@@ -66,6 +66,9 @@
     if(out) out.innerHTML=html(a,"Lage");
     stack().innerHTML=html(b,"Block")+html(c,"Weg");
   }
+  var css=document.createElement("style");
+  css.textContent="#kOut{overflow:hidden}#kDreiStack .kcard{height:auto;margin:.35rem 0;padding:.7rem .7rem}";
+  document.head.appendChild(css);
   document.addEventListener("click",function(e){
     var t=e.target;
     if(!t) return;
