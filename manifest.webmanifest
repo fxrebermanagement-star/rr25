@@ -9,11 +9,6 @@
   "theme_color": "#07040d",
   "lang": "de",
   "icons": [
-    {
-      "src": "https://fxrebermanagement-star.github.io/universum/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    }
+    {"src": "./icon.svg", "sizes": "192x192", "type": "image/svg+xml"}
   ]
 }
