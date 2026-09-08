@@ -77,6 +77,7 @@ textarea{min-height:5.2rem}
 #list .card{padding:1rem 1.05rem;margin:.4rem 0;border-radius:1.05rem}
 #list .card b{font-size:1.1rem}
 #list .card small{font-size:.82rem;margin-top:.22rem}
+#moonLine{color:#c4a4d6;font-size:.72rem;text-align:center;margin:.15rem 0 .35rem;letter-spacing:.06em}
 </style>
 </head>
 <body>
@@ -89,6 +90,7 @@ textarea{min-height:5.2rem}
 <main>
 <section class="screen on" id="home">
 <button type="button" id="quick" hidden></button>
+<p class="sub" id="moonLine"></p>
 <div id="kasten">
 <div class="duo">
 <div id="kOut"></div>
@@ -102,6 +104,7 @@ textarea{min-height:5.2rem}
 <div id="underR">
 <input id="sigilT" placeholder="Absicht">
 <button type="button" class="btn ghost" id="sigilGo">Zeichen</button>
+<button type="button" class="btn ghost" id="sigilSave">Ablegen</button>
 </div>
 </div>
 </div>
@@ -156,5 +159,6 @@ textarea{min-height:5.2rem}
 <script src="ritual-nav.js?v=2"></script>
 <script src="ritual-layout.js?v=3"></script>
 <script src="ritual-look.js?v=5"></script>
+<script src="ritual-extra.js"></script>
 <script src="pwa.js"></script>
 </body></html>
