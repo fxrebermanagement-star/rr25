@@ -59,21 +59,12 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
   };
   function maybe(){
     if(window._rid==="dank") setDone();
-    var h=document.querySelector("#run .sub");
-    if(h&&/Dankesritual/i.test(h.textContent)) setDone();
   }
-  document.addEventListener("click",function(e){
-    var t=e.target; if(!t) return;
-    var id=t.id||"";
-    if(id==="next"||id==="afterGo"||id==="afterStay"){
-      setTimeout(maybe,30);
-    }
-  },true);
   var _show=typeof show==="function"?show:null;
   if(_show){
     show=function(id){
       var r=_show.apply(this,arguments);
-      if(id==="after"||id==="bye"||id==="home") maybe();
+      if(id==="after"||id==="bye") maybe();
       return r;
     };
   }
