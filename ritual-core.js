@@ -1,14 +1,14 @@
 const KEY="rr25_ritual_v1";
 const NOTEKEY="rr25_notiz_v1";
-let BOOK=[];
-const R=[{id:"dank",t:"Tägliches Dankesritual",s:"Gesundheit · Liebe · Geld · Schutz",tag:"Alltag",steps:[["Ankommen","Füße. Atem. Ich bin der Spieler."],["Dank","Dreimal Danke für Gesundheit, Liebe, Geld, Schutz."],["Abschluss","Übergeben. So sei es."]]},{id:"stopp",t:"Schaden stoppen",s:"Angriff endet",tag:"Schutz",need:["Name"],steps:[["Absicht","Angriff von [Name] stoppt."],["Rückkehr","Ich bin nicht [Name]."]]},{id:"schutz",t:"Schutz selbst",s:"Feld schliessen",tag:"Schutz",steps:[["Absicht","Mein Feld ist geschlossen."],["369","3× Schutz. 6× Fremdes prallt ab. 9× Ich bin klar."]]},{id:"schutz2",t:"Schutz für eine andere Person",s:"Vor Arbeit",tag:"Schutz",need:["Name"],steps:[["Absicht","Das Feld von [Name] ist klar und geschützt."],["Rückkehr","Ich bin nicht [Name]."]]},{id:"heil",t:"Heilung",s:"Ergänzung Medizin",tag:"Energie",need:["Name"],steps:[["Absicht","Heilung für [Name]."],["Rückkehr","Ich bin nicht [Name]."]]},{id:"trenn",t:"Trennung — selbst",s:"Nur der Faden",tag:"Trennung",need:["Name"],steps:[["Absicht","Verbindung zu [Name] löst sich."],["Rückkehr","Ich kehre zurück."]]},{id:"trenn2",t:"Trennung zweier anderer",s:"Nur der Faden",tag:"Trennung",need:["A","B"],steps:[["Absicht","Faden zwischen [A] und [B] löst sich."],["Rückkehr","Ich bin nicht [A], nicht [B]."]]},{id:"wesen",t:"Nur wenn nötig — Wesenheit",s:"Fragen und entlassen",tag:"Feld",need:["A","B"],steps:[["Fragen","Wer die Verbindung zwischen [A] und [B] löst, darf sich zeigen."],["Entlassen","Danke. Du gehst."]]},{id:"liebe",t:"Liebesritual",s:"Ohne Zwang",tag:"Liebe",need:["Name"],steps:[["Absicht","Stimmige Nähe mit [Name], nur wenn wahr."],["Rückkehr","Ich kehre zurück."]]},{id:"anz",t:"Anziehung und Kontakt",s:"Nur wenn stimmig",tag:"Liebe",need:["Name"],steps:[["Absicht","[Name] fühlt die Anziehung. Nur wenn stimmig."]]},{id:"karma",t:"Karma-Ausgleich",s:"Nicht Rache",tag:"Energie",steps:[["Absicht","Was genommen wurde, kehrt stimmig zurück."]]},{id:"finst",t:"Finsternis",s:"Versiegeln",tag:"Feld",steps:[["Absicht","Unstimmiges fällt ab."]]},{id:"ahn",t:"Ahnenkontakt",s:"Ehren",tag:"Feld",need:["Name"],steps:[["Einladung","[Name], wenn du bereit bist, zeige dich."],["Schluss","Kontakt beendet."]]},{id:"fremd",t:"Fremde Wesenheit",s:"Hartes Ende",tag:"Feld",steps:[["Ende","Kontakt beendet. Der Raum gehört mir."]]},{id:"zur",t:"Energie zurückholen",s:"Nach Kontakt",tag:"Energie",steps:[["Absicht","Alles von mir kehrt zurück."]]},{id:"fil",t:"Filterübung",s:"Kein Auftrag",tag:"Feld",steps:[["Filter","Nur klare Präsenz."]]}];
+let BOOKTEXT="";
+const R=[{id:"dank",t:"Tägliches Dankesritual",s:"Gesundheit · Liebe · Geld · Schutz",tag:"Alltag",steps:[["Ankommen","Füße. Atem. Ich bin der Spieler."],["Dank","Dreimal Danke."],["Abschluss","So sei es."]]},{id:"stopp",t:"Schaden stoppen",s:"Angriff endet",tag:"Schutz",need:["Name"],steps:[["Absicht","Angriff von [Name] stoppt."],["Rückkehr","Ich bin nicht [Name]."]]},{id:"schutz",t:"Schutz selbst",s:"Feld schliessen",tag:"Schutz",steps:[["Absicht","Mein Feld ist geschlossen."]]},{id:"schutz2",t:"Schutz für eine andere Person",s:"Vor Arbeit",tag:"Schutz",need:["Name"],steps:[["Absicht","Feld von [Name] ist geschützt."],["Rückkehr","Ich bin nicht [Name]."]]},{id:"heil",t:"Heilung",s:"Ergänzung Medizin",tag:"Energie",need:["Name"],steps:[["Absicht","Heilung für [Name]."],["Rückkehr","Ich bin nicht [Name]."]]},{id:"trenn",t:"Trennung — selbst",s:"Nur der Faden",tag:"Trennung",need:["Name"],steps:[["Absicht","Verbindung zu [Name] löst sich."]]},{id:"trenn2",t:"Trennung zweier anderer",s:"Nur der Faden",tag:"Trennung",need:["A","B"],steps:[["Absicht","Faden zwischen [A] und [B] löst sich."]]},{id:"wesen",t:"Nur wenn nötig — Wesenheit",s:"Fragen und entlassen",tag:"Feld",need:["A","B"],steps:[["Fragen","Wer die Verbindung zwischen [A] und [B] löst, darf sich zeigen."],["Entlassen","Danke. Du gehst."]]},{id:"liebe",t:"Liebesritual",s:"Ohne Zwang",tag:"Liebe",need:["Name"],steps:[["Absicht","Stimmige Nähe mit [Name]."]]},{id:"anz",t:"Anziehung und Kontakt",s:"Nur wenn stimmig",tag:"Liebe",need:["Name"],steps:[["Absicht","[Name] fühlt die Anziehung."]]},{id:"karma",t:"Karma-Ausgleich",s:"Nicht Rache",tag:"Energie",steps:[["Absicht","Was genommen wurde, kehrt stimmig zurück."]]},{id:"finst",t:"Finsternis",s:"Versiegeln",tag:"Feld",steps:[["Absicht","Unstimmiges fällt ab."]]},{id:"ahn",t:"Ahnenkontakt",s:"Ehren",tag:"Feld",need:["Name"],steps:[["Einladung","[Name], wenn du bereit bist, zeige dich."]]},{id:"fremd",t:"Fremde Wesenheit",s:"Hartes Ende",tag:"Feld",steps:[["Ende","Kontakt beendet."]]},{id:"zur",t:"Energie zurückholen",s:"Nach Kontakt",tag:"Energie",steps:[["Absicht","Alles von mir kehrt zurück."]]},{id:"fil",t:"Filterübung",s:"Kein Auftrag",tag:"Feld",steps:[["Filter","Nur klare Präsenz."]]}];
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const now=()=>new Date().toLocaleString("de-CH");
 const fill=(s,m)=>s.replaceAll("[Name]",m.Name||"[Name]").replaceAll("[A]",m.A||"[A]").replaceAll("[B]",m.B||"[B]");
 const esc=s=>String(s||"").replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">");
-function load(){try{return Object.assign({log:[],planned:[]},JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){return {log:[],planned:[]}}}
+function load(){try{return Object.assign({log:[],planned:[]},JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){return{log:[],planned:[]}}}
 function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
 function loadNotes(){try{const x=JSON.parse(localStorage.getItem(NOTEKEY)||"[]");return Array.isArray(x)?x:[]}catch(e){return[]}}
 function saveNotes(a){localStorage.setItem(NOTEKEY,JSON.stringify(a))}
@@ -25,17 +25,24 @@ function paintNotes(){const notes=loadNotes();$("#notesOnly").innerHTML=notes.le
 function paintLog(){const rows=load().log||[];$("#entries").innerHTML=rows.length?rows.map(e=>`<div class="entry"><b>${esc(e.titel)}</b><div class="meta">${esc(e.t)} ${esc(e.wer||"")}</div></div>`).join(""):"<p class='sub'>Noch leer.</p>"}
 async function paintBuch(){
   const page=$("#page"); if(!page) return;
-  page.innerHTML="<p class='sub'>Buch lädt …</p>";
-  if(!BOOK.length){
+  page.innerHTML="<p class='sub'>Buch lädt … voller Text</p>";
+  if(!BOOKTEXT){
     try{
-      const parts=await Promise.all(["bookpart0.json","bookpart1.json","bookpart2.json"].map(f=>fetch(f,{cache:"reload"}).then(r=>{if(!r.ok)throw new Error(f);return r.json()})));
-      BOOK=[].concat.apply([],parts);
+      const parts=await Promise.all([0,1,2,3,4].map(n=>fetch("pdfpart"+n+".txt",{cache:"reload"}).then(r=>{if(!r.ok)throw new Error(n);return r.text()})));
+      BOOKTEXT=parts.join("\n\n");
     }catch(e){
-      page.innerHTML="<p class='sub'>Buch lädt noch. In einer Minute neu laden.</p>";
+      page.innerHTML="<p class='sub'>Buchdateien kommen. Neu laden.</p>";
       return;
     }
   }
-  page.innerHTML=BOOK.map((c,i)=>"<sec id='c"+i+"'><h3>"+esc(c.t)+"</h3><div>"+esc(c.b).replaceAll("\n","<br>")+"</div></sec>").join("");
+  page.innerHTML="";
+  const pre=document.createElement("div");
+  pre.style.whiteSpace="pre-wrap";
+  pre.style.fontFamily="Georgia,serif";
+  pre.style.lineHeight="1.65";
+  pre.style.fontSize="1.02rem";
+  pre.textContent=BOOKTEXT;
+  page.appendChild(pre);
 }
 document.addEventListener("click",e=>{const n=e.target.closest("nav button");if(n)show(n.dataset.v)});
 $("#plAdd").onclick=()=>{const r=R.find(x=>x.id===$("#plR").value);if(!r)return;const d=load();d.planned.unshift({pid:uid(),id:r.id,titel:r.t,wer:($("#plW").value||"").trim(),t:now()});save(d);paintPlan()};
