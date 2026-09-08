@@ -41,8 +41,9 @@
     return '<div class="kcard"><span class="group">'+label+'</span><div class="kz">'+(c.z||"✦")+'</div><b>'+c.t+'</b><small>'+c.x+'</small></div>';
   }
   function go(id){
-    if(typeof show==="function"){ show(id); return; }
     document.querySelectorAll(".screen").forEach(function(s){ s.classList.toggle("on", s.id===id); });
+    document.querySelectorAll("nav button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-v")===id); });
+    if(id==="drei") document.querySelectorAll("nav button").forEach(function(b){ b.classList.remove("on"); });
   }
   function drawDay(){
     var d=loadK();
@@ -52,8 +53,6 @@
   function showOne(){
     var out=document.getElementById("kOut");
     if(out) out.innerHTML=html(drawDay(),"Heute");
-    var extra=document.getElementById("kDreiStack");
-    if(extra) extra.innerHTML="";
   }
   function showDrei(){
     var a=pick([]),b=pick([a.t]),c=pick([a.t,b.t]);
