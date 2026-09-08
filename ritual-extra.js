@@ -8,35 +8,21 @@
     var p=age/syn;
     if(p<0.03||p>0.97) return ["○","Neumond","Neu setzen. Still halten."];
     if(p<0.22) return ["🌒","Zunehmend","Wachsen lassen. Nicht hetzen."];
-    if(p<0.28) return ["🌓","Erstes Viertel","Form geben. Grenze halten."];
+    if(p<0.28) return ["🌓","Viertel","Form geben. Grenze halten."];
     if(p<0.47) return ["🌔","Zunehmend","Kraft sammeln. Klar bleiben."];
     if(p<0.53) return ["🌕","Vollmond","Sichtbar. Nicht nachsetzen."];
     if(p<0.72) return ["🌖","Abnehmend","Abgeben. Was fällt, darf fallen."];
-    if(p<0.78) return ["🌗","Letztes Viertel","Lösen. Zurück zur Mitte."];
+    if(p<0.78) return ["🌗","Viertel","Lösen. Zurück zur Mitte."];
     return ["🌘","Abnehmend","Leeren. Schlafen lassen."];
   }
   function moon(){
     var ph=phase();
     var el=document.getElementById("moonSym");
-    if(!el){
-      var head=document.querySelector("header");
-      var doll=document.querySelector("header .doll");
-      if(!head||!doll) return;
-      var row=document.getElementById("headRow");
-      if(!row){
-        row=document.createElement("div");
-        row.id="headRow";
-        head.insertBefore(row, doll);
-        row.appendChild(doll);
-      }
-      el=document.createElement("span");
-      el.id="moonSym";
-      row.insertBefore(el, row.firstChild);
-    }
-    el.textContent=ph[0];
-    el.title=ph[1]+" · "+ph[2];
-    var line=document.getElementById("moonLine");
-    if(line) line.style.display="none";
+    var tx=document.getElementById("moonTxt");
+    if(el) el.textContent=ph[0];
+    if(tx) tx.textContent=ph[1];
+    var wrap=document.getElementById("moonWrap");
+    if(wrap) wrap.title=ph[1]+" · "+ph[2];
   }
   function saveSigil(){
     var c=document.getElementById("sigilC");
@@ -62,9 +48,12 @@
   }
   var s=document.createElement("style");
   s.textContent=[
-    "#headRow{display:flex;align-items:center;justify-content:center;gap:.55rem;margin:0 auto .2rem}",
-    "#headRow .doll{margin:0}",
-    "#moonSym{width:52px;height:52px;display:flex;align-items:center;justify-content:center;font-size:1.55rem;line-height:1;border-radius:16px;border:1px solid rgba(232,160,255,.28);background:#12081c}"
+    "header{position:relative}",
+    "#headRow{position:relative;min-height:52px;margin:0 0 .2rem}",
+    "#moonWrap{position:absolute;left:0;top:0;text-align:center;width:3.2rem}",
+    "#moonSym{display:block;font-size:1.55rem;line-height:1;border:0;background:none;width:auto;height:auto;padding:0}",
+    "#moonTxt{display:block;margin-top:.18rem;font-size:.52rem;letter-spacing:.04em;color:#c4a4d6;line-height:1.15}",
+    "#headRow .doll{margin:0 auto;display:block}"
   ].join("");
   document.head.appendChild(s);
   document.addEventListener("click",function(e){
