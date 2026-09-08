@@ -121,7 +121,32 @@ if(_openLog){
     });
   };
 }
-const _paintBuch=paintBuch;
+function istKapitel(line){
+  const s=String(line||"").trim();
+  if(!s||s.length>72) return false;
+  if(/^(Vorwort|Inhalt|Anhang|Schluss|Widmung)$/.test(s)) return true;
+  if(/^Das Feld/.test(s)) return true;
+  if(/^Ritual \d+/.test(s)) return true;
+  if(/^\d{1,2}\.\s/.test(s) && s.indexOf(":")<0 && (s.match(/\./g)||[]).length<=1) return true;
+  return false;
+}
+function buchKapitel(text){
+  const lines=String(text||"").split(/\n/);
+  const items=[];
+  let cur=null;
+  lines.forEach(line=>{
+    if(istKapitel(line)){
+      if(cur) items.push(cur);
+      cur={title:line.trim(), body:""};
+    }else if(cur){
+      cur.body += (cur.body?"\n":"")+line;
+    }else{
+      cur={title:"Buch", body:line};
+    }
+  });
+  if(cur) items.push(cur);
+  return items.filter(x=>x.title!=="Buch" || (x.body||"").trim());
+}
 paintBuch=async function(){
   const page=$("#page"); if(!page)return;
   page.innerHTML="<p class='sub'>Buch lädt …</p>";
@@ -134,13 +159,7 @@ paintBuch=async function(){
       return;
     }
   }
-  const chunks=BOOKTEXT.split(/\n(?=(?:Vorwort|Inhalt|\d+\. |Ritual \d+|Anhang|Schluss|Widmung)\b)/).map(s=>s.trim()).filter(Boolean);
-  const items=chunks.map((c,i)=>{
-    const nl=c.indexOf("\n");
-    const title=(nl>=0?c.slice(0,nl):c).trim();
-    const body=(nl>=0?c.slice(nl+1):"").trim();
-    return {title,body};
-  });
+  const items=buchKapitel(BOOKTEXT);
   page.innerHTML="";
   const toc=document.createElement("div");
   toc.className="toc";
