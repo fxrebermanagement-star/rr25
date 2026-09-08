@@ -40,6 +40,15 @@
   function html(c,label){
     return '<div class="kcard"><span class="group">'+label+'</span><div class="kz">'+(c.z||"✦")+'</div><b>'+c.t+'</b><small>'+c.x+'</small></div>';
   }
+  function stack(){
+    var el=document.getElementById("kDreiStack");
+    if(el) return el;
+    el=document.createElement("div");
+    el.id="kDreiStack";
+    var k=document.getElementById("kasten");
+    if(k) k.appendChild(el);
+    return el;
+  }
   function drawDay(){
     var d=loadK();
     if(d.day!==today()||!d.one){ d.day=today(); d.one=pick([]); saveK(d); }
@@ -47,22 +56,22 @@
   }
   function showOne(){
     var out=document.getElementById("kOut");
-    if(!out) return;
-    out.innerHTML=html(drawDay(),"Heute");
+    if(out) out.innerHTML=html(drawDay(),"Heute");
+    var st=document.getElementById("kDreiStack");
+    if(st) st.innerHTML="";
   }
   function showDrei(){
-    var out=document.getElementById("kOut");
-    if(!out) return;
     var a=pick([]),b=pick([a.t]),c=pick([a.t,b.t]);
-    out.innerHTML=html(a,"Lage")+html(b,"Block")+html(c,"Weg");
+    var out=document.getElementById("kOut");
+    if(out) out.innerHTML=html(a,"Lage");
+    stack().innerHTML=html(b,"Block")+html(c,"Weg");
   }
-  var st=document.createElement("style");
-  st.textContent=".kcard{background:linear-gradient(180deg,rgba(72,28,110,.7),rgba(28,10,42,.85));border:1px solid rgba(232,160,255,.28);border-radius:1.2rem;padding:1.15rem 1.1rem 1.2rem;margin:.45rem 0;text-align:center;box-shadow:0 10px 28px rgba(0,0,0,.28)}.kcard .group{display:block;margin:0 0 .35rem}.kz{font-size:2.1rem;line-height:1;color:#ffb3ea;margin:.15rem 0 .45rem;text-shadow:0 0 18px rgba(255,122,217,.35)}.kcard b{display:block;font-family:Georgia,serif;font-size:1.22rem;margin:0 0 .4rem;letter-spacing:.02em}.kcard small{display:block;color:#c4a4d6;line-height:1.5;font-size:.92rem}";
-  document.head.appendChild(st);
-  var tag=document.getElementById("kTag");
-  var drei=document.getElementById("kDrei");
-  if(tag) tag.onclick=showOne;
-  if(drei) drei.onclick=showDrei;
+  document.addEventListener("click",function(e){
+    var t=e.target;
+    if(!t) return;
+    if(t.id==="kTag"||(t.closest&&t.closest("#kTag"))) showOne();
+    if(t.id==="kDrei"||(t.closest&&t.closest("#kDrei"))) showDrei();
+  });
   var d=loadK();
   if(d.day===today()&&d.one){
     var found=DECK.filter(function(c){return c.t===d.one.t})[0];
