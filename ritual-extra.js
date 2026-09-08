@@ -1,8 +1,14 @@
 (function(){
   var DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
   var FEST=[
-    [2,1,"Imbolc"],[3,20,"Ostara"],[5,1,"Beltane"],[6,21,"Litha"],
-    [8,1,"Lughnasadh"],[9,22,"Mabon"],[10,31,"Samhain"],[12,21,"Jul"]
+    [2,1,"Imbolc","Licht zurück. Samen innen. Nicht hetzen. Still halten und wärmen."],
+    [3,20,"Ostara","Tag und Nacht gleich. Neu setzen. Was keimt, darf wachsen."],
+    [5,1,"Beltane","Feuer und Tür. Leben nach aussen. Grenze trotzdem halten."],
+    [6,21,"Litha","Höhe. Kraft ist da. Nicht nachsetzen. Danken und stehen."],
+    [8,1,"Lughnasadh","Erste Ernte. Nehmen was reif ist. Den Rest stehen lassen."],
+    [9,22,"Mabon","Wieder Gleichstand. Abgeben. Was fällt, darf fallen."],
+    [10,31,"Samhain","Schleier dünn. Ahnen ehren. Kontakt kurz. Dann schliessen."],
+    [12,21,"Jul","Tiefste Nacht. Licht hüten. Innen bleiben. Neu beginnen." ]
   ];
   function day(){ return new Date(); }
   function nextFest(n){
@@ -10,17 +16,16 @@
     var list=[];
     for(var k=0;k<2;k++){
       FEST.forEach(function(f){
-        list.push({d:new Date(y+k,f[0]-1,f[1]), name:f[1]});
-        list[list.length-1].name=f[2];
+        list.push({d:new Date(y+k,f[0]-1,f[1]), name:f[2], text:f[3]});
       });
     }
     var now=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime();
     for(var i=0;i<list.length;i++){
       var t=new Date(list[i].d.getFullYear(),list[i].d.getMonth(),list[i].d.getDate()).getTime();
       var diff=Math.round((t-now)/86400000);
-      if(diff>=0) return {name:list[i].name, tage:diff};
+      if(diff>=0) return {name:list[i].name, tage:diff, text:list[i].text};
     }
-    return {name:"Imbolc",tage:0};
+    return {name:"Imbolc",tage:0,text:FEST[0][3]};
   }
   function moonInfo(){
     var syn=29.53058867;
@@ -47,7 +52,17 @@
     var f=nextFest(n);
     var dat=DAYS[n.getDay()]+" "+n.getDate()+"."+(n.getMonth()+1)+".";
     var wait=f.tage===0?"heute":(f.tage===1?"1 Tag":f.tage+" Tage");
-    return {sym:"☀️", dat:dat, fest:f.name, wait:wait, tage:f.tage};
+    return {sym:"☀️", dat:dat, fest:f.name, wait:wait, tage:f.tage, text:f.text};
+  }
+  function box(){
+    var el=document.getElementById("festHint");
+    if(el) return el;
+    el=document.createElement("div");
+    el.id="festHint";
+    var home=document.getElementById("home");
+    if(home) home.insertBefore(el, home.firstChild);
+    else document.body.appendChild(el);
+    return el;
   }
   function paintHead(){
     var m=moonInfo();
@@ -62,6 +77,14 @@
     var st=document.getElementById("sunTxt");
     if(se) se.textContent=s.sym;
     if(st) st.innerHTML=s.dat+"<br>"+s.fest+" "+(s.tage===0?"heute":s.wait);
+    window._fest=s;
+  }
+  function toggleFest(){
+    var s=window._fest||sunInfo();
+    var el=box();
+    if(el.classList.contains("on")){ el.classList.remove("on"); el.innerHTML=""; return; }
+    el.className="on";
+    el.innerHTML="<b>"+s.fest+"</b><small>"+(s.tage===0?"heute":s.wait)+"</small><p>"+s.text+"</p>";
   }
   function saveSigil(){
     var c=document.getElementById("sigilC");
@@ -85,8 +108,20 @@
     var b=document.getElementById("sigilSave");
     if(b){ b.textContent="Abgelegt"; setTimeout(function(){ b.textContent="Ablegen"; },1400); }
   }
+  var css=document.createElement("style");
+  css.textContent=[
+    "#sunWrap{cursor:pointer}",
+    "#festHint{display:none;margin:.35rem 0 .55rem;padding:.7rem .8rem;border:1px solid rgba(232,160,255,.22);border-radius:.9rem;background:rgba(56,24,86,.45)}",
+    "#festHint.on{display:block}",
+    "#festHint b{display:block;font-family:Georgia,serif;font-size:1rem}",
+    "#festHint small{display:block;color:#c4a4d6;margin:.12rem 0 .35rem}",
+    "#festHint p{margin:0;font-family:Georgia,serif;line-height:1.5}"
+  ].join("");
+  document.head.appendChild(css);
   document.addEventListener("click",function(e){
-    if(e.target&&e.target.id==="sigilSave") saveSigil();
+    if(!e.target) return;
+    if(e.target.id==="sigilSave") saveSigil();
+    if(e.target.id==="sunWrap"||(e.target.closest&&e.target.closest("#sunWrap"))) toggleFest();
   });
   paintHead();
 })();
