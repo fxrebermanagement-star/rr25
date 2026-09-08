@@ -49,7 +49,7 @@ textarea{min-height:5.2rem}
 .group{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin:.7rem 0 .15rem}
 .check{display:none}
 .msg{color:var(--pink);font-style:italic}
-.entry{border-top:1px solid var(--line);padding:.7rem 0}
+.entry{border-top:1px solid var(--line);padding:.85rem 0}
 .meta{color:#8d6ea3;font-size:.68rem}
 .shots{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
 .shots img{width:4.4rem;height:4.4rem;object-fit:cover;border-radius:.6rem;border:1px solid var(--line)}
@@ -66,7 +66,7 @@ textarea{min-height:5.2rem}
 #underL,#underR{display:flex;flex-direction:column;gap:.35rem}
 #under .btn{width:100%;margin:0}
 #under input{margin:0;width:100%}
-#kDreiStack .kcard{height:auto;margin:.35rem 0}
+#dreiList .kcard{margin:.4rem 0}
 .kcard{background:linear-gradient(180deg,rgba(72,28,110,.7),rgba(28,10,42,.85));border:1px solid rgba(232,160,255,.28);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
 .kcard .group{margin:0 0 .15rem}
 .kz{font-size:1.35rem;line-height:1;color:#ffb3ea;margin:.05rem 0 .25rem}
@@ -102,6 +102,11 @@ textarea{min-height:5.2rem}
 </div>
 <div id="cats"></div><div id="list"></div>
 </section>
+<section class="screen" id="drei">
+<div class="hero"><h2>Drei</h2><p class="sub">Lage · Block · Weg</p></div>
+<div id="dreiList"></div>
+<div class="row"><button type="button" class="btn ghost" id="dreiBack">Zurück</button></div>
+</section>
 <section class="screen" id="run"></section>
 <section class="screen" id="geplant"><div class="hero"><h2>Geplant</h2></div>
 <div class="card"><select id="plR"></select><input id="plW" placeholder="Für wen">
@@ -135,7 +140,7 @@ textarea{min-height:5.2rem}
 <script src="ritual-schaden.js"></script>
 <script src="ritual-drop.js"></script>
 <script src="ritual-filter.js?v=4"></script>
-<script src="ritual-karten.js?v=5"></script>
+<script src="ritual-karten.js?v=6"></script>
 <script src="ritual-sigil.js?v=4"></script>
 <script src="ritual-log.js"></script>
 <script src="ritual-notes.js"></script>
