@@ -14,13 +14,14 @@
 :root{--bg:#07040d;--elev:rgba(56,24,86,.5);--line:rgba(232,160,255,.22);--ink:#f6eaff;--dim:#c4a4d6;--pink:#ff7ad9}
 *{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#07040d;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
 .app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
-header{padding:calc(.7rem + env(safe-area-inset-top)) 1.1rem .75rem;position:sticky;top:0;background:#0c0614}
+header{padding:calc(.7rem + env(safe-area-inset-top)) 1.1rem .75rem;position:sticky;top:0;background:#0c0614;z-index:5}
 .doll{width:72px;height:72px;object-fit:cover;border-radius:20px;margin:0 auto .35rem;display:block;border:1px solid rgba(255,122,217,.3);background:#12081c}
 .brand{font-family:Georgia,serif;letter-spacing:.28em;font-size:.7rem;color:var(--pink);text-align:center;margin:0}
 .sub{color:var(--dim);font-size:.75rem;text-align:center}
-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.22rem;margin-top:.7rem}
-nav button{border:0;background:var(--elev);color:var(--dim);border-radius:999px;padding:.5rem 0;font:inherit;font-size:.64rem}
-nav button.on{background:linear-gradient(135deg,#9650d2,#e6aaff);color:#14081c;font-weight:650}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.28rem;margin-top:.85rem;padding:.28rem;background:rgba(20,8,32,.7);border:1px solid var(--line);border-radius:1.15rem}
+nav button{border:0;background:transparent;color:var(--dim);border-radius:.9rem;padding:.42rem .12rem .38rem;font:inherit;font-size:.58rem;letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;gap:.18rem}
+nav button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;font-weight:650;box-shadow:0 6px 16px rgba(150,80,210,.28)}
 main{flex:1;padding:0 1.05rem 1.4rem}
 .hero h2{font-family:Georgia,serif;font-weight:500;margin:.4rem 0}
 .card{background:var(--elev);border:1px solid var(--line);border-radius:1.1rem;padding:1rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.4rem 0}
@@ -51,11 +52,11 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 <p class="brand">ROLF REBER 25</p>
 <p class="sub">eigene App</p>
 <nav>
-<button type="button" class="on" data-v="home">Rituale</button>
-<button type="button" data-v="geplant">Geplant</button>
-<button type="button" data-v="notiz">Notiz</button>
-<button type="button" data-v="log">Chronik</button>
-<button type="button" data-v="buch">Buch</button>
+<button type="button" class="on" data-v="home"><svg viewBox="0 0 24 24"><path d="M12 3l1.2 3.6L17 8l-3.8 1.4L12 13l-1.2-3.6L7 8l3.8-1.4z"/><path d="M8 16h8M9 19h6"/></svg>Rituale</button>
+<button type="button" data-v="geplant"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Geplant</button>
+<button type="button" data-v="notiz"><svg viewBox="0 0 24 24"><path d="M7 4h8l5 5v11H7z"/><path d="M15 4v5h5M9 13h6M9 17h4"/></svg>Notiz</button>
+<button type="button" data-v="log"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>Chronik</button>
+<button type="button" data-v="buch"><svg viewBox="0 0 24 24"><path d="M5 5h11a3 3 0 013 3v12H8a3 3 0 01-3-3V5z"/><path d="M8 20a3 3 0 01-3-3"/></svg>Buch</button>
 </nav>
 </header>
 <main>
