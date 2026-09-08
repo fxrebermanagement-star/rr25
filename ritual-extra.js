@@ -1,7 +1,5 @@
 (function(){
-  function day(){
-    return new Date();
-  }
+  function day(){ return new Date(); }
   function phase(){
     var syn=29.53058867;
     var nm=Date.UTC(2000,0,6,18,14)/1000;
@@ -18,80 +16,35 @@
     return ["Abnehmend","Leeren. Schlafen lassen."];
   }
   function moon(){
-    var home=document.getElementById("home");
-    if(!home) return;
     var el=document.getElementById("moonLine");
-    if(!el){
-      el=document.createElement("p");
-      el.id="moonLine";
-      el.className="sub";
-      var kast=document.getElementById("kasten");
-      if(kast) home.insertBefore(el, kast);
-      else home.insertBefore(el, home.firstChild);
-    }
+    if(!el) return;
     var ph=phase();
     el.textContent=ph[0]+" · "+ph[1];
-    el.style.textAlign="center";
-    el.style.letterSpacing=".06em";
-    el.style.margin=".15rem 0 .35rem";
-  }
-  function ensureSave(){
-    var box=document.getElementById("underR");
-    if(!box||document.getElementById("sigilSave")) return;
-    var b=document.createElement("button");
-    b.type="button";
-    b.id="sigilSave";
-    b.className="btn ghost";
-    b.textContent="Ablegen";
-    box.appendChild(b);
   }
   function saveSigil(){
     var c=document.getElementById("sigilC");
-    var t=(document.getElementById("sigilT")||{}).value||"";
-    if(!c) return;
+    var t=((document.getElementById("sigilT")||{}).value||"").trim();
+    if(!c||typeof load!=="function") return;
     var img="";
-    try{ img=c.toDataURL("image/jpeg",.72); }catch(e){}
-    if(typeof load!=="function"||typeof save!=="function") return;
+    try{ img=c.toDataURL("image/jpeg",0.72); }catch(e){}
+    if(!img||img.length<80) return;
+    var id=typeof uid==="function"?uid():String(Date.now());
     var d=load();
     d.log=d.log||[];
     d.log.unshift({
-      id:(typeof uid==="function"?uid():String(Date.now())),
-      t:(typeof now==="function"?now():new Date().toLocaleString("de-CH")),
+      id:id,
+      t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),
       titel:"Sigille",
-      wer:t.trim(),
-      img:img
+      wer:t,
+      pics:1
     });
     save(d);
+    if(typeof fotoPut==="function") fotoPut(id,[img]);
     var b=document.getElementById("sigilSave");
-    if(b){ b.textContent="Abgelegt"; setTimeout(function(){ b.textContent="Ablegen"; },1200); }
-  }
-  var old=typeof paintLog==="function"?paintLog:null;
-  if(old){
-    paintLog=function(){
-      old();
-      var rows=(typeof load==="function"?load().log:null)||[];
-      var box=document.getElementById("entries");
-      if(!box) return;
-      var nodes=box.querySelectorAll(".entry");
-      rows.forEach(function(e,i){
-        if(!e.img||!nodes[i]) return;
-        if(nodes[i].querySelector(".shots")) return;
-        var sh=document.createElement("div");
-        sh.className="shots";
-        var im=document.createElement("img");
-        im.src=e.img;
-        sh.appendChild(im);
-        nodes[i].appendChild(sh);
-      });
-    };
+    if(b){ b.textContent="Abgelegt"; setTimeout(function(){ b.textContent="Ablegen"; },1400); }
   }
   document.addEventListener("click",function(e){
     if(e.target&&e.target.id==="sigilSave") saveSigil();
   });
-  var st=document.createElement("style");
-  st.textContent="#moonLine{color:#c4a4d6;font-size:.72rem}#sigilSave{min-height:2.45rem}";
-  document.head.appendChild(st);
   moon();
-  ensureSave();
-  setTimeout(ensureSave,200);
 })();
