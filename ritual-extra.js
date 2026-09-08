@@ -52,7 +52,11 @@
     if(b){ b.textContent="Abgelegt"; setTimeout(function(){ b.textContent="Ablegen"; },1400); }
   }
   var s=document.createElement("style");
-  s.textContent="#moonTxt{font-size:.5rem;letter-spacing:.03em;line-height:1.2}";
+  s.textContent=[
+    "#moonWrap{width:4.4rem!important}",
+    "#moonSym{font-size:2.05rem!important;line-height:1!important}",
+    "#moonTxt{font-size:.68rem!important;letter-spacing:.02em;line-height:1.25!important;margin-top:.22rem!important}"
+  ].join("");
   document.head.appendChild(s);
   document.addEventListener("click",function(e){
     if(e.target&&e.target.id==="sigilSave") saveSigil();
