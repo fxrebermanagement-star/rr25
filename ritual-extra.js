@@ -1,6 +1,27 @@
 (function(){
   var DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  var FEST=[
+    [2,1,"Imbolc"],[3,20,"Ostara"],[5,1,"Beltane"],[6,21,"Litha"],
+    [8,1,"Lughnasadh"],[9,22,"Mabon"],[10,31,"Samhain"],[12,21,"Jul"]
+  ];
   function day(){ return new Date(); }
+  function nextFest(n){
+    var y=n.getFullYear();
+    var list=[];
+    for(var k=0;k<2;k++){
+      FEST.forEach(function(f){
+        list.push({d:new Date(y+k,f[0]-1,f[1]), name:f[1]});
+        list[list.length-1].name=f[2];
+      });
+    }
+    var now=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime();
+    for(var i=0;i<list.length;i++){
+      var t=new Date(list[i].d.getFullYear(),list[i].d.getMonth(),list[i].d.getDate()).getTime();
+      var diff=Math.round((t-now)/86400000);
+      if(diff>=0) return {name:list[i].name, tage:diff};
+    }
+    return {name:"Imbolc",tage:0};
+  }
   function moonInfo(){
     var syn=29.53058867;
     var nm=Date.UTC(2000,0,6,18,14)/1000;
@@ -23,7 +44,10 @@
   }
   function sunInfo(){
     var n=day();
-    return {sym:"☀️", dat:DAYS[n.getDay()]+" "+n.getDate()+"."+(n.getMonth()+1)+"."};
+    var f=nextFest(n);
+    var dat=DAYS[n.getDay()]+" "+n.getDate()+"."+(n.getMonth()+1)+".";
+    var wait=f.tage===0?"heute":(f.tage===1?"1 Tag":f.tage+" Tage");
+    return {sym:"☀️", dat:dat, fest:f.name, wait:wait, tage:f.tage};
   }
   function paintHead(){
     var m=moonInfo();
@@ -37,7 +61,7 @@
     var se=document.getElementById("sunSym");
     var st=document.getElementById("sunTxt");
     if(se) se.textContent=s.sym;
-    if(st) st.textContent=s.dat;
+    if(st) st.innerHTML=s.dat+"<br>"+s.fest+" "+(s.tage===0?"heute":s.wait);
   }
   function saveSigil(){
     var c=document.getElementById("sigilC");
