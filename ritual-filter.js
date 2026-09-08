@@ -17,7 +17,7 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
       ok.className="ok";
       pin.appendChild(ok);
     }
-    ok.textContent=done()?"✓":"";
+    ok.textContent=done()?"\u2713":"";
   }
   if(typeof openR==="function"){
     var _open=openR;
@@ -26,6 +26,7 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
   var s=document.createElement("style");
   s.textContent=[
     '#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}',
+    "#cats .chip:empty{display:none!important}",
     "#pinDank{position:relative;padding-right:2.6rem}",
     "#pinDank .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.55rem;height:1.55rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#14081c;background:transparent;pointer-events:none}",
     "#pinDank.done .ok{background:linear-gradient(165deg,#9650d2,#e6aaff);border-color:transparent;font-weight:700}"
@@ -33,15 +34,16 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
   document.head.appendChild(s);
   var old=renderList;
   renderList=function(){
-    if(cat==="Alle"||cat==="Alltag") cat="Schutz";
+    if(cat==="Alle"||cat==="Alltag"||!cat) cat="Schutz";
     old();
-    ["Alle","Alltag"].forEach(function(name){
-      var n=document.querySelector('#cats [data-cat="'+name+'"]');
-      if(n) n.remove();
+    document.querySelectorAll("#cats .chip").forEach(function(n){
+      var name=String(n.getAttribute("data-cat")||n.textContent||"").trim();
+      if(!name||name==="Alle"||name==="Alltag") n.remove();
     });
     document.querySelectorAll("#list .group").forEach(function(g){
       if(/Alltag/i.test(g.textContent)) g.remove();
     });
+    document.querySelectorAll('#list [data-id="dank"],#list [data-id="fil"]').forEach(function(el){ el.remove(); });
     var home=document.getElementById("home");
     var cats=document.getElementById("cats");
     var pin=document.getElementById("pinDank");
@@ -54,7 +56,6 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
       pin.onclick=function(){ fromPlan=null; openR("dank"); };
       home.insertBefore(pin, cats);
     }
-    document.querySelectorAll('#list [data-id="dank"]').forEach(function(el){ el.remove(); });
     paint();
   };
   function maybe(){
