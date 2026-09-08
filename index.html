@@ -62,8 +62,9 @@ textarea{min-height:5.2rem}
 #kOut .kcard{height:100%;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:.55rem .5rem}
 #sigilBox{background:#12081c;border:1px solid rgba(232,160,255,.28);border-radius:1rem;overflow:hidden;padding:0}
 #sigilC{width:100%;height:100%;display:block;margin:0;border:0;border-radius:1rem;background:#07040d}
-#sigilTools{display:flex;gap:.35rem;margin-top:.4rem}
+#sigilTools{display:flex;gap:.35rem;margin-top:.45rem}
 #sigilTools input{flex:1;margin:0}
+#kasten .row{margin-top:.15rem;margin-bottom:.15rem}
 .kcard{background:linear-gradient(180deg,rgba(72,28,110,.7),rgba(28,10,42,.85));border:1px solid rgba(232,160,255,.28);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
 .kcard .group{margin:0 0 .15rem}
 .kz{font-size:1.35rem;line-height:1;color:#ffb3ea;margin:.05rem 0 .25rem}
@@ -82,6 +83,10 @@ textarea{min-height:5.2rem}
 <section class="screen on" id="home">
 <button type="button" id="quick" hidden></button>
 <div id="kasten">
+<div class="row">
+<button type="button" class="btn primary" id="kTag">Karte</button>
+<button type="button" class="btn ghost" id="kDrei">Drei</button>
+</div>
 <div class="duo">
 <div id="kOut"></div>
 <div id="sigilBox"><canvas id="sigilC" width="360" height="360"></canvas></div>
@@ -89,10 +94,6 @@ textarea{min-height:5.2rem}
 <div id="sigilTools">
 <input id="sigilT" placeholder="Absicht">
 <button type="button" class="btn ghost" id="sigilGo">Zeichen</button>
-</div>
-<div class="row">
-<button type="button" class="btn primary" id="kTag">Karte</button>
-<button type="button" class="btn ghost" id="kDrei">Drei</button>
 </div>
 </div>
 <div id="cats"></div><div id="list"></div>
