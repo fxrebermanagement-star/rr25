@@ -121,32 +121,6 @@ if(_openLog){
     });
   };
 }
-function istKapitel(line){
-  const s=String(line||"").trim();
-  if(!s||s.length>72) return false;
-  if(/^(Vorwort|Inhalt|Anhang|Schluss|Widmung)$/.test(s)) return true;
-  if(/^Das Feld/.test(s)) return true;
-  if(/^Ritual \d+/.test(s)) return true;
-  if(/^\d{1,2}\.\s/.test(s) && s.indexOf(":")<0 && (s.match(/\./g)||[]).length<=1) return true;
-  return false;
-}
-function buchKapitel(text){
-  const lines=String(text||"").split(/\n/);
-  const items=[];
-  let cur=null;
-  lines.forEach(line=>{
-    if(istKapitel(line)){
-      if(cur) items.push(cur);
-      cur={title:line.trim(), body:""};
-    }else if(cur){
-      cur.body += (cur.body?"\n":"")+line;
-    }else{
-      cur={title:"Buch", body:line};
-    }
-  });
-  if(cur) items.push(cur);
-  return items.filter(x=>x.title!=="Buch" || (x.body||"").trim());
-}
 paintBuch=async function(){
   const page=$("#page"); if(!page)return;
   page.innerHTML="<p class='sub'>Buch lädt …</p>";
@@ -159,21 +133,5 @@ paintBuch=async function(){
       return;
     }
   }
-  const items=buchKapitel(BOOKTEXT);
-  page.innerHTML="";
-  const toc=document.createElement("div");
-  toc.className="toc";
-  toc.innerHTML=items.map((x,i)=>'<a href="#c'+i+'">'+esc(x.title)+'</a>').join("");
-  page.appendChild(toc);
-  items.forEach((x,i)=>{
-    const sec=document.createElement("sec");
-    sec.id="c"+i;
-    sec.innerHTML="<h3>"+esc(x.title)+"</h3><div class='words'>"+esc(x.body)+"</div>";
-    page.appendChild(sec);
-  });
-  toc.querySelectorAll("a").forEach(a=>a.onclick=ev=>{
-    ev.preventDefault();
-    const t=document.querySelector(a.getAttribute("href"));
-    if(t) t.scrollIntoView({behavior:"smooth",block:"start"});
-  });
+  page.innerHTML="<div class='words pdfbook'>"+esc(BOOKTEXT)+"</div>";
 };
