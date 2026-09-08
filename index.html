@@ -22,6 +22,10 @@ nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.28rem;margin-top:.85re
 nav button{border:0;background:transparent;color:var(--dim);border-radius:.9rem;padding:.42rem .12rem .38rem;font:inherit;font-size:.58rem;letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;gap:.18rem}
 nav button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;font-weight:650;box-shadow:0 6px 16px rgba(150,80,210,.28)}
+.app.runmode .doll,.app.runmode .brand,.app.runmode .sub{display:none}
+.app.runmode nav{margin-top:.2rem;padding:.18rem}
+.app.runmode nav button svg{width:14px;height:14px}
+.app.runmode header{padding-top:calc(.35rem + env(safe-area-inset-top));padding-bottom:.4rem}
 main{flex:1;padding:0 1.05rem 1.4rem}
 .hero h2{font-family:Georgia,serif;font-weight:500;margin:.4rem 0}
 .card{background:var(--elev);border:1px solid var(--line);border-radius:1.1rem;padding:1rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.4rem 0}
@@ -42,7 +46,11 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 .entry{border-top:1px solid var(--line);padding:.8rem 0}
 .meta{color:#8d6ea3;font-size:.72rem}
 .book h3{font-family:Georgia,serif;color:#c9a0ff;font-weight:500}
-.book sec{display:block;margin:0 0 1.4rem}
+.book sec{display:block;margin:0 0 1.4rem;scroll-margin-top:5.5rem}
+.toc{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 1rem}
+.toc a{color:var(--pink);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:.28rem .6rem;font-size:.72rem}
+.shots{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.shots img{width:5.2rem;height:5.2rem;object-fit:cover;border-radius:.7rem;border:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -73,7 +81,7 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 <div id="notesOnly"></div></section>
 <section class="screen" id="log"><div class="hero"><h2>Chronik</h2></div><div id="entries"></div></section>
 <section class="screen" id="buch">
-<div class="hero"><h2>Buch</h2><p class="sub">Taschenbuch · Kapitel lesen</p></div>
+<div class="hero"><h2>Buch</h2><p class="sub">Kapitel antippen</p></div>
 <article class="card book" id="page"></article>
 </section>
 <section class="screen" id="after"><div class="hero" style="text-align:center;padding:2rem 0"><p class="brand">SO SEI ES</p></div>
@@ -88,4 +96,5 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 <script src="ritual-filter.js"></script>
 <script src="ritual-log.js"></script>
 <script src="ritual-notes.js"></script>
+<script src="ritual-plus.js"></script>
 </body></html>
