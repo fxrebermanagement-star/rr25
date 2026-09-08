@@ -1,1 +1,1 @@
-document.querySelectorAll("img.doll").forEach(function(el){el.src="rune.svg?v=3";});
+document.querySelectorAll("img.doll").forEach(function(el){el.src="rune.svg?v=4";});
