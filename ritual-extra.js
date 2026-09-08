@@ -1,5 +1,6 @@
 (function(){
   var DAYS=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  var ZKEY="rr25_369";
   var FEST=[
     [2,1,"Imbolc","Licht zurück. Samen innen. Nicht hetzen. Still halten und wärmen."],
     [3,20,"Ostara","Tag und Nacht gleich. Neu setzen. Was keimt, darf wachsen."],
@@ -8,9 +9,50 @@
     [8,1,"Lughnasadh","Erste Ernte. Nehmen was reif ist. Den Rest stehen lassen."],
     [9,22,"Mabon","Wieder Gleichstand. Abgeben. Was fällt, darf fallen."],
     [10,31,"Samhain","Schleier dünn. Ahnen ehren. Kontakt kurz. Dann schliessen."],
-    [12,21,"Jul","Tiefste Nacht. Licht hüten. Innen bleiben. Neu beginnen." ]
+    [12,21,"Jul","Tiefste Nacht. Licht hüten. Innen bleiben. Neu beginnen."]
   ];
   function day(){ return new Date(); }
+  function ymd(){
+    var n=day();
+    return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+  }
+  function zLoad(){
+    try{
+      var x=JSON.parse(localStorage.getItem(ZKEY)||"{}");
+      if(x.d!==ymd()) return {d:ymd(),n3:0,n6:0,n9:0};
+      return {d:x.d,n3:x.n3|0,n6:x.n6|0,n9:x.n9|0};
+    }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
+  }
+  function zSave(z){ localStorage.setItem(ZKEY, JSON.stringify(z)); }
+  function zBox(){
+    var el=document.getElementById("z369");
+    if(el) return el;
+    el=document.createElement("div");
+    el.id="z369";
+    var kast=document.getElementById("kasten");
+    if(kast&&kast.parentNode) kast.parentNode.insertBefore(el, kast.nextSibling);
+    else {
+      var home=document.getElementById("home");
+      if(home) home.appendChild(el);
+    }
+    return el;
+  }
+  function zPaint(){
+    var z=zLoad();
+    var el=zBox();
+    el.innerHTML=
+      '<button type="button" data-z="n3" class="'+(z.n3>=3?"on":"")+'">3 <span>'+z.n3+'/3</span></button>'+
+      '<button type="button" data-z="n6" class="'+(z.n6>=6?"on":"")+'">6 <span>'+z.n6+'/6</span></button>'+
+      '<button type="button" data-z="n9" class="'+(z.n9>=9?"on":"")+'">9 <span>'+z.n9+'/9</span></button>';
+  }
+  function zTap(key){
+    var max={n3:3,n6:6,n9:9};
+    var z=zLoad();
+    if(z[key]>=max[key]) z[key]=0;
+    else z[key]++;
+    zSave(z);
+    zPaint();
+  }
   function nextFest(n){
     var y=n.getFullYear();
     var list=[];
@@ -115,13 +157,21 @@
     "#festHint.on{display:block}",
     "#festHint b{display:block;font-family:Georgia,serif;font-size:1rem}",
     "#festHint small{display:block;color:#c4a4d6;margin:.12rem 0 .35rem}",
-    "#festHint p{margin:0;font-family:Georgia,serif;line-height:1.5}"
+    "#festHint p{margin:0;font-family:Georgia,serif;line-height:1.5}",
+    "#z369{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.55rem 0 .15rem}",
+    "#z369 button{border:1px solid rgba(232,160,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
+    "#z369 button span{display:block;font-size:.68rem;color:#c4a4d6;margin-top:.08rem}",
+    "#z369 button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;border-color:transparent}",
+    "#z369 button.on span{color:#14081c}"
   ].join("");
   document.head.appendChild(css);
   document.addEventListener("click",function(e){
     if(!e.target) return;
     if(e.target.id==="sigilSave") saveSigil();
     if(e.target.id==="sunWrap"||(e.target.closest&&e.target.closest("#sunWrap"))) toggleFest();
+    var z=e.target.closest&&e.target.closest("#z369 [data-z]");
+    if(z) zTap(z.getAttribute("data-z"));
   });
   paintHead();
+  zPaint();
 })();
