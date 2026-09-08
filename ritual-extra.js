@@ -24,22 +24,27 @@
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function zSave(z){ localStorage.setItem(ZKEY, JSON.stringify(z)); }
+  function zClearHome(){
+    var home=document.getElementById("home");
+    if(!home) return;
+    home.querySelectorAll("#z369").forEach(function(n){ n.remove(); });
+  }
   function zBox(){
-    var el=document.getElementById("z369");
-    if(el) return el;
-    el=document.createElement("div");
-    el.id="z369";
-    var kast=document.getElementById("kasten");
-    if(kast&&kast.parentNode) kast.parentNode.insertBefore(el, kast.nextSibling);
-    else {
-      var home=document.getElementById("home");
-      if(home) home.appendChild(el);
+    var run=document.getElementById("run");
+    if(!run||!run.classList.contains("on")) return null;
+    var el=run.querySelector("#z369");
+    if(!el){
+      el=document.createElement("div");
+      el.id="z369";
+      run.appendChild(el);
     }
     return el;
   }
   function zPaint(){
-    var z=zLoad();
+    zClearHome();
     var el=zBox();
+    if(!el) return;
+    var z=zLoad();
     el.innerHTML=
       '<button type="button" data-z="n3" class="'+(z.n3>=3?"on":"")+'">3 <span>'+z.n3+'/3</span></button>'+
       '<button type="button" data-z="n6" class="'+(z.n6>=6?"on":"")+'">6 <span>'+z.n6+'/6</span></button>'+
@@ -158,11 +163,12 @@
     "#festHint b{display:block;font-family:Georgia,serif;font-size:1rem}",
     "#festHint small{display:block;color:#c4a4d6;margin:.12rem 0 .35rem}",
     "#festHint p{margin:0;font-family:Georgia,serif;line-height:1.5}",
-    "#z369{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.55rem 0 .15rem}",
-    "#z369 button{border:1px solid rgba(232,160,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
-    "#z369 button span{display:block;font-size:.68rem;color:#c4a4d6;margin-top:.08rem}",
-    "#z369 button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;border-color:transparent}",
-    "#z369 button.on span{color:#14081c}"
+    "#run #z369{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.7rem 0 .2rem}",
+    "#run #z369 button{border:1px solid rgba(232,160,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
+    "#run #z369 button span{display:block;font-size:.68rem;color:#c4a4d6;margin-top:.08rem}",
+    "#run #z369 button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;border-color:transparent}",
+    "#run #z369 button.on span{color:#14081c}",
+    "#home #z369{display:none!important}"
   ].join("");
   document.head.appendChild(css);
   document.addEventListener("click",function(e){
@@ -170,8 +176,22 @@
     if(e.target.id==="sigilSave") saveSigil();
     if(e.target.id==="sunWrap"||(e.target.closest&&e.target.closest("#sunWrap"))) toggleFest();
     var z=e.target.closest&&e.target.closest("#z369 [data-z]");
-    if(z) zTap(z.getAttribute("data-z"));
+    if(z){ e.stopPropagation(); zTap(z.getAttribute("data-z")); }
+    setTimeout(zPaint,40);
   });
+  var run=document.getElementById("run");
+  if(run&&window.MutationObserver){
+    new MutationObserver(function(){ setTimeout(zPaint,20); }).observe(run,{childList:true});
+  }
+  if(typeof show==="function"){
+    var _show=show;
+    show=function(id){
+      var r=_show.apply(this,arguments);
+      zClearHome();
+      if(id==="run") setTimeout(zPaint,30);
+      return r;
+    };
+  }
   paintHead();
-  zPaint();
+  zClearHome();
 })();
