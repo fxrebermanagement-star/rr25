@@ -19,11 +19,15 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
     }
     ok.textContent=done()?"✓":"";
   }
+  if(typeof openR==="function"){
+    var _open=openR;
+    openR=function(id,wer){ window._rid=id; return _open(id,wer); };
+  }
   var s=document.createElement("style");
   s.textContent=[
     '#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}',
     "#pinDank{position:relative;padding-right:2.6rem}",
-    "#pinDank .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.55rem;height:1.55rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#14081c;background:transparent}",
+    "#pinDank .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.55rem;height:1.55rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.95rem;color:#14081c;background:transparent;pointer-events:none}",
     "#pinDank.done .ok{background:linear-gradient(165deg,#9650d2,#e6aaff);border-color:transparent;font-weight:700}"
   ].join("");
   document.head.appendChild(s);
@@ -47,27 +51,31 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
       pin.id="pinDank";
       pin.className="card";
       pin.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit · Liebe · Geld · Schutz</small><span class=\"ok\"></span>";
-      pin.addEventListener("click",function(e){
-        if(e.target&&e.target.classList.contains("ok")){
-          e.stopPropagation();
-          if(done()) localStorage.removeItem(KEY); else setDone();
-          paint();
-          return;
-        }
-        fromPlan=null; openR("dank");
-      });
+      pin.onclick=function(){ fromPlan=null; openR("dank"); };
       home.insertBefore(pin, cats);
     }
     document.querySelectorAll('#list [data-id="dank"]').forEach(function(el){ el.remove(); });
     paint();
   };
+  function maybe(){
+    if(window._rid==="dank") setDone();
+    var h=document.querySelector("#run .sub");
+    if(h&&/Dankesritual/i.test(h.textContent)) setDone();
+  }
   document.addEventListener("click",function(e){
-    var t=e.target;
-    if(!t) return;
-    if(t.id==="afterGo"||(t.closest&&t.closest("#afterGo"))){
-      var h=document.querySelector("#run h2");
-      if(h&&/Dankesritual/i.test(h.textContent)) setDone();
+    var t=e.target; if(!t) return;
+    var id=t.id||"";
+    if(id==="next"||id==="afterGo"||id==="afterStay"){
+      setTimeout(maybe,30);
     }
-  });
+  },true);
+  var _show=typeof show==="function"?show:null;
+  if(_show){
+    show=function(id){
+      var r=_show.apply(this,arguments);
+      if(id==="after"||id==="bye"||id==="home") maybe();
+      return r;
+    };
+  }
   renderList();
 })();
