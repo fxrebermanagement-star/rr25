@@ -1,4 +1,5 @@
 (function(){
+  var KEY="rr25_sigil";
   var L={
     B:[[.3,.15],[.3,.85],[.3,.15],[.7,.28],[.3,.5],[.7,.72],[.3,.85]],
     C:[[.72,.22],[.3,.2],[.28,.8],[.72,.78]],
@@ -28,6 +29,8 @@
     for(var i=0;i<s.length;i++){var c=s[i]; if(!seen[c]){seen[c]=1;o+=c}}
     return o;
   }
+  function loadS(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
+  function saveS(d){localStorage.setItem(KEY,JSON.stringify(d))}
   function canvas(){
     var c=document.getElementById("sigilC");
     if(!c) return null;
@@ -41,7 +44,7 @@
     var c=canvas(); if(!c) return;
     var ctx=c.getContext("2d"),w=c.width,h=c.height;
     ctx.fillStyle="#07040d"; ctx.fillRect(0,0,w,h);
-    if(!letters) letters="X";
+    if(!letters) return;
     ctx.strokeStyle="#ff6b82"; ctx.lineWidth=Math.max(3,w/80); ctx.lineCap="round"; ctx.lineJoin="round";
     var n=letters.length;
     for(var i=0;i<n;i++){
@@ -58,19 +61,35 @@
       ctx.restore();
     }
   }
+  function field(){
+    return document.getElementById("sigilT")||document.querySelector("#underR input");
+  }
   function text(){
-    var el=document.getElementById("sigilT")||document.querySelector("#sigilTools input")||document.querySelector("#sigilBox input");
+    var el=field();
     return el?el.value:"";
   }
-  function go(){ draw(red(text())); }
+  function go(){
+    var t=text();
+    var letters=red(t);
+    draw(letters);
+    saveS({t:t,l:letters});
+  }
+  function restore(){
+    var d=loadS();
+    var el=field();
+    if(el&&d.t) el.value=d.t;
+    if(d.l) draw(d.l);
+  }
   window._sigilGo=go;
   document.addEventListener("click",function(e){
-    if(e.target&&(e.target.id==="sigilGo"||e.target.id==="sigilGo2"||(e.target.closest&&e.target.closest("#sigilGo,#sigilGo2,#sigilTools button")))){
+    if(e.target&&(e.target.id==="sigilGo"||(e.target.closest&&e.target.closest("#sigilGo")))){
       e.preventDefault();
       go();
     }
   },true);
   document.addEventListener("keydown",function(e){
-    if(e.key==="Enter"&&e.target&&(e.target.id==="sigilT"||e.target.id==="sigilT2")) go();
+    if(e.key==="Enter"&&e.target&&e.target.id==="sigilT") go();
   });
+  setTimeout(restore,80);
+  setTimeout(restore,400);
 })();
