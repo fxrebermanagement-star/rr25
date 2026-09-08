@@ -20,8 +20,7 @@
     W:[[.18,.15],[.32,.85],[.5,.4],[.68,.85],[.82,.15]],
     X:[[.25,.18],[.75,.82],[.75,.18],[.25,.82]],
     Y:[[.22,.15],[.5,.5],[.78,.15],[.5,.5],[.5,.85]],
-    Z:[[.25,.18],[.75,.18],[.25,.82],[.75,.82]],
-    ß:[[.3,.15],[.3,.85],[.55,.85],[.3,.7]]
+    Z:[[.25,.18],[.75,.18],[.25,.82],[.75,.82]]
   };
   function red(s){
     s=String(s||"").toUpperCase().replace(/[AEIOUÄÖÜ\s0-9.,;:!?'"\-]/g,"");
@@ -55,11 +54,15 @@
     var raw=(document.getElementById("sigilT")||{}).value||"";
     var s=red(raw);
     var lab=document.getElementById("sigilL");
-    if(lab) lab.textContent=s||"—";
+    if(lab) lab.textContent=s||"";
     draw(s);
   }
+  var box=document.getElementById("sigilBox");
+  var open=document.getElementById("sigilOpen");
+  if(open) open.onclick=function(){
+    if(!box) return;
+    box.classList.toggle("on");
+  };
   var btn=document.getElementById("sigilGo");
   if(btn) btn.onclick=go;
-  var inp=document.getElementById("sigilT");
-  if(inp) inp.addEventListener("keydown",function(e){ if(e.key==="Enter") go(); });
 })();
