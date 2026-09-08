@@ -1,15 +1,25 @@
 {
-  "id": "https://fxrebermanagement-star.github.io/rr25/rune1",
+  "id": "/rr25/",
   "name": "Rolf Reber 25",
   "short_name": "RR25",
-  "start_url": "./?v=rune1",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#07040d",
   "theme_color": "#06030c",
   "lang": "de",
   "icons": [
-    {"src": "./rune.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
-    {"src": "./icon.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable"}
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
   ]
 }
