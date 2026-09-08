@@ -23,10 +23,7 @@
   }
   function sunInfo(){
     var n=day();
-    var h=n.getHours();
-    var sym=(h>=6&&h<20)?"☀️":"🌙";
-    var dat=DAYS[n.getDay()]+" "+n.getDate()+"."+(n.getMonth()+1)+".";
-    return {sym:sym,dat:dat};
+    return {sym:"☀️", dat:DAYS[n.getDay()]+" "+n.getDate()+"."+(n.getMonth()+1)+"."};
   }
   function paintHead(){
     var m=moonInfo();
@@ -64,14 +61,6 @@
     var b=document.getElementById("sigilSave");
     if(b){ b.textContent="Abgelegt"; setTimeout(function(){ b.textContent="Ablegen"; },1400); }
   }
-  var css=document.createElement("style");
-  css.textContent=[
-    "#moonWrap,#sunWrap{width:4.4rem}",
-    "#sunWrap{position:absolute;right:0;top:0;text-align:center}",
-    "#sunSym,#moonSym{display:block;font-size:2.05rem;line-height:1}",
-    "#sunTxt,#moonTxt{display:block;margin-top:.22rem;font-size:.68rem;letter-spacing:.02em;color:#c4a4d6;line-height:1.25}"
-  ].join("");
-  document.head.appendChild(css);
   document.addEventListener("click",function(e){
     if(e.target&&e.target.id==="sigilSave") saveSigil();
   });
