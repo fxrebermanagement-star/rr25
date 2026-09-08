@@ -50,19 +50,14 @@
       ctx.restore();
     }
   }
-  function go(){
+  window._sigilGo=function(){
     var raw=(document.getElementById("sigilT")||{}).value||"";
-    var s=red(raw);
-    var lab=document.getElementById("sigilL");
-    if(lab) lab.textContent=s||"";
-    draw(s);
-  }
-  var box=document.getElementById("sigilBox");
-  var open=document.getElementById("sigilOpen");
-  if(open) open.onclick=function(){
-    if(!box) return;
-    box.classList.toggle("on");
+    draw(red(raw));
   };
-  var btn=document.getElementById("sigilGo");
-  if(btn) btn.onclick=go;
+  function hook(){
+    var btn=document.getElementById("sigilGo");
+    if(btn) btn.onclick=window._sigilGo;
+  }
+  hook();
+  setTimeout(hook,300);
 })();
