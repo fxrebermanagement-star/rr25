@@ -9,12 +9,13 @@
 <title>Rolf Reber 25</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
 <style>
 :root{--bg:#07040d;--elev:rgba(56,24,86,.5);--line:rgba(232,160,255,.22);--ink:#f6eaff;--dim:#c4a4d6;--pink:#ff7ad9}
 *{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#07040d;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
 .app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
 header{padding:calc(.7rem + env(safe-area-inset-top)) 1.1rem .75rem;position:sticky;top:0;background:#0c0614}
-.doll{width:64px;height:64px;object-fit:cover;border-radius:18px;margin:0 auto .35rem;display:block}
+.doll{width:72px;height:72px;object-fit:cover;border-radius:20px;margin:0 auto .35rem;display:block;border:1px solid rgba(255,122,217,.3);background:#12081c}
 .brand{font-family:Georgia,serif;letter-spacing:.28em;font-size:.7rem;color:var(--pink);text-align:center;margin:0}
 .sub{color:var(--dim);font-size:.75rem;text-align:center}
 nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.22rem;margin-top:.7rem}
@@ -78,5 +79,6 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 <section class="screen" id="bye"><div class="hero" style="text-align:center;padding:4rem 0"><p class="brand">SO SEI ES</p>
 <div class="row"><button type="button" class="btn ghost" id="stay">Bleiben</button></div></div></section>
 </main></div>
+<script src="doll.js"></script>
 <script src="ritual-core.js"></script>
 </body></html>
