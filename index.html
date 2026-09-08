@@ -58,12 +58,14 @@ textarea{min-height:6.5rem}
 #after .hero{padding:2.4rem 0 1rem}
 #after .brand{font-size:.9rem;letter-spacing:.36em}
 #home{padding-top:.35rem}
+#sigilC{width:100%;max-width:16rem;height:auto;aspect-ratio:1;display:block;margin:.6rem auto 0;border-radius:1.1rem;border:1px solid var(--line);background:#07040d}
+#sigilL{text-align:center;letter-spacing:.2em}
 </style>
 </head>
 <body>
 <div class="app">
 <header>
-<img class="doll" alt="" src="icon.svg">
+<img class="doll" alt="" src="rune.svg">
 <p class="brand">ROLF REBER 25</p>
 <p class="sub">eigene App</p>
 <nav>
@@ -83,6 +85,13 @@ textarea{min-height:6.5rem}
 <button type="button" class="btn primary" id="kTag">Karte des Tages</button>
 <button type="button" class="btn ghost" id="kDrei">Drei ziehen</button>
 </div>
+</div>
+<div class="card" id="sigilBox">
+<p class="group">Sigil</p>
+<input id="sigilT" placeholder="Absicht in einem Satz">
+<div class="row"><button type="button" class="btn ghost" id="sigilGo">Zeichen</button></div>
+<p class="sub" id="sigilL"></p>
+<canvas id="sigilC" width="360" height="360"></canvas>
 </div>
 <div id="cats"></div><div id="list"></div>
 </section>
@@ -112,6 +121,7 @@ textarea{min-height:6.5rem}
 <script src="ritual-drop.js"></script>
 <script src="ritual-filter.js?v=4"></script>
 <script src="ritual-karten.js?v=3"></script>
+<script src="ritual-sigil.js"></script>
 <script src="ritual-log.js"></script>
 <script src="ritual-notes.js"></script>
 <script src="ritual-plus.js?v=2"></script>
