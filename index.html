@@ -59,10 +59,11 @@ textarea{min-height:5.2rem}
 #after .brand{font-size:.82rem;letter-spacing:.36em}
 #home{padding-top:.2rem}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;align-items:stretch;margin-top:.15rem}
-.duo .kcard,.duo #sigilBox{margin:0;min-height:8.2rem}
-#sigilBox{display:block;padding:.55rem .5rem}
-#sigilC{width:6.6rem;height:6.6rem;display:block;margin:.2rem auto 0;border-radius:.7rem;border:1px solid var(--line);background:#07040d}
-#sigilL{text-align:center;letter-spacing:.14em;font-size:.62rem;min-height:.8rem}
+#kOut,#sigilBox{height:12.2rem;min-height:12.2rem;margin:0}
+#kOut .kcard{height:12.2rem;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:.55rem .45rem}
+#sigilBox{display:flex;flex-direction:column;padding:.45rem .4rem}
+#sigilC{width:5.6rem;height:5.6rem;display:block;margin:.15rem auto 0;border-radius:.7rem;border:1px solid var(--line);background:#07040d}
+#sigilL{text-align:center;letter-spacing:.14em;font-size:.62rem;min-height:.7rem}
 #sigilT{padding:.4rem .5rem;margin:.15rem 0;font-size:.78rem}
 .kcard{background:linear-gradient(180deg,rgba(72,28,110,.7),rgba(28,10,42,.85));border:1px solid rgba(232,160,255,.28);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
 .kcard .group{margin:0 0 .15rem}
@@ -132,6 +133,7 @@ textarea{min-height:5.2rem}
 <script src="ritual-filter.js?v=4"></script>
 <script src="ritual-karten.js?v=3"></script>
 <script src="ritual-sigil.js?v=2"></script>
+<script src="ritual-size.js"></script>
 <script src="ritual-log.js"></script>
 <script src="ritual-notes.js"></script>
 <script src="ritual-plus.js?v=2"></script>
