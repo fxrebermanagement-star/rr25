@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07040d">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RR25">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Rolf Reber 25</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="https://fxrebermanagement-star.github.io/universum/icons/icon-192.png">
+<link rel="icon" href="https://fxrebermanagement-star.github.io/universum/icons/icon-192.png">
+<style>
+:root{--bg:#07040d;--elev:rgba(56,24,86,.5);--line:rgba(232,160,255,.22);--ink:#f6eaff;--dim:#c4a4d6;--pink:#ff7ad9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#07040d;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+.app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+header{padding:calc(.7rem + env(safe-area-inset-top)) 1.1rem .75rem;position:sticky;top:0;background:#0c0614}
+.doll{width:64px;height:64px;object-fit:cover;border-radius:18px;margin:0 auto .35rem;display:block}
+.brand{font-family:Georgia,serif;letter-spacing:.28em;font-size:.7rem;color:var(--pink);text-align:center;margin:0}
+.sub{color:var(--dim);font-size:.75rem;text-align:center}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.22rem;margin-top:.7rem}
+nav button{border:0;background:var(--elev);color:var(--dim);border-radius:999px;padding:.5rem 0;font:inherit;font-size:.64rem}
+nav button.on{background:linear-gradient(135deg,#9650d2,#e6aaff);color:#14081c;font-weight:650}
+main{flex:1;padding:0 1.05rem 1.4rem}
+.hero h2{font-family:Georgia,serif;font-weight:500;font-size:1.35rem;margin:.4rem 0}
+.card{background:var(--elev);border:1px solid var(--line);border-radius:1.1rem;padding:1rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.4rem 0}
+.card b{display:block;font-family:Georgia,serif}
+.card small{display:block;color:var(--dim);margin-top:.2rem}
+.screen{display:none}.screen.on{display:block}
+.words{font-family:Georgia,serif;font-size:1.12rem;line-height:1.55}
+input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line);color:var(--ink);border-radius:.8rem;padding:.75rem;font:inherit;margin:.35rem 0}
+textarea{min-height:4.5rem}
+.row{display:flex;gap:.5rem;margin-top:1rem}
+.btn{flex:1;border:0;border-radius:999px;padding:.85rem;font:inherit;font-weight:650}
+.primary{background:linear-gradient(135deg,#9650d2,#e6aaff);color:#14081c}
+.ghost{background:var(--elev);color:var(--ink)}
+.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.35rem .7rem;font:inherit;font-size:.72rem;margin:0 .3rem .4rem 0}
+.chip.on{color:var(--pink);border-color:#ff7ad9}
+.group{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.check{display:flex;gap:.5rem;color:var(--dim);margin:1rem 0}
+.msg{color:var(--pink);font-style:italic;min-height:1.2rem}
+.entry{border-top:1px solid var(--line);padding:.8rem 0}
+.meta{color:#8d6ea3;font-size:.72rem}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<img class="doll" alt="" src="https://fxrebermanagement-star.github.io/universum/icons/icon-192.png">
+<p class="brand">ROLF REBER 25</p>
+<p class="sub">nur dieses Gerät</p>
+<nav>
+<button type="button" class="on" data-v="home">Rituale</button>
+<button type="button" data-v="geplant">Geplant</button>
+<button type="button" data-v="notiz">Notiz</button>
+<button type="button" data-v="log">Chronik</button>
+<button type="button" data-v="buch">Buch</button>
+</nav>
+</header>
+<main>
+<section class="screen on" id="home">
+<div class="hero"><h2>Was steht?</h2></div>
+<button type="button" class="btn primary" id="quick" style="width:100%">Feld zu · So sei es</button>
+<p class="msg" id="qmsg"></p>
+<div id="cats"></div>
+<div id="list"></div>
+</section>
+<section class="screen" id="run"></section>
+<section class="screen" id="geplant">
+<div class="hero"><h2>Geplant</h2></div>
+<div class="card"><select id="plR"></select><input id="plW" placeholder="Für wen">
+<div class="row"><button type="button" class="btn ghost" id="plAdd">Vormerken</button></div>
+<div id="plList"></div></div>
+</section>
+<section class="screen" id="notiz">
+<div class="hero"><h2>Notiz</h2></div>
+<div class="card"><textarea id="noteT" placeholder="Was merken"></textarea>
+<div class="row"><button type="button" class="btn primary" id="noteAdd">Speichern</button></div>
+<div id="notesOnly"></div></div>
+</section>
+<section class="screen" id="log">
+<div class="hero"><h2>Chronik</h2></div>
+<div id="entries"></div>
+</section>
+<section class="screen" id="buch">
+<div class="hero"><h2>Buch</h2><p class="sub">Rituale sind bereit.</p></div>
+</section>
+<section class="screen" id="after">
+<div class="hero" style="text-align:center;padding:2rem 0"><p class="brand">SO SEI ES</p></div>
+<div class="row"><button type="button" class="btn ghost" id="afterStay">Später</button><button type="button" class="btn primary" id="afterGo">Übergeben</button></div>
+</section>
+<section class="screen" id="bye">
+<div class="hero" style="text-align:center;padding:4rem 0"><p class="brand">SO SEI ES</p>
+<div class="row"><button type="button" class="btn ghost" id="stay">Bleiben</button></div></div>
+</section>
+</main>
+</div>
+<script src="ritual-core.js"></script>
+</body>
+</html>
