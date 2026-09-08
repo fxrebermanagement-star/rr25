@@ -40,14 +40,9 @@
   function html(c,label){
     return '<div class="kcard"><span class="group">'+label+'</span><div class="kz">'+(c.z||"✦")+'</div><b>'+c.t+'</b><small>'+c.x+'</small></div>';
   }
-  function stack(){
-    var el=document.getElementById("kDreiStack");
-    if(el) return el;
-    el=document.createElement("div");
-    el.id="kDreiStack";
-    var k=document.getElementById("kasten");
-    if(k) k.appendChild(el);
-    return el;
+  function go(id){
+    if(typeof show==="function"){ show(id); return; }
+    document.querySelectorAll(".screen").forEach(function(s){ s.classList.toggle("on", s.id===id); });
   }
   function drawDay(){
     var d=loadK();
@@ -57,23 +52,20 @@
   function showOne(){
     var out=document.getElementById("kOut");
     if(out) out.innerHTML=html(drawDay(),"Heute");
-    var st=document.getElementById("kDreiStack");
-    if(st) st.innerHTML="";
+    var extra=document.getElementById("kDreiStack");
+    if(extra) extra.innerHTML="";
   }
   function showDrei(){
     var a=pick([]),b=pick([a.t]),c=pick([a.t,b.t]);
-    var out=document.getElementById("kOut");
-    if(out) out.innerHTML=html(a,"Lage");
-    stack().innerHTML=html(b,"Block")+html(c,"Weg");
+    var box=document.getElementById("dreiList");
+    if(box) box.innerHTML=html(a,"Lage")+html(b,"Block")+html(c,"Weg");
+    go("drei");
   }
-  var css=document.createElement("style");
-  css.textContent="#kOut{overflow:hidden}#kDreiStack .kcard{height:auto;margin:.35rem 0;padding:.7rem .7rem}";
-  document.head.appendChild(css);
   document.addEventListener("click",function(e){
-    var t=e.target;
-    if(!t) return;
+    var t=e.target; if(!t) return;
     if(t.id==="kTag"||(t.closest&&t.closest("#kTag"))) showOne();
     if(t.id==="kDrei"||(t.closest&&t.closest("#kDrei"))) showDrei();
+    if(t.id==="dreiBack"||(t.closest&&t.closest("#dreiBack"))) go("home");
   });
   var d=loadK();
   if(d.day===today()&&d.one){
