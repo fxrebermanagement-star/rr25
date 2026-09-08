@@ -11,42 +11,51 @@
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
-:root{--bg:#07040d;--elev:rgba(56,24,86,.5);--line:rgba(232,160,255,.22);--ink:#f6eaff;--dim:#c4a4d6;--pink:#ff7ad9}
-*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#07040d;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+:root{--bg:#07040d;--elev:rgba(56,24,86,.55);--line:rgba(232,160,255,.2);--ink:#f6eaff;--dim:#c4a4d6;--pink:#ff7ad9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#07040d;color:var(--ink);font:16px/1.5 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 .app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
-header{padding:calc(.7rem + env(safe-area-inset-top)) 1.1rem .75rem;position:sticky;top:0;background:#0c0614;z-index:5}
-.doll{width:72px;height:72px;object-fit:cover;border-radius:20px;margin:0 auto .35rem;display:block;border:1px solid rgba(255,122,217,.3);background:#12081c}
-.brand{font-family:Georgia,serif;letter-spacing:.28em;font-size:.7rem;color:var(--pink);text-align:center;margin:0}
-.sub{color:var(--dim);font-size:.75rem;text-align:center}
-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.28rem;margin-top:.85rem;padding:.28rem;background:rgba(20,8,32,.7);border:1px solid var(--line);border-radius:1.15rem}
-nav button{border:0;background:transparent;color:var(--dim);border-radius:.9rem;padding:.42rem .12rem .38rem;font:inherit;font-size:.58rem;letter-spacing:.04em;display:flex;flex-direction:column;align-items:center;gap:.18rem}
-nav button svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-nav button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;font-weight:650;box-shadow:0 6px 16px rgba(150,80,210,.28)}
-.app.runmode .doll,.app.runmode .brand,.app.runmode .sub{display:none}
-.app.runmode nav{margin-top:.2rem;padding:.18rem}
-.app.runmode nav button svg{width:14px;height:14px}
-.app.runmode header{padding-top:calc(.35rem + env(safe-area-inset-top));padding-bottom:.4rem}
-main{flex:1;padding:0 1.05rem 1.4rem}
-.hero h2{font-family:Georgia,serif;font-weight:500;margin:.4rem 0}
-.card{background:var(--elev);border:1px solid var(--line);border-radius:1.1rem;padding:1rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.4rem 0}
-.card b{display:block;font-family:Georgia,serif}
-.card small{display:block;color:var(--dim);margin-top:.2rem}
+header{padding:calc(.55rem + env(safe-area-inset-top)) 1rem .7rem;position:sticky;top:0;background:rgba(12,6,20,.92);backdrop-filter:blur(14px);z-index:5}
+.doll{width:64px;height:64px;object-fit:cover;border-radius:18px;margin:0 auto .3rem;display:block;border:1px solid rgba(255,122,217,.32);background:#12081c}
+.brand{font-family:Georgia,serif;letter-spacing:.3em;font-size:.68rem;color:var(--pink);text-align:center;margin:0}
+.sub{color:var(--dim);font-size:.75rem;text-align:center;margin:.15rem 0 0}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.22rem;margin-top:.75rem;padding:.22rem;background:rgba(20,8,32,.75);border:1px solid var(--line);border-radius:1.1rem}
+nav button{border:0;background:transparent;color:var(--dim);border-radius:.85rem;padding:.4rem .1rem .34rem;font:inherit;font-size:.58rem;letter-spacing:.03em;display:flex;flex-direction:column;align-items:center;gap:.16rem}
+nav button svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;font-weight:650}
+.app.runmode header .doll,.app.runmode header .brand,.app.runmode header .sub{display:none}
+.app.runmode nav{margin-top:.15rem;padding:.16rem}
+.app.runmode header{padding-top:calc(.28rem + env(safe-area-inset-top));padding-bottom:.35rem}
+main{flex:1;padding:0 1rem calc(1.4rem + env(safe-area-inset-bottom))}
+.hero h2{font-family:Georgia,serif;font-weight:500;margin:.55rem 0 .35rem;font-size:1.55rem}
+#cats{display:flex;flex-wrap:wrap;gap:.35rem;margin:.15rem 0 .55rem}
+.card{background:var(--elev);border:1px solid var(--line);border-radius:1.05rem;padding:1rem 1.05rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.32rem 0}
+.card b{display:block;font-family:Georgia,serif;font-size:1.05rem}
+.card small{display:block;color:var(--dim);margin-top:.22rem;font-size:.82rem}
 .screen{display:none}.screen.on{display:block}
-.words{font-family:Georgia,serif;font-size:1.08rem;line-height:1.6;white-space:pre-wrap}
-input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line);color:var(--ink);border-radius:.8rem;padding:.75rem;font:inherit;margin:.35rem 0}
-.row{display:flex;gap:.5rem;margin-top:1rem}
-.btn{flex:1;border:0;border-radius:999px;padding:.85rem;font:inherit;font-weight:650}
+.words{font-family:Georgia,serif;font-size:1.12rem;line-height:1.65;white-space:pre-wrap}
+#run .words{font-size:1.16rem;line-height:1.7}
+#run .hero h2{font-size:1.35rem;margin:.2rem 0 .5rem}
+#run .sub{display:block!important;text-align:left;letter-spacing:.1em;text-transform:uppercase;font-size:.68rem;margin:0}
+.pbar{height:3px;background:rgba(232,160,255,.14);border-radius:99px;margin:.15rem 0 .85rem;overflow:hidden}
+.pbar::before{content:"";display:block;height:100%;width:var(--p,8%);background:linear-gradient(90deg,#9650d2,#ff7ad9);border-radius:99px}
+input,textarea,select{width:100%;background:#241330;border:1px solid var(--line);color:var(--ink);border-radius:.85rem;padding:.8rem .85rem;font:inherit;margin:.35rem 0}
+textarea{min-height:6.5rem}
+.row{display:flex;gap:.5rem;margin-top:1.05rem}
+.btn{flex:1;border:0;border-radius:999px;padding:.88rem;font:inherit;font-weight:650}
 .primary{background:linear-gradient(135deg,#9650d2,#e6aaff);color:#14081c}
 .ghost{background:var(--elev);color:var(--ink)}
-.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.35rem .7rem;margin:0 .3rem .4rem 0;font:inherit;font-size:.72rem}
-.chip.on{color:var(--pink)}
-.group{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--pink)}
+.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.38rem .72rem;margin:0;font:inherit;font-size:.72rem}
+.chip.on{color:#14081c;background:linear-gradient(165deg,#9650d2,#e6aaff);border-color:transparent;font-weight:650}
+.group{font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--pink);margin:1rem 0 .2rem}
 .check{display:none}
 .msg{color:var(--pink);font-style:italic}
-.entry{border-top:1px solid var(--line);padding:.8rem 0}
+.entry{border-top:1px solid var(--line);padding:.85rem 0}
 .meta{color:#8d6ea3;font-size:.72rem}
-.shots{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
-.shots img{width:5.2rem;height:5.2rem;object-fit:cover;border-radius:.7rem;border:1px solid var(--line)}
+.shots{display:flex;flex-wrap:wrap;gap:.4rem;margin:.55rem 0}
+.shots img{width:5.4rem;height:5.4rem;object-fit:cover;border-radius:.75rem;border:1px solid var(--line)}
+#page{padding:1.1rem 1.05rem 2rem}
+#after .hero{padding:2.4rem 0 1rem}
+#after .brand{font-size:.9rem;letter-spacing:.36em}
 </style>
 </head>
 <body>
@@ -80,7 +89,7 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 <div class="hero"><h2>Buch</h2><p class="sub">komplett zum Lesen</p></div>
 <article class="card book" id="page"></article>
 </section>
-<section class="screen" id="after"><div class="hero" style="text-align:center;padding:2rem 0"><p class="brand">SO SEI ES</p></div>
+<section class="screen" id="after"><div class="hero" style="text-align:center"><p class="brand">SO SEI ES</p></div>
 <div class="row"><button type="button" class="btn ghost" id="afterStay">Später</button><button type="button" class="btn primary" id="afterGo">Übergeben</button></div></section>
 <section class="screen" id="bye"><div class="hero" style="text-align:center;padding:4rem 0"><p class="brand">SO SEI ES</p>
 <div class="row"><button type="button" class="btn ghost" id="stay">Bleiben</button></div></div></section>
@@ -94,4 +103,5 @@ input,textarea,select{width:100%;background:#2a1438;border:1px solid var(--line)
 <script src="ritual-notes.js"></script>
 <script src="ritual-plus.js?v=2"></script>
 <script src="ritual-close.js"></script>
+<script src="ritual-polish.js"></script>
 </body></html>
