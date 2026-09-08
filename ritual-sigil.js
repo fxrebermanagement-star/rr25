@@ -28,36 +28,49 @@
     for(var i=0;i<s.length;i++){var c=s[i]; if(!seen[c]){seen[c]=1;o+=c}}
     return o;
   }
+  function canvas(){
+    var c=document.getElementById("sigilC");
+    if(!c) return null;
+    var r=c.getBoundingClientRect();
+    var w=Math.max(220, Math.round(r.width*2)||220);
+    var h=Math.max(220, Math.round(r.height*2)||220);
+    if(c.width!==w||c.height!==h){ c.width=w; c.height=h; }
+    return c;
+  }
   function draw(letters){
-    var c=document.getElementById("sigilC"); if(!c) return;
+    var c=canvas(); if(!c) return;
     var ctx=c.getContext("2d"),w=c.width,h=c.height;
     ctx.fillStyle="#07040d"; ctx.fillRect(0,0,w,h);
-    if(!letters) return;
-    ctx.strokeStyle="#ff6b82"; ctx.lineWidth=3; ctx.lineCap="round"; ctx.lineJoin="round";
+    if(!letters) letters="X";
+    ctx.strokeStyle="#ff6b82"; ctx.lineWidth=Math.max(3,w/80); ctx.lineCap="round"; ctx.lineJoin="round";
     var n=letters.length;
     for(var i=0;i<n;i++){
       var pts=L[letters[i]]||L.X;
-      var ang=(i/Math.max(n,1))*Math.PI*2;
       ctx.save();
       ctx.translate(w/2,h/2);
-      ctx.rotate(ang*0.35);
+      ctx.rotate((i/Math.max(n,1))*Math.PI*0.7);
       ctx.beginPath();
       pts.forEach(function(p,k){
-        var x=(p[0]-.5)*w*0.72, y=(p[1]-.5)*h*0.72;
+        var x=(p[0]-.5)*w*0.7, y=(p[1]-.5)*h*0.7;
         if(k) ctx.lineTo(x,y); else ctx.moveTo(x,y);
       });
       ctx.stroke();
       ctx.restore();
     }
   }
-  window._sigilGo=function(){
-    var raw=(document.getElementById("sigilT")||{}).value||"";
-    draw(red(raw));
-  };
-  function hook(){
-    var btn=document.getElementById("sigilGo");
-    if(btn) btn.onclick=window._sigilGo;
+  function text(){
+    var el=document.getElementById("sigilT")||document.querySelector("#sigilTools input")||document.querySelector("#sigilBox input");
+    return el?el.value:"";
   }
-  hook();
-  setTimeout(hook,300);
+  function go(){ draw(red(text())); }
+  window._sigilGo=go;
+  document.addEventListener("click",function(e){
+    if(e.target&&(e.target.id==="sigilGo"||e.target.id==="sigilGo2"||(e.target.closest&&e.target.closest("#sigilGo,#sigilGo2,#sigilTools button")))){
+      e.preventDefault();
+      go();
+    }
+  },true);
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Enter"&&e.target&&(e.target.id==="sigilT"||e.target.id==="sigilT2")) go();
+  });
 })();
