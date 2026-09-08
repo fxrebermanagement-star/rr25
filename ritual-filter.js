@@ -1,5 +1,8 @@
 if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
 (function(){
+  var s=document.createElement("style");
+  s.textContent='#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}';
+  document.head.appendChild(s);
   var old=renderList;
   renderList=function(){
     if(cat==="Alle"||cat==="Alltag") cat="Schutz";
@@ -7,6 +10,9 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
     ["Alle","Alltag"].forEach(function(name){
       var n=document.querySelector('#cats [data-cat="'+name+'"]');
       if(n) n.remove();
+    });
+    document.querySelectorAll("#list .group").forEach(function(g){
+      if(/Alltag/i.test(g.textContent)) g.remove();
     });
     var home=document.getElementById("home");
     var cats=document.getElementById("cats");
@@ -20,11 +26,7 @@ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat="Schutz";
       pin.onclick=function(){ fromPlan=null; openR("dank"); };
       home.insertBefore(pin, cats);
     }
-    document.querySelectorAll('#list [data-id="dank"]').forEach(function(el){
-      var prev=el.previousElementSibling;
-      el.remove();
-      if(prev&&prev.classList.contains("group")&&/Alltag/.test(prev.textContent)) prev.remove();
-    });
+    document.querySelectorAll('#list [data-id="dank"]').forEach(function(el){ el.remove(); });
   };
   renderList();
 })();
