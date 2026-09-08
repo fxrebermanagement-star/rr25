@@ -28,45 +28,45 @@
   ];
   function loadK(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
   function saveK(d){localStorage.setItem(KEY,JSON.stringify(d))}
-  function today(){return new Date().toISOString().slice(0,10)}
+  function today(){
+    var n=new Date();
+    return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+  }
   function pick(used){
     var pool=DECK.filter(function(c){return used.indexOf(c.t)<0});
     if(!pool.length) pool=DECK.slice();
     return pool[Math.floor(Math.random()*pool.length)];
   }
-  function cardHtml(c,label){
+  function html(c,label){
     return '<div class="kcard"><span class="group">'+label+'</span><b>'+c.t+'</b><small>'+c.x+'</small></div>';
   }
-  function mount(){
-    var home=document.getElementById("home");
-    if(!home||document.getElementById("kasten")) return;
-    var box=document.createElement("div");
-    box.id="kasten";
-    var cats=document.getElementById("cats");
-    if(cats) home.insertBefore(box, cats);
-    else home.appendChild(box);
+  function drawDay(){
     var d=loadK();
-    if(d.day===today()&&d.one) paint([d.one],["Heute"]);
-    else paint([],[]);
+    if(d.day!==today()||!d.one){ d.day=today(); d.one=pick([]); saveK(d); }
+    return d.one;
   }
-  function paint(cards,labels){
-    var box=document.getElementById("kasten"); if(!box) return;
-    box.innerHTML=cards.map(function(c,i){return cardHtml(c,labels[i]||"")}).join("")+
-      '<div class="row"><button type="button" class="btn primary" id="kTag">Karte des Tages</button><button type="button" class="btn ghost" id="kDrei">Drei ziehen</button></div>';
-    document.getElementById("kTag").onclick=function(){
-      var d=loadK();
-      if(d.day!==today()||!d.one){ d.day=today(); d.one=pick([]); saveK(d); }
-      paint([d.one],["Heute"]);
-    };
-    document.getElementById("kDrei").onclick=function(){
-      var a=pick([]), b=pick([a.t]), c=pick([a.t,b.t]);
-      paint([a,b,c],["Lage","Block","Weg"]);
-    };
+  function showOne(){
+    var out=document.getElementById("kOut");
+    if(!out) return;
+    var c=drawDay();
+    out.innerHTML=html(c,"Heute");
+  }
+  function showDrei(){
+    var out=document.getElementById("kOut");
+    if(!out) return;
+    var a=pick([]),b=pick([a.t]),c=pick([a.t,b.t]);
+    out.innerHTML=html(a,"Lage")+html(b,"Block")+html(c,"Weg");
   }
   var st=document.createElement("style");
-  st.textContent=".kcard{background:var(--elev);border:1px solid var(--line);border-radius:1.05rem;padding:.9rem 1rem;margin:.32rem 0}.kcard b{display:block;font-family:Georgia,serif;font-size:1.12rem;margin:.15rem 0 .25rem}.kcard small{display:block;color:var(--dim);line-height:1.45}";
+  st.textContent=".kcard{background:rgba(56,24,86,.55);border:1px solid rgba(232,160,255,.2);border-radius:1.05rem;padding:.9rem 1rem;margin:.32rem 0}.kcard b{display:block;font-family:Georgia,serif;font-size:1.12rem;margin:.15rem 0 .25rem}.kcard small{display:block;color:#c4a4d6;line-height:1.45}";
   document.head.appendChild(st);
-  mount();
-  var _s=show;
-  show=function(id){ _s(id); if(id==="home") mount(); };
+  var tag=document.getElementById("kTag");
+  var drei=document.getElementById("kDrei");
+  if(tag) tag.onclick=showOne;
+  if(drei) drei.onclick=showDrei;
+  var d=loadK();
+  if(d.day===today()&&d.one){
+    var out=document.getElementById("kOut");
+    if(out) out.innerHTML=html(d.one,"Heute");
+  }
 })();
