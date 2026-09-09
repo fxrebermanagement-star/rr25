@@ -1,8 +1,8 @@
 (function(){
   var on=false, raf=0;
-  var x=0.18, y=0.06, vx=0.012, vy=-0.004, spin=0, spinV=0.04;
+  var x=0, y=0, vx=0, vy=0, spin=0, spinV=0;
   var ax=0, ay=0, rot=0;
-  var trail=[];
+  var g0=null, b0=null, cal=[], trail=[];
   var c, ctx;
 
   function ready(){
@@ -21,20 +21,17 @@
     var w=c.width, h=c.height;
     ctx.clearRect(0,0,w,h);
     var cx=w/2, cy=h/2, R=Math.min(w,h)*0.36;
-
     var glow=ctx.createRadialGradient(cx,cy,8,cx,cy,R*1.25);
     glow.addColorStop(0,"rgba(150,80,210,.2)");
     glow.addColorStop(1,"rgba(0,0,0,0)");
     ctx.fillStyle=glow;
     ctx.beginPath(); ctx.arc(cx,cy,R*1.2,0,Math.PI*2); ctx.fill();
-
     ctx.strokeStyle="rgba(232,160,255,.18)";
     ctx.lineWidth=Math.max(1.2,w/220);
     ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.arc(cx,cy,R*0.55,0,Math.PI*2); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx, cy-R); ctx.lineTo(cx, cy+R); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx-R, cy); ctx.lineTo(cx+R, cy); ctx.stroke();
-
     ctx.fillStyle="rgba(230,170,255,.85)";
     ctx.font=(w*0.042)+"px Georgia,serif";
     ctx.textAlign="center"; ctx.textBaseline="middle";
@@ -43,9 +40,8 @@
     ctx.fillStyle="rgba(196,164,214,.8)";
     ctx.fillText("NEIN", cx-R-w*0.078, cy);
     ctx.fillText("NEIN", cx+R+w*0.078, cy);
-
     if(trail.length>1){
-      ctx.strokeStyle="rgba(255,122,217,.28)";
+      ctx.strokeStyle="rgba(255,122,217,.26)";
       ctx.lineWidth=2;
       ctx.beginPath();
       trail.forEach(function(p,i){
@@ -54,7 +50,6 @@
       });
       ctx.stroke();
     }
-
     var px=cx+x*R, py=cy-y*R;
     ctx.save();
     ctx.translate(px+5, py+8);
@@ -62,7 +57,6 @@
     ctx.fillStyle="rgba(0,0,0,.3)";
     ctx.beginPath(); ctx.arc(0,0,20,0,Math.PI*2); ctx.fill();
     ctx.restore();
-
     var r=Math.max(15,w/18);
     ctx.save();
     ctx.translate(px,py);
@@ -83,18 +77,18 @@
   }
 
   function step(){
-    var k=2.35, damp=0.988, dt=1/60;
-    vx += (-x*k + ax*2.4)*dt;
-    vy += (-y*k + ay*2.4)*dt;
+    var k=3.4, damp=0.975, dt=1/60;
+    vx += (-x*k + ax*0.85)*dt;
+    vy += (-y*k + ay*0.85)*dt;
     vx*=damp; vy*=damp;
     x += vx; y += vy;
     var m=Math.sqrt(x*x+y*y);
-    if(m>0.92){ x*=0.92/m; y*=0.92/m; vx*=-0.25; vy*=-0.25; }
-    spinV += rot*0.06;
-    spinV *= 0.987;
+    if(m>0.9){ x*=0.9/m; y*=0.9/m; vx*=-0.2; vy*=-0.2; }
+    spinV += rot*0.03;
+    spinV *= 0.97;
     spin += spinV;
     trail.push({x:x,y:y});
-    if(trail.length>70) trail.shift();
+    if(trail.length>55) trail.shift();
   }
 
   function loop(){
@@ -103,15 +97,31 @@
     raf=requestAnimationFrame(loop);
   }
 
+  function dead(v, z){ return Math.abs(v)<z ? 0 : v - Math.sign(v)*z; }
+
   function onOri(e){
-    ax=(e.gamma||0)/40;
-    ay=-((e.beta||48)-48)/36;
-    ax=Math.max(-1,Math.min(1,ax));
-    ay=Math.max(-1,Math.min(1,ay));
+    var g=e.gamma||0, b=e.beta||0;
+    if(g0===null){
+      cal.push({g:g,b:b});
+      if(cal.length<18) return;
+      g0=0; b0=0;
+      cal.forEach(function(p){ g0+=p.g; b0+=p.b; });
+      g0/=cal.length; b0/=cal.length;
+      var h=document.getElementById("pendelHint");
+      if(h) h.textContent="Flach halten. Kugel bleibt in der Mitte, bis es zieht.";
+      return;
+    }
+    var dg=dead(g-g0, 5);
+    var db=dead(b-b0, 5);
+    ax=Math.max(-1,Math.min(1, dg/55));
+    ay=Math.max(-1,Math.min(1, -db/55));
   }
   function onMot(e){
     var r=e.rotationRate;
-    if(r && typeof r.alpha==="number") rot=r.alpha/150;
+    if(r && typeof r.alpha==="number"){
+      var a=r.alpha;
+      rot=Math.abs(a)<8 ? 0 : a/220;
+    }
   }
 
   function bind(){
@@ -121,6 +131,7 @@
     window.addEventListener("devicemotion", onMot, true);
   }
   function startSensor(){
+    g0=null; b0=null; cal=[];
     var n=0,g=0,fin=function(){ g++; if(g>=n) bind(); };
     if(typeof DeviceOrientationEvent!=="undefined" && DeviceOrientationEvent.requestPermission){
       n++; DeviceOrientationEvent.requestPermission().then(fin).catch(fin);
@@ -129,6 +140,8 @@
       n++; DeviceMotionEvent.requestPermission().then(fin).catch(fin);
     }
     if(!n) bind();
+    var h=document.getElementById("pendelHint");
+    if(h) h.textContent="Einen Moment flach halten — Mitte wird gesetzt.";
   }
 
   function openP(){
@@ -142,7 +155,7 @@
       c.width=w; c.height=w;
       ctx=c.getContext("2d");
     }
-    x=0.22; y=0.08; vx=0.016; vy=-0.006; spin=0; spinV=0.05;
+    x=0; y=0; vx=0; vy=0; spin=0; spinV=0; ax=0; ay=0; rot=0;
     trail=[]; on=true;
     startSensor();
     loop();
