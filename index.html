@@ -122,6 +122,13 @@ textarea{min-height:5.2rem}
 <div id="dreiList"></div>
 <div class="row"><button type="button" class="btn ghost" id="dreiBack">Zurück</button></div>
 </section>
+<section class="screen" id="pendel">
+<div class="hero"><h2>Pendel</h2><p class="sub">Frage stellen. Handy locker halten.</p></div>
+<canvas id="pendelC" width="360" height="420"></canvas>
+<p id="pendelAns" class="words" style="text-align:center;margin:.4rem 0 0"></p>
+<p id="pendelHint" class="sub">Vor / zurück = Ja · Links / rechts = Nein</p>
+<div class="row"><button type="button" class="btn ghost" id="pendelBack">Zurück</button><button type="button" class="btn primary" id="pendelStart">Sensor</button></div>
+</section>
 <section class="screen" id="run"></section>
 <section class="screen" id="geplant"><div class="hero"><h2>Geplant</h2></div>
 <div class="card"><select id="plR"></select><input id="plW" placeholder="Für wen">
@@ -167,5 +174,6 @@ textarea{min-height:5.2rem}
 <script src="ritual-layout.js?v=3"></script>
 <script src="ritual-look.js?v=7"></script>
 <script src="ritual-extra.js?v=13"></script>
+<script src="ritual-pendel.js"></script>
 <script src="pwa.js"></script>
 </body></html>
