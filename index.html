@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#12080c">
+<meta name="theme-color" content="#090614">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="RR25">
 <meta name="mobile-web-app-capable" content="yes">
@@ -12,22 +12,22 @@
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
-:root{--bg:#12080c;--elev:rgba(72,24,36,.72);--line:rgba(232,168,150,.18);--ink:#f7efe8;--dim:#cbb0a6;--pink:#e8a4b0}
-*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#12080c;color:var(--ink);font:15px/1.45 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+:root{--bg:#090614;--elev:rgba(48,18,72,.7);--line:rgba(126,200,255,.2);--ink:#f6f0ff;--dim:#c4b4e0;--pink:#ff7ad9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#090614;color:var(--ink);font:15px/1.45 system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
 .app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
-header{padding:calc(.45rem + env(safe-area-inset-top)) .85rem .55rem;position:sticky;top:0;background:rgba(16,8,12,.84);backdrop-filter:blur(14px);z-index:5}
+header{padding:calc(.45rem + env(safe-area-inset-top)) .85rem .55rem;position:sticky;top:0;background:rgba(10,6,20,.8);backdrop-filter:blur(14px);z-index:5}
 #headRow{position:relative;min-height:52px;margin:0 0 .2rem}
 #moonWrap{position:absolute;left:0;top:0;text-align:center;width:4.4rem}
 #sunWrap{position:absolute;right:0;top:0;text-align:center;width:4.6rem}
 #moonSym,#sunSym{display:block;font-size:2.05rem;line-height:1}
-#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.68rem;letter-spacing:.02em;color:#cbb0a6;line-height:1.25}
-.doll{width:52px;height:52px;object-fit:cover;border-radius:16px;margin:0 auto;display:block;border:1px solid rgba(232,164,176,.45);background:#1a0a0c}
-.brand{font-family:Georgia,serif;letter-spacing:.34em;font-size:.92rem;color:#e8a4b0;text-align:center;margin:0}
-.sub{color:#cbb0a6;font-size:.68rem;text-align:center;margin:.1rem 0 0}
-nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.18rem;padding:.28rem .16rem calc(.28rem + env(safe-area-inset-bottom));background:rgba(14,6,10,.75);border:1px solid var(--line)}
+#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.68rem;letter-spacing:.02em;color:#c4b4e0;line-height:1.25}
+.doll{width:52px;height:52px;object-fit:cover;border-radius:16px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.55);background:#12081c}
+.brand{font-family:Georgia,serif;letter-spacing:.34em;font-size:.92rem;color:#ff7ad9;text-align:center;margin:0}
+.sub{color:#9fd6ff;font-size:.68rem;text-align:center;margin:.1rem 0 0}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.18rem;padding:.28rem .16rem calc(.28rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
 nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.55rem .08rem .48rem;font:inherit;font-size:.62rem;letter-spacing:.03em;display:flex;flex-direction:column;align-items:center;gap:.16rem}
 nav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-nav button.on{background:linear-gradient(165deg,#a84860,#f0c4a8);color:#1a0a0c;font-weight:650}
+nav button.on{background:linear-gradient(165deg,#ff7ad9,#7ec8ff);color:#14081c;font-weight:650}
 .app.runmode header .doll,.app.runmode header .brand,.app.runmode header .sub,.app.runmode #moonWrap,.app.runmode #sunWrap,.app.runmode #headRow{display:none}
 .app.runmode header{padding-top:calc(.22rem + env(safe-area-inset-top));padding-bottom:.28rem}
 main{flex:1;padding:0 .85rem 6.6rem}
@@ -42,21 +42,21 @@ main{flex:1;padding:0 .85rem 6.6rem}
 #run .words{font-size:1.14rem;line-height:1.72}
 #run .hero h2{font-size:1.2rem;margin:.15rem 0 .4rem}
 #run .sub{display:block!important;text-align:left;letter-spacing:.1em;text-transform:uppercase;font-size:.64rem;margin:0}
-.pbar{height:3px;background:rgba(232,168,150,.12);border-radius:99px;margin:.2rem 0 .8rem;overflow:hidden}
-.pbar::before{content:"";display:block;height:100%;width:var(--p,8%);background:linear-gradient(90deg,#a84860,#f0c4a8);border-radius:99px}
-input,textarea,select{width:100%;background:#1a0c10;border:1px solid var(--line);color:var(--ink);border-radius:.75rem;padding:.62rem .7rem;font:inherit;margin:.28rem 0}
+.pbar{height:3px;background:rgba(126,200,255,.14);border-radius:99px;margin:.2rem 0 .8rem;overflow:hidden}
+.pbar::before{content:"";display:block;height:100%;width:var(--p,8%);background:linear-gradient(90deg,#ff7ad9,#7ec8ff,#7dffa3);border-radius:99px}
+input,textarea,select{width:100%;background:#140a22;border:1px solid var(--line);color:var(--ink);border-radius:.75rem;padding:.62rem .7rem;font:inherit;margin:.28rem 0}
 textarea{min-height:5.2rem}
 .row{display:flex;gap:.35rem;margin-top:.7rem}
 .btn{flex:1;border:0;border-radius:999px;padding:.62rem .4rem;font:inherit;font-size:.78rem;font-weight:650}
-.primary{background:linear-gradient(135deg,#a84860,#f0c4a8);color:#1a0a0c}
+.primary{background:linear-gradient(135deg,#ff7ad9,#7ec8ff);color:#14081c}
 .ghost{background:var(--elev);color:var(--ink)}
 .chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.5rem .82rem;margin:0;font:inherit;font-size:.82rem;min-height:2.2rem}
-.chip.on{color:#1a0a0c;background:linear-gradient(165deg,#a84860,#f0c4a8);border-color:transparent;font-weight:650}
+.chip.on{color:#14081c;background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border-color:transparent;font-weight:650}
 .group{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:1.1rem 0 .3rem}
 .check{display:none}
 .msg{color:var(--pink);font-style:italic}
 .entry{border-top:1px solid var(--line);padding:.85rem 0}
-.meta{color:#8d6e6a;font-size:.68rem}
+.meta{color:#8e7aa8;font-size:.68rem}
 .shots{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
 .shots img{width:4.4rem;height:4.4rem;object-fit:cover;border-radius:.6rem;border:1px solid var(--line)}
 #page{padding:.9rem .85rem 1.6rem}
@@ -65,20 +65,20 @@ textarea{min-height:5.2rem}
 #home{padding-top:.2rem}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;align-items:stretch;margin-top:.15rem}
 #kOut,#sigilBox{aspect-ratio:1/1;height:auto;min-height:0;margin:0;padding:0;overflow:hidden;border-radius:1.15rem}
-#kOut{border:1px solid rgba(232,168,150,.28)}
+#kOut{border:1px solid rgba(255,122,217,.38)}
 #kOut .kcard{height:100%;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:.55rem .5rem}
-#sigilBox{background:#10080c;border:1px solid rgba(232,168,150,.2);overflow:hidden;padding:0}
+#sigilBox{background:#0a0612;border:1px solid rgba(46,230,214,.28);overflow:hidden;padding:0}
 #sigilC{width:100%;height:100%;display:block;margin:0;border:0;border-radius:1.15rem;background:transparent}
 #under{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.48rem}
 #underL,#underR{display:flex;flex-direction:column;gap:.35rem}
 #under .btn{width:100%;margin:0;min-height:2.45rem}
 #under input{margin:0;width:100%}
 #dreiList .kcard{margin:.48rem 0;padding:1.05rem .95rem 1.1rem}
-.kcard{background:linear-gradient(185deg,rgba(110,36,48,.62),rgba(18,6,10,.92));border:1px solid rgba(232,168,150,.16);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
+.kcard{background:linear-gradient(185deg,rgba(70,24,90,.62),rgba(12,8,28,.92));border:1px solid rgba(255,122,217,.16);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
 .kcard .group{margin:0 0 .15rem}
-.kz{font-size:1.35rem;line-height:1;color:#f0c4a8;margin:.05rem 0 .25rem}
+.kz{font-size:1.35rem;line-height:1;color:#7ef0e6;margin:.05rem 0 .25rem}
 .kcard b{display:block;font-family:Georgia,serif;font-size:.92rem;margin:0 0 .25rem}
-.kcard small{display:block;color:#cbb0a6;line-height:1.35;font-size:.68rem}
+.kcard small{display:block;color:#c4b4e0;line-height:1.35;font-size:.68rem}
 #list .card{padding:1rem 1.05rem;margin:.4rem 0;border-radius:1.05rem}
 #list .card b{font-size:1.1rem}
 #list .card small{font-size:.82rem;margin-top:.22rem}
@@ -172,9 +172,9 @@ textarea{min-height:5.2rem}
 <script src="ritual-lightbox.js"></script>
 <script src="ritual-nav.js?v=2"></script>
 <script src="ritual-layout.js?v=3"></script>
-<script src="ritual-look.js?v=9"></script>
+<script src="ritual-look.js?v=10"></script>
 <script src="ritual-extra.js?v=13"></script>
 <script src="ritual-pendel.js?v=11"></script>
-<script src="ritual-home.js"></script>
+<script src="ritual-home.js?v=2"></script>
 <script src="pwa.js"></script>
 </body></html>
