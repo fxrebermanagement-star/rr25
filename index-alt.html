@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#06030c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RR25 alt">
+<title>RR25 Werkstatt</title>
+<link rel="manifest" href="manifest.webmanifest?v=2">
+<link rel="icon" href="icon.svg">
+<style>
+:root{--bg:#06030c;--elev:rgba(56,24,86,.55);--line:rgba(232,160,255,.2);--ink:#f6eaff;--dim:#c4a4d6;--pink:#ff7ad9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#06030c;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+.app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+header{padding:calc(.45rem + env(safe-area-inset-top)) .85rem .55rem;position:sticky;top:0;background:rgba(8,4,16,.82);backdrop-filter:blur(14px);z-index:5}
+#headRow{position:relative;min-height:52px;margin:0 0 .2rem}
+#moonWrap{position:absolute;left:0;top:0;text-align:center;width:4.4rem}
+#sunWrap{position:absolute;right:0;top:0;text-align:center;width:4.6rem}
+#moonSym,#sunSym{display:block;font-size:2.05rem;line-height:1}
+#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.68rem;color:#c4a4d6;line-height:1.25}
+.doll{width:52px;height:52px;object-fit:cover;border-radius:16px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.42);background:#12081c}
+.brand{font-family:Georgia,serif;letter-spacing:.4em;font-size:.58rem;color:var(--pink);text-align:center;margin:0}
+.sub{color:var(--dim);font-size:.7rem;text-align:center;margin:.1rem 0 0}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.18rem;padding:.28rem .16rem calc(.28rem + env(safe-area-inset-bottom));background:rgba(20,8,32,.75);border:1px solid var(--line)}
+nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.55rem .08rem .48rem;font:inherit;font-size:.62rem;display:flex;flex-direction:column;align-items:center;gap:.16rem}
+nav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;font-weight:650}
+.app.runmode header .doll,.app.runmode header .brand,.app.runmode header .sub,.app.runmode #moonWrap,.app.runmode #sunWrap,.app.runmode #headRow{display:none}
+main{flex:1;padding:0 .85rem 6.6rem}
+.hero h2{font-family:Georgia,serif;font-weight:500;margin:.4rem 0 .25rem;font-size:1.28rem}
+#cats{display:flex;flex-wrap:wrap;gap:.42rem;margin:.6rem 0 .5rem}
+#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}
+.card{background:var(--elev);border:1px solid var(--line);border-radius:.9rem;padding:.75rem .8rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.24rem 0}
+.card b{display:block;font-family:Georgia,serif;font-size:.95rem}
+.card small{display:block;color:var(--dim);margin-top:.16rem;font-size:.75rem}
+.screen{display:none}.screen.on{display:block}
+.words{font-family:Georgia,serif;font-size:1.05rem;line-height:1.6;white-space:pre-wrap}
+#run .words{font-size:1.14rem;line-height:1.72}
+input,textarea,select{width:100%;background:#1b0f28;border:1px solid var(--line);color:var(--ink);border-radius:.75rem;padding:.62rem .7rem;font:inherit;margin:.28rem 0}
+textarea{min-height:5.2rem}
+.row{display:flex;gap:.35rem;margin-top:.7rem}
+.btn{flex:1;border:0;border-radius:999px;padding:.62rem .4rem;font:inherit;font-size:.78rem;font-weight:650}
+.primary{background:linear-gradient(135deg,#9650d2,#e6aaff);color:#14081c}
+.ghost{background:var(--elev);color:var(--ink)}
+.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.5rem .82rem;margin:0;font:inherit;font-size:.82rem}
+.chip.on{color:#14081c;background:linear-gradient(165deg,#9650d2,#e6aaff);border-color:transparent;font-weight:650}
+.group{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:1.1rem 0 .3rem}
+#home{padding-top:.2rem}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;align-items:stretch;margin-top:.15rem}
+#kOut,#sigilBox{aspect-ratio:1/1;height:auto;min-height:0;margin:0;padding:0;overflow:hidden;border-radius:1.15rem}
+#kOut{border:1px solid rgba(232,160,255,.36)}
+#sigilBox{background:#0a0612;border:1px solid rgba(232,160,255,.28)}
+#sigilC{width:100%;height:100%;display:block;border-radius:1.15rem}
+#under{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.48rem}
+#underL,#underR{display:flex;flex-direction:column;gap:.35rem}
+#under .btn{width:100%;margin:0;min-height:2.45rem}
+#under input{margin:0;width:100%}
+.kcard{background:linear-gradient(185deg,rgba(86,34,128,.72),rgba(22,8,36,.92));border:1px solid rgba(232,160,255,.22);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+<div id="headRow">
+<div id="moonWrap"><span id="moonSym"></span><span id="moonTxt"></span></div>
+<img class="doll" alt="" src="rune.svg">
+<div id="sunWrap"><span id="sunSym"></span><span id="sunTxt"></span></div>
+</div>
+<p class="brand">ROLF REBER 25</p>
+<p class="sub">Werkstatt · alte Ansicht</p>
+</header>
+<main>
+<section class="screen on" id="home">
+<button type="button" id="quick" hidden></button>
+<div id="kasten">
+<div class="duo"><div id="kOut"></div><div id="sigilBox"><canvas id="sigilC" width="360" height="360"></canvas></div></div>
+<div id="under">
+<div id="underL"><button type="button" class="btn primary" id="kTag">Karte</button><button type="button" class="btn ghost" id="kDrei">Drei</button></div>
+<div id="underR"><input id="sigilT" placeholder="Absicht"><button type="button" class="btn ghost" id="sigilGo">Zeichen</button><button type="button" class="btn ghost" id="sigilSave">Ablegen</button></div>
+</div>
+</div>
+<div id="cats"></div><div id="list"></div>
+</section>
+<section class="screen" id="drei"><div class="hero"><h2>Drei</h2></div><div id="dreiList"></div><div class="row"><button type="button" class="btn ghost" id="dreiBack">Zurück</button></div></section>
+<section class="screen" id="pendel"><div class="hero"><h2>Pendel</h2></div><canvas id="pendelC" width="360" height="360"></canvas><p id="pendelHint" class="sub"></p><div class="row"><button type="button" class="btn ghost" id="pendelBack">Zurück</button><button type="button" class="btn primary" id="pendelStart">Stabilisieren</button></div></section>
+<section class="screen" id="run"></section>
+<section class="screen" id="geplant"><div class="hero"><h2>Geplant</h2></div><div class="card"><select id="plR"></select><input id="plW" placeholder="Für wen"><div class="row"><button type="button" class="btn ghost" id="plAdd">Vormerken</button></div><div id="plList"></div></div></section>
+<section class="screen" id="notiz"><div class="hero"><h2>Notiz</h2></div><div class="card"><textarea id="noteT"></textarea><div class="row"><button type="button" class="btn primary" id="noteAdd">Speichern</button></div></div><div id="notesOnly"></div></section>
+<section class="screen" id="log"><div class="hero"><h2>Chronik</h2></div><div id="entries"></div></section>
+<section class="screen" id="buch"><div class="hero"><h2>Buch</h2></div><article class="card book" id="page"></article></section>
+<section class="screen" id="after"><div class="hero" style="text-align:center"><p class="brand">SO SEI ES</p></div><div class="row"><button type="button" class="btn ghost" id="afterStay">Später</button><button type="button" class="btn primary" id="afterGo">Übergeben</button></div></section>
+<section class="screen" id="bye"><div class="hero" style="text-align:center"><p class="brand">SO SEI ES</p><div class="row"><button type="button" class="btn ghost" id="stay">Bleiben</button></div></div></section>
+</main>
+<nav>
+<button type="button" class="on" data-v="home"><svg viewBox="0 0 24 24"><path d="M12 3l1.2 3.6L17 8l-3.8 1.4L12 13l-1.2-3.6L7 8l3.8-1.4z"/></svg>Rituale</button>
+<button type="button" data-v="geplant"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/></svg>Geplant</button>
+<button type="button" data-v="notiz"><svg viewBox="0 0 24 24"><path d="M7 4h8l5 5v11H7z"/></svg>Notiz</button>
+<button type="button" data-v="log"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>Chronik</button>
+<button type="button" data-v="buch"><svg viewBox="0 0 24 24"><path d="M5 5h11a3 3 0 013 3v12H8a3 3 0 01-3-3V5z"/></svg>Buch</button>
+</nav>
+</div>
+<script src="doll.js"></script>
+<script src="ritual-core.js"></script>
+<script src="ritual-prep.js"></script>
+<script src="ritual-steps.js?v=6"></script>
+<script src="ritual-schaden.js"></script>
+<script src="ritual-drop.js"></script>
+<script src="ritual-filter.js?v=7"></script>
+<script src="ritual-karten.js?v=6"></script>
+<script src="ritual-sigil.js?v=5"></script>
+<script src="ritual-log.js"></script>
+<script src="ritual-notes.js"></script>
+<script src="ritual-plus.js?v=2"></script>
+<script src="ritual-close.js"></script>
+<script src="ritual-polish.js"></script>
+<script src="ritual-lightbox.js"></script>
+<script src="ritual-nav.js?v=2"></script>
+<script src="ritual-layout.js?v=3"></script>
+<script src="ritual-look.js?v=7"></script>
+<script src="ritual-extra.js?v=13"></script>
+<script src="ritual-pendel.js?v=11"></script>
+<script src="pwa.js"></script>
+</body></html>
