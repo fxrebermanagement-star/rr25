@@ -1,9 +1,9 @@
 (function(){
-  var on=false, raf=0;
-  var x=0, y=0, vx=0, vy=0, th=0, om=0, spin=0;
+  var on=false, raf=0, t0=0;
+  var x=0, y=0, vx=0, vy=0;
   var gx=0, gy=0, primed=false, lock=null;
-  var votes={ja:0,nein:0,kreis:0};
   var trail=[], c, ctx;
+  var W=Math.PI*2/1.05;
 
   function ready(){
     if(document.getElementById("pendelGo")) return;
@@ -45,7 +45,7 @@
     ctx.fillText("NEIN", cx-R-w*0.078, cy);
     ctx.fillText("NEIN", cx+R+w*0.078, cy);
     if(trail.length>1){
-      ctx.strokeStyle="rgba(255,122,217,.26)";
+      ctx.strokeStyle="rgba(255,122,217,.28)";
       ctx.lineWidth=2;
       ctx.beginPath();
       trail.forEach(function(p,i){
@@ -64,7 +64,6 @@
     var r=Math.max(15,w/18);
     ctx.save();
     ctx.translate(px,py);
-    ctx.rotate(spin);
     var grd=ctx.createRadialGradient(-r*0.32,-r*0.36,2,0,0,r);
     grd.addColorStop(0,"#ffe6f6");
     grd.addColorStop(0.4,"#ff7ad9");
@@ -74,46 +73,33 @@
     ctx.strokeStyle="rgba(255,230,246,.65)";
     ctx.lineWidth=2;
     ctx.beginPath(); ctx.arc(0,0,r*0.7,-2.3,-0.35); ctx.stroke();
-    ctx.strokeStyle="#14081c";
-    ctx.lineWidth=2.4;
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-r*0.72); ctx.stroke();
     ctx.restore();
   }
 
   function step(){
-    var k=1.5, damp=0.993, dt=1/60;
-    if(lock==="kreis" || Math.abs(om)>0.012){
-      if(!lock && Math.abs(om)>0.016){ lock="kreis"; hint("Bahn: Kreis"); }
-      var rad=Math.sqrt(x*x+y*y);
-      if(rad<0.2) rad=0.28;
-      if(rad>0.64) rad=0.64;
-      th += om;
-      x=Math.cos(th)*rad;
-      y=Math.sin(th)*rad;
-      vx=0; vy=0;
-      om *= 0.999;
-      if(Math.abs(om)<0.012 && lock==="kreis") om = (om>=0?0.02:-0.02);
-    } else {
-      if(lock==="ja"){ x*=0.88; vx*=0.88; }
-      if(lock==="nein"){ y*=0.88; vy*=0.88; }
-      vx += -x*k*dt;
-      vy += -y*k*dt;
-      vx*=damp; vy*=damp;
-      x += vx; y += vy;
-      var ax=Math.abs(x)+Math.abs(vx)*10;
-      var ay=Math.abs(y)+Math.abs(vy)*10;
-      if(!lock){
-        if(ay>ax*1.55 && ay>0.12) votes.ja++;
-        else if(ax>ay*1.55 && ax>0.12) votes.nein++;
-        if(votes.ja>80){ lock="ja"; hint("Bahn: Ja"); }
-        if(votes.nein>80){ lock="nein"; hint("Bahn: Nein"); }
-      }
-    }
+    var dt=1/60;
+    vx += -W*W*x*dt;
+    vy += -W*W*y*dt;
+    vx*=0.9992; vy*=0.9992;
+    if(lock==="ja"){ vx*=0.96; x*=0.96; }
+    if(lock==="nein"){ vy*=0.96; y*=0.96; }
+    x += vx*dt*60*0.016;
+    y += vy*dt*60*0.016;
+    x += vx*dt; y += vy*dt;
     var m=Math.sqrt(x*x+y*y);
-    if(m>0.9){ x*=0.9/m; y*=0.9/m; }
-    spin += om;
+    if(m>0.82){ x*=0.82/m; y*=0.82/m; vx*=0.7; vy*=0.7; }
+    if(!lock){
+      var ax=Math.abs(x), ay=Math.abs(y);
+      var phase=x*vy-y*vx;
+      if(Math.abs(phase)>0.004 && ax>0.12 && ay>0.12) lock="kreis";
+      else if(ay>0.22 && ay>ax*1.6) lock="ja";
+      else if(ax>0.22 && ax>ay*1.6) lock="nein";
+      if(lock==="ja") hint("Bahn: Ja");
+      if(lock==="nein") hint("Bahn: Nein");
+      if(lock==="kreis") hint("Bahn: Kreis");
+    }
     trail.push({x:x,y:y});
-    if(trail.length>80) trail.shift();
+    if(trail.length>90) trail.shift();
   }
 
   function loop(){
@@ -122,32 +108,25 @@
     raf=requestAnimationFrame(loop);
   }
 
-  function pulse(px,py){
-    if(lock==="kreis") return;
-    var s=Math.sqrt(px*px+py*py);
-    if(s<0.07) return;
-    vx += px*0.0026;
-    vy += py*0.0026;
-  }
-
   function onMot(e){
     var a=e.acceleration, g=e.accelerationIncludingGravity;
     var px=0, py=0;
     if(a && typeof a.x==="number"){ px=a.x; py=a.y; }
     else if(g && typeof g.x==="number"){
-      gx=gx*0.96+g.x*0.04;
-      gy=gy*0.96+g.y*0.04;
+      gx=gx*0.97+g.x*0.03;
+      gy=gy*0.97+g.y*0.03;
       px=g.x-gx; py=g.y-gy;
     }
     if(!primed){ primed=true; return; }
-    pulse(px, py);
+    if(Math.sqrt(px*px+py*py)<0.08) return;
+    vx += px*0.0018;
+    vy += py*0.0018;
     var r=e.rotationRate||{};
-    var yaw=0;
-    if(typeof r.alpha==="number") yaw=r.alpha;
-    else if(typeof r.gamma==="number") yaw=r.gamma;
-    if(Math.abs(yaw)>6){
-      om += Math.max(-0.01, Math.min(0.01, yaw/900));
-      om = Math.max(-0.05, Math.min(0.05, om));
+    var yaw=typeof r.alpha==="number"?r.alpha:(r.gamma||0);
+    if(Math.abs(yaw)>10){
+      var rad=Math.max(0.18, Math.sqrt(x*x+y*y));
+      var ang=Math.atan2(y,x)+yaw/4000;
+      x=Math.cos(ang)*rad; y=Math.sin(ang)*rad;
     }
   }
 
@@ -156,10 +135,9 @@
     window.addEventListener("devicemotion", onMot, true);
   }
   function stabilize(){
-    x=0; y=0; vx=0; vy=0; th=0; om=0; spin=0;
-    trail=[]; lock=null; votes={ja:0,nein:0,kreis:0};
-    primed=false; gx=0; gy=0;
-    hint("Mitte. 3 die Linie. 9 der Kreis.");
+    x=0; y=0.16; vx=0.012; vy=0;
+    trail=[]; lock=null; primed=false; gx=0; gy=0;
+    hint("Es schwingt. Die Bahn kommt von allein.");
     bind();
   }
   function startSensor(){
