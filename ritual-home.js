@@ -4,8 +4,8 @@
     if(!kast) return;
     var brand=document.querySelector("header .brand");
     var sub=document.querySelector("header .sub");
-    if(brand) brand.textContent="RR25";
-    if(sub) sub.textContent="Feld · Ritual · Zeichen";
+    if(brand) brand.textContent="ROLF REBER 25";
+    if(sub) sub.textContent="";
     var tools=document.getElementById("tools");
     if(!tools){
       tools=document.createElement("div");
@@ -29,6 +29,8 @@
   }
   var css=document.createElement("style");
   css.textContent=[
+    "header .brand{font-size:.72rem;letter-spacing:.28em}",
+    "header .sub{display:none}",
     "#kasten{background:linear-gradient(180deg,rgba(80,20,70,.35),rgba(8,20,28,.35));border:1px solid rgba(126,200,255,.18);border-radius:1.35rem;padding:.7rem .7rem .8rem;margin:.15rem 0 .7rem}",
     "#under,#pendelGo{display:none!important}",
     "#tools{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:.62rem}",
