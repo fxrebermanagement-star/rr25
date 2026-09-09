@@ -1,7 +1,7 @@
 (function(){
   var on=false, raf=0;
   var x=0, y=0, vx=0, vy=0, spin=0, spinV=0;
-  var gx=0, gy=0, gz=9.8, primed=false;
+  var gx=0, gy=0, gz=9.8, primed=false, lock=null, votes={ja:0,nein:0,kreis:0};
   var trail=[], c, ctx;
 
   function ready(){
@@ -13,6 +13,11 @@
     b.textContent="Pendel";
     b.style.cssText="margin-top:.45rem;width:100%;min-height:2.45rem";
     kast.appendChild(b);
+  }
+
+  function hint(t){
+    var h=document.getElementById("pendelHint");
+    if(h) h.textContent=t;
   }
 
   function draw(){
@@ -75,23 +80,41 @@
     ctx.restore();
   }
 
+  function choose(){
+    if(lock) return;
+    var ax=Math.abs(x)+Math.abs(vx)*8;
+    var ay=Math.abs(y)+Math.abs(vy)*8;
+    var as=Math.abs(spinV);
+    if(as>0.018 && as>ax*0.04 && as>ay*0.04) votes.kreis++;
+    else if(ay>ax*1.35 && ay>0.08) votes.ja++;
+    else if(ax>ay*1.35 && ax>0.08) votes.nein++;
+    if(votes.ja>40){ lock="ja"; hint("Bahn: Ja"); }
+    else if(votes.nein>40){ lock="nein"; hint("Bahn: Nein"); }
+    else if(votes.kreis>40){ lock="kreis"; hint("Bahn: Drehen"); }
+  }
+
   function step(){
-    var k=1.7, damp=0.991, dt=1/60;
+    var k=1.65, damp=0.992, dt=1/60;
+    if(lock==="ja"){ x*=0.86; vx*=0.86; }
+    if(lock==="nein"){ y*=0.86; vy*=0.86; }
+    if(lock==="kreis"){ x*=0.9; y*=0.9; vx*=0.9; vy*=0.9; }
+    if(lock!=="kreis") spinV*=0.9;
     vx += -x*k*dt;
     vy += -y*k*dt;
     var amp=Math.sqrt(vx*vx+vy*vy);
-    if(amp>0.01){
-      vx += vx/amp*0.0007;
-      vy += vy/amp*0.0007;
+    if(lock && amp>0.006){
+      vx += vx/amp*0.0009;
+      vy += vy/amp*0.0009;
     }
     vx*=damp; vy*=damp;
     x += vx; y += vy;
     var m=Math.sqrt(x*x+y*y);
     if(m>0.9){ x*=0.9/m; y*=0.9/m; vx*=-0.28; vy*=-0.28; }
-    spinV *= 0.985;
+    spinV = Math.max(-0.045, Math.min(0.045, spinV*0.97));
     spin += spinV;
     trail.push({x:x,y:y});
     if(trail.length>70) trail.shift();
+    choose();
   }
 
   function loop(){
@@ -101,41 +124,48 @@
   }
 
   function pulse(px,py){
+    if(lock) return;
     var s=Math.sqrt(px*px+py*py);
-    if(s<0.045) return;
-    vx += px*0.007;
-    vy += py*0.007;
-    if(Math.abs(px)>Math.abs(py)*1.4) spinV += (px>0?0.006:-0.006);
+    if(s<0.055) return;
+    vx += px*0.0045;
+    vy += py*0.0045;
   }
 
   function onMot(e){
     var a=e.acceleration;
     var g=e.accelerationIncludingGravity;
     var px=0, py=0;
-    if(a && typeof a.x==="number"){
-      px=a.x; py=a.y;
-    } else if(g && typeof g.x==="number"){
-      gx=gx*0.94+g.x*0.06;
-      gy=gy*0.94+g.y*0.06;
-      gz=gz*0.94+(g.z||9.8)*0.06;
+    if(a && typeof a.x==="number"){ px=a.x; py=a.y; }
+    else if(g && typeof g.x==="number"){
+      gx=gx*0.95+g.x*0.05;
+      gy=gy*0.95+g.y*0.05;
       px=g.x-gx; py=g.y-gy;
     }
     if(!primed){ primed=true; return; }
     pulse(px, py);
-    var r=e.rotationRate;
-    if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>22){
-      spinV += r.alpha/1400;
+    if(!lock){
+      var r=e.rotationRate;
+      if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>28){
+        spinV += Math.max(-0.01, Math.min(0.01, r.alpha/2200));
+      }
     }
   }
 
   function bind(){
     window.removeEventListener("devicemotion", onMot, true);
     window.addEventListener("devicemotion", onMot, true);
-    var h=document.getElementById("pendelHint");
-    if(h) h.textContent="Flach halten. Nicht kippen. Die Hand darf zittern.";
   }
-  function startSensor(){
+
+  function stabilize(){
+    x=0; y=0; vx=0; vy=0; spin=0; spinV=0;
+    trail=[]; lock=null; votes={ja:0,nein:0,kreis:0};
     primed=false; gx=0; gy=0; gz=9.8;
+    hint("Mitte. Warten auf die Bahn.");
+    bind();
+  }
+
+  function startSensor(){
+    stabilize();
     if(typeof DeviceMotionEvent!=="undefined" && DeviceMotionEvent.requestPermission){
       DeviceMotionEvent.requestPermission().then(bind).catch(bind);
     } else bind();
@@ -145,6 +175,8 @@
     if(typeof show==="function") show("pendel");
     var ans=document.getElementById("pendelAns");
     if(ans) ans.style.display="none";
+    var st=document.getElementById("pendelStart");
+    if(st) st.textContent="Stabilisieren";
     c=document.getElementById("pendelC");
     if(c){
       var r=c.getBoundingClientRect();
@@ -152,7 +184,7 @@
       c.width=w; c.height=w;
       ctx=c.getContext("2d");
     }
-    x=0; y=0; vx=0; vy=0; spin=0; spinV=0; trail=[]; on=true;
+    on=true;
     startSensor();
     loop();
   }
@@ -177,7 +209,7 @@
     if(!e.target) return;
     if(e.target.id==="pendelGo") openP();
     if(e.target.id==="pendelBack") closeP();
-    if(e.target.id==="pendelStart") startSensor();
+    if(e.target.id==="pendelStart") stabilize();
   });
   ready();
   setTimeout(ready,250);
