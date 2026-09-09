@@ -1,9 +1,8 @@
 (function(){
   var on=false, raf=0;
   var x=0, y=0, vx=0, vy=0, spin=0, spinV=0;
-  var ax=0, ay=0, rot=0;
-  var g0=null, b0=null, cal=[], trail=[];
-  var c, ctx;
+  var gx=0, gy=0, gz=9.8, primed=false;
+  var trail=[], c, ctx;
 
   function ready(){
     if(document.getElementById("pendelGo")) return;
@@ -77,18 +76,22 @@
   }
 
   function step(){
-    var k=3.4, damp=0.975, dt=1/60;
-    vx += (-x*k + ax*0.85)*dt;
-    vy += (-y*k + ay*0.85)*dt;
+    var k=1.55, damp=0.993, dt=1/60;
+    vx += -x*k*dt;
+    vy += -y*k*dt;
+    var amp=Math.sqrt(vx*vx+vy*vy);
+    if(amp>0.004){
+      vx += vx/amp*0.0016;
+      vy += vy/amp*0.0016;
+    }
     vx*=damp; vy*=damp;
     x += vx; y += vy;
     var m=Math.sqrt(x*x+y*y);
-    if(m>0.9){ x*=0.9/m; y*=0.9/m; vx*=-0.2; vy*=-0.2; }
-    spinV += rot*0.03;
-    spinV *= 0.97;
+    if(m>0.9){ x*=0.9/m; y*=0.9/m; vx*=-0.28; vy*=-0.28; }
+    spinV *= 0.985;
     spin += spinV;
     trail.push({x:x,y:y});
-    if(trail.length>55) trail.shift();
+    if(trail.length>70) trail.shift();
   }
 
   function loop(){
@@ -97,51 +100,48 @@
     raf=requestAnimationFrame(loop);
   }
 
-  function dead(v, z){ return Math.abs(v)<z ? 0 : v - Math.sign(v)*z; }
+  function pulse(px,py){
+    var s=Math.sqrt(px*px+py*py);
+    if(s<0.012) return;
+    vx += px*0.018;
+    vy += py*0.018;
+    if(Math.abs(px)>Math.abs(py)*1.2) spinV += (px>0?0.012:-0.012);
+  }
 
-  function onOri(e){
-    var g=e.gamma||0, b=e.beta||0;
-    if(g0===null){
-      cal.push({g:g,b:b});
-      if(cal.length<18) return;
-      g0=0; b0=0;
-      cal.forEach(function(p){ g0+=p.g; b0+=p.b; });
-      g0/=cal.length; b0/=cal.length;
-      var h=document.getElementById("pendelHint");
-      if(h) h.textContent="Flach halten. Kugel bleibt in der Mitte, bis es zieht.";
+  function onMot(e){
+    var a=e.acceleration;
+    var g=e.accelerationIncludingGravity;
+    var px=0, py=0;
+    if(a && typeof a.x==="number"){
+      px=a.x; py=a.y;
+    } else if(g && typeof g.x==="number"){
+      gx=gx*0.92+g.x*0.08;
+      gy=gy*0.92+g.y*0.08;
+      gz=gz*0.92+(g.z||9.8)*0.08;
+      px=g.x-gx; py=g.y-gy;
+    }
+    if(!primed){
+      primed=true;
       return;
     }
-    var dg=dead(g-g0, 5);
-    var db=dead(b-b0, 5);
-    ax=Math.max(-1,Math.min(1, dg/55));
-    ay=Math.max(-1,Math.min(1, -db/55));
-  }
-  function onMot(e){
+    pulse(px, py);
     var r=e.rotationRate;
-    if(r && typeof r.alpha==="number"){
-      var a=r.alpha;
-      rot=Math.abs(a)<8 ? 0 : a/220;
+    if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>12){
+      spinV += r.alpha/900;
     }
   }
 
   function bind(){
-    window.removeEventListener("deviceorientation", onOri, true);
     window.removeEventListener("devicemotion", onMot, true);
-    window.addEventListener("deviceorientation", onOri, true);
     window.addEventListener("devicemotion", onMot, true);
+    var h=document.getElementById("pendelHint");
+    if(h) h.textContent="Flach halten. Nicht kippen. Die Hand darf zittern.";
   }
   function startSensor(){
-    g0=null; b0=null; cal=[];
-    var n=0,g=0,fin=function(){ g++; if(g>=n) bind(); };
-    if(typeof DeviceOrientationEvent!=="undefined" && DeviceOrientationEvent.requestPermission){
-      n++; DeviceOrientationEvent.requestPermission().then(fin).catch(fin);
-    }
+    primed=false; gx=0; gy=0; gz=9.8;
     if(typeof DeviceMotionEvent!=="undefined" && DeviceMotionEvent.requestPermission){
-      n++; DeviceMotionEvent.requestPermission().then(fin).catch(fin);
-    }
-    if(!n) bind();
-    var h=document.getElementById("pendelHint");
-    if(h) h.textContent="Einen Moment flach halten — Mitte wird gesetzt.";
+      DeviceMotionEvent.requestPermission().then(bind).catch(bind);
+    } else bind();
   }
 
   function openP(){
@@ -155,15 +155,13 @@
       c.width=w; c.height=w;
       ctx=c.getContext("2d");
     }
-    x=0; y=0; vx=0; vy=0; spin=0; spinV=0; ax=0; ay=0; rot=0;
-    trail=[]; on=true;
+    x=0; y=0; vx=0; vy=0; spin=0; spinV=0; trail=[]; on=true;
     startSensor();
     loop();
   }
   function closeP(){
     on=false;
     if(raf) cancelAnimationFrame(raf);
-    window.removeEventListener("deviceorientation", onOri, true);
     window.removeEventListener("devicemotion", onMot, true);
     if(typeof show==="function") show("home");
   }
