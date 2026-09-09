@@ -29,21 +29,21 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "header .brand{font-size:.72rem;letter-spacing:.28em}",
     "header .sub{display:none}",
-    "#kasten{background:linear-gradient(180deg,rgba(80,20,70,.35),rgba(8,20,28,.35));border:1px solid rgba(126,200,255,.18);border-radius:1.35rem;padding:.7rem .7rem .8rem;margin:.15rem 0 .7rem}",
+    "#kasten{background:linear-gradient(180deg,rgba(80,20,70,.32),rgba(8,20,28,.32));border:1px solid rgba(126,200,255,.16);border-radius:1.3rem;padding:.62rem .62rem .7rem;margin:.1rem 0 .62rem}",
     "#under,#pendelGo{display:none!important}",
-    "#tools{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:.62rem}",
-    "#tools .tile{border:1px solid rgba(255,255,255,.1);background:rgba(12,8,20,.75);color:#fff;border-radius:1.05rem;padding:.55rem .1rem .5rem;font:inherit}",
-    "#tools .tile b{display:block;font-size:1.15rem;line-height:1;margin:0 0 .28rem;font-weight:400}",
-    "#tools .tile span{display:block;font-size:.64rem;letter-spacing:.04em}",
-    "#tools .t1{border-color:rgba(255,122,217,.45);color:#ffb3ea}",
-    "#tools .t2{border-color:rgba(126,200,255,.45);color:#9fd6ff}",
-    "#tools .t3{border-color:rgba(46,230,214,.45);color:#7ef0e6}",
-    "#tools .t4{border-color:rgba(125,255,163,.45);color:#a6ffc4}",
-    "#sigRow{display:grid;grid-template-columns:1fr auto;gap:.35rem;margin-top:.5rem;align-items:center}",
-    "#sigRow input{margin:0;border-radius:.9rem}",
-    "#sigRow #sigilSave{margin:0;border-radius:.9rem;padding:.62rem .9rem;white-space:nowrap}"
+    ".duo{gap:.42rem}",
+    "#tools{display:grid;grid-template-columns:repeat(4,1fr);gap:.36rem;margin-top:.55rem}",
+    "#tools .tile{border:1px solid rgba(255,255,255,.1);background:rgba(12,8,20,.78);border-radius:1rem;padding:.58rem .08rem .5rem;font:inherit}",
+    "#tools .tile b{display:block;font-size:1.2rem;line-height:1;margin:0 0 .26rem;font-weight:400}",
+    "#tools .tile span{display:block;font-size:.62rem;letter-spacing:.05em}",
+    "#tools .t1{border-color:rgba(255,122,217,.48);color:#ffb3ea}",
+    "#tools .t2{border-color:rgba(126,200,255,.48);color:#9fd6ff}",
+    "#tools .t3{border-color:rgba(46,230,214,.48);color:#7ef0e6}",
+    "#tools .t4{border-color:rgba(125,255,163,.48);color:#a6ffc4}",
+    "#sigRow{display:grid;grid-template-columns:1fr auto;gap:.32rem;margin-top:.46rem;align-items:center}",
+    "#sigRow input{margin:0;border-radius:.85rem;min-height:2.35rem}",
+    "#sigRow #sigilSave{margin:0;border-radius:.85rem;padding:.58rem .85rem;white-space:nowrap;min-height:2.35rem}"
   ].join("");
   document.head.appendChild(css);
   document.addEventListener("click",function(e){
