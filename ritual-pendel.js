@@ -1,7 +1,8 @@
 (function(){
   var on=false, raf=0;
   var x=0, y=0, vx=0, vy=0, spin=0, spinV=0;
-  var gx=0, gy=0, gz=9.8, primed=false, lock=null, votes={ja:0,nein:0,kreis:0};
+  var gx=0, gy=0, primed=false, lock=null;
+  var votes={ja:0,nein:0,kreis:0}, turn=0, lastA=null;
   var trail=[], c, ctx;
 
   function ready(){
@@ -14,7 +15,6 @@
     b.style.cssText="margin-top:.45rem;width:100%;min-height:2.45rem";
     kast.appendChild(b);
   }
-
   function hint(t){
     var h=document.getElementById("pendelHint");
     if(h) h.textContent=t;
@@ -82,38 +82,50 @@
 
   function choose(){
     if(lock) return;
-    var ax=Math.abs(x)+Math.abs(vx)*8;
-    var ay=Math.abs(y)+Math.abs(vy)*8;
-    var as=Math.abs(spinV);
-    if(as>0.018 && as>ax*0.04 && as>ay*0.04) votes.kreis++;
-    else if(ay>ax*1.35 && ay>0.08) votes.ja++;
-    else if(ax>ay*1.35 && ax>0.08) votes.nein++;
-    if(votes.ja>40){ lock="ja"; hint("Bahn: Ja"); }
-    else if(votes.nein>40){ lock="nein"; hint("Bahn: Nein"); }
-    else if(votes.kreis>40){ lock="kreis"; hint("Bahn: Drehen"); }
+    var rad=Math.sqrt(x*x+y*y);
+    var a=Math.atan2(y,x);
+    if(rad>0.12 && lastA!==null){
+      var d=a-lastA;
+      while(d>Math.PI) d-=Math.PI*2;
+      while(d<-Math.PI) d+=Math.PI*2;
+      turn+=d;
+    }
+    lastA=a;
+    var ax=Math.abs(x)+Math.abs(vx)*10;
+    var ay=Math.abs(y)+Math.abs(vy)*10;
+    if(Math.abs(turn)>1.6) votes.kreis+=3;
+    else if(ay>ax*1.5 && ay>0.1) votes.ja++;
+    else if(ax>ay*1.5 && ax>0.1) votes.nein++;
+    if(votes.kreis>36){ lock="kreis"; hint("Bahn: Kreis"); }
+    else if(votes.ja>70){ lock="ja"; hint("Bahn: Ja"); }
+    else if(votes.nein>70){ lock="nein"; hint("Bahn: Nein"); }
   }
 
   function step(){
-    var k=1.65, damp=0.992, dt=1/60;
-    if(lock==="ja"){ x*=0.86; vx*=0.86; }
-    if(lock==="nein"){ y*=0.86; vy*=0.86; }
-    if(lock==="kreis"){ x*=0.9; y*=0.9; vx*=0.9; vy*=0.9; }
-    if(lock!=="kreis") spinV*=0.9;
-    vx += -x*k*dt;
-    vy += -y*k*dt;
-    var amp=Math.sqrt(vx*vx+vy*vy);
-    if(lock && amp>0.006){
-      vx += vx/amp*0.0009;
-      vy += vy/amp*0.0009;
+    var k=1.45, damp=0.993, dt=1/60;
+    if(lock==="ja"){ x*=0.88; vx*=0.88; }
+    if(lock==="nein"){ y*=0.88; vy*=0.88; }
+    if(lock==="kreis"){
+      var rad=Math.sqrt(x*x+y*y);
+      if(rad<0.18) rad=0.22;
+      if(rad>0.62) rad=0.62;
+      var a=Math.atan2(y,x);
+      var w=spinV!==0?Math.sign(spinV)*0.028:(turn>=0?0.028:-0.028);
+      a+=w;
+      x=Math.cos(a)*rad; y=Math.sin(a)*rad;
+      vx=0; vy=0;
+    } else {
+      vx += -x*k*dt;
+      vy += -y*k*dt;
+      vx*=damp; vy*=damp;
+      x += vx; y += vy;
     }
-    vx*=damp; vy*=damp;
-    x += vx; y += vy;
     var m=Math.sqrt(x*x+y*y);
-    if(m>0.9){ x*=0.9/m; y*=0.9/m; vx*=-0.28; vy*=-0.28; }
-    spinV = Math.max(-0.045, Math.min(0.045, spinV*0.97));
+    if(m>0.9){ x*=0.9/m; y*=0.9/m; vx*=-0.25; vy*=-0.25; }
+    spinV = Math.max(-0.03, Math.min(0.03, spinV*0.975));
     spin += spinV;
     trail.push({x:x,y:y});
-    if(trail.length>70) trail.shift();
+    if(trail.length>80) trail.shift();
     choose();
   }
 
@@ -126,27 +138,32 @@
   function pulse(px,py){
     if(lock) return;
     var s=Math.sqrt(px*px+py*py);
-    if(s<0.055) return;
-    vx += px*0.0045;
-    vy += py*0.0045;
+    if(s<0.07) return;
+    vx += px*0.0028;
+    vy += py*0.0028;
+    var tang=-y*px + x*py;
+    if(Math.abs(tang)>0.02) spinV += Math.max(-0.006, Math.min(0.006, tang*0.015));
   }
 
   function onMot(e){
-    var a=e.acceleration;
-    var g=e.accelerationIncludingGravity;
+    var a=e.acceleration, g=e.accelerationIncludingGravity;
     var px=0, py=0;
     if(a && typeof a.x==="number"){ px=a.x; py=a.y; }
     else if(g && typeof g.x==="number"){
-      gx=gx*0.95+g.x*0.05;
-      gy=gy*0.95+g.y*0.05;
+      gx=gx*0.96+g.x*0.04;
+      gy=gy*0.96+g.y*0.04;
       px=g.x-gx; py=g.y-gy;
     }
     if(!primed){ primed=true; return; }
     pulse(px, py);
     if(!lock){
       var r=e.rotationRate;
-      if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>28){
-        spinV += Math.max(-0.01, Math.min(0.01, r.alpha/2200));
+      if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>18){
+        var add=Math.max(-0.008, Math.min(0.008, r.alpha/2600));
+        spinV += add;
+        var rad=Math.sqrt(x*x+y*y)||0.12;
+        var ang=Math.atan2(y,x)+add*0.9;
+        x=Math.cos(ang)*rad; y=Math.sin(ang)*rad;
       }
     }
   }
@@ -155,22 +172,19 @@
     window.removeEventListener("devicemotion", onMot, true);
     window.addEventListener("devicemotion", onMot, true);
   }
-
   function stabilize(){
     x=0; y=0; vx=0; vy=0; spin=0; spinV=0;
-    trail=[]; lock=null; votes={ja:0,nein:0,kreis:0};
-    primed=false; gx=0; gy=0; gz=9.8;
+    trail=[]; lock=null; votes={ja:0,nein:0,kreis:0}; turn=0; lastA=null;
+    primed=false; gx=0; gy=0;
     hint("Mitte. Warten auf die Bahn.");
     bind();
   }
-
   function startSensor(){
     stabilize();
     if(typeof DeviceMotionEvent!=="undefined" && DeviceMotionEvent.requestPermission){
       DeviceMotionEvent.requestPermission().then(bind).catch(bind);
     } else bind();
   }
-
   function openP(){
     if(typeof show==="function") show("pendel");
     var ans=document.getElementById("pendelAns");
@@ -184,9 +198,7 @@
       c.width=w; c.height=w;
       ctx=c.getContext("2d");
     }
-    on=true;
-    startSensor();
-    loop();
+    on=true; startSensor(); loop();
   }
   function closeP(){
     on=false;
@@ -204,7 +216,6 @@
     "#pendelHint{text-align:center;line-height:1.4;margin:.25rem auto .45rem}"
   ].join("");
   document.head.appendChild(css);
-
   document.addEventListener("click",function(e){
     if(!e.target) return;
     if(e.target.id==="pendelGo") openP();
