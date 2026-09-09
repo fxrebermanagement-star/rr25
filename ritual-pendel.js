@@ -76,13 +76,13 @@
   }
 
   function step(){
-    var k=1.55, damp=0.993, dt=1/60;
+    var k=1.7, damp=0.991, dt=1/60;
     vx += -x*k*dt;
     vy += -y*k*dt;
     var amp=Math.sqrt(vx*vx+vy*vy);
-    if(amp>0.004){
-      vx += vx/amp*0.0016;
-      vy += vy/amp*0.0016;
+    if(amp>0.01){
+      vx += vx/amp*0.0007;
+      vy += vy/amp*0.0007;
     }
     vx*=damp; vy*=damp;
     x += vx; y += vy;
@@ -102,10 +102,10 @@
 
   function pulse(px,py){
     var s=Math.sqrt(px*px+py*py);
-    if(s<0.012) return;
-    vx += px*0.018;
-    vy += py*0.018;
-    if(Math.abs(px)>Math.abs(py)*1.2) spinV += (px>0?0.012:-0.012);
+    if(s<0.045) return;
+    vx += px*0.007;
+    vy += py*0.007;
+    if(Math.abs(px)>Math.abs(py)*1.4) spinV += (px>0?0.006:-0.006);
   }
 
   function onMot(e){
@@ -115,19 +115,16 @@
     if(a && typeof a.x==="number"){
       px=a.x; py=a.y;
     } else if(g && typeof g.x==="number"){
-      gx=gx*0.92+g.x*0.08;
-      gy=gy*0.92+g.y*0.08;
-      gz=gz*0.92+(g.z||9.8)*0.08;
+      gx=gx*0.94+g.x*0.06;
+      gy=gy*0.94+g.y*0.06;
+      gz=gz*0.94+(g.z||9.8)*0.06;
       px=g.x-gx; py=g.y-gy;
     }
-    if(!primed){
-      primed=true;
-      return;
-    }
+    if(!primed){ primed=true; return; }
     pulse(px, py);
     var r=e.rotationRate;
-    if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>12){
-      spinV += r.alpha/900;
+    if(r && typeof r.alpha==="number" && Math.abs(r.alpha)>22){
+      spinV += r.alpha/1400;
     }
   }
 
