@@ -35,20 +35,20 @@
   var css=document.createElement("style");
   css.textContent=[
     "header .sub{display:none}",
-    "#kasten{background:linear-gradient(180deg,rgba(80,20,70,.32),rgba(8,20,28,.32));border:1px solid rgba(126,200,255,.16);border-radius:1.3rem;padding:.62rem .62rem .7rem;margin:.1rem 0 .62rem}",
+    "#kasten{background:transparent;border:0;padding:.2rem 0 .35rem;margin:0 0 .4rem}",
     "#under,#pendelGo{display:none!important}",
     ".duo{gap:.42rem}",
-    "#tools{display:grid;grid-template-columns:repeat(4,1fr);gap:.36rem;margin-top:.55rem}",
-    "#tools .tile{border:1px solid rgba(255,255,255,.1);background:rgba(12,8,20,.78);border-radius:1rem;padding:.58rem .08rem .5rem;font:inherit}",
-    "#tools .tile b{display:block;font-size:1.05rem;line-height:1;margin:0 0 .26rem;font-weight:500}",
-    "#tools .tile span{display:block;font-size:.62rem;letter-spacing:.05em}",
-    "#tools .t1{border-color:rgba(255,122,217,.48);color:#ffb3ea}",
-    "#tools .t2{border-color:rgba(126,200,255,.48);color:#9fd6ff}",
-    "#tools .t3{border-color:rgba(46,230,214,.48);color:#7ef0e6}",
-    "#tools .t4{border-color:rgba(125,255,163,.48);color:#a6ffc4}",
-    "#sigRow{display:grid;grid-template-columns:1fr auto;gap:.32rem;margin-top:.46rem;align-items:center}",
-    "#sigRow input{margin:0;border-radius:.85rem;min-height:2.35rem}",
-    "#sigRow #sigilSave{margin:0;border-radius:.85rem;padding:.58rem .85rem;white-space:nowrap;min-height:2.35rem}"
+    "#tools{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-top:.5rem}",
+    "#tools .tile{border:1px solid rgba(255,255,255,.1);background:rgba(12,8,20,.7);border-radius:.95rem;padding:.5rem .08rem .42rem;font:inherit}",
+    "#tools .tile b{display:block;font-size:1.05rem;line-height:1;margin:0 0 .22rem;font-weight:500}",
+    "#tools .tile span{display:block;font-size:.6rem;letter-spacing:.05em}",
+    "#tools .t1{border-color:rgba(255,122,217,.4);color:#ffb3ea}",
+    "#tools .t2{border-color:rgba(126,200,255,.4);color:#9fd6ff}",
+    "#tools .t3{border-color:rgba(46,230,214,.4);color:#7ef0e6}",
+    "#tools .t4{border-color:rgba(125,255,163,.4);color:#a6ffc4}",
+    "#sigRow{display:grid;grid-template-columns:1fr auto;gap:.32rem;margin-top:.42rem;align-items:center}",
+    "#sigRow input{margin:0;border-radius:.85rem;min-height:2.3rem}",
+    "#sigRow #sigilSave{margin:0;border-radius:.85rem;padding:.55rem .8rem;white-space:nowrap;min-height:2.3rem}"
   ].join("");
   document.head.appendChild(css);
   document.addEventListener("click",function(e){
