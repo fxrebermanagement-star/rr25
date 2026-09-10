@@ -24,10 +24,11 @@ header{padding:calc(.38rem + env(safe-area-inset-top)) .8rem .42rem;position:sti
 .doll{width:54px;height:54px;object-fit:cover;border-radius:17px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.55);background:#12081c}
 .brand{font-family:Georgia,serif;letter-spacing:.32em;font-size:.7rem;color:#ff7ad9;text-align:center;margin:.14rem 0 0}
 .sub{display:none}
-nav{display:grid;grid-template-columns:repeat(6,1fr);gap:.18rem;padding:.28rem .16rem calc(.28rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
-nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.55rem .08rem .48rem;font:inherit;font-size:.58rem;letter-spacing:.03em;display:flex;flex-direction:column;align-items:center;gap:.16rem}
+nav{display:grid;grid-template-columns:repeat(5,1fr);gap:.18rem;padding:.28rem .16rem calc(.28rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
+nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.55rem .08rem .48rem;font:inherit;font-size:.62rem;letter-spacing:.03em;display:flex;flex-direction:column;align-items:center;gap:.16rem}
 nav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{background:linear-gradient(165deg,#ff7ad9,#7ec8ff);color:#14081c;font-weight:650}
+nav [data-v="person"]{display:none!important}
 .app.runmode header .doll,.app.runmode header .brand,.app.runmode header .sub,.app.runmode #moonWrap,.app.runmode #sunWrap,.app.runmode #headRow{display:none}
 .app.runmode header{padding-top:calc(.22rem + env(safe-area-inset-top));padding-bottom:.28rem}
 main{flex:1;padding:0 .8rem 6.8rem}
@@ -147,7 +148,6 @@ textarea{min-height:5.2rem}
 </main>
 <nav>
 <button type="button" class="on" data-v="home"><svg viewBox="0 0 24 24"><path d="M12 3l1.2 3.6L17 8l-3.8 1.4L12 13l-1.2-3.6L7 8l3.8-1.4z"/><path d="M8 16h8M9 19h6"/></svg>Rituale</button>
-<button type="button" data-v="person"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M6 19c.8-3.2 3-5 6-5s5.2 1.8 6 5"/></svg>Person</button>
 <button type="button" data-v="geplant"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Geplant</button>
 <button type="button" data-v="notiz"><svg viewBox="0 0 24 24"><path d="M7 4h8l5 5v11H7z"/><path d="M15 4v5h5M9 13h6M9 17h4"/></svg>Notiz</button>
 <button type="button" data-v="log"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>Chronik</button>
@@ -181,10 +181,10 @@ textarea{min-height:5.2rem}
 <script src="ritual-wesen-run.js?v=3"></script>
 <script src="ritual-finst.js"></script>
 <script src="ritual-liebe-zw.js"></script>
-<script src="ritual-person.js?v=4"></script>
 <script src="ritual-wort.js?v=8"></script>
 <script src="ritual-ueber.js?v=2"></script>
 <script src="ritual-backup.js?v=3"></script>
+<script src="ritual-navkill.js?v=1"></script>
 <script src="pwa.js"></script>
 <script>
 (function(){
@@ -199,6 +199,7 @@ textarea{min-height:5.2rem}
       b.onclick=function(){ cat="Person X"; if(typeof renderList==="function") renderList(); };
       cats.appendChild(b);
     }
+    document.querySelectorAll('nav [data-v="person"]').forEach(function(n){ n.remove(); });
   }
   if(typeof renderList==="function"){
     var prev=renderList;
