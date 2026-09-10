@@ -1,28 +1,6 @@
 (function(){
   var KEY="rr25_sigil";
-  var L={
-    B:[[.3,.15],[.3,.85],[.3,.15],[.7,.28],[.3,.5],[.7,.72],[.3,.85]],
-    C:[[.72,.22],[.3,.2],[.28,.8],[.72,.78]],
-    D:[[.3,.15],[.3,.85],[.3,.15],[.72,.5],[.3,.85]],
-    F:[[.3,.85],[.3,.15],[.72,.15],[.3,.15],[.3,.5],[.62,.5]],
-    G:[[.7,.22],[.3,.22],[.28,.78],[.7,.78],[.7,.52],[.5,.52]],
-    H:[[.28,.15],[.28,.85],[.28,.5],[.72,.5],[.72,.15],[.72,.85]],
-    J:[[.68,.15],[.68,.7],[.5,.85],[.32,.7]],
-    K:[[.3,.15],[.3,.85],[.3,.5],[.72,.15],[.3,.5],[.72,.85]],
-    L:[[.32,.15],[.32,.85],[.7,.85]],
-    M:[[.22,.85],[.22,.15],[.5,.55],[.78,.15],[.78,.85]],
-    N:[[.28,.85],[.28,.15],[.72,.85],[.72,.15]],
-    P:[[.3,.85],[.3,.15],[.68,.15],[.7,.38],[.3,.48]],
-    Q:[[.5,.2],[.28,.38],[.28,.7],[.5,.85],[.72,.7],[.72,.38],[.5,.2]],
-    R:[[.3,.85],[.3,.15],[.68,.15],[.7,.38],[.3,.48],[.7,.85]],
-    S:[[.7,.22],[.32,.2],[.3,.48],[.7,.52],[.7,.8],[.3,.82]],
-    T:[[.22,.18],[.78,.18],[.5,.18],[.5,.85]],
-    V:[[.22,.15],[.5,.85],[.78,.15]],
-    W:[[.18,.15],[.32,.85],[.5,.4],[.68,.85],[.82,.15]],
-    X:[[.25,.18],[.75,.82],[.75,.18],[.25,.82]],
-    Y:[[.22,.15],[.5,.5],[.78,.15],[.5,.5],[.5,.85]],
-    Z:[[.25,.18],[.75,.18],[.25,.82],[.75,.82]]
-  };
+  var L={B:[[.3,.15],[.3,.85],[.3,.15],[.7,.28],[.3,.5],[.7,.72],[.3,.85]],C:[[.72,.22],[.3,.2],[.28,.8],[.72,.78]],D:[[.3,.15],[.3,.85],[.3,.15],[.72,.5],[.3,.85]],F:[[.3,.85],[.3,.15],[.72,.15],[.3,.15],[.3,.5],[.62,.5]],G:[[.7,.22],[.3,.22],[.28,.78],[.7,.78],[.7,.52],[.5,.52]],H:[[.28,.15],[.28,.85],[.28,.5],[.72,.5],[.72,.15],[.72,.85]],J:[[.68,.15],[.68,.7],[.5,.85],[.32,.7]],K:[[.3,.15],[.3,.85],[.3,.5],[.72,.15],[.3,.5],[.72,.85]],L:[[.32,.15],[.32,.85],[.7,.85]],M:[[.22,.85],[.22,.15],[.5,.55],[.78,.15],[.78,.85]],N:[[.28,.85],[.28,.15],[.72,.85],[.72,.15]],P:[[.3,.85],[.3,.15],[.68,.15],[.7,.38],[.3,.48]],Q:[[.5,.2],[.28,.38],[.28,.7],[.5,.85],[.72,.7],[.72,.38],[.5,.2]],R:[[.3,.85],[.3,.15],[.68,.15],[.7,.38],[.3,.48],[.7,.85]],S:[[.7,.22],[.32,.2],[.3,.48],[.7,.52],[.7,.8],[.3,.82]],T:[[.22,.18],[.78,.18],[.5,.18],[.5,.85]],V:[[.22,.15],[.5,.85],[.78,.15]],W:[[.18,.15],[.32,.85],[.5,.4],[.68,.85],[.82,.15]],X:[[.25,.18],[.75,.82],[.75,.18],[.25,.82]],Y:[[.22,.15],[.5,.5],[.78,.15],[.5,.5],[.5,.85]],Z:[[.25,.18],[.75,.18],[.25,.82],[.75,.82]]};
   function red(s){
     s=String(s||"").toUpperCase().replace(/[ÄÖÜAEIOU\s0-9.,;:!?'"\-]/g,"");
     var o="",seen={};
@@ -34,54 +12,51 @@
   function canvas(){
     var c=document.getElementById("sigilC"); if(!c) return null;
     var r=c.getBoundingClientRect();
-    var w=Math.max(300, Math.round(r.width*2)||300);
-    var h=Math.max(300, Math.round(r.height*2)||300);
+    var w=Math.max(320, Math.round(r.width*2)||320);
+    var h=Math.max(320, Math.round(r.height*2)||320);
     if(c.width!==w||c.height!==h){ c.width=w; c.height=h; }
     return c;
-  }
-  function ring(ctx, rad, color, width){
-    ctx.beginPath(); ctx.arc(0,0,rad,0,Math.PI*2);
-    ctx.strokeStyle=color; ctx.lineWidth=width; ctx.stroke();
   }
   function draw(letters){
     var c=canvas(); if(!c) return;
     var ctx=c.getContext("2d"), w=c.width, h=c.height, m=Math.min(w,h);
-    var bg=ctx.createRadialGradient(w/2,h/2,m*0.08,w/2,h/2,m*0.55);
-    bg.addColorStop(0,"#20102f"); bg.addColorStop(1,"#08040e");
+    var bg=ctx.createRadialGradient(w/2,h/2,m*0.06,w/2,h/2,m*0.55);
+    bg.addColorStop(0,"#241334"); bg.addColorStop(1,"#08040e");
     ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
     ctx.save();
     ctx.translate(w/2,h/2);
-    ring(ctx, m*0.44, "rgba(126,240,230,.45)", Math.max(2,m/140));
-    ring(ctx, m*0.38, "rgba(255,122,217,.35)", Math.max(1.4,m/180));
+    ctx.beginPath(); ctx.arc(0,0,m*0.46,0,Math.PI*2);
+    ctx.strokeStyle="rgba(126,240,230,.4)"; ctx.lineWidth=Math.max(2,m/130); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0,0,m*0.41,0,Math.PI*2);
+    ctx.strokeStyle="rgba(255,122,217,.32)"; ctx.lineWidth=Math.max(1.5,m/160); ctx.stroke();
     var n=(letters||"").length;
     if(n){
-      var lw=Math.max(3,m/55);
+      var lw=Math.max(5,m/38);
       for(var i=0;i<n;i++){
         var pts=L[letters[i]]||L.X;
         ctx.save();
         ctx.rotate((Math.PI*2*i)/n);
-        ctx.translate(0, -m*0.02);
         ctx.lineCap="round"; ctx.lineJoin="round";
-        ctx.shadowColor="#ff7ad9"; ctx.shadowBlur=m/16;
+        ctx.shadowColor="#ff7ad9"; ctx.shadowBlur=m/12;
         ctx.strokeStyle="#ff9ad8"; ctx.lineWidth=lw;
         ctx.beginPath();
         pts.forEach(function(p,k){
-          var x=(p[0]-.5)*m*0.34, y=(p[1]-.5)*m*0.34;
+          var x=(p[0]-.5)*m*0.72, y=(p[1]-.5)*m*0.72;
           if(k) ctx.lineTo(x,y); else ctx.moveTo(x,y);
         });
         ctx.stroke();
         ctx.shadowBlur=0;
-        ctx.strokeStyle="#fff0fb"; ctx.lineWidth=lw*0.38;
+        ctx.strokeStyle="#fff4fb"; ctx.lineWidth=lw*0.35;
         ctx.stroke();
         ctx.restore();
       }
     }
     ctx.fillStyle="#7ef0e6";
-    ctx.shadowColor="#7ef0e6"; ctx.shadowBlur=m/14;
-    ctx.beginPath(); ctx.arc(0,0,Math.max(3,m/70),0,Math.PI*2); ctx.fill();
+    ctx.shadowColor="#7ef0e6"; ctx.shadowBlur=m/12;
+    ctx.beginPath(); ctx.arc(0,0,Math.max(4,m/55),0,Math.PI*2); ctx.fill();
     ctx.restore();
   }
-  function field(){ return document.getElementById("sigilT")||document.querySelector("#underR input"); }
+  function field(){ return document.getElementById("sigilT")||document.querySelector("#sigRow input,#underR input"); }
   function go(){
     var t=field()?field().value:"";
     var letters=red(t);
@@ -91,7 +66,7 @@
   function restore(){
     var d=loadS();
     var el=field();
-    if(el&&d.t) el.value=d.t;
+    if(el&&d.t) el.value=String(d.t).toUpperCase();
     draw(d.l||"");
   }
   window._sigilGo=go;
