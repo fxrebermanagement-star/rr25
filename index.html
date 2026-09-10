@@ -185,5 +185,28 @@ textarea{min-height:5.2rem}
 <script src="ritual-ueber.js?v=2"></script>
 <script src="ritual-backup.js?v=3"></script>
 <script src="pwa.js"></script>
+<script>
+(function(){
+  function addChip(){
+    var cats=document.getElementById("cats");
+    if(!cats) return;
+    if(!cats.querySelector('[data-cat="Person X"]')){
+      var b=document.createElement("button");
+      b.className="chip"+(typeof cat!=="undefined"&&cat==="Person X"?" on":"");
+      b.setAttribute("data-cat","Person X");
+      b.textContent="Person X";
+      b.onclick=function(){ cat="Person X"; if(typeof renderList==="function") renderList(); };
+      cats.appendChild(b);
+    }
+  }
+  if(typeof renderList==="function"){
+    var prev=renderList;
+    renderList=function(){ prev(); addChip(); };
+  }
+  addChip();
+  setTimeout(addChip,200);
+  setTimeout(addChip,800);
+})();
+</script>
 </body>
 </html>
