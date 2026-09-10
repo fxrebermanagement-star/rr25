@@ -9,43 +9,29 @@
     ["Entlassen","Der Auftrag ist gegeben und begrenzt.\nIch danke. Du gehst, wenn die Arbeit getan ist.\nAlle Verbindungen zu mir lösen sich.\nIch schließe den Kontakt."],
     ["Rückkehr","Ich bin nicht die Wesenheit.\nIch kehre vollständig in mich zurück.\nMeine Energie gehört mir.\nSo sei es. Erden."]
   ];
-  function put(){
-    for(var i=R.length-1;i>=0;i--) if(R[i].id==="wesen") R.splice(i,1);
-    R.push({id:"wesen",t:"Kontakt Wesenheit",s:"Auftrag setzen. Kontakt. Entlassen.",tag:"Feld",need:["Auftrag"],steps:STEPS.slice()});
-  }
-  function pin(){
-    var home=document.getElementById("home");
-    var cats=document.getElementById("cats");
-    if(!home||!cats) return;
-    var el=document.getElementById("pinWesen");
-    if(!el){
-      el=document.createElement("button");
-      el.type="button"; el.id="pinWesen"; el.className="card";
-      home.insertBefore(el, cats);
-    }
-    el.innerHTML="<b>Kontakt Wesenheit</b><small>Auftrag setzen. Kontakt. Entlassen.</small>";
-    el.onclick=function(){ fromPlan=null; openR("wesen"); };
-  }
-  put();
+  var pin=document.getElementById("pinWesen");
+  if(pin&&pin.parentNode) pin.parentNode.removeChild(pin);
+  for(var i=R.length-1;i>=0;i--) if(R[i].id==="wesen") R.splice(i,1);
+  R.push({id:"wesen",t:"Kontakt Wesenheit",s:"Auftrag setzen. Kontakt. Entlassen.",tag:"Feld",need:["Auftrag"],steps:STEPS.slice()});
   var prev=openR;
   openR=function(id,wer){
     if(id!=="wesen") return prev(id,wer);
-    var i=0, mem={Auftrag:(wer||"")};
+    var n=0, mem={Auftrag:(wer||"")};
     function tx(s){ return String(s||"").split("[Auftrag]").join(mem.Auftrag||"[Auftrag]"); }
     function draw(){
-      var last=i===STEPS.length-1;
-      var field=i===0?'<input id="aufT" placeholder="Auftrag">':'';
+      var last=n===STEPS.length-1;
+      var field=n===0?'<input id="aufT" placeholder="Auftrag">':'';
       document.getElementById("run").innerHTML=
-        '<div class="hero"><p class="sub">Kontakt Wesenheit · '+(i+1)+'/'+STEPS.length+'</p><h2>'+STEPS[i][0]+'</h2></div>'+
-        field+'<p class="words">'+tx(STEPS[i][1])+'</p>'+
-        '<div class="row"><button type="button" class="btn ghost" id="prev">'+(i?"Zurück":"Liste")+'</button>'+
+        '<div class="hero"><p class="sub">Kontakt Wesenheit · '+(n+1)+'/'+STEPS.length+'</p><h2>'+STEPS[n][0]+'</h2></div>'+
+        field+'<p class="words">'+tx(STEPS[n][1])+'</p>'+
+        '<div class="row"><button type="button" class="btn ghost" id="prev">'+(n?"Zurück":"Liste")+'</button>'+
         '<button type="button" class="btn primary" id="next">'+(last?"So sei es":"Weiter")+'</button></div>';
       var inp=document.getElementById("aufT");
       if(inp){ inp.value=mem.Auftrag||""; inp.oninput=function(){ mem.Auftrag=inp.value.trim(); }; }
-      document.getElementById("prev").onclick=function(){ if(!i){show("home");return;} i--; draw(); };
+      document.getElementById("prev").onclick=function(){ if(!n){show("home");return;} n--; draw(); };
       document.getElementById("next").onclick=function(){
         if(inp) mem.Auftrag=inp.value.trim();
-        if(i<STEPS.length-1){ i++; draw(); return; }
+        if(n<STEPS.length-1){ n++; draw(); return; }
         var d=load();
         d.log.unshift({id:uid(),t:now(),titel:"Kontakt Wesenheit",wer:mem.Auftrag||"",wesen:true});
         save(d); show("after");
@@ -53,10 +39,5 @@
     }
     show("run"); draw();
   };
-  if(typeof renderList==="function"){
-    var old=renderList;
-    renderList=function(){ old(); pin(); };
-  }
-  pin();
   if(typeof renderList==="function") renderList();
 })();
