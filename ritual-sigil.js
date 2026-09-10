@@ -20,40 +20,30 @@
   function draw(letters){
     var c=canvas(); if(!c) return;
     var ctx=c.getContext("2d"), w=c.width, h=c.height, m=Math.min(w,h);
-    var bg=ctx.createRadialGradient(w/2,h/2,m*0.06,w/2,h/2,m*0.55);
-    bg.addColorStop(0,"#241334"); bg.addColorStop(1,"#08040e");
-    ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle="#08040e"; ctx.fillRect(0,0,w,h);
+    var n=(letters||"").length;
+    if(!n) return;
     ctx.save();
     ctx.translate(w/2,h/2);
-    ctx.beginPath(); ctx.arc(0,0,m*0.46,0,Math.PI*2);
-    ctx.strokeStyle="rgba(126,240,230,.4)"; ctx.lineWidth=Math.max(2,m/130); ctx.stroke();
-    ctx.beginPath(); ctx.arc(0,0,m*0.41,0,Math.PI*2);
-    ctx.strokeStyle="rgba(255,122,217,.32)"; ctx.lineWidth=Math.max(1.5,m/160); ctx.stroke();
-    var n=(letters||"").length;
-    if(n){
-      var lw=Math.max(5,m/38);
-      for(var i=0;i<n;i++){
-        var pts=L[letters[i]]||L.X;
-        ctx.save();
-        ctx.rotate((Math.PI*2*i)/n);
-        ctx.lineCap="round"; ctx.lineJoin="round";
-        ctx.shadowColor="#ff7ad9"; ctx.shadowBlur=m/12;
-        ctx.strokeStyle="#ff9ad8"; ctx.lineWidth=lw;
-        ctx.beginPath();
-        pts.forEach(function(p,k){
-          var x=(p[0]-.5)*m*0.72, y=(p[1]-.5)*m*0.72;
-          if(k) ctx.lineTo(x,y); else ctx.moveTo(x,y);
-        });
-        ctx.stroke();
-        ctx.shadowBlur=0;
-        ctx.strokeStyle="#fff4fb"; ctx.lineWidth=lw*0.35;
-        ctx.stroke();
-        ctx.restore();
-      }
+    var lw=Math.max(7,m/28);
+    for(var i=0;i<n;i++){
+      var pts=L[letters[i]]||L.X;
+      ctx.save();
+      ctx.rotate((Math.PI*2*i)/n);
+      ctx.lineCap="round"; ctx.lineJoin="round";
+      ctx.shadowColor="#ff7ad9"; ctx.shadowBlur=m/10;
+      ctx.strokeStyle="#ff9ad8"; ctx.lineWidth=lw;
+      ctx.beginPath();
+      pts.forEach(function(p,k){
+        var x=(p[0]-.5)*m*0.92, y=(p[1]-.5)*m*0.92;
+        if(k) ctx.lineTo(x,y); else ctx.moveTo(x,y);
+      });
+      ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.strokeStyle="#fff4fb"; ctx.lineWidth=lw*0.32;
+      ctx.stroke();
+      ctx.restore();
     }
-    ctx.fillStyle="#7ef0e6";
-    ctx.shadowColor="#7ef0e6"; ctx.shadowBlur=m/12;
-    ctx.beginPath(); ctx.arc(0,0,Math.max(4,m/55),0,Math.PI*2); ctx.fill();
     ctx.restore();
   }
   function field(){ return document.getElementById("sigilT")||document.querySelector("#sigRow input,#underR input"); }
