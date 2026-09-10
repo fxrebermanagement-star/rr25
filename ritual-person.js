@@ -112,6 +112,10 @@
       }
     });
   }
+  function go(id){
+    fromPlan=null;
+    openR(id, getP()||"");
+  }
   function screen(){
     if(document.getElementById("person")) return;
     var main=document.querySelector("main");
@@ -119,7 +123,10 @@
     var s=document.createElement("section");
     s.className="screen"; s.id="person";
     s.innerHTML=
-      '<div class="hero"><h2>Person X</h2><p class="sub">Anker · Foto · Datum · Notiz</p></div>'+
+      '<div class="hero"><h2>Person X</h2><p class="sub">Rituale und Anker</p></div>'+
+      '<button type="button" class="card" id="pUeber"><b>Person übernehmen</b><small>Person X für Aufgabe X</small></button>'+
+      '<button type="button" class="card" id="pSegen"><b>Segen</b><small>Für Person X. Wort legen.</small></button>'+
+      '<button type="button" class="card" id="pFluch"><b>Fluch</b><small>Gegen Person X. Wort setzen.</small></button>'+
       '<div class="card">'+
       '<p class="meta">Aktiv</p><p id="personCur"></p>'+
       '<input id="personId" type="hidden">'+
@@ -152,6 +159,9 @@
   document.addEventListener("click",function(e){
     var t=e.target;
     if(!t) return;
+    if(t.id==="pUeber"||t.closest&&t.closest("#pUeber")) go("ueber");
+    if(t.id==="pSegen"||t.closest&&t.closest("#pSegen")) go("segen");
+    if(t.id==="pFluch"||t.closest&&t.closest("#pFluch")) go("fluch");
     if(t.id==="personFoto"){
       var f=document.getElementById("personFile");
       if(f) f.click();
@@ -185,7 +195,6 @@
         if(n){ inp.value=n; inp.dispatchEvent(new Event("input")); }
         else if(inp.value.trim()){ saveOne({name:inp.value.trim()}); b.textContent=inp.value.trim()+" gemerkt"; }
       };
-      inp.addEventListener("blur",function(){ if(inp.value.trim()) saveOne({name:inp.value.trim(),id:"",born:"",note:"",pic:""}); });
       fillInputs();
     },80);
   },true);
