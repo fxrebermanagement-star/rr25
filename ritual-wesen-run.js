@@ -13,6 +13,19 @@
     for(var i=R.length-1;i>=0;i--) if(R[i].id==="wesen") R.splice(i,1);
     R.push({id:"wesen",t:"Kontakt Wesenheit",s:"Auftrag setzen. Kontakt. Entlassen.",tag:"Feld",need:["Auftrag"],steps:STEPS.slice()});
   }
+  function pin(){
+    var home=document.getElementById("home");
+    var cats=document.getElementById("cats");
+    if(!home||!cats) return;
+    var el=document.getElementById("pinWesen");
+    if(!el){
+      el=document.createElement("button");
+      el.type="button"; el.id="pinWesen"; el.className="card";
+      home.insertBefore(el, cats);
+    }
+    el.innerHTML="<b>Kontakt Wesenheit</b><small>Auftrag setzen. Kontakt. Entlassen.</small>";
+    el.onclick=function(){ fromPlan=null; openR("wesen"); };
+  }
   put();
   var prev=openR;
   openR=function(id,wer){
@@ -40,5 +53,10 @@
     }
     show("run"); draw();
   };
+  if(typeof renderList==="function"){
+    var old=renderList;
+    renderList=function(){ old(); pin(); };
+  }
+  pin();
   if(typeof renderList==="function") renderList();
 })();
