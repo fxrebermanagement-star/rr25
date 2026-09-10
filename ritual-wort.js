@@ -1,5 +1,4 @@
 (function(){
-  for(var i=R.length-1;i>=0;i--) if(R[i].id==="ueber") R.splice(i,1);
   function put(r){
     var old=R.find(function(x){return x.id===r.id});
     if(old){ old.t=r.t; old.s=r.s; old.tag=r.tag; old.need=r.need; old.steps=r.steps; }
@@ -41,7 +40,6 @@
         b.onclick=function(){ cat="Person X"; renderList(); };
         cats.appendChild(b);
       }
-      document.querySelectorAll('#list [data-id="ueber"]').forEach(function(el){ el.remove(); });
     };
   }
   if(typeof renderList==="function") renderList();
