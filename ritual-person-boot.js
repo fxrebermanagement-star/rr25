@@ -28,31 +28,41 @@
     var _f=fill;
     fill=function(s,m){ return _f(s,m).split("[Auftrag]").join((m&&m.Auftrag)||"[Auftrag]"); };
   }
-  if(document.getElementById("person")) return;
-  var main=document.querySelector("main");
-  if(!main) return;
-  var s=document.createElement("section");
-  s.id="person"; s.className="screen";
-  s.innerHTML='<div class="hero"><h2>Person X</h2><p class="sub">Rituale</p></div>'+
-    '<button type="button" class="card" data-rid="ueber"><b>Person übernehmen</b><small>Für Aufgabe X</small></button>'+
-    '<button type="button" class="card" data-rid="segen"><b>Segen</b><small>Für Person X</small></button>'+
-    '<button type="button" class="card" data-rid="fluch"><b>Fluch</b><small>Gegen Person X</small></button>';
-  main.appendChild(s);
-  var nav=document.querySelector("nav");
-  if(nav && !nav.querySelector('[data-v="person"]')){
+  function chip(){
+    var cats=document.getElementById("cats");
+    if(!cats) return;
+    var old=cats.querySelector('[data-cat="Person X"]');
+    if(old) old.remove();
     var b=document.createElement("button");
-    b.type="button"; b.setAttribute("data-v","person");
-    b.innerHTML='<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M6 19c.8-3.2 3-5 6-5s5.2 1.8 6 5"/></svg>Person';
-    var g=nav.querySelector('[data-v="geplant"]');
-    if(g) nav.insertBefore(b,g); else nav.appendChild(b);
+    b.className="chip"+(typeof cat!=="undefined" && cat==="Person X"?" on":"");
+    b.setAttribute("data-cat","Person X");
+    b.textContent="Person X";
+    b.onclick=function(){ cat="Person X"; renderList(); };
+    cats.appendChild(b);
   }
-  var st=document.createElement("style");
-  st.textContent="nav{grid-template-columns:repeat(6,1fr)!important}#person .sub{display:block!important;letter-spacing:.12em;text-transform:uppercase;font-size:.64rem}";
-  document.head.appendChild(st);
+  var prev=typeof renderList==="function"?renderList:function(){};
+  renderList=function(){
+    prev();
+    chip();
+  };
+  chip();
+  if(!document.getElementById("person")){
+    var main=document.querySelector("main");
+    if(main){
+      var s=document.createElement("section");
+      s.id="person"; s.className="screen";
+      s.innerHTML='<div class="hero"><h2>Person X</h2><p class="sub">Rituale</p></div>'+
+        '<button type="button" class="card" data-rid="ueber"><b>Person übernehmen</b><small>Für Aufgabe X</small></button>'+
+        '<button type="button" class="card" data-rid="segen"><b>Segen</b><small>Für Person X</small></button>'+
+        '<button type="button" class="card" data-rid="fluch"><b>Fluch</b><small>Gegen Person X</small></button>';
+      main.appendChild(s);
+    }
+  }
   document.addEventListener("click",function(e){
     var c=e.target.closest&&e.target.closest("#person [data-rid]");
     if(!c) return;
     fromPlan=null;
     openR(c.getAttribute("data-rid"));
   });
+  renderList();
 })();
