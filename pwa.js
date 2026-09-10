@@ -2,7 +2,10 @@
   if("serviceWorker" in navigator){
     navigator.serviceWorker.register("./sw.js").catch(function(){});
   }
-  var s=document.createElement("script");
-  s.src="ritual-person-boot.js?v=2";
-  document.body.appendChild(s);
+  var a=document.createElement("script");
+  a.src="ritual-list.js?v=1";
+  document.body.appendChild(a);
+  var b=document.createElement("script");
+  b.src="ritual-navkill.js?v=1";
+  document.body.appendChild(b);
 })();
