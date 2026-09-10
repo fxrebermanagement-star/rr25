@@ -26,7 +26,7 @@
     fill=function(s,m){ return _f(s,m).split("[Auftrag]").join((m&&m.Auftrag)||"[Auftrag]"); };
   }
   renderList=function(){
-    var order=["Alltag","Schutz","Energie","Liebe","Trennung","Feld","Person X"];
+    var order=["Alltag","Schutz","Energie","Liebe","Trennung","Person X","Feld"];
     var cats=document.getElementById("cats");
     var list=document.getElementById("list");
     if(!cats||!list) return;
