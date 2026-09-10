@@ -7,18 +7,15 @@
     if(!el||el._up) return;
     el._up=1;
     el.setAttribute("autocapitalize","characters");
-    el.setAttribute("autocomplete","off");
     el.addEventListener("input",function(){
-      var s=el.selectionStart, e=el.selectionEnd;
+      var a=el.selectionStart, b=el.selectionEnd;
       var v=el.value.toUpperCase();
       if(el.value!==v){
         el.value=v;
-        try{ el.setSelectionRange(s,e); }catch(err){}
+        try{ el.setSelectionRange(a,b); }catch(err){}
       }
-      if(typeof window._sigilGo==="function") window._sigilGo();
     });
   }
   up();
-  setTimeout(up,300);
-  setTimeout(up,900);
+  setTimeout(up,400);
 })();
