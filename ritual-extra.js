@@ -57,15 +57,15 @@
     if(!el) return;
     var z=zLoad();
     el.innerHTML=
-      '<button type="button" data-z="n3" class="'+(z.n3>=3?"on":"")+'">3 <span>'+z.n3+'/3</span></button>'+
-      '<button type="button" data-z="n6" class="'+(z.n6>=6?"on":"")+'">6 <span>'+z.n6+'/6</span></button>'+
-      '<button type="button" data-z="n9" class="'+(z.n9>=9?"on":"")+'">9 <span>'+z.n9+'/9</span></button>';
+      '<button type="button" data-z="n3">3 <span>'+z.n3+'/3</span></button>'+
+      '<button type="button" data-z="n6">6 <span>'+z.n6+'/6</span></button>'+
+      '<button type="button" data-z="n9">9 <span>'+z.n9+'/9</span></button>';
   }
   function zTap(key){
     var max={n3:3,n6:6,n9:9};
     var z=zLoad();
+    z[key]++;
     if(z[key]>=max[key]) z[key]=0;
-    else z[key]++;
     zSave(z);
     zPaint();
   }
@@ -177,8 +177,6 @@
     "#run #z369{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.7rem 0 .2rem}",
     "#run #z369 button{border:1px solid rgba(232,160,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
     "#run #z369 button span{display:block;font-size:.68rem;color:#c4a4d6;margin-top:.08rem}",
-    "#run #z369 button.on{background:linear-gradient(165deg,#9650d2,#e6aaff);color:#14081c;border-color:transparent}",
-    "#run #z369 button.on span{color:#14081c}",
     "#home #z369{display:none!important}"
   ].join("");
   document.head.appendChild(css);
