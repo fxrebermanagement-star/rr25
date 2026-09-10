@@ -1,9 +1,17 @@
 (function(){
   function put(r){
-    var old=R.find(function(x){return x.id===r.id});
-    if(old){ old.t=r.t; old.s=r.s; old.tag=r.tag; old.need=r.need; old.steps=r.steps; }
-    else R.push(r);
+    for(var i=R.length-1;i>=0;i--) if(R[i].id===r.id) R.splice(i,1);
+    R.push(r);
   }
+  put({id:"ueber",t:"Person übernehmen",s:"Person X für Aufgabe X",tag:"Person X",need:["Name","Auftrag"],steps:[
+    ["Vorbereitung","Name von Person X. Aufgabe in einem Satz.\nHandy weg. Eigenes Feld zuerst schliessen.\nFoto nur als Anker. Wasser danach.\nDu übernimmst für die Aufgabe, nicht für immer."],
+    ["Ankommen","Füsse. Drei Atemzüge.\nIch bin der Spieler, nicht die Spielfigur.\nDer Beobachter ist wach.\nIch bleibe ich. [Name] bleibt [Name]."],
+    ["Rahmen","Nur [Name]. Nur diese Aufgabe:\n[Auftrag]\nKein Auftrag darüber hinaus.\nKein Unbeteiligter. Die Übernahme endet mit der Aufgabe."],
+    ["Absicht","Ich übernehme [Name] für die Aufgabe.\nWille, Bahn und Handeln von [Name] richten sich auf:\n[Auftrag]\nZugang nur so weit, wie die Aufgabe braucht."],
+    ["369","Sprich vollständig. Zwischen den Runden ein Atem.\n3× Ich übernehme [Name] für die Aufgabe.\n6× Der Wille von [Name] hält bei der Aufgabe.\n9× Die Aufgabe läuft. Es ist so."],
+    ["Grenze","Kein Bleiben in [Name].\nKein Mehr als die Aufgabe.\nWenn die Aufgabe erfüllt ist, fällt die Übernahme."],
+    ["Rückkehr","Ich bin nicht [Name].\nIch kehre vollständig in mich zurück.\nMeine Energie gehört mir.\nSo sei es. Erden. Wasser, Alltag."]
+  ]});
   put({id:"segen",t:"Segen",s:"Für Person X. Wort legen.",tag:"Person X",need:["Name"],steps:[
     ["Vorbereitung","Name von Person X klar. Handy weg.\nEigenes Feld zuerst schliessen.\nKerze optional. Wasser danach.\nKein Hass im Mund. Segen ist Gabe, nicht Handel."],
     ["Ankommen","Stelle dich oder setze dich. Füsse auf den Boden.\nDrei ruhige Atemzüge.\nIch bin der Spieler, nicht die Spielfigur.\nDer Beobachter ist wach. Ich handle aus klarer Mitte."],
@@ -24,23 +32,30 @@
     ["Siegel","Optional Salz oder Siegelzeichen.\nEinmal setzen. Abgeben.\nNicht aus Unruhe wiederholen."],
     ["Rückkehr","Ich bin nicht [Name].\nIch kehre vollständig in mich zurück.\nMeine Energie gehört mir. Der Auftrag endet hier.\nSo sei es. Erden. Wasser, Alltag."]
   ]});
-  var old=renderList;
-  if(typeof old==="function"){
-    renderList=function(){
-      old();
-      var cats=document.getElementById("cats");
-      if(!cats) return;
-      var w=cats.querySelector('[data-cat="Wort"]');
-      if(w){ w.setAttribute("data-cat","Person X"); w.textContent="Person X"; }
-      if(!cats.querySelector('[data-cat="Person X"]')){
-        var b=document.createElement("button");
-        b.className="chip"+(cat==="Person X"?" on":"");
-        b.setAttribute("data-cat","Person X");
-        b.textContent="Person X";
-        b.onclick=function(){ cat="Person X"; renderList(); };
-        cats.appendChild(b);
-      }
-    };
+  if(typeof fill==="function"){
+    var _f=fill;
+    fill=function(s,m){ return _f(s,m).split("[Auftrag]").join((m&&m.Auftrag)||"[Auftrag]"); };
   }
-  if(typeof renderList==="function") renderList();
+  var prev=renderList;
+  renderList=function(){
+    prev();
+    var cats=document.getElementById("cats");
+    var list=document.getElementById("list");
+    if(cats && !cats.querySelector('[data-cat="Person X"]')){
+      var b=document.createElement("button");
+      b.className="chip"+(cat==="Person X"?" on":"");
+      b.setAttribute("data-cat","Person X");
+      b.textContent="Person X";
+      b.onclick=function(){ cat="Person X"; renderList(); };
+      cats.appendChild(b);
+    }
+    if(list && cat==="Person X" && !list.querySelector('[data-id="ueber"]')){
+      var c=document.createElement("button");
+      c.type="button"; c.className="card"; c.setAttribute("data-id","ueber");
+      c.innerHTML="<b>Person übernehmen</b><small>Person X für Aufgabe X</small>";
+      c.onclick=function(){ fromPlan=null; openR("ueber"); };
+      list.insertBefore(c, list.firstChild);
+    }
+  };
+  renderList();
 })();
