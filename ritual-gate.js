@@ -1,5 +1,5 @@
 (function(){
-  var SKIP={dank:1,schutz:1,finst:1,zur:1,fil:1,ahn:1,fremd:1,wesen:1,karma:1};
+  var SKIP={dank:1,schutz:1,finst:1,zur:1,fil:1,ahn:1,fremd:1,wesen:1,karma:1,segen:1,fluch:1,ueber:1,schaden:1};
   if(typeof openR!=="function") return;
   var _open=openR;
   openR=function(id,wer){
