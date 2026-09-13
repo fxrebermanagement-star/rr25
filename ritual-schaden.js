@@ -6,21 +6,17 @@
     tag:"Feld",
     need:["Name"],
     steps:[
-      ["Halt","Dies ist die Gegenseite. Du musst es nicht tun.\nNur wenn du die Verantwortung voll übernimmst.\nKein Theater. Keine Wut als Steuer.\nFüße. Atem. Ich bin der Spieler. Der Beobachter ist wach."],
-      ["Schutz zuerst","Erst das eigene Feld schließen.\nNichts Fremdes hat Zutritt. Ich öffne nur für diese eine Arbeit.\nIch bleibe in meiner Mitte. Ich werde nicht zum Werkzeug."],
-      ["Rahmen","Nur [Name]. Nur das gesetzte Maß.\nKein Nachsetzen ins Leben von Unbeteiligten.\nKein unendlicher Auftrag. Die Arbeit hat ein Ende."],
-      ["Absicht","Was von [Name] als Schaden ausgeht, kehrt in stimmiger Form zur Quelle.\nDer Zugriff auf mich, mein Haus und meine Leute endet.\nWas gesetzt wird, ist Begrenzung und Rückgabe — nicht blinder Hass."],
-      ["369","3× Der Schaden kehrt zur Quelle.\n6× Der Zugriff von [Name] fällt ab und findet keinen Halt.\n9× Die Arbeit ist gesetzt und begrenzt. Es ist so."],
-      ["Siegel","Optional Salz oder Siegelzeichen. Die Arbeit ist geschlossen.\nKein Wiederholen aus Wut. Einmal setzen, abgeben."],
-      ["Rückkehr","Ich bin nicht [Name]. Ich kehre vollständig in mich zurück.\nMeine Energie gehört mir. Der Auftrag endet hier.\nSo sei es. Erden. Wasser, Körper, Alltag."]
+      ["Vorbereitung","Dies ist die Gegenseite. Du musst es nicht tun.\nNur wenn du die Verantwortung voll übernimmst.\nHandy weg. Eigenes Feld zuerst schliessen.\nName von [Name] bereit. Foto nur als Anker, nicht als Fessel.\nKerze optional. Salz. Siegelzeichen wenn da.\nWasser zum Erden danach.\nKein Theater. Keine Wut als Steuer.\nNur setzen, wenn du es wirklich willst. Sonst zurück."],
+      ["Halt","Füsse auf den Boden. Drei Atemzüge.\nIch bin der Spieler, nicht die Spielfigur.\nDer Beobachter ist wach.\nIch bleibe in meiner Mitte.\nIch werde nicht zum Werkzeug."],
+      ["Schutz zuerst","Erst das eigene Feld schliessen.\nNichts Fremdes hat Zutritt.\nIch öffne nur für diese eine Arbeit.\nUnbeteiligte bleiben draussen."],
+      ["Rahmen","Nur [Name]. Nur das gesetzte Mass.\nKein Nachsetzen ins Leben von Unbeteiligten.\nKein unendlicher Auftrag.\nDie Arbeit hat ein Ende.\nWas gesetzt wird, ist Begrenzung und Rückgabe — nicht blinder Hass."],
+      ["Absicht","Was von [Name] als Schaden ausgeht, kehrt in stimmiger Form zur Quelle.\nDer Zugriff auf mich, mein Haus und meine Leute endet.\nDie Bahn bricht. Der Halt fällt."],
+      ["369","Sprich jede Zeile vollständig. Zwischen den Runden ein Atem. Zähler unten.\n\nDrei Mal:\nDer Schaden kehrt zur Quelle.\nDer Schaden kehrt zur Quelle.\nDer Schaden kehrt zur Quelle.\n\nSechs Mal:\nDer Zugriff von [Name] fällt ab und findet keinen Halt.\nDer Zugriff von [Name] fällt ab und findet keinen Halt.\nDer Zugriff von [Name] fällt ab und findet keinen Halt.\nDer Zugriff von [Name] fällt ab und findet keinen Halt.\nDer Zugriff von [Name] fällt ab und findet keinen Halt.\nDer Zugriff von [Name] fällt ab und findet keinen Halt.\n\nNeun Mal:\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so.\nDie Arbeit ist gesetzt und begrenzt. Es ist so."],
+      ["Siegel","Optional Salz oder Siegelzeichen.\nDie Arbeit ist geschlossen.\nKein Wiederholen aus Wut.\nEinmal setzen, abgeben."],
+      ["Rückkehr","Ich bin nicht [Name].\nIch kehre vollständig in mich zurück.\nMeine Energie gehört mir.\nDer Auftrag endet hier.\nSo sei es.\nErden. Wasser, Körper, Alltag."]
     ]
   };
-  if(!R.some(function(x){return x.id==="schaden"})) R.push(r);
-  if(typeof PREP==="object" && !PREP.schaden){
-    PREP.schaden="Raum schließen. Eigenes Feld zuerst.\nName von [Name] bereit. Foto nur als Anker, nicht als Fessel.\nKerze optional. Salz. Wasser zum Erden danach.\nNur setzen, wenn du es wirklich willst. Sonst zurück.";
-  }
-  if(r.steps[0][0]!=="Vorbereitung" && PREP && PREP.schaden){
-    r.steps.unshift(["Vorbereitung",PREP.schaden]);
-  }
+  for(var i=R.length-1;i>=0;i--) if(R[i].id==="schaden") R.splice(i,1);
+  R.push(r);
   if(typeof renderList==="function") renderList();
 })();
