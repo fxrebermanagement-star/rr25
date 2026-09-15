@@ -19,7 +19,7 @@
     "ritual-sigil-auto.js?v=2",
     "ritual-karten.js?v=6",
     "ritual-fein-all.js?v=1",
-    "ritual-dank.js?v=1",
+    "ritual-dank.js?v=2",
     "ritual-fluch.js?v=2",
     "ritual-segen.js?v=2",
     "ritual-ueber-full.js?v=2",
