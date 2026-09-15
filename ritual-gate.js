@@ -5,9 +5,19 @@
   var NOWESEN={dank:1,schutzweg:1,ahn:1,fremd:1};
   var FOTO={schutz2:1,liebe:1,liebezw:1,anz:1,fluch:1,segen:1,ueber:1,schaden:1};
   var MITSTEP=/Rufen|Prüfen|Auftrag geben/i;
+  var HALT_O="Tu:\nEinen Atem stehen. Nichts nachschieben.\n\nSprich:\nGesetzt.\nIch trage allein.\nAbgegeben.";
+  var HALT_M="Tu:\nEinen Atem stehen. Die Wesenheit trägt noch. Du hältst das Mass.\n\nSprich:\nGesetzt.\nDu trägst.\nIch führe.\nKein Mehr.";
+  var SIEG_O="Tu:\nSalz auf den Boden oder Hand flach auf die Erde. Einmal.\n\nSprich:\nVersiegelt.\nGeschlossen.\nDas Feld hat es.";
+  var SIEG_M="Tu:\nSalz oder Siegelzeichen. Einmal. Nicht aus Unruhe wiederholen.\n\nSprich:\nVersiegelt.\nDer Auftrag bleibt begrenzt.\nDanach gehst du.";
   var GO=
-    "Tu:\nKontakt schliessen. Nicht nachwinken.\n\n"+
+    "Tu:\nNicht nachwinken. Nicht offen lassen. Tor zu.\n\n"+
     "Sprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor.";
+  var RUECK_O=
+    "Tu:\nHaut. Atem. Füsse. Raum. Wasser.\n\n"+
+    "Sprich:\nIch bin zurück in mir.\nMeine Energie gehört mir.\nSo sei es.";
+  var RUECK_M=
+    "Tu:\nTor zu. Haut. Atem. Füsse. Raum. Wasser.\n\n"+
+    "Sprich:\nIch bin nicht die Wesenheit.\nIch bin zurück in mir.\nDer Raum gehört mir.\nMeine Energie gehört mir.\nSo sei es.";
   if(typeof openR!=="function") return;
   var _open=openR;
   openR=function(id,wer){
@@ -67,10 +77,15 @@
     }
     function wortText(text){
       if(ALWAYS[id] || NOWESEN[id]) return text;
-      if(mem.mit){
-        return "Weg Mit.\nDie Wesenheit trägt. Du führst.\nDu sprichst das Wort trotzdem selbst.\n\n"+text;
-      }
+      if(mem.mit) return "Weg Mit.\nDie Wesenheit trägt. Du führst.\nDu sprichst das Wort selbst.\n\n"+text;
       return "Weg Ohne.\nKein Kontakt. Du trägst das Wort allein.\n\n"+text;
+    }
+    function endText(titel, text){
+      if(/Halten/i.test(titel)) return mem.mit?HALT_M:HALT_O;
+      if(/Siegel/i.test(titel)) return mem.mit?SIEG_M:SIEG_O;
+      if(/Entlassen/i.test(titel)) return GO;
+      if(/Feld-Check|Rückkehr|Fertig/i.test(titel)) return mem.mit?RUECK_M:RUECK_O;
+      return String(text||"").replace(/Nur wenn jemand da war\.?\n*/g,"").replace(/Falls eine Wesenheit da war:?\n*/gi,"");
     }
     function choose(mit){
       mem.mit=mit; mem.wahl=true;
@@ -79,10 +94,9 @@
     function draw(){
       if(skipAt(i) && i<steps.length-1) fwd();
       if(skipAt(i) && i===steps.length-1){ i--; while(i>0 && skipAt(i)) i--; }
-      var titel=steps[i][0], text=steps[i][1], last=i===steps.length-1;
+      var titel=steps[i][0], text=endText(titel, steps[i][1]), last=i===steps.length-1;
       var wahl=/^Wesenheit$/i.test(titel) && !ALWAYS[id] && !NOWESEN[id];
-      if(/Entlassen/i.test(titel)) text=GO;
-      if(/^Wort$/i.test(titel)) text=wortText(text);
+      if(/^Wort$/i.test(titel)) text=wortText(steps[i][1]);
       if(/369/i.test(titel) && text.indexOf("Halte das Wort")<0){
         text="Halte das Wort. Nicht neu setzen, was schon gesprochen ist.\n"+text;
       }
@@ -105,7 +119,6 @@
         names+'<p class="words">'+fill(text,mem)+'</p>'+extra+
         (wahl?'':'<div class="row"><button type="button" class="btn ghost" id="prev">'+(i?"Zurück":"Liste")+'</button>'+
         '<button type="button" class="btn primary" id="next">'+(last?"So sei es":"Weiter")+'</button></div>')+
-        (wahl?'<p class="meta">Zurück zur Liste: unten Rituale.</p>':'')+
         '<p class="msg" id="msg"></p>';
       document.querySelectorAll("#run [data-k]").forEach(function(inp){
         inp.value=mem[inp.dataset.k]||"";
