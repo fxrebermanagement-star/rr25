@@ -8,7 +8,7 @@
   var HALT_O="Tu:\nEinen Atem stehen. Nichts nachschieben.\n\nSprich:\nGesetzt.\nIch trage allein.\nAbgegeben.";
   var HALT_M="Tu:\nEinen Atem stehen. Die Wesenheit trägt noch. Du hältst das Mass.\n\nSprich:\nGesetzt.\nDu trägst.\nIch führe.\nKein Mehr.";
   var SIEG_O="Tu:\nSalz auf den Boden oder Hand flach auf die Erde. Einmal.\n\nSprich:\nVersiegelt.\nGeschlossen.\nDas Feld hat es.";
-  var SIEG_M="Tu:\nSalz oder Siegelzeichen. Einmal. Nicht aus Unruhe wiederholen.\n\nSprich:\nVersiegelt.\nDer Auftrag bleibt begrenzt.\nDanach gehst du.";
+  var SIEG_M="Tu:\nSalz oder Siegelzeichen. Einmal.\n\nSprich:\nVersiegelt.\nDer Auftrag bleibt begrenzt.\nDanach gehst du.";
   var GO=
     "Tu:\nNicht nachwinken. Nicht offen lassen. Tor zu.\n\n"+
     "Sprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor.";
@@ -91,11 +91,17 @@
       mem.mit=mit; mem.wahl=true;
       fwd(); draw();
     }
+    function pruef(ok){
+      if(!ok) mem.mit=false;
+      mem.wahl=true;
+      fwd(); draw();
+    }
     function draw(){
       if(skipAt(i) && i<steps.length-1) fwd();
       if(skipAt(i) && i===steps.length-1){ i--; while(i>0 && skipAt(i)) i--; }
       var titel=steps[i][0], text=endText(titel, steps[i][1]), last=i===steps.length-1;
       var wahl=/^Wesenheit$/i.test(titel) && !ALWAYS[id] && !NOWESEN[id];
+      var pruefen=/^Prüfen$/i.test(titel) && !ALWAYS[id] && !NOWESEN[id];
       if(/^Wort$/i.test(titel)) text=wortText(steps[i][1]);
       if(/369/i.test(titel) && text.indexOf("Halte das Wort")<0){
         text="Halte das Wort. Nicht neu setzen, was schon gesprochen ist.\n"+text;
@@ -106,18 +112,22 @@
       if(wahl){
         extra+='<div class="row" style="margin-top:.8rem"><button type="button" class="btn ghost" id="wOhne">Ohne — allein</button><button type="button" class="btn primary" id="wMit">Mit — rufen</button></div>';
       }
+      if(pruefen){
+        extra+='<div class="row" style="margin-top:.8rem"><button type="button" class="btn ghost" id="pNein">Nicht klar</button><button type="button" class="btn primary" id="pJa">Klar</button></div>';
+      }
       if(last && !SHORT[id]){
         extra+='<label class="check" style="display:flex;gap:.5rem;align-items:center;margin:.8rem 0 .2rem"><input type="checkbox" id="feldCheck"><span>Feld-Check: Ich bin zurück in mir.</span></label>';
       }
       var v=vis();
       var nr=v.indexOf(i)+1;
       if(nr<1) nr=i+1;
+      var hideNav=wahl||pruefen;
       document.getElementById("run").innerHTML=
         '<div class="hero"><p class="sub">'+r.t+' · '+nr+'/'+v.length+'</p>'+
         '<p class="meta" id="absicht">'+intent()+(mem.wahl?(mem.mit?" · mit Wesenheit":" · ohne Wesenheit"):"")+'</p>'+
         '<h2>'+titel+'</h2></div>'+
         names+'<p class="words">'+fill(text,mem)+'</p>'+extra+
-        (wahl?'':'<div class="row"><button type="button" class="btn ghost" id="prev">'+(i?"Zurück":"Liste")+'</button>'+
+        (hideNav?'':'<div class="row"><button type="button" class="btn ghost" id="prev">'+(i?"Zurück":"Liste")+'</button>'+
         '<button type="button" class="btn primary" id="next">'+(last?"So sei es":"Weiter")+'</button></div>')+
         '<p class="msg" id="msg"></p>';
       document.querySelectorAll("#run [data-k]").forEach(function(inp){
@@ -132,6 +142,10 @@
       var wm=document.getElementById("wMit");
       if(wo) wo.onclick=function(){ choose(false); };
       if(wm) wm.onclick=function(){ choose(true); };
+      var pn=document.getElementById("pNein");
+      var pj=document.getElementById("pJa");
+      if(pn) pn.onclick=function(){ pruef(false); };
+      if(pj) pj.onclick=function(){ pruef(true); };
       var pv=document.getElementById("prev");
       var nx=document.getElementById("next");
       if(pv) pv.onclick=function(){ if(!i){show("home");return;} back(); draw(); };
