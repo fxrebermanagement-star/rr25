@@ -33,9 +33,7 @@
     var run=document.getElementById("run");
     if(!run||!run.classList.contains("on")) return false;
     var h=run.querySelector("h2");
-    var w=run.querySelector(".words");
-    var t=((h&&h.textContent)||"")+" "+((w&&w.textContent)||"");
-    return /369|3\s*[x×]|6\s*[x×]|9\s*[x×]/i.test(t);
+    return !!(h && (h.textContent||"").trim()==="369");
   }
   function zBox(){
     var run=document.getElementById("run");
@@ -94,14 +92,14 @@
     var left=(p<0.5)?(0.5-p)*syn:(1.5-p)*syn;
     var tage=Math.max(0, Math.round(left));
     var name,satz,sym;
-    if(p<0.03||p>0.97){ sym="○"; name="Neumond"; satz="Neu setzen. Still halten."; }
-    else if(p<0.22){ sym="🌒"; name="Zunehmend"; satz="Wachsen lassen. Nicht hetzen."; }
-    else if(p<0.28){ sym="🌓"; name="Viertel"; satz="Form geben. Grenze halten."; }
-    else if(p<0.47){ sym="🌔"; name="Zunehmend"; satz="Kraft sammeln. Klar bleiben."; }
-    else if(p<0.53){ sym="🌕"; name="Vollmond"; satz="Sichtbar. Nicht nachsetzen."; }
-    else if(p<0.72){ sym="🌖"; name="Abnehmend"; satz="Abgeben. Was fällt, darf fallen."; }
-    else if(p<0.78){ sym="🌗"; name="Viertel"; satz="Lösen. Zurück zur Mitte."; }
-    else { sym="🌘"; name="Abnehmend"; satz="Leeren. Schlafen lassen."; }
+    if(p<0.03||p>0.97){ sym="\u25cb"; name="Neumond"; satz="Neu setzen. Still halten."; }
+    else if(p<0.22){ sym="\ud83c\udf12"; name="Zunehmend"; satz="Wachsen lassen. Nicht hetzen."; }
+    else if(p<0.28){ sym="\ud83c\udf13"; name="Viertel"; satz="Form geben. Grenze halten."; }
+    else if(p<0.47){ sym="\ud83c\udf14"; name="Zunehmend"; satz="Kraft sammeln. Klar bleiben."; }
+    else if(p<0.53){ sym="\ud83c\udf15"; name="Vollmond"; satz="Sichtbar. Nicht nachsetzen."; }
+    else if(p<0.72){ sym="\ud83c\udf16"; name="Abnehmend"; satz="Abgeben. Was fällt, darf fallen."; }
+    else if(p<0.78){ sym="\ud83c\udf17"; name="Viertel"; satz="Lösen. Zurück zur Mitte."; }
+    else { sym="\ud83c\udf18"; name="Abnehmend"; satz="Leeren. Schlafen lassen."; }
     var wait=tage===0?"heute":(tage===1?"1 Tag":tage+" Tage");
     return {sym:sym,name:name,satz:satz,wait:wait,tage:tage};
   }
@@ -110,7 +108,7 @@
     var f=nextFest(n);
     var dat=DAYS[n.getDay()]+" "+n.getDate()+"."+(n.getMonth()+1)+".";
     var wait=f.tage===0?"heute":(f.tage===1?"1 Tag":f.tage+" Tage");
-    return {sym:"☀️", dat:dat, fest:f.name, wait:wait, tage:f.tage, text:f.text};
+    return {sym:"\u2600\ufe0f", dat:dat, fest:f.name, wait:wait, tage:f.tage, text:f.text};
   }
   function box(){
     var el=document.getElementById("festHint");
