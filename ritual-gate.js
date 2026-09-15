@@ -4,6 +4,7 @@
   var ALWAYS={wesen:1,fremd:1,ahn:1};
   var NOWESEN={dank:1,schutzweg:1,ahn:1,fremd:1};
   var FOTO={schutz2:1,liebe:1,liebezw:1,anz:1,fluch:1,segen:1,ueber:1,schaden:1};
+  var MITSTEP=/Rufen|Prüfen|Auftrag an/i;
   var GO=
     "Der Auftrag ist beendet.\n"+
     "Ich danke dir.\n"+
@@ -32,8 +33,8 @@
     var need=r.need||[];
     function skipAt(n){
       var t=steps[n] && steps[n][0] || "";
-      if(NOWESEN[id] && /Wesenheit/i.test(t)) return true;
-      if(!ALWAYS[id] && !mem.mit && /Entlassen/i.test(t)) return true;
+      if(NOWESEN[id] && (/Wesenheit/i.test(t) || MITSTEP.test(t))) return true;
+      if(!ALWAYS[id] && !mem.mit && (MITSTEP.test(t) || /Entlassen/i.test(t))) return true;
       return false;
     }
     function reset369(){
@@ -89,7 +90,7 @@
       var extra="";
       if(i===0 && FOTO[id]) extra+='<p class="meta">Foto nur als Anker, dann umdrehen.</p>';
       if(/Wesenheit/i.test(titel) && !ALWAYS[id] && !NOWESEN[id]){
-        extra+='<div class="row"><button type="button" class="btn ghost" id="wOhne">Ohne</button><button type="button" class="btn primary" id="wMit">Mit</button></div><p class="meta" id="wWahl">jetzt: '+(mem.mit?"mit Wesenheit":"ohne Wesenheit")+'</p>';
+        extra+='<div class="row"><button type="button" class="btn ghost" id="wOhne">Ohne</button><button type="button" class="btn primary" id="wMit">Mit</button></div><p class="meta" id="wWahl">jetzt: '+(mem.mit?"mit — als Nächstes kommt das Rufen":"ohne — weiter zum Wort")+'</p>';
       }
       if(last && !SHORT[id]){
         extra+='<label class="check" style="display:flex;gap:.5rem;align-items:center;margin:.8rem 0 .2rem"><input type="checkbox" id="feldCheck"><span>Feld-Check: Ich bin zurück in mir.</span></label>';
@@ -111,8 +112,8 @@
       });
       var wo=document.getElementById("wOhne");
       var wm=document.getElementById("wMit");
-      if(wo) wo.onclick=function(){ mem.mit=false; var w=document.getElementById("wWahl"); if(w) w.textContent="jetzt: ohne Wesenheit"; };
-      if(wm) wm.onclick=function(){ mem.mit=true; var w=document.getElementById("wWahl"); if(w) w.textContent="jetzt: mit Wesenheit"; };
+      if(wo) wo.onclick=function(){ mem.mit=false; var w=document.getElementById("wWahl"); if(w) w.textContent="jetzt: ohne — weiter zum Wort"; };
+      if(wm) wm.onclick=function(){ mem.mit=true; var w=document.getElementById("wWahl"); if(w) w.textContent="jetzt: mit — als Nächstes kommt das Rufen"; };
       document.getElementById("prev").onclick=function(){ if(!i){show("home");return;} back(); draw(); };
       document.getElementById("next").onclick=function(){
         if(i<steps.length-1){ fwd(); draw(); return; }
