@@ -1,88 +1,53 @@
 (function(){
-  var G=
-    "Tu:\nStehen. Füsse. Feld halten. Nicht suchen — nur prüfen.\n\n"+
-    "Ohne — sprich:\nIch gehe allein weiter zum Wort.\nKein Kontakt. Kein Auftrag.\n\n"+
-    "Mit — nur wenn klar. Sprich:\nIch behalte den Raum.\nMein Feld bleibt geschlossen.\nNur klare, begrenzbare Präsenz.\nAuftrag nur in einem Satz. Dann gehst du vollständig.\n\n"+
-    "Prüfen: Mitte da? Klar oder Nebel? Druck oder Ruhe?\nBei Druck, Theater, Sog: sofort schliessen. Kein Auftrag.";
+  var WAHL=
+    "Tu:\nStehen. Füsse. Feld hart halten.\n\n"+
+    "Ohne — sprich:\nIch gehe allein weiter zum Wort.\nKein Rufen. Kein Kontakt.\n\n"+
+    "Mit — nur wenn nötig. Sprich:\nIch öffne nur für klare Hilfe.\nDann kommt das Rufen.";
 
-  var MAP={
-    stopp:
-      "Tu:\nStehen. Feld hart halten. Nicht die Geschichte aufmachen.\n\n"+
-      "Ohne — sprich:\nIch gehe allein weiter zum Wort.\nDer Stopp sitzt ohne Hilfskraft.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nIch behalte den Raum.\nTrage den Stopp gegen [Name].\nDann gehst du vollständig.\nKein eigener Krieg. Kein Bleiben.\n\n"+
-      "Prüfen: Mitte da? Klar oder Nebel?\nBei Druck: sofort schliessen.",
-    schutz:
-      "Tu:\nStand fest. Grenze halten.\n\n"+
-      "Ohne — sprich:\nIch schliesse mein Feld selbst.\nIch gehe weiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nHalte den Schutz.\nDann geh.\n\n"+
-      "Prüfen: Druck oder Ruhe? Bei Druck: ohne weiter.",
-    schutz2:
-      "Tu:\nDu bleibst hier. [Name] bleibt [Name].\n\n"+
-      "Ohne — sprich:\nIch gebe den Schutz selbst.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage den Schutz zu [Name].\nDann geh vollständig.\n\n"+
-      "Prüfen: Sog? Dann sofort schliessen.",
-    heil:
-      "Tu:\nRaum geben. Kein Druck.\n\n"+
-      "Ohne — sprich:\nDie Heilung geht ohne Hilfskraft.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage reine Heilung zu [Name].\nDann geh.\n\n"+
-      "Prüfen: Klar oder Nebel?",
-    zur:
-      "Tu:\nBei dir bleiben. Nicht nachlaufen.\n\n"+
-      "Ohne — sprich:\nIch hole zurück was meins ist.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nHole zurück was meins ist.\nDann geh.",
-    karma:
-      "Tu:\nAbgeben, nicht kämpfen.\n\n"+
-      "Ohne — sprich:\nDer Ausgleich geht durch das Feld.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage den Ausgleich rein.\nDann geh.",
-    liebe:
-      "Tu:\nWärme ja. Kleben nein.\n\n"+
-      "Ohne — sprich:\nDie Nähe darf stimmig kommen.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage stimmige Nähe ohne Zwang.\nDann geh.",
-    liebezw:
-      "Tu:\nFeld hart. Bei Sog sofort zu.\n\n"+
-      "Ohne — sprich:\nIch setze selbst.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage die gesetzte Bindung.\nDann geh vollständig.\n\n"+
-      "Theater oder Sog: sofort schliessen.",
-    anz:
-      "Tu:\nKurz halten. Sofort zurück in den Körper.\n\n"+
-      "Ohne — sprich:\nDer Weg darf sich öffnen.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nÖffne den Weg.\nDann geh.",
-    trenn:
-      "Tu:\nNur den Faden. Nicht die Geschichte.\n\n"+
-      "Ohne — sprich:\nIch löse den Faden selbst.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn der Faden allein nicht reisst. Sprich:\nLöse den Faden.\nDann geh.",
-    trenn2:
-      "Tu:\nAussen bleiben.\n\n"+
-      "Ohne — sprich:\nDer Faden zwischen [A] und [B] löst sich.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nLöse den Faden zwischen [A] und [B].\nDann geh.",
-    finst:
-      "Tu:\nHalten, nicht neu setzen.\n\n"+
-      "Ohne — sprich:\nWas wahr ist, bleibt.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nFestige das Wahre. Lass Altes fallen.\nDann geh.",
-    schaden:
-      "Tu:\nMass halten. Wut steuert nicht.\n\n"+
-      "Ohne — sprich:\nIch setze selbst.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage Rückgabe und Begrenzung zu [Name].\nDann geh vollständig.\n\n"+
-      "Theater oder Sog: sofort schliessen.",
-    fluch:
-      "Tu:\nFeld hart. Du bleibst der Spieler.\n\n"+
-      "Ohne — sprich:\nIch setze das Wort selbst.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage das gesetzte Wort zu [Name].\nBegrenze die Bahn.\nDann gehst du vollständig.\n\n"+
-      "Prüfen: Mitte da? Bei Druck: sofort schliessen.",
-    segen:
-      "Tu:\nWärme ohne Sog.\n\n"+
-      "Ohne — sprich:\nDer Segen geht durch das Feld.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage den Segen zu [Name].\nDann geh vollständig.",
-    ueber:
-      "Tu:\nAuftrag in einem Satz. Feld hart.\n\n"+
-      "Ohne — sprich:\nIch setze den Auftrag selbst.\nWeiter zum Wort.\n\n"+
-      "Mit — nur wenn klar. Sprich:\nTrage die Übernahme von [Name] nur für [Auftrag].\nDann geh vollständig."
+  var RUFEN=
+    "Tu:\nNicht suchen. Nicht ziehen. Nur rufen und warten.\nEin Atem. Feld bleibt zu — nur ein Tor, kein Haus.\n\n"+
+    "Sprich:\nIch rufe nur, was klar, erkennbar und begrenzbar ist.\nNur für diesen einen Auftrag.\nTheater, Nebel, Stimmen ohne Grenze bleiben draussen.\nWer das nicht halten kann, kommt nicht.\nWenn du kommst, zeig dich klar.";
+
+  var PRUEF=
+    "Tu:\nMitte spüren. Haut. Atem. Ein Atem warten.\n\n"+
+    "Sprich:\nBist du klar?\nIst die Mitte da?\nDruck oder Ruhe?\n\n"+
+    "Bei Ruhe und Klarheit: weiter zum Auftrag.\nBei Druck, Theater, Sog — sprich:\nDu gehst. Ich schliesse.\nDann ohne weiter zum Wort.";
+
+  var AUF={
+    stopp:"Sprich:\nDein Auftrag ist nur:\nTrage den Stopp gegen [Name].\nDie Bahn gegen mich, mein Haus und meine Leute endet.\nDann gehst du vollständig.\nKein eigener Krieg. Kein Bleiben.",
+    schutz:"Sprich:\nDein Auftrag ist nur:\nHalte den Schutz um mein Feld.\nDann gehst du.",
+    schutz2:"Sprich:\nDein Auftrag ist nur:\nTrage den Schutz zu [Name].\nDann gehst du vollständig.",
+    heil:"Sprich:\nDein Auftrag ist nur:\nTrage reine Heilung zu [Name].\nKein Druck. Dann gehst du.",
+    zur:"Sprich:\nDein Auftrag ist nur:\nHole zurück was meins ist.\nDann gehst du.",
+    karma:"Sprich:\nDein Auftrag ist nur:\nTrage den Ausgleich rein.\nKeine Rache. Dann gehst du.",
+    liebe:"Sprich:\nDein Auftrag ist nur:\nTrage stimmige Nähe zu [Name] ohne Zwang.\nDann gehst du.",
+    liebezw:"Sprich:\nDein Auftrag ist nur:\nTrage die gesetzte Bindung zu [Name].\nDann gehst du vollständig.",
+    anz:"Sprich:\nDein Auftrag ist nur:\nÖffne den Weg zum Kontakt mit [Name], wenn er stimmig ist.\nDann gehst du.",
+    trenn:"Sprich:\nDein Auftrag ist nur:\nLöse den Faden zwischen mir und [Name].\nDann gehst du.",
+    trenn2:"Sprich:\nDein Auftrag ist nur:\nLöse den Faden zwischen [A] und [B].\nDann gehst du.",
+    finst:"Sprich:\nDein Auftrag ist nur:\nFestige was wahr ist. Lass Altes fallen.\nDann gehst du.",
+    schaden:"Sprich:\nDein Auftrag ist nur:\nTrage Rückgabe und Begrenzung zu [Name].\nDann gehst du vollständig.",
+    fluch:"Sprich:\nDein Auftrag ist nur:\nTrage das gesetzte Wort zu [Name].\nBegrenze die Bahn.\nDann gehst du vollständig.",
+    segen:"Sprich:\nDein Auftrag ist nur:\nTrage den Segen zu [Name].\nDann gehst du vollständig.",
+    ueber:"Sprich:\nDein Auftrag ist nur:\nTrage die Übernahme von [Name] für [Auftrag].\nDann gehst du vollständig."
   };
 
   (R||[]).forEach(function(r){
     if(!r || !r.steps) return;
-    r.steps.forEach(function(st){
-      if(st && /Wesenheit/i.test(st[0])) st[1]=MAP[r.id]||G;
-    });
+    var i=-1;
+    for(var k=0;k<r.steps.length;k++){
+      if(/Wesenheit/i.test(r.steps[k][0])) i=k;
+    }
+    if(i<0) return;
+    r.steps[i][0]="Wesenheit";
+    r.steps[i][1]=WAHL;
+    var next=r.steps[i+1] && r.steps[i+1][0];
+    if(next!=="Rufen"){
+      r.steps.splice(i+1,0,
+        ["Rufen", RUFEN],
+        ["Prüfen", PRUEF],
+        ["Auftrag an die Wesenheit", "Tu:\nNur wenn die Prüfung klar war. Sonst zurück und ohne weiter.\n\n"+(AUF[r.id]||"Sprich:\nDein Auftrag ist nur dieser eine Satz.\nDann gehst du vollständig.")]
+      );
+    }
   });
 })();
