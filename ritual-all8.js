@@ -1,13 +1,5 @@
 (function(){
   var SHORT={dank:1,schutzweg:1,fremd:1};
-  var WESEN=
-    "Ohne Wesenheit weiter zum Wort.\n"+
-    "Mit Wesenheit nur so:\n"+
-    "Eigenes Feld bleibt geschlossen.\n"+
-    "Nur klare, begrenzbare Präsenz.\n"+
-    "Prüfen: Mitte da? Klar oder Nebel? Druck oder Ruhe?\n"+
-    "Bei Druck, Theater, Sog: sofort schliessen, ohne Auftrag.\n"+
-    "Auftrag nur in einem Satz. Dann vollständig gehen.";
 
   var css=document.createElement("style");
   css.textContent=[
@@ -118,15 +110,6 @@
     inp.parentNode.insertBefore(row, inp.nextSibling);
   }
 
-  function unifyWesen(){
-    var run=document.getElementById("run");
-    if(!run) return;
-    var h=run.querySelector("h2");
-    if(!h || !/Wesenheit/i.test(h.textContent||"")) return;
-    var w=run.querySelector(".words");
-    if(w && w.textContent.indexOf("Ohne Wesenheit")<0) w.textContent=WESEN;
-  }
-
   function afterNote(){
     var box=document.getElementById("after");
     if(!box || document.getElementById("afterNote")) return;
@@ -152,7 +135,7 @@
   var run=document.getElementById("run");
   if(run && window.MutationObserver){
     new MutationObserver(function(){
-      setTimeout(function(){ z369only(); chips(); unifyWesen(); }, 30);
+      setTimeout(function(){ z369only(); chips(); }, 30);
     }).observe(run,{childList:true});
   }
 
