@@ -20,9 +20,7 @@
     "#werChips{display:flex;flex-wrap:wrap;gap:.32rem;margin:.35rem 0 .1rem}",
     "#werChips button{border:1px solid rgba(255,122,217,.28);background:rgba(28,14,48,.55);color:#f6f0ff;border-radius:999px;padding:.28rem .7rem;font:inherit;font-size:.78rem}",
     "#afterNote{margin:.55rem 0 .2rem}",
-    "#buchJump{display:flex;flex-wrap:wrap;gap:.32rem;margin:.2rem 0 .7rem}",
-    "#buchJump button{border:1px solid rgba(126,200,255,.22);background:rgba(18,10,32,.7);color:#f6f0ff;border-radius:999px;padding:.32rem .7rem;font:inherit;font-size:.72rem}",
-    "#runBuch{margin:.15rem 0 .35rem}",
+    "#runBuch,#buchJump{display:none!important}",
     "#list .card[data-id=dank]{display:none}"
   ].join("");
   document.head.appendChild(css);
@@ -53,6 +51,10 @@
     if(!home) return;
     var flip=document.getElementById("quickFlip");
     if(flip) flip.remove();
+    var bar=document.getElementById("buchJump");
+    if(bar) bar.remove();
+    var rb=document.getElementById("runBuch");
+    if(rb) rb.remove();
     var el=document.getElementById("pinDank") || document.getElementById("quickGo");
     if(!el){
       el=document.createElement("button");
@@ -132,38 +134,6 @@
     if(w) w.textContent=WESEN;
   }
 
-  function bookBtn(){
-    var run=document.getElementById("run");
-    if(!run || !run.classList.contains("on") || run.querySelector("#runBuch")) return;
-    var hero=run.querySelector(".hero");
-    if(!hero) return;
-    var b=document.createElement("button");
-    b.type="button"; b.id="runBuch"; b.className="btn ghost"; b.textContent="Im Buch";
-    b.onclick=function(){ if(typeof show==="function") show("buch"); };
-    hero.appendChild(b);
-  }
-
-  function bookJump(){
-    var page=document.getElementById("page");
-    var buch=document.getElementById("buch");
-    if(!page || !buch) return;
-    var bar=document.getElementById("buchJump");
-    if(!bar){
-      bar=document.createElement("div");
-      bar.id="buchJump";
-      buch.insertBefore(bar, page);
-    }
-    bar.innerHTML=(R||[]).map(function(r){
-      return '<button type="button" data-rid="'+r.id+'">'+r.t+'</button>';
-    }).join("");
-    bar.querySelectorAll("[data-rid]").forEach(function(b){
-      b.onclick=function(){
-        if(typeof fromPlan!=="undefined") fromPlan=null;
-        openR(b.getAttribute("data-rid"));
-      };
-    });
-  }
-
   function afterNote(){
     var box=document.getElementById("after");
     if(!box) return;
@@ -193,7 +163,13 @@
   var run=document.getElementById("run");
   if(run && window.MutationObserver){
     new MutationObserver(function(){
-      setTimeout(function(){ z369only(); chips(); unifyWesen(); bookBtn(); }, 30);
+      setTimeout(function(){
+        z369only();
+        chips();
+        unifyWesen();
+        var b=document.getElementById("runBuch");
+        if(b) b.remove();
+      }, 30);
     }).observe(run,{childList:true,subtree:true});
   }
 
@@ -207,7 +183,10 @@
         if(window._rid==="dank"){ try{ localStorage.setItem("rr25_dank", day()); }catch(e){} }
         try{ var d=load(); if(d.log && d.log[0]) remember(d.log[0].wer); }catch(e){}
       }
-      if(id==="buch") setTimeout(bookJump, 80);
+      if(id==="buch"){
+        var bar=document.getElementById("buchJump");
+        if(bar) bar.remove();
+      }
       setTimeout(z369only, 40);
       return r;
     };
