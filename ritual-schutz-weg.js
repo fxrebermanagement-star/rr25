@@ -5,11 +5,11 @@
     s:"Kurz. Stehen oder gehen.",
     tag:"Schutz",
     steps:[
-      ["Jetzt","Stehen bleiben oder weitergehen — beides geht.\nFüsse spüren. Einen Atem. Schultern fallen lassen.\nHandy bleibt in der Tasche."],
-      ["Feld","Ich bin der Spieler.\nMein Feld ist zu.\nWas nicht meins ist, bleibt draussen."],
-      ["Wort","Sprich leise oder nur innen:\nIch bin geschützt.\nIch gehe klar.\nNichts Fremdes hat Halt an mir."],
-      ["369","Zähler unten, oder nur mit den Fingern.\n\n3  Mein Feld ist zu.\n6  Fremdes findet keinen Halt.\n9  Ich gehe geschützt. Es ist so."],
-      ["Fertig","Ein Atem. Weitergehen.\nNicht nachprüfen. Nicht stehen bleiben und grübeln.\nSo sei es."]
+      ["Jetzt","Tu:\nStehen bleiben oder weitergehen. Füsse spüren. Einen Atem. Schultern fallen lassen.\nHandy bleibt in der Tasche.\n\nSprich innen:\nIch bin hier."],
+      ["Feld","Tu:\nEinen Atem länger hinaus.\n\nSprich innen:\nIch bin der Spieler.\nIch schliesse mein Feld hart.\nWas nicht meins ist, bleibt draussen."],
+      ["Wort","Tu:\nLeise oder nur innen.\n\nSprich:\nIch bin geschützt.\nIch gehe klar.\nNichts Fremdes hat Halt an mir."],
+      ["369","Tu:\nZähler oder Finger.\n\nSprich und zähle:\n3  Mein Feld ist zu.\n6  Fremdes findet keinen Halt.\n9  Ich gehe geschützt. Es ist so."],
+      ["Fertig","Tu:\nEin Atem. Weitergehen. Nicht stehen bleiben und grübeln.\n\nSprich:\nSo sei es."]
     ]
   };
   for(var i=R.length-1;i>=0;i--) if(R[i].id==="schutzweg") R.splice(i,1);
