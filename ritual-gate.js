@@ -1,13 +1,21 @@
 (function(){
   var SKIP={dank:1,stopp:1,schutz:1,schutz2:1,schutzweg:1,heil:1,zur:1,karma:1,liebe:1,liebezw:1,anz:1,trenn:1,trenn2:1,wesen:1,fremd:1,ahn:1,finst:1,schaden:1,segen:1,fluch:1,ueber:1,fil:1};
-  var SHORT={schutzweg:1,dank:1};
+  var SHORT={schutzweg:1,dank:1,fremd:1};
+  var ALWAYS={wesen:1,fremd:1,ahn:1};
+  var GO=
+    "Der Auftrag ist beendet.\n"+
+    "Ich danke dir.\n"+
+    "Du bist frei.\n"+
+    "Alle Verbindungen zu mir und zu dieser Arbeit lösen sich.\n"+
+    "Du bleibst nicht.\n"+
+    "Ich schliesse den Kontakt.";
   if(typeof openR!=="function") return;
   var _open=openR;
   openR=function(id,wer){
     if(!SKIP[id]) return _open(id,wer);
     var r=R.find(function(x){return x.id===id});
     if(!r) return;
-    var i=0, mem={mit:false};
+    var i=0, mem={mit:!!ALWAYS[id]};
     if(wer){
       mem.Name=wer;
       mem.Auftrag=wer;
@@ -20,11 +28,21 @@
     }catch(e){}
     var steps=r.steps.map(function(s){return s.slice()});
     var need=r.need||[];
+    function skipAt(n){
+      if(ALWAYS[id]) return false;
+      var t=steps[n] && steps[n][0] || "";
+      return !mem.mit && /Entlassen/i.test(t);
+    }
+    function fwd(){ i++; while(i<steps.length-1 && skipAt(i)) i++; }
+    function back(){ i--; while(i>0 && skipAt(i)) i--; if(i<0) i=0; }
     function draw(){
+      if(skipAt(i) && i<steps.length-1) fwd();
+      if(skipAt(i) && i===steps.length-1){ i--; while(i>0 && skipAt(i)) i--; }
       var titel=steps[i][0], text=steps[i][1], last=i===steps.length-1;
+      if(/Entlassen/i.test(titel)) text=GO;
       var names=(i===0?need:[]).map(function(n){return '<input data-k="'+n+'" placeholder="'+n+'">'}).join("");
       var extra="";
-      if(/Wesenheit/i.test(titel)){
+      if(/Wesenheit/i.test(titel) && !ALWAYS[id]){
         extra='<div class="row"><button type="button" class="btn ghost" id="wOhne">Ohne</button><button type="button" class="btn primary" id="wMit">Mit</button></div><p class="meta" id="wWahl">jetzt: '+(mem.mit?"mit Wesenheit":"ohne Wesenheit")+'</p>';
       }
       if(last && !SHORT[id]){
@@ -43,9 +61,9 @@
       var wm=document.getElementById("wMit");
       if(wo) wo.onclick=function(){ mem.mit=false; var w=document.getElementById("wWahl"); if(w) w.textContent="jetzt: ohne Wesenheit"; };
       if(wm) wm.onclick=function(){ mem.mit=true; var w=document.getElementById("wWahl"); if(w) w.textContent="jetzt: mit Wesenheit"; };
-      document.getElementById("prev").onclick=function(){ if(!i){show("home");return;} i--; draw(); };
+      document.getElementById("prev").onclick=function(){ if(!i){show("home");return;} back(); draw(); };
       document.getElementById("next").onclick=function(){
-        if(i<steps.length-1){ i++; draw(); return; }
+        if(i<steps.length-1){ fwd(); draw(); return; }
         if(!SHORT[id]){
           var box=document.getElementById("feldCheck");
           if(!box || !box.checked){
@@ -61,7 +79,7 @@
           t:now(),
           titel:r.t,
           wer:who,
-          wesen: !!(mem.mit || id==="wesen" || id==="fremd")
+          wesen: !!(mem.mit || ALWAYS[id])
         });
         if(fromPlan){ d.planned=d.planned.filter(function(p){return p.pid!==fromPlan}); fromPlan=null; }
         save(d); show("after");
