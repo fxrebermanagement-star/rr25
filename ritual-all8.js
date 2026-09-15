@@ -12,16 +12,16 @@
   var css=document.createElement("style");
   css.textContent=[
     "#quickFlip,.tabs,#faceDank,#faceWeg,#pinWeg,#quickRow{display:none!important}",
-    "#pinDank,#quickGo{position:relative;padding-right:2.6rem;margin:.1rem 0 .55rem;text-align:left;width:100%}",
-    "#pinDank .ok,#quickGo .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.45rem;height:1.45rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.85rem}",
-    "#pinDank.done .ok,#quickGo.done .ok{background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border:0;color:#14081c;font-weight:700}",
+    "#pinDank{position:relative;padding-right:2.6rem;margin:.15rem 0 .55rem;text-align:left;width:100%;min-height:4.4rem}",
+    "#pinDank .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.45rem;height:1.45rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.85rem}",
+    "#pinDank.done .ok{background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border:0;color:#14081c;font-weight:700}",
     "#list .card .len{display:inline-block;margin-top:.28rem;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#7ef0e6}",
     "#list .card .len.voll{color:#ffb3ea}",
     "#werChips{display:flex;flex-wrap:wrap;gap:.32rem;margin:.35rem 0 .1rem}",
     "#werChips button{border:1px solid rgba(255,122,217,.28);background:rgba(28,14,48,.55);color:#f6f0ff;border-radius:999px;padding:.28rem .7rem;font:inherit;font-size:.78rem}",
     "#afterNote{margin:.55rem 0 .2rem}",
     "#runBuch,#buchJump{display:none!important}",
-    "#list .card[data-id=dank]{display:none}"
+    "#list .card[data-id=dank]{display:none!important}"
   ].join("");
   document.head.appendChild(css);
 
@@ -49,30 +49,23 @@
   function pin(){
     var home=document.getElementById("home");
     if(!home) return;
-    var flip=document.getElementById("quickFlip");
-    if(flip) flip.remove();
-    var bar=document.getElementById("buchJump");
-    if(bar) bar.remove();
-    var rb=document.getElementById("runBuch");
-    if(rb) rb.remove();
-    var el=document.getElementById("pinDank") || document.getElementById("quickGo");
+    var el=document.getElementById("pinDank");
     if(!el){
       el=document.createElement("button");
       el.type="button";
       el.id="pinDank";
-      el.className="card";
-    }
-    el.id="pinDank";
-    el.className="card"+(dankDone()?" done":"");
-    el.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit · Liebe · Geld · Schutz</small><span class=\"ok\">"+(dankDone()?"\u2713":"")+"</span>";
-    el.onclick=function(){ if(typeof fromPlan!=="undefined") fromPlan=null; openR("dank"); };
-    var kast=document.getElementById("kasten");
-    var cats=document.getElementById("cats");
-    if(el.parentNode!==home){
+      var kast=document.getElementById("kasten");
       if(kast && kast.nextSibling) home.insertBefore(el, kast.nextSibling);
-      else if(cats) home.insertBefore(el, cats);
       else home.appendChild(el);
     }
+    el.className="card"+(dankDone()?" done":"");
+    if(!el.querySelector("b")){
+      el.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit · Liebe · Geld · Schutz</small><span class=\"ok\"></span>";
+      el.onclick=function(){ if(typeof fromPlan!=="undefined") fromPlan=null; openR("dank"); };
+    }
+    el.classList.toggle("done", dankDone());
+    var ok=el.querySelector(".ok");
+    if(ok) ok.textContent=dankDone()?"\u2713":"";
   }
 
   function badgeList(){
@@ -131,22 +124,18 @@
     var h=run.querySelector("h2");
     if(!h || !/Wesenheit/i.test(h.textContent||"")) return;
     var w=run.querySelector(".words");
-    if(w) w.textContent=WESEN;
+    if(w && w.textContent.indexOf("Ohne Wesenheit")<0) w.textContent=WESEN;
   }
 
   function afterNote(){
     var box=document.getElementById("after");
-    if(!box) return;
-    var ta=document.getElementById("afterNote");
-    if(!ta){
-      ta=document.createElement("textarea");
-      ta.id="afterNote";
-      ta.placeholder="Was war da — eine Zeile in die Chronik";
-      var row=box.querySelector(".row");
-      if(row) box.insertBefore(ta, row);
-      else box.appendChild(ta);
-    }
-    ta.value="";
+    if(!box || document.getElementById("afterNote")) return;
+    var ta=document.createElement("textarea");
+    ta.id="afterNote";
+    ta.placeholder="Was war da — eine Zeile in die Chronik";
+    var row=box.querySelector(".row");
+    if(row) box.insertBefore(ta, row);
+    else box.appendChild(ta);
   }
   function flushNote(){
     var ta=document.getElementById("afterNote");
@@ -163,14 +152,8 @@
   var run=document.getElementById("run");
   if(run && window.MutationObserver){
     new MutationObserver(function(){
-      setTimeout(function(){
-        z369only();
-        chips();
-        unifyWesen();
-        var b=document.getElementById("runBuch");
-        if(b) b.remove();
-      }, 30);
-    }).observe(run,{childList:true,subtree:true});
+      setTimeout(function(){ z369only(); chips(); unifyWesen(); }, 30);
+    }).observe(run,{childList:true});
   }
 
   if(typeof show==="function"){
@@ -183,15 +166,9 @@
         if(window._rid==="dank"){ try{ localStorage.setItem("rr25_dank", day()); }catch(e){} }
         try{ var d=load(); if(d.log && d.log[0]) remember(d.log[0].wer); }catch(e){}
       }
-      if(id==="buch"){
-        var bar=document.getElementById("buchJump");
-        if(bar) bar.remove();
-      }
-      setTimeout(z369only, 40);
       return r;
     };
   }
 
   pin();
-  setTimeout(pin, 400);
 })();
