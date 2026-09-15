@@ -11,9 +11,8 @@
 
   var PRUEF=
     "Tu:\nEinen ganzen Atem warten. Mitte. Haut. Kiefer.\n\n"+
-    "Sprich:\nBist du da?\nBist du klar?\nDruck oder Ruhe?\n\n"+
-    "Ruhe und Klarheit: weiter zum Auftrag.\n\n"+
-    "Druck, Theater, Sog — sprich:\nDu gehst jetzt.\nIch schliesse das Tor.\nDann zurück und ohne weiter zum Wort.";
+    "Sprich:\nBist du da?\nBist du klar?\n\n"+
+    "Unten antworten.\nKlar: Auftrag geben.\nNicht klar: das Tor fällt zu, du gehst allein weiter zum Wort.";
 
   var AUF={
     stopp:"Sprich:\nHör den Auftrag.\nTrage den Stopp gegen [Name].\nDie Bahn gegen mich, mein Haus und meine Leute endet.\nKein eigener Krieg.\nWenn der Stopp sitzt, gehst du vollständig.",
@@ -46,7 +45,7 @@
     r.steps.splice(i+1,0,
       ["Rufen", RUFEN],
       ["Prüfen", PRUEF],
-      ["Auftrag geben", "Tu:\nNur wenn die Prüfung klar war.\nSonst zurück, Ohne wählen, weiter zum Wort.\n\n"+(AUF[r.id]||"Sprich:\nHör den Auftrag.\nNur dieser eine Satz.\nDann gehst du vollständig.")]
+      ["Auftrag geben", "Tu:\nEinmal sprechen. Nicht ausweiten.\n\n"+(AUF[r.id]||"Sprich:\nHör den Auftrag.\nNur dieser eine Satz.\nDann gehst du vollständig.")]
     );
   });
 })();
