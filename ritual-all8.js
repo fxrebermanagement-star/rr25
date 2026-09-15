@@ -11,10 +11,14 @@
 
   var css=document.createElement("style");
   css.textContent=[
-    "#quickRow{display:flex;flex-direction:column;gap:.35rem;margin:.1rem 0 .55rem}",
-    "#pinDank,#pinWeg{position:relative;padding-right:2.7rem;margin:0;text-align:left}",
-    "#pinDank .ok,#pinWeg .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.45rem;height:1.45rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.85rem}",
-    "#pinDank.done .ok{background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border:0;color:#14081c;font-weight:700}",
+    "#quickFlip{margin:.1rem 0 .55rem}",
+    "#quickFlip .tabs{display:grid;grid-template-columns:1fr 1fr;gap:.32rem;margin:0 0 .32rem}",
+    "#quickFlip .tabs button{border:1px solid rgba(255,122,217,.22);background:rgba(18,10,32,.7);color:#c4b4e0;border-radius:999px;padding:.42rem .4rem;font:inherit;font-size:.78rem;min-height:2.1rem}",
+    "#quickFlip .tabs button.on{color:#14081c;background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border-color:transparent;font-weight:650}",
+    "#quickGo{position:relative;padding-right:2.6rem;margin:0;text-align:left;width:100%}",
+    "#quickGo .ok{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);width:1.45rem;height:1.45rem;border-radius:50%;border:1px solid rgba(232,160,255,.35);display:flex;align-items:center;justify-content:center;font-size:.85rem}",
+    "#quickGo.done .ok{background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border:0;color:#14081c;font-weight:700}",
+    "#pinDank,#pinWeg,#quickRow{display:none!important}",
     "#list .card .len{display:inline-block;margin-top:.28rem;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#7ef0e6}",
     "#list .card .len.voll{color:#ffb3ea}",
     "#werChips{display:flex;flex-wrap:wrap;gap:.32rem;margin:.35rem 0 .1rem}",
@@ -26,6 +30,8 @@
     "#list .card[data-id=dank],#list .card[data-id=schutzweg]{display:none}"
   ].join("");
   document.head.appendChild(css);
+
+  var face=localStorage.getItem("rr25_face")||"dank";
 
   function day(){
     var n=new Date();
@@ -48,40 +54,58 @@
     localStorage.setItem("rr25_wer_list", JSON.stringify(list.slice(0,5)));
   }
 
+  function paintFace(){
+    var go=document.getElementById("quickGo");
+    var t1=document.getElementById("faceDank");
+    var t2=document.getElementById("faceWeg");
+    if(!go) return;
+    if(t1) t1.classList.toggle("on", face==="dank");
+    if(t2) t2.classList.toggle("on", face==="weg");
+    if(face==="dank"){
+      go.classList.toggle("done", dankDone());
+      go.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit · Liebe · Geld · Schutz</small><span class=\"ok\">"+(dankDone()?"\u2713":"")+"</span>";
+    } else {
+      go.classList.remove("done");
+      go.innerHTML="<b>Schutz unterwegs</b><small>Kurz. Stehen oder gehen.</small><span class=\"ok\">→</span>";
+    }
+  }
+
   function pin(){
     var home=document.getElementById("home");
     if(!home) return;
-    var row=document.getElementById("quickRow");
-    if(!row){
-      row=document.createElement("div");
-      row.id="quickRow";
-    }
-    var kast=document.getElementById("kasten");
-    if(kast && kast.nextSibling) home.insertBefore(row, kast.nextSibling);
-    else{
+    var box=document.getElementById("quickFlip");
+    if(!box){
+      box=document.createElement("div");
+      box.id="quickFlip";
+      box.innerHTML=
+        '<div class="tabs">'+
+          '<button type="button" id="faceDank">Täglich</button>'+
+          '<button type="button" id="faceWeg">Schutz</button>'+
+        '</div>'+
+        '<button type="button" class="card" id="quickGo"></button>';
+      var kast=document.getElementById("kasten");
       var cats=document.getElementById("cats");
-      if(cats) home.insertBefore(row, cats);
-      else home.appendChild(row);
+      if(kast && kast.nextSibling) home.insertBefore(box, kast.nextSibling);
+      else if(cats) home.insertBefore(box, cats);
+      else home.appendChild(box);
+      document.getElementById("faceDank").onclick=function(){
+        face="dank"; localStorage.setItem("rr25_face","dank"); paintFace();
+      };
+      document.getElementById("faceWeg").onclick=function(){
+        face="weg"; localStorage.setItem("rr25_face","weg"); paintFace();
+      };
+      document.getElementById("quickGo").onclick=function(){
+        if(typeof fromPlan!=="undefined") fromPlan=null;
+        openR(face==="dank"?"dank":"schutzweg");
+      };
+    } else if(box.parentNode!==home){
+      var kast2=document.getElementById("kasten");
+      if(kast2 && kast2.nextSibling) home.insertBefore(box, kast2.nextSibling);
     }
-    var d=document.getElementById("pinDank");
-    if(!d){
-      d=document.createElement("button");
-      d.type="button"; d.id="pinDank"; d.className="card";
-      d.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit · Liebe · Geld · Schutz</small><span class=\"ok\"></span>";
-      d.onclick=function(){ if(typeof fromPlan!=="undefined") fromPlan=null; openR("dank"); };
-    }
-    d.classList.toggle("done", dankDone());
-    var ok=d.querySelector(".ok");
-    if(ok) ok.textContent=dankDone()?"\u2713":"";
-    var w=document.getElementById("pinWeg");
-    if(!w){
-      w=document.createElement("button");
-      w.type="button"; w.id="pinWeg"; w.className="card";
-      w.innerHTML="<b>Schutz unterwegs</b><small>Kurz. Stehen oder gehen.</small><span class=\"ok\">→</span>";
-      w.onclick=function(){ if(typeof fromPlan!=="undefined") fromPlan=null; openR("schutzweg"); };
-    }
-    row.appendChild(d);
-    row.appendChild(w);
+    document.querySelectorAll("#pinDank,#pinWeg,#quickRow").forEach(function(n){
+      if(n && n.id!=="quickFlip") n.remove();
+    });
+    paintFace();
   }
 
   function badgeList(){
@@ -111,15 +135,8 @@
     var run=document.getElementById("run");
     if(!run) return;
     var h=run.querySelector("h2");
-    var ok=h && /^ *369 *$/.test((h.textContent||"").trim());
-    var box=run.querySelector("#z369");
-    if(!ok && box) box.remove();
-    if(ok && !box && typeof window._zPaint==="function"){
-      /* extra.js baut die Box */
-    }
-    if(!ok){
-      document.querySelectorAll("#run #z369").forEach(function(n){ n.remove(); });
-    }
+    var ok=h && (h.textContent||"").trim()==="369";
+    if(!ok) document.querySelectorAll("#run #z369").forEach(function(n){ n.remove(); });
   }
 
   function chips(){
@@ -253,6 +270,5 @@
   }
 
   pin();
-  setTimeout(function(){ pin(); badgeList(); }, 400);
-  setTimeout(function(){ pin(); badgeList(); }, 1100);
+  setTimeout(pin, 500);
 })();
