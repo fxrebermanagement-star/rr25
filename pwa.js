@@ -21,7 +21,7 @@
     "ritual-karten.js?v=6",
     "ritual-fein-all.js?v=1",
     "ritual-fluch.js?v=2",
-    "ritual-segen.js?v=2",
+    "ritual-segen.js?v=3",
     "ritual-ueber-full.js?v=2",
     "ritual-chronik.js?v=1",
     "ritual-alle.js?v=3",
