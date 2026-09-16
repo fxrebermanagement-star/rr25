@@ -39,11 +39,29 @@
     }
     if(!found) R.push({id:"ueber",t:"Person übernehmen",s:"Hart. Ich bin [Name]. Bis ich schliesse.",tag:"Person X",need:["Name","Auftrag"],steps:STEPS});
   }
+  function card(){
+    var list=document.getElementById("list");
+    if(!list || typeof cat==="undefined" || cat!=="Person X") return;
+    if(list.querySelector('[data-id="ueber"]')) return;
+    var b=document.createElement("button");
+    b.type="button"; b.className="card"; b.setAttribute("data-id","ueber");
+    b.innerHTML="<b>Person übernehmen</b><small>Hart. Ich bin [Name]. Bis ich schliesse.</small>";
+    b.onclick=function(){ fromPlan=null; openR("ueber"); };
+    list.insertBefore(b, list.firstChild);
+  }
   put();
+  if(typeof renderList==="function" && !renderList._ue){
+    var prev=renderList;
+    renderList=function(){
+      put();
+      prev();
+      card();
+    };
+    renderList._ue=1;
+  }
   if(typeof openR==="function"){
     var _o=openR;
     openR=function(id){ if(id==="ueber") put(); return _o.apply(this,arguments); };
   }
-  setTimeout(put,400);
-  setTimeout(put,1400);
+  if(typeof renderList==="function") renderList();
 })();
