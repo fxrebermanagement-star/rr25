@@ -39,6 +39,7 @@
     "ritual-liebe.js?v=2",
     "ritual-liebe2.js?v=1",
     "ritual-trenn.js?v=1",
+    "ritual-trenn2.js?v=1",
     "ritual-gate.js?v=15",
     "ritual-stabil.js?v=1",
     "ritual-entlass-fix.js?v=1",
