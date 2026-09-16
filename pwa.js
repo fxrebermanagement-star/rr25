@@ -24,7 +24,7 @@
     "ritual-segen.js?v=5",
     "ritual-ueber-full.js?v=2",
     "ritual-chronik.js?v=1",
-    "ritual-alle.js?v=3",
+    "ritual-alle.js?v=4",
     "ritual-schutz-weg.js?v=3",
     "ritual-all8.js?v=6",
     "ritual-wortfix.js?v=1",
