@@ -1,9 +1,13 @@
 (function(){
   var css=document.createElement("style");
   css.textContent=[
-    "#entries .shots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.35rem 0}",
-    "#entries .logpic img,#entries .shots img,#logShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.2);background:#0a0612}",
-    "#entries .logpic img.sig,#logShots img.sig{object-fit:contain}"
+    "#entries .logrow{display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:start;padding:.9rem 0;border-top:1px solid rgba(126,200,255,.16)}",
+    "#entries .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
+    "#entries .logrow .meta{margin-top:.2rem}",
+    "#entries .logact{margin-top:.4rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem}",
+    "#entries .logpic img,#logShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
+    "#entries .logpic img.sig,#logShots img.sig{object-fit:contain}",
+    "#entries .shots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}"
   ].join("");
   document.head.appendChild(css);
 
@@ -12,53 +16,51 @@
     var w=document.createElement("div");
     w.id="picZoom";
     w.style.cssText="position:fixed;inset:0;background:rgba(4,2,10,.92);z-index:80;display:flex;align-items:center;justify-content:center;padding:1.2rem";
-    w.innerHTML='<img alt="" src="'+src+'" style="max-width:100%;max-height:92%;border-radius:1rem;background:#0a0612">';
+    w.innerHTML='<img alt="" src="'+src+'" style="max-width:100%;max-height:92%;border-radius:1rem">';
     w.onclick=function(){ w.remove(); };
     document.body.appendChild(w);
   }
-  function add(hold, src, sig){
-    if(!hold || !src || hold.querySelector('img[src="'+src.slice(0,40)+'"]')) return;
-    if(hold.querySelector("img") && hold.className.indexOf("logpic")>=0) return;
+  function putImg(hold, src, sig){
+    if(!hold||!src||hold.querySelector("img")) return;
     var img=document.createElement("img");
     img.src=src;
     if(sig) img.className="sig";
-    img.onclick=function(){ zoom(src); };
+    img.onclick=function(ev){ ev.stopPropagation(); zoom(src); };
     hold.appendChild(img);
   }
-  function fillList(){
+  function attach(id, hold, titel, fallback){
+    if(fallback) putImg(hold, fallback, /sigil/i.test(titel||""));
+    if(typeof fotoGet!=="function") return;
+    fotoGet(id).then(function(arr){
+      if(arr && arr[0]) putImg(hold, arr[0], /sigil/i.test(titel||""));
+    }).catch(function(){});
+  }
+
+  paintLog=function(){
     var box=document.getElementById("entries");
     if(!box) return;
-    var rows=(typeof load==="function"?load().log:null)||[];
-    rows.forEach(function(e){
-      var hold=box.querySelector('[data-pic="'+e.id+'"]');
-      if(!hold){
-        var row=box.querySelector('[data-eid="'+e.id+'"]');
-        if(row){
-          hold=document.createElement("div");
-          hold.className="logpic";
-          hold.setAttribute("data-pic", e.id);
-          row.appendChild(hold);
-        }
-      }
-      if(!hold) return;
-      var sig=/sigil/i.test(e.titel||"");
-      if(e.img) add(hold, e.img, sig);
-      if(typeof fotoGet==="function"){
-        fotoGet(e.id).then(function(arr){
-          if(arr && arr[0]) add(hold, arr[0], sig);
-        });
-      }
+    var rows=[];
+    try{ rows=(load().log)||[]; }catch(e){ rows=[]; }
+    if(!rows.length){ box.innerHTML="<p class='meta'>Noch leer.</p>"; return; }
+    box.innerHTML=rows.map(function(e){
+      var note=String(e.note||"");
+      if(note && note===String(e.titel||"")) note="";
+      return '<div class="logrow" data-eid="'+e.id+'">'+ 
+        '<div><b>'+String(e.titel||"").replace(/</g,"")+'</b>'+
+        '<div class="meta">'+String(e.t||"")+(e.wer?" · "+String(e.wer).replace(/</g,""):"")+'</div>'+
+        (note?'<p style="margin:.35rem 0 0;white-space:pre-wrap">'+note.replace(/</g,"")+'</p>':'')+
+        '<button type="button" class="logact" data-open="'+e.id+'">Öffnen</button></div>'+
+        '<div class="logpic" data-pic="'+e.id+'"></div></div>';
+    }).join("");
+    box.querySelectorAll("[data-open]").forEach(function(b){
+      b.onclick=function(){ if(typeof openLog==="function") openLog(b.getAttribute("data-open")); };
     });
-  }
-  if(typeof paintLog==="function" && !paintLog._foto){
-    var pl=paintLog;
-    paintLog=function(){
-      pl();
-      setTimeout(fillList, 40);
-    };
-    paintLog._foto=1;
-  }
-  if(typeof openLog==="function" && !openLog._foto){
+    rows.forEach(function(e){
+      attach(e.id, box.querySelector('[data-pic="'+e.id+'"]'), e.titel, e.img);
+    });
+  };
+
+  if(typeof openLog==="function" && !openLog._foto2){
     var ol=openLog;
     openLog=function(id){
       ol(id);
@@ -71,27 +73,21 @@
         sh.className="shots";
         box.appendChild(sh);
       }
-      function paint(){
-        sh.innerHTML="";
-        var e=((typeof load==="function"?load().log:[])||[]).filter(function(x){ return x.id===id; })[0];
-        if(e && e.img) add(sh, e.img, /sigil/i.test(e.titel||""));
-        if(typeof fotoGet==="function"){
-          fotoGet(id).then(function(arr){
-            (arr||[]).forEach(function(src){ add(sh, src, /sigil/i.test((e&&e.titel)||"")); });
-          });
-        }
-      }
-      paint();
+      sh.innerHTML="";
+      var e=null;
+      try{ e=((load().log)||[]).filter(function(x){ return String(x.id)===String(id); })[0]; }catch(err){}
+      attach(id, sh, e&&e.titel, e&&e.img);
     };
-    openLog._foto=1;
+    openLog._foto2=1;
   }
-  if(typeof show==="function" && !show._foto){
-    var sh=show;
+
+  if(typeof show==="function" && !show._foto2){
+    var shw=show;
     show=function(id){
-      var r=sh.apply(this,arguments);
-      if(id==="log") setTimeout(fillList, 80);
+      var r=shw.apply(this,arguments);
+      if(id==="log") setTimeout(function(){ paintLog(); }, 30);
       return r;
     };
-    show._foto=1;
+    show._foto2=1;
   }
 })();
