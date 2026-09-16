@@ -28,15 +28,18 @@
       "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nKein zweites Ritual aus Unruhe heute.\n\nTu:\nWasser. Alltag. Nicht nachkontrollieren."]
   ];
   if(typeof R==="undefined") return;
-  function put(id,t,s){
-    var found=false;
-    for(var i=0;i<R.length;i++){
-      if(R[i].id===id){
-        R[i].t=t; R[i].s=s; R[i].tag="Liebe"; R[i].need=["Name"]; R[i].steps=STEPS; found=true;
-      }
+  for(var i=R.length-1;i>=0;i--) if(R[i].id==="liebezw") R.splice(i,1);
+  var found=false;
+  for(var j=0;j<R.length;j++){
+    if(R[j].id==="liebe"){
+      R[j].t="Liebesritual";
+      R[j].s="Hart. Bindung auf Person X.";
+      R[j].tag="Liebe";
+      R[j].need=["Name"];
+      R[j].steps=STEPS;
+      found=true;
     }
-    if(!found) R.push({id:id,t:t,s:s,tag:"Liebe",need:["Name"],steps:STEPS});
   }
-  put("liebe","Liebesritual","Hart. Bindung auf Person X.");
-  put("liebezw","Liebesritual Bindung","Hart. Bindung auf Person X.");
+  if(!found) R.push({id:"liebe",t:"Liebesritual",s:"Hart. Bindung auf Person X.",tag:"Liebe",need:["Name"],steps:STEPS});
+  if(typeof renderList==="function") renderList();
 })();
