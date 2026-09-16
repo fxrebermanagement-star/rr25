@@ -9,11 +9,11 @@
     ["Wort",
       "Sprich:\nIch schütze mich jetzt vollständig.\nFeld und Energien tragen die Grenze.\nFremdes prallt ab oder geht in die Erde.\nMeine Energie gehört allein mir."],
     ["369",
-      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nMein Schutz ist aktiv und stark.\n\nSechs:\nAlles Fremde prallt ab und findet keinen Halt.\n\nNeun:\nIch bin klar, geschützt und bei mir."],
+      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nMein Feld ist hart geschlossen.\n\nSechs:\nAlles Fremde prallt ab und findet keinen Halt.\n\nNeun:\nIch bin klar, geschützt und bei mir."],
     ["Siegel",
-      "Tu:\nZur Kerze stehen. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
+      "Tu:\nHand kurz vor die Flamme oder flach aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
     ["Schluss",
-      "Sprich:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\nIch schliesse.\n\nTu:\nWasser. Alltag."]
+      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nIch schliesse.\n\nTu:\nWasser. Alltag."]
   ];
   if(typeof R==="undefined") return;
   var found=false;
