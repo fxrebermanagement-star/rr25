@@ -1,13 +1,18 @@
 (function(){
+  var st=document.createElement("style");
+  st.textContent="#run label.check,#run #feldCheck,#run #back,.check{display:none!important}";
+  document.head.appendChild(st);
   var run=document.getElementById("run");
   if(!run || !window.MutationObserver) return;
-  new MutationObserver(function(){
+  function hide(){
     ["feldCheck","back"].forEach(function(id){
       var box=document.getElementById(id);
-      if(!box) return;
-      box.checked=true;
-      var lab=box.closest("label");
-      if(lab) lab.style.display="none";
+      if(box) box.checked=true;
     });
-  }).observe(run,{childList:true,subtree:true});
+    run.querySelectorAll("label.check").forEach(function(lab){
+      lab.style.setProperty("display","none","important");
+    });
+  }
+  hide();
+  new MutationObserver(hide).observe(run,{childList:true,subtree:true});
 })();
