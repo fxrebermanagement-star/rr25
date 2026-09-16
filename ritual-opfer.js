@@ -5,8 +5,26 @@
   function nid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
   function when(){
     if(typeof now==="function") return now();
-    var d=new Date();
-    return d.toLocaleString("de-CH");
+    return new Date().toLocaleString("de-CH");
+  }
+  function label(){
+    var h=document.querySelector("#opfer h2");
+    if(h) h.textContent="Gabe";
+    var sub=document.querySelector("#opfer .sub");
+    if(sub) sub.textContent="Foto und Wort. Dann Chronik.";
+    var bar=document.querySelector("nav");
+    var btn=bar && bar.querySelector('[data-v="opfer"]');
+    var buch=bar && bar.querySelector('[data-v="buch"]');
+    if(btn){
+      var lab=btn.childNodes[btn.childNodes.length-1];
+      if(lab && lab.nodeType===3) lab.textContent="Gabe";
+      else {
+        var t=document.createTextNode("Gabe");
+        btn.appendChild(t);
+      }
+      btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 4l2.2 4.6L19 10l-4.8 1.8L12 17l-2.2-5.2L5 10l4.8-1.4z"/><path d="M7 19h10"/></svg>Gabe';
+      if(buch) bar.insertBefore(btn, buch);
+    }
   }
   function preview(){
     var el=document.getElementById("opferPrev");
@@ -41,16 +59,13 @@
     d.log=d.log||[];
     d.planned=d.planned||[];
     var id=nid();
-    var e={id:id,t:when(),titel:"Opfergabe",wer:"",note:t,wesen:false};
+    var e={id:id,t:when(),titel:"Gabe",wer:"",note:t,wesen:false};
     if(pic) e.img=pic;
     d.log.unshift(e);
     try{ persist(d); }
 catch(err){
-      if(msg) msg.textContent="Speicher voll. Nur Text versuchen.";
-      if(pic){
-        delete e.img;
-        try{ persist(d); }catch(e2){ return; }
-      } else return;
+      if(pic){ delete e.img; try{ persist(d); }catch(e2){ if(msg) msg.textContent="Speicher voll."; return; } }
+      else { if(msg) msg.textContent="Speicher voll."; return; }
     }
     if(pic && typeof fotoPut==="function") fotoPut(id,[pic]);
     pic="";
@@ -59,6 +74,7 @@ catch(err){
     if(msg) msg.textContent="In der Chronik.";
     setTimeout(function(){ if(typeof show==="function") show("log"); }, 200);
   }
+  label();
   document.addEventListener("click", function(e){
     if(e.target.closest && e.target.closest("#opferFoto")){ e.preventDefault(); pick(); }
     if(e.target.closest && e.target.closest("#opferGo")){ e.preventDefault(); ablegen(); }
