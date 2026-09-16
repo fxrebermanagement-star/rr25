@@ -4,7 +4,7 @@
   }
   var files=[
     "ritual-core-fix.js?v=1",
-    "ritual-list.js?v=3",
+    "ritual-list.js?v=4",
     "ritual-navkill.js?v=1",
     "ritual-look.js?v=13",
     "ritual-feinschliff.js?v=2",
@@ -21,7 +21,7 @@
     "ritual-karten.js?v=6",
     "ritual-fein-all.js?v=1",
     "ritual-fluch.js?v=3",
-    "ritual-segen.js?v=4",
+    "ritual-segen.js?v=5",
     "ritual-ueber-full.js?v=2",
     "ritual-chronik.js?v=1",
     "ritual-alle.js?v=3",
@@ -47,7 +47,7 @@
     "ritual-entlass-fix.js?v=1",
     "ritual-run-bind.js?v=1",
     "ritual-nohak.js?v=2",
-    "ritual-sort.js?v=1"
+    "ritual-sort.js?v=2"
   ];
   files.forEach(function(src){
     var s=document.createElement("script");
