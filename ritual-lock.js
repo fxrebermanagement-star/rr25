@@ -1,5 +1,5 @@
 (function(){
-  var DROP={finst:1,fremd:1,fil:1};
+  var DROP={finst:1,fremd:1,fil:1,schaden:1};
   function grab(id){
     for(var i=0;i<R.length;i++) if(R[i].id===id) return R[i];
     return null;
@@ -25,7 +25,6 @@
     ensure("ueber","Person übernehmen","Hart. Ich bin [Name]. Bis ich schliesse.",["Name","Auftrag"]);
     ensure("segen","Segen","Ein Name. Ein Satz Wofür.",["Name","Wofür"]);
     ensure("fluch","Fluch","Ein Name. Ein Satz Mass.",["Name","Mass"]);
-    ensure("schaden","Schadenszauber","Vorhanden. Nicht Pflicht.",["Name"]);
   }
   function chip(){
     var cats=document.getElementById("cats");
