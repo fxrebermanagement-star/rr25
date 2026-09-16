@@ -56,7 +56,6 @@ textarea{min-height:5.2rem}
 .msg{color:var(--pink);font-style:italic}
 .entry{border-top:1px solid var(--line);padding:.8rem 0}
 .meta{color:#8e7aa8;font-size:.68rem}
-.shots{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
 #page{padding:.9rem .85rem 1.6rem}
 #after .hero{padding:1.8rem 0 .8rem}
 #after .brand{font-size:.82rem;letter-spacing:.42em}
@@ -64,7 +63,6 @@ textarea{min-height:5.2rem}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:.42rem;align-items:stretch;margin-top:.15rem}
 #kOut,#sigilBox{aspect-ratio:1/1;height:auto;min-height:0;margin:0;padding:0;overflow:hidden;border-radius:1.15rem}
 #kOut{border:1px solid rgba(255,122,217,.38)}
-#kOut .kcard{height:100%;margin:0;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding:.55rem .5rem}
 #sigilBox{background:#0a0612;border:1px solid rgba(46,230,214,.28);overflow:hidden;padding:0}
 #sigilC{width:100%;height:100%;display:block;margin:0;border:0;border-radius:1.15rem;background:transparent}
 #under{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:.48rem}
@@ -73,14 +71,11 @@ textarea{min-height:5.2rem}
 #under input{margin:0;width:100%}
 #dreiList .kcard{margin:.48rem 0;padding:1.05rem .95rem}
 .kcard{background:linear-gradient(185deg,rgba(70,24,90,.62),rgba(12,8,28,.92));border:1px solid rgba(255,122,217,.16);border-radius:1rem;padding:.7rem .55rem .75rem;margin:.3rem 0;text-align:center}
-.kcard .group{margin:0 0 .15rem}
 .kz{font-size:1.35rem;line-height:1;color:#7ef0e6;margin:.05rem 0 .25rem}
 .kcard b{display:block;font-family:Georgia,serif;font-size:.92rem;margin:0 0 .25rem}
 .kcard small{display:block;color:#c4b4e0;line-height:1.35;font-size:.68rem}
 #list .card{padding:1rem 1.05rem;margin:.42rem 0;border-radius:1.15rem}
-#list .card b{font-size:1.08rem}
-#list .card small{font-size:.8rem;margin-top:.22rem}
-#run label.check,#afterStay,#stay{display:none!important}
+#run label.check,#afterStay,#stay,#entries .shots{display:none!important}
 #log textarea{min-height:4.2rem}
 </style>
 </head>
@@ -118,12 +113,12 @@ textarea{min-height:5.2rem}
 <div id="cats"></div><div id="list"></div>
 </section>
 <section class="screen" id="drei">
-<div class="hero"><h2>Drei</h2><p class="sub">Lage · Block · Weg</p></div>
+<div class="hero"><h2>Drei</h2></div>
 <div id="dreiList"></div>
 <div class="row"><button type="button" class="btn ghost" id="dreiBack">Zurück</button></div>
 </section>
 <section class="screen" id="zahl">
-<div class="hero"><h2>369</h2><p class="sub">Heute. Tippen zählt.</p></div>
+<div class="hero"><h2>369</h2></div>
 <div id="zahlBox"></div>
 <div class="row"><button type="button" class="btn ghost" id="zahlBack">Zurück</button></div>
 </section>
@@ -137,12 +132,12 @@ textarea{min-height:5.2rem}
 <div id="notesOnly"></div></section>
 <section class="screen" id="log"><div class="hero"><h2>Chronik</h2></div><div id="entries"></div></section>
 <section class="screen" id="buch">
-<div class="hero"><h2>Buch</h2><p class="sub">komplett zum Lesen</p></div>
+<div class="hero"><h2>Buch</h2></div>
 <article class="card book" id="page"></article>
 </section>
 <section class="screen" id="after"><div class="hero" style="text-align:center"><p class="brand">SO SEI ES</p></div>
 <div class="row"><button type="button" class="btn primary" id="afterGo">Fertig</button></div></section>
-<section class="screen" id="bye"><div class="hero" style="text-align:center;padding:4rem 0"><p class="brand">SO SEI ES</p></div></section>
+<section class="screen" id="bye"></section>
 </main>
 <nav>
 <button type="button" class="on" data-v="home"><svg viewBox="0 0 24 24"><path d="M12 3l1.2 3.6L17 8l-3.8 1.4L12 13l-1.2-3.6L7 8l3.8-1.4z"/><path d="M8 16h8M9 19h6"/></svg>Rituale</button>
@@ -186,6 +181,7 @@ textarea{min-height:5.2rem}
 <script src="ritual-u.js"></script>
 <script src="ritual-feld.js"></script>
 <script src="ritual-run-clean.js?v=1"></script>
-<script src="ritual-edition.js?v=2"></script>
+<script src="ritual-edition.js?v=3"></script>
+<script src="ritual-log-fix.js"></script>
 </body>
 </html>
