@@ -24,6 +24,9 @@
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function zSave(z){ localStorage.setItem(ZKEY, JSON.stringify(z)); }
+  function buzz(){
+    try{ if(navigator.vibrate) navigator.vibrate([40,50,80,50,140]); }catch(e){}
+  }
   function zClearHome(){
     var home=document.getElementById("home");
     if(!home) return;
@@ -33,7 +36,9 @@
     var run=document.getElementById("run");
     if(!run||!run.classList.contains("on")) return false;
     var h=run.querySelector("h2");
-    return !!(h && (h.textContent||"").trim()==="369");
+    var w=run.querySelector(".words");
+    var t=((h&&h.textContent)||"")+" "+((w&&w.textContent)||"");
+    return /369|zähler|zaehler/i.test(t);
   }
   function zBox(){
     var run=document.getElementById("run");
@@ -45,7 +50,9 @@
     if(!el){
       el=document.createElement("div");
       el.id="z369";
-      run.appendChild(el);
+      var words=run.querySelector(".words");
+      if(words && words.parentNode) words.parentNode.insertBefore(el, words.nextSibling);
+      else run.appendChild(el);
     }
     return el;
   }
@@ -62,8 +69,11 @@
   function zTap(key){
     var max={n3:3,n6:6,n9:9};
     var z=zLoad();
-    z[key]++;
-    if(z[key]>=max[key]) z[key]=0;
+    if(z[key]<max[key]) z[key]++;
+    if(z.n9>=9){
+      buzz();
+      z.n3=0; z.n6=0; z.n9=0;
+    }
     zSave(z);
     zPaint();
   }
