@@ -16,6 +16,12 @@
     '<polyline points="90,158 80,150 92,146" fill="none" stroke="#a8889c" stroke-width="1.5"/>'+
     '<text x="180" y="228" text-anchor="middle" font-size="13" fill="#d0b0c4" font-family="system-ui,sans-serif" letter-spacing="0.22em">SCHLUSS</text>'+
     '</svg>';
+  function startOnly(){
+    var on=document.querySelector("#cats .chip.on");
+    var list=document.getElementById("list");
+    var cards=list && list.children.length && !list.querySelector("#skizze");
+    return !on && !cards;
+  }
   function mount(){
     var home=document.getElementById("home");
     var list=document.getElementById("list");
@@ -24,24 +30,30 @@
     if(!el){
       el=document.createElement("div");
       el.id="skizze";
-      if(list) home.insertBefore(el, list.nextSibling);
+      el.innerHTML=SVG;
+      if(list) home.insertBefore(el, list);
       else home.appendChild(el);
     }
-    el.innerHTML=SVG;
     return el;
   }
   function paint(){
-    var el=document.getElementById("skizze")||mount();
+    var el=mount();
     if(!el) return;
-    var list=document.getElementById("list");
-    var cards=list && list.querySelector(".card,[data-id]");
-    el.style.display=cards?"none":"block";
+    el.style.display=startOnly()?"block":"none";
   }
   var css=document.createElement("style");
-  css.textContent="#skizze{margin:.7rem auto .2rem;width:92%;max-width:24rem}#skizze svg{display:block;width:100%;height:15rem}";
+  css.textContent=[
+    "#skizze{margin:.7rem auto .2rem;width:92%;max-width:24rem}",
+    "#skizze svg{display:block;width:100%;height:15rem}",
+    "#home:has(#cats .chip.on) #skizze{display:none!important}",
+    "#home:has(#list .card) #skizze,#home:has(#list button) #skizze{display:none!important}"
+  ].join("");
   document.head.appendChild(css);
   mount(); paint();
-  document.addEventListener("click", function(e){
-    if(e.target.closest && e.target.closest("#cats .chip")) setTimeout(paint,0);
-  });
+  document.addEventListener("click", function(){ setTimeout(paint, 0); setTimeout(paint, 80); });
+  if(typeof renderList==="function" && !renderList._sk){
+    var rl=renderList;
+    renderList=function(){ rl(); paint(); };
+    renderList._sk=1;
+  }
 })();
