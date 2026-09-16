@@ -39,9 +39,30 @@
     "#entries .logrow .meta{margin-top:.2rem}",
     "#entries .logrow .logact{margin-top:.45rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem;letter-spacing:.04em}",
     "#entries .logrow img{width:4.6rem;height:4.6rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.2);background:#0a0612}",
-    "#entries .logrow img.sig{object-fit:contain}"
+    "#entries .logrow img.sig{object-fit:contain}",
+    "#sigilT,#sigRow input,#underR input,#run [data-k]{text-transform:uppercase;letter-spacing:.06em;font-size:1.02rem}"
   ].join("");
   document.head.appendChild(css);
+
+  function up(el){
+    if(!el||el._up) return;
+    el._up=1;
+    el.setAttribute("autocapitalize","characters");
+    el.setAttribute("autocomplete","off");
+    el.addEventListener("input", function(){
+      var a=el.selectionStart, b=el.selectionEnd;
+      var v=el.value.toUpperCase();
+      if(el.value!==v){
+        el.value=v;
+        try{ el.setSelectionRange(a,b); }catch(err){}
+      }
+    });
+  }
+  up(document.getElementById("sigilT"));
+  document.querySelectorAll("#sigRow input,#underR input,#run [data-k]").forEach(up);
+  document.addEventListener("focusin", function(e){
+    if(e.target && (e.target.id==="sigilT" || e.target.getAttribute("data-k"))) up(e.target);
+  });
 
   function zoom(src){
     var old=document.getElementById("picZoom"); if(old) old.remove();
@@ -87,17 +108,6 @@
       }
     });
   };
-
-  if(typeof openLog==="function" && !openLog._ed){
-    var op=openLog;
-    openLog=function(id){
-      op(id);
-      var box=document.getElementById("entries");
-      if(!box) return;
-      box.querySelectorAll(".btn.primary").forEach(function(b){ b.className="btn ghost"; });
-    };
-    openLog._ed=1;
-  }
 
   var KEY="rr25_dank";
   function day(){
