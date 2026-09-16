@@ -1,23 +1,17 @@
 (function(){
-  var under=document.getElementById("under");
-  var tools=document.getElementById("tools");
-  if(tools && under) under.style.setProperty("display","none","important");
   var s=document.createElement("style");
   s.textContent=[
     "#under{display:none!important}",
-    "#kasten{margin:0 0 .25rem}",
-    "#home .duo{gap:.3rem;margin:0}",
-    "#kOut,#sigilBox{aspect-ratio:1/1;max-height:36vw}",
-    "#tools{margin-top:.28rem!important;gap:.26rem!important}",
-    "#tools .tile{padding:.34rem .04rem .28rem!important}",
-    "#sigRow{margin-top:.24rem!important}",
-    "#pinDank{margin:.22rem 0 .16rem;padding:.52rem .68rem}",
-    "#cats{margin:.22rem 0 .16rem}",
-    "#list .card{margin:.14rem 0;padding:.68rem .78rem}",
-    "#headRow{min-height:48px}",
-    ".doll{width:48px;height:48px}"
+    "#kasten{display:block!important;visibility:visible!important;height:auto!important;overflow:visible!important;margin:0 0 .35rem!important}",
+    "#home .duo{display:grid!important;grid-template-columns:1fr 1fr!important;gap:.4rem!important}",
+    "#kOut,#sigilBox{display:block!important;aspect-ratio:1/1!important;max-height:none!important;min-height:9.2rem!important}",
+    "#tools{display:grid!important;grid-template-columns:repeat(4,1fr)!important;margin-top:.4rem!important}",
+    "#sigRow{display:grid!important}"
   ].join("");
   document.head.appendChild(s);
+  var home=document.getElementById("home");
+  var kast=document.getElementById("kasten");
+  if(home && kast && home.firstChild!==kast) home.insertBefore(kast, home.firstChild);
 })();
 (function(){
   var pic="";
