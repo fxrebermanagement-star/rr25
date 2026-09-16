@@ -36,6 +36,7 @@
     "ritual-zur.js?v=1",
     "ritual-heil.js?v=1",
     "ritual-karma.js?v=1",
+    "ritual-liebe.js?v=2",
     "ritual-gate.js?v=15",
     "ritual-stabil.js?v=1",
     "ritual-entlass-fix.js?v=1",
