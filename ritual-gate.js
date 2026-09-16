@@ -1,14 +1,14 @@
 (function(){
   var SKIP={dank:1,stopp:1,schutz:1,schutz2:1,schutzweg:1,heil:1,zur:1,karma:1,liebe:1,liebezw:1,anz:1,trenn:1,trenn2:1,wesen:1,fremd:1,ahn:1,finst:1,schaden:1,segen:1,fluch:1,ueber:1,fil:1};
-  var SHORT={schutzweg:1,dank:1,fremd:1};
+  var SHORT={schutzweg:1,dank:1,fremd:1,schutz:1};
   var ALWAYS={wesen:1,fremd:1,ahn:1};
-  var NOWESEN={dank:1,schutzweg:1,ahn:1,fremd:1};
+  var NOWESEN={dank:1,schutzweg:1,ahn:1,fremd:1,schutz:1};
   var FOTO={schutz2:1,liebe:1,liebezw:1,anz:1,fluch:1,segen:1,ueber:1,schaden:1};
   var MITSTEP=/Rufen|Prüfen|Auftrag geben/i;
   var HALT_O="Tu:\nEinen Atem stehen. Nichts nachschieben.\n\nSprich:\nGesetzt.\nIch trage allein.\nAbgegeben.";
   var HALT_M="Tu:\nEinen Atem stehen. Die Wesenheit trägt noch. Du hältst das Mass.\n\nSprich:\nGesetzt.\nDu trägst.\nIch führe.\nKein Mehr.";
-  var SIEG_O="Tu:\nSalz auf den Boden oder Hand flach auf die Erde. Einmal.\n\nSprich:\nVersiegelt.\nGeschlossen.\nDas Feld hat es.";
-  var SIEG_M="Tu:\nSalz oder Siegelzeichen. Einmal.\n\nSprich:\nVersiegelt.\nDer Auftrag bleibt begrenzt.\nDanach gehst du.";
+  var SIEG_O="Tu:\nZur Kerze stehen. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es.";
+  var SIEG_M="Tu:\nSiegelzeichen. Einmal.\n\nSprich:\nVersiegelt.\nDer Auftrag bleibt begrenzt.\nDanach gehst du.";
   var GO=
     "Tu:\nNicht nachwinken. Nicht offen lassen. Tor zu.\n\n"+
     "Sprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor.";
@@ -82,7 +82,7 @@
     }
     function endText(titel, text){
       if(/Halten/i.test(titel)) return mem.mit?HALT_M:HALT_O;
-      if(/Siegel/i.test(titel)) return mem.mit?SIEG_M:SIEG_O;
+      if(/Siegel/i.test(titel)) return NOWESEN[id]?String(text||""):(mem.mit?SIEG_M:SIEG_O);
       if(/Entlassen/i.test(titel)) return GO;
       if(/Feld-Check|Rückkehr|Fertig/i.test(titel)) return mem.mit?RUECK_M:RUECK_O;
       return String(text||"").replace(/Nur wenn jemand da war\.?\n*/g,"").replace(/Falls eine Wesenheit da war:?\n*/gi,"");
