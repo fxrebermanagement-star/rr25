@@ -12,6 +12,9 @@
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function saveZ(z){ localStorage.setItem(KEY, JSON.stringify(z)); }
+  function buzz(){
+    try{ if(navigator.vibrate) navigator.vibrate([40,50,80,50,140]); }catch(e){}
+  }
   function wanted(){
     var run=document.getElementById("run");
     if(!run || !run.classList.contains("on")) return false;
@@ -42,11 +45,14 @@
   function tap(key){
     var max={n3:3,n6:6,n9:9};
     var z=loadZ();
-    z[key]++;
-    if(z[key]>=max[key]) z[key]=0;
-    if(z.n3>=3 && z.n6>=6 && z.n9>=9){ z.n3=0; z.n6=0; z.n9=0; }
+    if(z[key]<max[key]) z[key]++;
+    if(z.n9>=9){
+      buzz();
+      z.n3=0; z.n6=0; z.n9=0;
+    }
     saveZ(z);
     paint();
+    if(typeof window._zPaint==="function") window._zPaint();
   }
   var css=document.createElement("style");
   css.textContent=[
@@ -58,20 +64,16 @@
   document.head.appendChild(css);
   document.addEventListener("click", function(e){
     var b=e.target.closest && e.target.closest("#run #z369 [data-z]");
-    if(b){ e.preventDefault(); e.stopPropagation(); tap(b.getAttribute("data-z")); }
+    if(b){
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+      tap(b.getAttribute("data-z"));
+    }
     setTimeout(paint, 30);
   }, true);
   var run=document.getElementById("run");
   if(run && window.MutationObserver){
     new MutationObserver(function(){ setTimeout(paint, 20); }).observe(run,{childList:true,subtree:true});
-  }
-  if(typeof show==="function" && !show._zfix){
-    var sh=show;
-    show=function(id){
-      var r=sh.apply(this,arguments);
-      setTimeout(paint, 40);
-      return r;
-    };
-    show._zfix=1;
   }
 })();
