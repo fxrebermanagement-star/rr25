@@ -12,8 +12,8 @@
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function saveZ(z){ localStorage.setItem(KEY, JSON.stringify(z)); }
-  function buzz(){
-    try{ if(navigator.vibrate) navigator.vibrate([40,50,80,50,140]); }catch(e){}
+  function buzz(full){
+    try{ if(navigator.vibrate) navigator.vibrate(full?[40,50,80,50,140]:[55]); }catch(e){}
   }
   function wanted(){
     var run=document.getElementById("run");
@@ -47,8 +47,10 @@
     var z=loadZ();
     if(z[key]<max[key]) z[key]++;
     if(z.n9>=9){
-      buzz();
+      buzz(true);
       z.n3=0; z.n6=0; z.n9=0;
+    } else if(z[key]>=max[key]){
+      buzz(false);
     }
     saveZ(z);
     paint();
