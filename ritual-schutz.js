@@ -15,8 +15,20 @@
     ["Schluss",
       "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nIch schliesse.\n\nTu:\nWasser. Alltag."]
   ];
+  var WEG=[
+    ["Ankommen",
+      "Tu:\nStehen bleiben oder weitergehen, Füsse spüren.\nEinen Atem.\n\nSprich:\nIch bin da.\nIch bleibe ich."],
+    ["Feld hart",
+      "Tu:\nGrenze um den Körper. Schultern locker.\n\nSprich:\nIch schliesse mein Feld hart.\nNichts Fremdes hat Zutritt.\nMeine Energie gehört mir."],
+    ["Wort",
+      "Sprich:\nIch bin geschützt unterwegs.\nDie Bahn bleibt bei mir.\nFremdes prallt ab."],
+    ["Es ist so",
+      "Sprich dreimal:\nEs ist so."],
+    ["Schluss",
+      "Sprich:\nDanke Feld.\nIch gehe weiter.\n\nTu:\nNicht nachprüfen. Alltag."]
+  ];
   if(typeof R==="undefined") return;
-  var found=false;
+  var found=false, foundW=false;
   for(var i=0;i<R.length;i++){
     if(R[i].id==="schutz"){
       R[i].t="Schutz selbst";
@@ -26,8 +38,19 @@
       delete R[i].need;
       found=true;
     }
+    if(R[i].id==="weg"){
+      R[i].t="Schutz unterwegs";
+      R[i].s="Kurz. Ohne Kerze. 3× Es ist so.";
+      R[i].tag="Schutz";
+      R[i].steps=WEG;
+      delete R[i].need;
+      foundW=true;
+    }
   }
   if(!found){
     R.push({id:"schutz",t:"Schutz selbst",s:"Feld schliessen. Kerze. Feld und Energien.",tag:"Schutz",steps:STEPS});
+  }
+  if(!foundW){
+    R.push({id:"weg",t:"Schutz unterwegs",s:"Kurz. Ohne Kerze. 3× Es ist so.",tag:"Schutz",steps:WEG});
   }
 })();
