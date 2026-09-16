@@ -1,13 +1,9 @@
 (function(){
   function wipe(){
-    ["afterStay","stay"].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.remove();
-    });
-    document.querySelectorAll("button").forEach(function(b){
-      var t=(b.textContent||"").trim();
-      if(t==="Später" || t==="Bleiben") b.remove();
-    });
+    var after=document.getElementById("after");
+    if(!after) return;
+    var stay=document.getElementById("afterStay");
+    if(stay) stay.remove();
     var go=document.getElementById("afterGo");
     if(go){
       go.textContent="Fertig";
@@ -15,24 +11,20 @@
     }
   }
   document.addEventListener("click", function(e){
-    var btn=e.target && e.target.closest && e.target.closest("#run #next");
-    if(!btn) return;
+    var t=e.target && e.target.closest && e.target.closest("#run #next");
+    if(!t) return;
     var back=document.getElementById("back");
+    var feld=document.getElementById("feldCheck");
     if(back) back.checked=true;
+    if(feld) feld.checked=true;
   }, true);
-  wipe();
   if(typeof show==="function" && !show._end){
     var prev=show;
     show=function(id){
       var r=prev.apply(this,arguments);
-      setTimeout(wipe,0);
-      setTimeout(wipe,80);
+      if(id==="after") setTimeout(wipe,0);
       return r;
     };
     show._end=1;
-  }
-  if(window.MutationObserver){
-    var after=document.getElementById("after");
-    if(after) new MutationObserver(wipe).observe(after,{childList:true,subtree:true});
   }
 })();
