@@ -50,7 +50,7 @@
   }
   function form(){
     var box=document.getElementById("opfer");
-    if(!box || box.querySelector("#opferTitel")) return;
+    if(!box) return;
     box.innerHTML=
       '<div class="hero"><h2>Gabe</h2></div>'+
       '<div class="card">'+
@@ -61,7 +61,6 @@
       '<button type="button" class="btn ghost" id="opferList">Liste</button>'+
       '<button type="button" class="btn primary" id="opferGo">Speichern</button>'+
       '</div>'+
-      '<div class="row"><button type="button" class="btn ghost" id="opferDel">Löschen</button></div>'+
       '</div>'+
       '<div class="row"><button type="button" class="btn ghost" id="opferFoto">Foto dazu</button></div>'+
       '<p class="msg" id="opferMsg"></p>';
@@ -128,7 +127,6 @@
     if(e.target.closest("#opferFoto")){ e.preventDefault(); pick(); }
     if(e.target.closest("#opferGo")){ e.preventDefault(); ablegen(); }
     if(e.target.closest("#opferList")){ e.preventDefault(); if(typeof show==="function") show("log"); }
-    if(e.target.closest("#opferDel")){ e.preventDefault(); wipe(); }
   });
   if(typeof show==="function" && !show._gabe){
     var sh=show;
