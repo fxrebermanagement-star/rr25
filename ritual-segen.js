@@ -1,19 +1,43 @@
 (function(){
-  var steps=[
-    ["Vorbereitung","Name von Person X klar. Laut sagen oder aufschreiben.\nHandy stumm und weg. Ungestörter Platz.\nEigenes Feld zuerst schliessen.\nKerze wenn da. Salz. Wasser danach bereit.\nRitualbuch darf daneben liegen.\nFoto nur als Anker, dann weglegen.\nKein Hass im Mund. Kein Handel. Segen ist Gabe.\nWesenheit nur wenn der Segen ohne sie nicht sitzt. Sonst ohne."],
-    ["Schutz zuerst","Füsse auf den Boden. Drei Atemzüge.\nIch bin der Spieler, nicht die Spielfigur.\nDer Beobachter ist wach.\nMein Feld ist geschlossen.\nIch gebe Wort, nicht mich."],
-    ["Ankommen","Stelle dich oder setze dich. Schultern fallen lassen. Kiefer lösen.\nDrei ruhige Atemzüge. Nichts hetzen.\nIch bleibe ich. [Name] bleibt [Name].\nWärme ja. Verschmelzen nein."],
-    ["Kreis","Sprich:\nIch öffne diesen Raum nur für Segen auf [Name].\nNur das Stimmige und Reine darf hier sein.\nUnklares, Ziehendes, Fremdes bleibt draussen.\nKein Auftrag über den Segen hinaus."],
-    ["Ausrichten","[Name] wahrnehmen, ohne [Name] zu werden.\nDer Segen geht zu [Name]. Ich bleibe hier.\nWenn es zieht: zurück in die Füsse."],
-    ["Wesenheit","Ohne Wesenheit weiter zum Wort.\nMit Wesenheit nur so:\nFilter zuerst. Nur klare, stimmige Präsenz.\nAuftrag: trage den Segen zu [Name] und geh danach vollständig.\nBei Druck oder Nebel: ohne Wesenheit weitermachen."],
-    ["Wort","Sprich langsam, einmal vollständig:\n\nIch lege Segen auf [Name].\nSchutz um den Körper.\nKlarheit im Kopf.\nWeg unter den Füssen.\nWas stimmig ist, darf wachsen.\nWas zieht, Last und fremder Zugriff bleiben draussen.\nDer Segen ist rein.\nEr bindet nicht.\nEr hält."],
-    ["369","Zähler unten. Zwischen den Runden ein Atem.\n\n3  [Name] ist gesegnet und gehalten.\n6  Der Segen sitzt, wirkt und bleibt rein.\n9  Das Wort ist gelegt. Es ist so."],
-    ["Halten","Einen Atem lang stehen lassen.\nNicht nachkontrollieren.\nDer Segen ist gegeben."],
-    ["Siegel","Hand aufs Herz oder eine Prise Salz.\nSprich:\nGegeben.\nVersiegelt.\nNicht nachholen."],
-    ["Entlassen","Falls eine Wesenheit da war:\nDanke. Der Auftrag ist erfüllt.\nDu gehst vollständig. Alle Fäden lösen sich.\nIch schliesse den Kontakt.\n\nOhne Wesenheit: weiter zum Feld-Check."],
-    ["Feld-Check","Haut. Atem. Füsse. Raum.\nIch bin nicht [Name].\nIch bin zurück in mir.\nMeine Energie gehört mir.\nDer Segen bleibt bei [Name].\nSo sei es.\nErden. Wasser. Alltag."]
+  var STEPS=[
+    ["Vorbereitung",
+      "Name von [Name] oben eingeben.\nFoto wenn da: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur Segen auf [Name].\nGabe, kein Handel.\nIch bleibe ich."],
+    ["Ankommen",
+      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler.\nDer Beobachter ist wach."],
+    ["Feld hart",
+      "Tu:\nGrenze um den Körper. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nIch gebe Wort, nicht mich."],
+    ["Ausrichten",
+      "Tu:\n[Name] wahrnehmen, ohne [Name] zu werden.\n\nSprich:\nWärme ja. Verschmelzen nein.\nDer Segen geht zu [Name]. Ich bleibe hier."],
+    ["Rufen",
+      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur den Segen zu [Name].\nKein Theater. Kein Sog. Kein Mehr."],
+    ["Auftrag geben",
+      "Sprich:\nTrage den Segen zu [Name].\nRein. Ohne Bindung.\nKein Bleiben in [Name].\nDanach gehst du vollständig."],
+    ["Wort",
+      "Sprich:\nIch lege Segen auf [Name].\nSchutz um den Körper.\nKlarheit im Kopf.\nWeg unter den Füssen.\nWas stimmig ist, darf wachsen.\nLast und fremder Zugriff bleiben draussen.\nDu trägst. Ich führe."],
+    ["369",
+      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\n[Name] ist gesegnet und gehalten.\n\nSechs:\nDer Segen sitzt und bleibt rein.\n\nNeun:\nDas Wort ist gelegt."],
+    ["Es ist so",
+      "Sprich dreimal:\nEs ist so."],
+    ["Siegel",
+      "Tu:\nHand aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
+    ["Entlassen",
+      "Tu:\nNicht nachwinken. Tor zu.\n\nSprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor."],
+    ["Rückkehr",
+      "Tu:\nHaut. Atem. Füsse. Raum.\n\nSprich:\nIch bin nicht [Name].\nIch bin nicht die Wesenheit.\nIch kehre vollständig zurück.\nDer Segen bleibt bei [Name].\nMeine Energie gehört mir."],
+    ["Schluss",
+      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nTu:\nWasser. Alltag. Nicht nachkontrollieren."]
   ];
-  for(var i=R.length-1;i>=0;i--) if(R[i].id==="segen") R.splice(i,1);
-  R.push({id:"segen",t:"Segen",s:"Für Person X. Wort legen und halten.",tag:"Person X",need:["Name"],steps:steps});
-  if(typeof renderList==="function") renderList();
+  if(typeof R==="undefined") return;
+  var found=false;
+  for(var i=0;i<R.length;i++){
+    if(R[i].id==="segen"){
+      R[i].t="Segen";
+      R[i].s="Wort legen. Gabe, kein Handel.";
+      R[i].tag="Person X";
+      R[i].need=["Name"];
+      R[i].steps=STEPS;
+      found=true;
+    }
+  }
+  if(!found) R.push({id:"segen",t:"Segen",s:"Wort legen. Gabe, kein Handel.",tag:"Person X",need:["Name"],steps:STEPS});
 })();
