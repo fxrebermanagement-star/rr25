@@ -32,6 +32,7 @@
     "ritual-dank.js?v=3",
     "ritual-schutz.js?v=2",
     "ritual-stopp.js?v=2",
+    "ritual-schutz2.js?v=1",
     "ritual-gate.js?v=15",
     "ritual-stabil.js?v=1",
     "ritual-entlass-fix.js?v=1",
