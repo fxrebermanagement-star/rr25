@@ -12,9 +12,9 @@
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function saveZ(z){ localStorage.setItem(KEY, JSON.stringify(z)); }
-  function buzz(){
+  function buzz(full){
     try{
-      if(navigator.vibrate) navigator.vibrate([40,50,80,50,140]);
+      if(navigator.vibrate) navigator.vibrate(full?[40,50,80,50,140]:[55]);
     }catch(e){}
   }
   function paint(){
@@ -38,11 +38,13 @@
     var max={n3:3,n6:6,n9:9};
     var z=loadZ();
     if(z[key]<max[key]) z[key]++;
-    if(z.n3>=3 && z.n6>=6 && z.n9>=9){
-      buzz();
+    if(z.n9>=9){
+      buzz(true);
       z.n3=0; z.n6=0; z.n9=0;
       window._zVoll=true;
       setTimeout(function(){ window._zVoll=false; paint(); },1800);
+    } else if(z[key]>=max[key]){
+      buzz(false);
     }
     saveZ(z);
     paint();
