@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="RR25">
 <meta name="mobile-web-app-capable" content="yes">
 <title>Rolf Reber 25</title>
-<link rel="manifest" href="manifest.webmanifest?v=3">
+<link rel="manifest" href="manifest.webmanifest?v=4">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
 <style>
@@ -59,7 +59,7 @@ textarea{min-height:5.2rem}
 .entry{border-top:1px solid var(--line);padding:.8rem 0}
 .meta{color:#8e7aa8;font-size:.68rem}
 .shots{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0}
-.shots img{width:4.4rem;height:4.4rem;object-fit:cover;border-radius:.7rem;border:1px solid var(--line)}
+.shots img{width:5.2rem;height:5.2rem;object-fit:contain;border-radius:.7rem;border:1px solid var(--line);background:#0a0612}
 #page{padding:.9rem .85rem 1.6rem}
 #after .hero{padding:1.8rem 0 .8rem}
 #after .brand{font-size:.82rem;letter-spacing:.42em}
@@ -83,11 +83,9 @@ textarea{min-height:5.2rem}
 #list .card{padding:1rem 1.05rem;margin:.42rem 0;border-radius:1.15rem}
 #list .card b{font-size:1.08rem}
 #list .card small{font-size:.8rem;margin-top:.22rem}
-#run label.check,#run #feldCheck{display:none!important}
+#run label.check,#run #feldCheck,#afterStay,#stay{display:none!important}
 #log textarea{min-height:4.2rem}
-#runBuch{width:auto;min-height:1.9rem;padding:.28rem .7rem;font-size:.68rem;margin-top:.15rem}
-#afterStay,#stay{display:none!important}
-#entries .shots img{width:5.2rem;height:5.2rem;object-fit:contain;background:#0a0612}
+#pinDank{position:relative;padding-right:3.1rem}
 </style>
 </head>
 <body>
@@ -115,7 +113,7 @@ textarea{min-height:5.2rem}
 <button type="button" class="btn ghost" id="kDrei">Drei</button>
 </div>
 <div id="underR">
-<input id="sigilT" placeholder="Absicht">
+<input id="sigilT" placeholder="Absicht" autocomplete="off" spellcheck="false">
 <button type="button" class="btn ghost" id="sigilGo">Zeichen</button>
 <button type="button" class="btn ghost" id="sigilSave">Ablegen</button>
 </div>
@@ -135,7 +133,7 @@ textarea{min-height:5.2rem}
 </section>
 <section class="screen" id="run"></section>
 <section class="screen" id="geplant"><div class="hero"><h2>Geplant</h2></div>
-<div class="card"><select id="plR"></select><input id="plW" placeholder="Für wen">
+<div class="card"><select id="plR"></select><input id="plW" placeholder="Für wen" autocomplete="off">
 <div class="row"><button type="button" class="btn ghost" id="plAdd">Vormerken</button></div><div id="plList"></div></div></section>
 <section class="screen" id="notiz"><div class="hero"><h2>Notiz</h2></div>
 <div class="card"><textarea id="noteT" placeholder="Neue Notiz"></textarea>
@@ -147,9 +145,8 @@ textarea{min-height:5.2rem}
 <article class="card book" id="page"></article>
 </section>
 <section class="screen" id="after"><div class="hero" style="text-align:center"><p class="brand">SO SEI ES</p></div>
-<div class="row"><button type="button" class="btn ghost" id="afterStay">Später</button><button type="button" class="btn primary" id="afterGo">Fertig</button></div></section>
-<section class="screen" id="bye"><div class="hero" style="text-align:center;padding:4rem 0"><p class="brand">SO SEI ES</p>
-<div class="row"><button type="button" class="btn ghost" id="stay">Bleiben</button></div></div></section>
+<div class="row"><button type="button" class="btn primary" id="afterGo">Fertig</button></div></section>
+<section class="screen" id="bye"><div class="hero" style="text-align:center;padding:4rem 0"><p class="brand">SO SEI ES</p></div></section>
 </main>
 <nav>
 <button type="button" class="on" data-v="home"><svg viewBox="0 0 24 24"><path d="M12 3l1.2 3.6L17 8l-3.8 1.4L12 13l-1.2-3.6L7 8l3.8-1.4z"/><path d="M8 16h8M9 19h6"/></svg>Rituale</button>
@@ -161,28 +158,20 @@ textarea{min-height:5.2rem}
 </div>
 <script src="doll.js"></script>
 <script src="ritual-core.js"></script>
-<script src="ritual-core-fix.js?v=2"></script>
-<script src="ritual-list.js?v=4"></script>
-<script src="ritual-prep.js"></script>
-<script src="ritual-steps.js?v=7"></script>
-<script src="ritual-filter.js?v=9"></script>
+<script src="ritual-list.js?v=5"></script>
 <script src="ritual-karten.js?v=6"></script>
-<script src="ritual-sigil.js?v=9"></script>
-<script src="ritual-log.js?v=4"></script>
+<script src="ritual-sigil.js?v=10"></script>
+<script src="ritual-log.js?v=5"></script>
 <script src="ritual-notes.js"></script>
-<script src="ritual-plus.js?v=2"></script>
-<script src="ritual-close.js"></script>
+<script src="ritual-plus.js?v=3"></script>
 <script src="ritual-nav.js?v=2"></script>
 <script src="ritual-layout.js?v=3"></script>
 <script src="ritual-look.js?v=13"></script>
 <script src="ritual-extra.js?v=15"></script>
 <script src="ritual-zahl.js?v=3"></script>
 <script src="ritual-home.js?v=6"></script>
-<script src="ritual-wort.js?v=10"></script>
 <script src="ritual-backup.js?v=7"></script>
-<script src="ritual-navkill.js?v=1"></script>
-<script src="pwa.js?v=32"></script>
-<script src="ritual-wesen-lead.js?v=4"></script>
+<script src="pwa.js?v=40"></script>
 <script src="ritual-dank.js?v=3"></script>
 <script src="ritual-schutz.js?v=2"></script>
 <script src="ritual-stopp.js?v=3"></script>
@@ -198,20 +187,9 @@ textarea{min-height:5.2rem}
 <script src="ritual-wesen.js?v=2"></script>
 <script src="ritual-segen.js?v=5"></script>
 <script src="ritual-fluch.js?v=3"></script>
-<script src="ritual-gate.js?v=15"></script>
-<script src="ritual-entlass-fix.js?v=1"></script>
-<script src="ritual-nohak.js?v=2"></script>
-<script src="ritual-sort.js?v=5"></script>
-<script src="ritual-pin-px.js?v=2"></script>
 <script src="ritual-u.js"></script>
 <script src="ritual-feld.js"></script>
-<script src="ritual-lock.js"></script>
-<script src="ritual-sch.js"></script>
-<script src="ritual-log-fein.js"></script>
-<script src="ritual-end.js"></script>
-<script src="ritual-haken.js"></script>
-<script src="ritual-sigil-keep.js"></script>
-<script src="ritual-fresh.js"></script>
-<script src="ritual-nowesen.js"></script>
+<script src="ritual-run-clean.js?v=1"></script>
+<script src="ritual-edition.js?v=1"></script>
 </body>
 </html>
