@@ -1,4 +1,25 @@
 (function(){
+  var under=document.getElementById("under");
+  var tools=document.getElementById("tools");
+  if(tools && under) under.style.setProperty("display","none","important");
+  var s=document.createElement("style");
+  s.textContent=[
+    "#under{display:none!important}",
+    "#kasten{margin:0 0 .25rem}",
+    "#home .duo{gap:.3rem;margin:0}",
+    "#kOut,#sigilBox{aspect-ratio:1/1;max-height:36vw}",
+    "#tools{margin-top:.28rem!important;gap:.26rem!important}",
+    "#tools .tile{padding:.34rem .04rem .28rem!important}",
+    "#sigRow{margin-top:.24rem!important}",
+    "#pinDank{margin:.22rem 0 .16rem;padding:.52rem .68rem}",
+    "#cats{margin:.22rem 0 .16rem}",
+    "#list .card{margin:.14rem 0;padding:.68rem .78rem}",
+    "#headRow{min-height:48px}",
+    ".doll{width:48px;height:48px}"
+  ].join("");
+  document.head.appendChild(s);
+})();
+(function(){
   var pic="";
   var persist=typeof save==="function"?save:function(){};
   var read=typeof load==="function"?load:function(){ return {log:[]}; };
@@ -10,18 +31,10 @@
   function label(){
     var h=document.querySelector("#opfer h2");
     if(h) h.textContent="Gabe";
-    var sub=document.querySelector("#opfer .sub");
-    if(sub) sub.textContent="Foto und Wort. Dann Chronik.";
     var bar=document.querySelector("nav");
     var btn=bar && bar.querySelector('[data-v="opfer"]');
     var buch=bar && bar.querySelector('[data-v="buch"]');
     if(btn){
-      var lab=btn.childNodes[btn.childNodes.length-1];
-      if(lab && lab.nodeType===3) lab.textContent="Gabe";
-      else {
-        var t=document.createTextNode("Gabe");
-        btn.appendChild(t);
-      }
       btn.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 4l2.2 4.6L19 10l-4.8 1.8L12 17l-2.2-5.2L5 10l4.8-1.4z"/><path d="M7 19h10"/></svg>Gabe';
       if(buch) bar.insertBefore(btn, buch);
     }
@@ -56,14 +69,12 @@
     }
     var d=read();
     if(!d || typeof d!=="object") d={log:[],planned:[]};
-    d.log=d.log||[];
-    d.planned=d.planned||[];
+    d.log=d.log||[]; d.planned=d.planned||[];
     var id=nid();
     var e={id:id,t:when(),titel:"Gabe",wer:"",note:t,wesen:false};
     if(pic) e.img=pic;
     d.log.unshift(e);
-    try{ persist(d); }
-catch(err){
+    try{ persist(d); }catch(err){
       if(pic){ delete e.img; try{ persist(d); }catch(e2){ if(msg) msg.textContent="Speicher voll."; return; } }
       else { if(msg) msg.textContent="Speicher voll."; return; }
     }
