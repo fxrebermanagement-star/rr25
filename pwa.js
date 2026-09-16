@@ -30,7 +30,7 @@
     "ritual-wortfix.js?v=1",
     "ritual-wesen-lead.js?v=4",
     "ritual-dank.js?v=3",
-    "ritual-schutz.js?v=1",
+    "ritual-schutz.js?v=2",
     "ritual-gate.js?v=14",
     "ritual-stabil.js?v=1",
     "ritual-entlass-fix.js?v=1",
