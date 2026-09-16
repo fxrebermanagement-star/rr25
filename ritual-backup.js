@@ -2,9 +2,12 @@
   if(window.__rr25bak) return;
   window.__rr25bak=1;
   var BAK="rr25_pack_bak";
+  var WHEN="rr25_bak_at";
+  var WEEK=7*24*60*60*1000;
 
   function get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+  function mark(){ set(WHEN, String(Date.now())); }
 
   function pack(){
     var p={v:4,t:new Date().toISOString()};
@@ -50,6 +53,26 @@
   if(typeof saveNotes==="function"){ var _n=saveNotes; saveNotes=function(a){ _n(a); snap(); }; }
   snap();
 
+  function stale(){
+    var t=parseInt(get(WHEN)||"0",10);
+    if(!t) return true;
+    return (Date.now()-t)>WEEK;
+  }
+  function hint(host){
+    if(!host) return;
+    var old=host.querySelector("#bakHint");
+    if(old) old.remove();
+    if(!stale()) return;
+    var p=document.createElement("p");
+    p.id="bakHint";
+    p.className="meta";
+    p.textContent="Sicherung steht an.";
+    p.style.margin="0 0 .45rem";
+    var bar=host.querySelector(".bakBar");
+    if(bar&&bar.nextSibling) host.insertBefore(p, bar.nextSibling);
+    else if(bar) bar.parentNode.appendChild(p);
+  }
+
   function pane(raw,c,mode){
     var old=document.getElementById("bakPane");
     if(old) old.remove();
@@ -80,7 +103,10 @@
       var ok=false;
       try{ if(navigator.clipboard){ navigator.clipboard.writeText(tx.value); ok=true; } }catch(e){}
       try{ if(!ok) ok=document.execCommand("copy"); }catch(e){}
+      if(ok) mark();
       copy.textContent=ok?"Kopiert":"Markieren und kopieren";
+      hint(document.getElementById("log"));
+      hint(document.getElementById("notiz"));
     };
     var go=box.querySelector("#bakGo");
     if(go) go.onclick=function(){
@@ -88,11 +114,14 @@
         var p=JSON.parse((tx.value||"").trim());
         if(!apply(p)) throw new Error("leer");
         snap();
+        mark();
         var k=counts(p);
         alert("Drin: Chronik "+k.log+", Notizen "+k.notes);
         box.remove();
         if(typeof paintLog==="function") paintLog();
         if(typeof paintNotes==="function") paintNotes();
+        hint(document.getElementById("log"));
+        hint(document.getElementById("notiz"));
       }catch(e){ alert("Text nicht lesbar. Ganzen Sicherungstext einfügen."); }
     };
     box.querySelector("#bakClose").onclick=function(){ box.remove(); };
@@ -100,9 +129,12 @@
 
   function dump(){
     snap();
+    mark();
     var p=pack();
     var c=counts(p);
     pane(JSON.stringify(p), c, "out");
+    hint(document.getElementById("log"));
+    hint(document.getElementById("notiz"));
   }
   function openIn(){ pane("", {log:0,notes:0,plan:0}, "in"); }
 
@@ -122,9 +154,11 @@
   function place(){
     bar(document.getElementById("log"));
     bar(document.getElementById("notiz"));
+    hint(document.getElementById("log"));
+    hint(document.getElementById("notiz"));
   }
   var st=document.createElement("style");
-  st.textContent="#bakPane{margin:.2rem 0 .8rem}#bakTx{min-height:8rem;font-size:.68rem}";
+  st.textContent="#bakPane{margin:.2rem 0 .8rem}#bakTx{min-height:8rem;font-size:.68rem}#bakHint{color:#c4a4d6}";
   document.head.appendChild(st);
   if(typeof show==="function"){
     var _show=show;
