@@ -1,19 +1,43 @@
 (function(){
-  var steps=[
-    ["Vorbereitung","Name von Person X klar. Laut sagen oder aufschreiben.\nHandy stumm und weg. Tür zu wenn möglich.\nKerze wenn da. Salz. Siegelzeichen oder Ritualbuch daneben.\nWasser danach bereit — das gehört zur Arbeit.\nFoto nur als Anker. Anschauen, dann umdrehen oder zudecken.\nEigenes Feld zuerst. Ohne geschlossenes Feld kein Fluch.\nKein Theater. Keine Show. Keine Wut als Steuer.\nWut macht 6 ohne 9. Erst Mitte, dann Wort.\nWesenheit nur wenn das Wort allein nicht sitzt. Sonst ohne.\nMass jetzt setzen: nur [Name]. Nur Begrenzung und Rückgabe. Ein Ende."],
-    ["Schutz zuerst","Füsse auf den Boden. Drei Atemzüge.\nIch bin der Spieler, nicht die Spielfigur.\nDer Beobachter ist wach.\nMein Feld ist geschlossen, klar und stabil.\nNichts Fremdes hat Zutritt.\nIch öffne nur für dieses eine Wort.\nIch werde nicht zum Werkzeug.\nIch bleibe in meiner Mitte."],
-    ["Ankommen","Stelle dich oder setze dich. Kiefer lösen. Schultern fallen lassen.\nNoch drei Atemzüge, langsamer.\nIch öffne nur für [Name].\nIch bleibe ich. [Name] bleibt [Name].\nKein Verschmelzen. Kein Sog. Kein Nachlaufen."],
-    ["Kreis","Sprich:\nIch öffne diesen Raum nur für den Fluch auf [Name].\nNur das gesetzte Mass darf hier sein.\nUnbeteiligte bleiben draussen.\nKein Auftrag auf Haus, Kind, Arbeit oder Dritte, die nicht [Name] sind.\nKein unendliches Nachsetzen.\nDie Arbeit hat ein Ende.\nWas gesetzt wird, ist Begrenzung und Rückgabe — nicht blinder Hass."],
-    ["Lage","[Name] vor dir im Feld, nicht in dir.\nDie Bahn wahrnehmen, soweit nötig: wo [Name] gegen dich, dein Haus oder deine Leute geht.\nNicht die ganze Biografie. Nur die Bahn.\nWenn es zieht, nebelt oder heiss wird: einen Schritt zurück in die Füsse.\nIch bleibe der Spieler."],
-    ["Wesenheit","Ohne Wesenheit weiter zum Wort.\nMit Wesenheit nur so:\nFilter hart. Nur klare, begrenzbare Präsenz.\nPrüfen: Mitte da? Klar oder Nebel? Druck oder Ruhe?\nDrängen, Theater, Sog, Stimmen ohne Grenze: sofort schliessen. Kein Auftrag.\nAuftrag nur, wenn klar:\nTrage das gesetzte Wort zu [Name].\nBegrenze die Bahn gegen mich, mein Haus und meine Leute.\nDann gehst du vollständig.\nKein eigener Krieg. Kein Mehr. Kein Bleiben."],
-    ["Wort","Sprich langsam, einmal vollständig:\n\nIch setze den Fluch auf [Name].\nDie Bahn von [Name] gegen mich bricht.\nDie Bahn von [Name] gegen mein Haus bricht.\nDie Bahn von [Name] gegen meine Leute bricht.\nWas von [Name] als Schaden ausgeht, kehrt zur Quelle.\nDer Zugriff fällt ab und findet keinen Halt.\nKein Halt an meinem Körper.\nKein Halt an meinem Feld.\nKein Halt an meinem Weg.\nDas Wort sitzt.\nDas Wort ist begrenzt.\nDas Wort hat ein Ende."],
-    ["369","Zähler unten. Zwischen den Runden ein Atem.\n\n3  Ich setze den Fluch auf [Name]. Die Bahn bricht.\n6  Was [Name] als Schaden sendet, kehrt zur Quelle und findet keinen Halt.\n9  Der Fluch ist gesetzt, begrenzt und geschlossen. Es ist so."],
-    ["Halten","Einen Atem lang stehen lassen.\nNicht nachschieben. Nicht verstärken. Nicht erklären.\nDas Feld hat das Wort.\nWas gesetzt ist, bleibt gesetzt."],
-    ["Siegel","Salz, Siegelzeichen oder Hand auf die Erde / den Boden.\nEinmal. Nicht dreimal aus Unruhe.\nSprich:\nVersiegelt.\nAbgegeben.\nGeschlossen.\nDie Arbeit ist dem Feld übergeben."],
-    ["Entlassen","Falls eine Wesenheit da war:\nDer Auftrag ist beendet. Ich danke dir.\nDu bist frei.\nLöse alle Verbindungen zu mir und zu [Name].\nDu bleibst nicht.\nIch schliesse den Kontakt.\n\nOhne Wesenheit: weiter zur Rückkehr."],
-    ["Rückkehr","Ich bin nicht [Name].\nIch kehre vollständig in mich zurück.\nHaut. Atem. Füsse. Raum.\nMeine Energie gehört mir.\nAlles Fremde löst sich und geht.\nDer Auftrag endet hier.\nKein Nachsetzen. Kein Kontrollieren. Kein zweites Ritual heute.\nSo sei es.\nErden. Wasser trinken. Alltag."]
+  var STEPS=[
+    ["Vorbereitung",
+      "Name von [Name] oben eingeben.\nFoto wenn da: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur [Name].\nNur das Wort.\nKein Nachsetzen.\nIch bleibe ich."],
+    ["Ankommen",
+      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler.\nDer Beobachter ist wach.\nWut steuert nicht."],
+    ["Feld hart",
+      "Tu:\nGrenze um den Körper. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nNichts Fremdes hat Zutritt.\nMeine Energie gehört mir."],
+    ["Lage",
+      "Sprich:\n[Name] steht im Wort.\nOhne [Name] zu werden.\nOhne mich zu verlieren."],
+    ["Rufen",
+      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur das Wort auf [Name].\nKein Theater. Kein Sog. Kein Mehr."],
+    ["Auftrag geben",
+      "Sprich:\nTrage das Wort zu [Name]. Hart.\nKein Ausweichen.\nKein eigener Krieg.\nKein Bleiben in [Name].\nDanach gehst du vollständig."],
+    ["Wort",
+      "Sprich:\nIch setze das Wort hart auf [Name].\nDie Bahn von [Name] gegen mich bricht und bleibt gebrochen.\nJedes Ausweichen fällt.\nWas [Name] als Schaden setzt, kehrt vollständig zur Quelle.\nKein Halt. Kein Zugang. Kein Nachsatz zu mir.\nDu trägst. Ich führe."],
+    ["369",
+      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nDas Wort sitzt hart auf [Name].\n\nSechs:\nDie Bahn ist zu. Die Rückgabe läuft.\n\nNeun:\nGeschlossen. Es bleibt gesetzt."],
+    ["Es ist so",
+      "Sprich dreimal:\nEs ist so."],
+    ["Siegel",
+      "Tu:\nHand vor die Flamme oder aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nAbgegeben.\nGeschlossen."],
+    ["Entlassen",
+      "Tu:\nNicht nachwinken. Tor zu.\n\nSprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor."],
+    ["Rückkehr",
+      "Tu:\nHaut. Atem. Füsse. Raum.\n\nSprich:\nIch bin nicht [Name].\nIch bin nicht die Wesenheit.\nIch kehre vollständig zurück.\nMeine Energie gehört mir."],
+    ["Schluss",
+      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nKein zweites Ritual aus Unruhe heute.\n\nTu:\nWasser. Alltag. Nicht nachsetzen."]
   ];
-  for(var i=R.length-1;i>=0;i--) if(R[i].id==="fluch") R.splice(i,1);
-  R.push({id:"fluch",t:"Fluch",s:"Gegen Person X. Wort setzen und schliessen.",tag:"Person X",need:["Name"],steps:steps});
-  if(typeof renderList==="function") renderList();
+  if(typeof R==="undefined") return;
+  var found=false;
+  for(var i=0;i<R.length;i++){
+    if(R[i].id==="fluch"){
+      R[i].t="Fluch";
+      R[i].s="Hart. Wort auf Person X.";
+      R[i].tag="Person X";
+      R[i].need=["Name"];
+      R[i].steps=STEPS;
+      found=true;
+    }
+  }
+  if(!found) R.push({id:"fluch",t:"Fluch",s:"Hart. Wort auf Person X.",tag:"Person X",need:["Name"],steps:STEPS});
 })();
