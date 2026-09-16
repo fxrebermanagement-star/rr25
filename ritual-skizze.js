@@ -1,20 +1,20 @@
 (function(){
   var SVG=
-    '<svg viewBox="0 0 360 230" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" shape-rendering="geometricPrecision">'+
-    '<line x1="92" y1="78" x2="140" y2="78" stroke="#8f7aa8" stroke-width="1.6"/>'+
-    '<line x1="220" y1="78" x2="268" y2="78" stroke="#8f7aa8" stroke-width="1.6"/>'+
-    '<circle cx="62" cy="78" r="30" fill="#0c0814" stroke="#b9a3d4" stroke-width="1.7"/>'+
-    '<circle cx="180" cy="78" r="30" fill="#0c0814" stroke="#7ec8c0" stroke-width="1.7"/>'+
-    '<circle cx="298" cy="78" r="30" fill="#0c0814" stroke="#d89ac0" stroke-width="1.7"/>'+
-    '<text x="62" y="86" text-anchor="middle" font-size="24" fill="#eee4f8" font-family="Georgia,serif">3</text>'+
-    '<text x="180" y="86" text-anchor="middle" font-size="24" fill="#e0faf6" font-family="Georgia,serif">6</text>'+
-    '<text x="298" y="86" text-anchor="middle" font-size="24" fill="#f8dceb" font-family="Georgia,serif">9</text>'+
-    '<text x="62" y="128" text-anchor="middle" font-size="12" fill="#a898bc" font-family="system-ui,sans-serif">stehen</text>'+
-    '<text x="180" y="128" text-anchor="middle" font-size="12" fill="#86b8b2" font-family="system-ui,sans-serif">tragen</text>'+
-    '<text x="298" y="128" text-anchor="middle" font-size="12" fill="#c898b0" font-family="system-ui,sans-serif">siegeln</text>'+
-    '<path d="M286 158 C 180 198, 180 198, 74 158" fill="none" stroke="#a8889c" stroke-width="1.4"/>'+
-    '<polyline points="84,165 74,158 86,154" fill="none" stroke="#a8889c" stroke-width="1.4"/>'+
-    '<text x="180" y="216" text-anchor="middle" font-size="12" fill="#c4a4b6" font-family="system-ui,sans-serif" letter-spacing="0.18em">Schluss</text>'+
+    '<svg viewBox="0 0 360 250" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+    '<line x1="96" y1="70" x2="138" y2="70" stroke="#8a7aa0" stroke-width="1.6"/>'+
+    '<line x1="222" y1="70" x2="264" y2="70" stroke="#8a7aa0" stroke-width="1.6"/>'+
+    '<circle cx="64" cy="70" r="32" fill="#0b0812" stroke="#c0aad8" stroke-width="1.8"/>'+
+    '<circle cx="180" cy="70" r="32" fill="#0b0812" stroke="#7ec8c0" stroke-width="1.8"/>'+
+    '<circle cx="296" cy="70" r="32" fill="#0b0812" stroke="#d89ac0" stroke-width="1.8"/>'+
+    '<text x="64" y="78" text-anchor="middle" font-size="26" fill="#f0e6fa" font-family="Georgia,serif">3</text>'+
+    '<text x="180" y="78" text-anchor="middle" font-size="26" fill="#e4faf6" font-family="Georgia,serif">6</text>'+
+    '<text x="296" y="78" text-anchor="middle" font-size="26" fill="#fadcea" font-family="Georgia,serif">9</text>'+
+    '<text x="64" y="122" text-anchor="middle" font-size="13" fill="#b0a0c4" font-family="system-ui,sans-serif">stehen</text>'+
+    '<text x="180" y="122" text-anchor="middle" font-size="13" fill="#8cbcb6" font-family="system-ui,sans-serif">tragen</text>'+
+    '<text x="296" y="122" text-anchor="middle" font-size="13" fill="#d0a0b8" font-family="system-ui,sans-serif">siegeln</text>'+
+    '<path d="M280 150 C 180 186, 180 186, 80 150" fill="none" stroke="#a8889c" stroke-width="1.5"/>'+
+    '<polyline points="90,158 80,150 92,146" fill="none" stroke="#a8889c" stroke-width="1.5"/>'+
+    '<text x="180" y="228" text-anchor="middle" font-size="13" fill="#d0b0c4" font-family="system-ui,sans-serif" letter-spacing="0.22em">SCHLUSS</text>'+
     '</svg>';
   function mount(){
     var home=document.getElementById("home");
@@ -27,37 +27,21 @@
       if(list) home.insertBefore(el, list.nextSibling);
       else home.appendChild(el);
     }
-    if(el.getAttribute("data-v")!=="2"){
-      el.setAttribute("data-v","2");
-      el.innerHTML=SVG;
-    }
+    el.innerHTML=SVG;
     return el;
   }
   function paint(){
-    var el=mount();
+    var el=document.getElementById("skizze")||mount();
     if(!el) return;
     var list=document.getElementById("list");
     var cards=list && list.querySelector(".card,[data-id]");
     el.style.display=cards?"none":"block";
   }
   var css=document.createElement("style");
-  css.textContent=[
-    "#skizze{margin:.55rem auto 0;padding:0;width:100%;max-width:22rem}",
-    "#skizze svg{display:block;width:100%;height:13.2rem;margin:0 auto}"
-  ].join("");
+  css.textContent="#skizze{margin:.7rem auto .2rem;width:92%;max-width:24rem}#skizze svg{display:block;width:100%;height:15rem}";
   document.head.appendChild(css);
-  mount();
-  paint();
+  mount(); paint();
   document.addEventListener("click", function(e){
-    if(e.target.closest && e.target.closest("#cats .chip")) setTimeout(paint, 0);
+    if(e.target.closest && e.target.closest("#cats .chip")) setTimeout(paint,0);
   });
-  if(typeof show==="function" && !show._sk){
-    var sh=show;
-    show=function(id){
-      var r=sh.apply(this,arguments);
-      if(id==="home") paint();
-      return r;
-    };
-    show._sk=1;
-  }
 })();
