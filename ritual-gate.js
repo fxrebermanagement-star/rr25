@@ -1,7 +1,7 @@
 (function(){
   var SKIP={dank:1,stopp:1,schutz:1,schutz2:1,schutzweg:1,heil:1,zur:1,karma:1,liebe:1,liebezw:1,anz:1,trenn:1,trenn2:1,wesen:1,fremd:1,ahn:1,finst:1,schaden:1,segen:1,fluch:1,ueber:1,fil:1};
   var SHORT={schutzweg:1,dank:1,fremd:1,schutz:1};
-  var ALWAYS={wesen:1,fremd:1,ahn:1};
+  var ALWAYS={wesen:1,fremd:1,ahn:1,stopp:1};
   var NOWESEN={dank:1,schutzweg:1,ahn:1,fremd:1,schutz:1};
   var FOTO={schutz2:1,liebe:1,liebezw:1,anz:1,fluch:1,segen:1,ueber:1,schaden:1};
   var MITSTEP=/Rufen|Prüfen|Auftrag geben/i;
@@ -24,7 +24,7 @@
     if(!SKIP[id]) return _open(id,wer);
     var r=R.find(function(x){return x.id===id});
     if(!r) return;
-    var i=0, mem={mit:!!ALWAYS[id],wahl:false};
+    var i=0, mem={mit:!!ALWAYS[id],wahl:!!ALWAYS[id]};
     if(wer){
       mem.Name=wer; mem.Auftrag=wer;
       var p=wer.split(/\s*·\s*/);
@@ -38,8 +38,8 @@
     var need=r.need||[];
     function skipAt(n){
       var t=steps[n] && steps[n][0] || "";
-      if(NOWESEN[id] && (/^Wesenheit$/i.test(t) || MITSTEP.test(t))) return true;
-      if(!ALWAYS[id] && !mem.mit && (MITSTEP.test(t) || /Entlassen/i.test(t))) return true;
+      if(NOWESEN[id] && (/^Wesenheit$/i.test(t) || MITSTEP.test(t) || /Entlassen/i.test(t))) return true;
+      if(!mem.mit && (MITSTEP.test(t) || /Entlassen/i.test(t))) return true;
       return false;
     }
     function vis(){
@@ -76,13 +76,13 @@
       return map[id]||r.s||"";
     }
     function wortText(text){
-      if(ALWAYS[id] || NOWESEN[id]) return text;
-      if(mem.mit) return "Weg Mit.\nDie Wesenheit trägt. Du führst.\nDu sprichst das Wort selbst.\n\n"+text;
-      return "Weg Ohne.\nKein Kontakt. Du trägst das Wort allein.\n\n"+text;
+      if(NOWESEN[id]) return text;
+      if(mem.mit) return text;
+      return "Kein Kontakt. Du trägst das Wort allein.\n\n"+text.replace(/Du trägst\. Ich führe\./g,"Feld und Energien tragen.");
     }
     function endText(titel, text){
       if(/Halten/i.test(titel)) return mem.mit?HALT_M:HALT_O;
-      if(/Siegel/i.test(titel)) return NOWESEN[id]?String(text||""):(mem.mit?SIEG_M:SIEG_O);
+      if(/Siegel/i.test(titel)) return String(text||"")|| (mem.mit?SIEG_M:SIEG_O);
       if(/Entlassen/i.test(titel)) return GO;
       if(/Feld-Check|Rückkehr|Fertig/i.test(titel)) return mem.mit?RUECK_M:RUECK_O;
       return String(text||"").replace(/Nur wenn jemand da war\.?\n*/g,"").replace(/Falls eine Wesenheit da war:?\n*/gi,"");
@@ -101,7 +101,7 @@
       if(skipAt(i) && i===steps.length-1){ i--; while(i>0 && skipAt(i)) i--; }
       var titel=steps[i][0], text=endText(titel, steps[i][1]), last=i===steps.length-1;
       var wahl=/^Wesenheit$/i.test(titel) && !ALWAYS[id] && !NOWESEN[id];
-      var pruefen=/^Prüfen$/i.test(titel) && !ALWAYS[id] && !NOWESEN[id];
+      var pruefen=/^Prüfen$/i.test(titel) && !NOWESEN[id];
       if(/^Wort$/i.test(titel)) text=wortText(steps[i][1]);
       if(/369/i.test(titel) && text.indexOf("Halte das Wort")<0){
         text="Halte das Wort. Nicht neu setzen, was schon gesprochen ist.\n"+text;
@@ -162,7 +162,7 @@
         reset369();
         var d=load();
         var who=[mem.Name,mem.Auftrag,mem.A,mem.B].filter(function(x,idx,arr){ return x && arr.indexOf(x)===idx; }).join(" · ");
-        d.log.unshift({id:uid(),t:now(),titel:r.t,wer:who,wesen:!!(mem.mit||ALWAYS[id])});
+        d.log.unshift({id:uid(),t:now(),titel:r.t,wer:who,wesen:!!mem.mit});
         if(fromPlan){ d.planned=d.planned.filter(function(p){return p.pid!==fromPlan}); fromPlan=null; }
         save(d); show("after");
       };
