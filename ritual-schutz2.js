@@ -9,7 +9,7 @@
     ["Ausrichten",
       "Tu:\n[Name] wahrnehmen, ohne [Name] zu werden.\n\nSprich:\nWärme ja. Verschmelzen nein.\nZugang nur so weit, wie der Schutz braucht."],
     ["Rufen",
-      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nWer klar, erkennbar und für den Schutz von [Name] geeignet ist, darf sich zeigen.\nKein Theater. Kein Sog."],
+      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur den Schutz für [Name].\nKein Theater. Kein Sog. Kein Mehr."],
     ["Prüfen",
       "Tu:\nMitte spüren. Klar oder Nebel. Druck oder Ruhe.\nBei Nebel: einen Atem. Feld nochmals hart. Warten, bis es still ist.\nDann weiter.\n\nSprich:\nDie Mitte hält.\nIch gebe den Auftrag."],
     ["Auftrag geben",
