@@ -31,7 +31,8 @@
     "ritual-wesen-lead.js?v=4",
     "ritual-dank.js?v=3",
     "ritual-schutz.js?v=2",
-    "ritual-gate.js?v=14",
+    "ritual-stopp.js?v=1",
+    "ritual-gate.js?v=15",
     "ritual-stabil.js?v=1",
     "ritual-entlass-fix.js?v=1",
     "ritual-run-bind.js?v=1"
