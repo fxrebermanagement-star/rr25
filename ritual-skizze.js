@@ -1,52 +1,45 @@
 (function(){
   var SVG=
     '<svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
-    '<defs>'+
-    '<linearGradient id="g36" x1="0" x2="1"><stop offset="0" stop-color="#c9a6ff"/><stop offset="1" stop-color="#7ef0e6"/></linearGradient>'+
-    '<linearGradient id="g69" x1="0" x2="1"><stop offset="0" stop-color="#7ef0e6"/><stop offset="1" stop-color="#ff9ad8"/></linearGradient>'+
-    '</defs>'+
-    '<line x1="78" y1="72" x2="148" y2="72" stroke="url(#g36)" stroke-width="2"/>'+
-    '<line x1="212" y1="72" x2="282" y2="72" stroke="url(#g69)" stroke-width="2"/>'+
-    '<circle cx="62" cy="72" r="28" fill="none" stroke="#c9a6ff" stroke-width="2"/>'+
-    '<circle cx="180" cy="72" r="28" fill="none" stroke="#7ef0e6" stroke-width="2"/>'+
-    '<circle cx="298" cy="72" r="28" fill="none" stroke="#ff9ad8" stroke-width="2"/>'+
-    '<text x="62" y="78" text-anchor="middle" font-size="22" fill="#e8d6ff" font-family="Georgia,serif">3</text>'+
-    '<text x="180" y="78" text-anchor="middle" font-size="22" fill="#b8fff6" font-family="Georgia,serif">6</text>'+
-    '<text x="298" y="78" text-anchor="middle" font-size="22" fill="#ffc4ea" font-family="Georgia,serif">9</text>'+
-    '<text x="62" y="118" text-anchor="middle" font-size="11" fill="#c4b4e0" font-family="system-ui,sans-serif">stehen</text>'+
-    '<text x="180" y="118" text-anchor="middle" font-size="11" fill="#7ef0e6" font-family="system-ui,sans-serif">tragen</text>'+
-    '<text x="298" y="118" text-anchor="middle" font-size="11" fill="#ff9ad8" font-family="system-ui,sans-serif">siegeln</text>'+
-    '<path d="M290 148 C 180 188, 180 188, 70 148" fill="none" stroke="#ff9ad8" stroke-width="1.6"/>'+
-    '<path d="M78 154 L70 148 L80 144" fill="none" stroke="#ff9ad8" stroke-width="1.6"/>'+
-    '<text x="180" y="176" text-anchor="middle" font-size="12" fill="#ffb3ea" font-family="system-ui,sans-serif" letter-spacing="0.12em">Schluss</text>'+
+    '<line x1="78" y1="72" x2="148" y2="72" stroke="#8f7aa8" stroke-width="1.4"/>'+
+    '<line x1="212" y1="72" x2="282" y2="72" stroke="#8f7aa8" stroke-width="1.4"/>'+
+    '<circle cx="62" cy="72" r="26" fill="none" stroke="#b9a3d4" stroke-width="1.5"/>'+
+    '<circle cx="180" cy="72" r="26" fill="none" stroke="#7ec8c0" stroke-width="1.5"/>'+
+    '<circle cx="298" cy="72" r="26" fill="none" stroke="#d89ac0" stroke-width="1.5"/>'+
+    '<text x="62" y="78" text-anchor="middle" font-size="20" fill="#ddd0ee" font-family="Georgia,serif">3</text>'+
+    '<text x="180" y="78" text-anchor="middle" font-size="20" fill="#d5f3ef" font-family="Georgia,serif">6</text>'+
+    '<text x="298" y="78" text-anchor="middle" font-size="20" fill="#f3d0e6" font-family="Georgia,serif">9</text>'+
+    '<text x="62" y="116" text-anchor="middle" font-size="11" fill="#9b8aaf" font-family="system-ui,sans-serif">stehen</text>'+
+    '<text x="180" y="116" text-anchor="middle" font-size="11" fill="#7aa8a3" font-family="system-ui,sans-serif">tragen</text>'+
+    '<text x="298" y="116" text-anchor="middle" font-size="11" fill="#c48aae" font-family="system-ui,sans-serif">siegeln</text>'+
+    '<path d="M286 146 C 180 182, 180 182, 74 146" fill="none" stroke="#a8889c" stroke-width="1.3"/>'+
+    '<path d="M82 152 L74 146 L84 142" fill="none" stroke="#a8889c" stroke-width="1.3"/>'+
+    '<text x="180" y="174" text-anchor="middle" font-size="11" fill="#b89aac" font-family="system-ui,sans-serif" letter-spacing="0.14em">Schluss</text>'+
     '</svg>';
-  function empty(){
+  function hasCards(){
     var list=document.getElementById("list");
-    if(!list) return true;
-    if(!list.children.length) return true;
-    if(list.children.length===1 && list.querySelector("#skizze")) return true;
-    return false;
+    if(!list) return false;
+    return !!list.querySelector(".card,[data-id]");
   }
   function paint(){
-    var home=document.getElementById("home");
     var list=document.getElementById("list");
-    if(!home||!list) return;
+    if(!list) return;
     var el=document.getElementById("skizze");
-    if(!empty()){
+    if(hasCards()){
       if(el) el.remove();
       return;
     }
-    if(!el){
-      el=document.createElement("div");
-      el.id="skizze";
-      el.innerHTML=SVG;
-      list.appendChild(el);
-    }
+    if(el) return;
+    el=document.createElement("div");
+    el.id="skizze";
+    el.innerHTML=SVG;
+    list.appendChild(el);
   }
   var css=document.createElement("style");
   css.textContent=[
-    "#skizze{margin:.35rem 0 .2rem;padding:.15rem 0 .1rem}",
-    "#skizze svg{display:block;width:100%;height:auto;max-height:11.5rem}"
+    "#skizze{margin:.2rem 0 0;padding:0}",
+    "#skizze svg{display:block;width:100%;height:auto;max-height:10.8rem}",
+    "#list:empty{display:block}"
   ].join("");
   document.head.appendChild(css);
   if(typeof renderList==="function" && !renderList._sk){
@@ -58,6 +51,5 @@
     renderList._sk=1;
   }
   paint();
-  setTimeout(paint,400);
-  setTimeout(paint,1200);
+  setTimeout(paint,600);
 })();
