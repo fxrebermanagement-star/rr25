@@ -33,17 +33,23 @@
     ["Schluss",
       "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nTu:\nWasser. Alltag. Nicht nachkontrollieren."]
   ];
-  if(typeof R==="undefined") return;
-  var found=false;
-  for(var i=0;i<R.length;i++){
-    if(R[i].id==="segen"){
-      R[i].t="Segen";
-      R[i].s="Ein Name. Ein Satz Wofür.";
-      R[i].tag="Person X";
-      R[i].need=["Name","Wofür"];
-      R[i].steps=STEPS;
-      found=true;
+  function apply(){
+    if(typeof R==="undefined") return;
+    var found=false;
+    for(var i=0;i<R.length;i++){
+      if(R[i].id==="segen"){
+        R[i].t="Segen";
+        R[i].s="Ein Name. Ein Satz Wofür.";
+        R[i].tag="Person X";
+        R[i].need=["Name","Wofür"];
+        R[i].steps=STEPS;
+        found=true;
+      }
     }
+    if(!found) R.push({id:"segen",t:"Segen",s:"Ein Name. Ein Satz Wofür.",tag:"Person X",need:["Name","Wofür"],steps:STEPS});
   }
-  if(!found) R.push({id:"segen",t:"Segen",s:"Ein Name. Ein Satz Wofür.",tag:"Person X",need:["Name","Wofür"],steps:STEPS});
+  apply();
+  setTimeout(apply,300);
+  setTimeout(apply,900);
+  setTimeout(apply,1800);
 })();
