@@ -5,24 +5,43 @@
       return _f(s,m).split("[Auftrag]").join((m&&m.Auftrag)||"[Auftrag]");
     };
   }
-  for(var i=R.length-1;i>=0;i--) if(R[i].id==="wesen") R.splice(i,1);
-  R.push({
-    id:"wesen",
-    t:"Kontakt Wesenheit",
-    s:"Raum · Filter · Auftrag · Entlassen",
-    tag:"Feld",
-    need:["Auftrag"],
-    steps:[
-      ["Vorbereitung","Eigenes Feld zuerst schließen.\nHandy weg. Wasser bereit.\nDen Auftrag in einem Satz kennen, bevor der Raum geöffnet wird.\nKontakt kurz. Entlassen ist Pflicht."],
-      ["Raum","Füße auf den Boden. Drei Atemzüge.\nIch bin der Spieler, nicht die Spielfigur.\nDer Beobachter ist wach.\nIch behalte den Raum. Ich öffne nicht mein ganzes Feld."],
-      ["Filter","Nur klare, erkennbare, stimmige Präsenz darf sich zeigen.\nDrängen, Nebel, Theater, Sog, Verwirrung: sofort schließen.\nKeine fremden Listen. Kein Befehl von außen."],
-      ["Kontakt","Wer bereit, klar und in der Lage ist, sich zu zeigen, darf sich zeigen.\nNur Kontakt. Noch kein Auftrag.\nPrüfen: Bleibt meine Mitte? Ist die Präsenz klar? Geht sie danach wieder?"],
-      ["Auftrag","Der Auftrag lautet:\n[Auftrag]\nNur das. Nichts darüber hinaus.\nDer Auftrag endet, wenn er erfüllt ist. Danach kein Bleiben."],
-      ["Grenze","Kein Zugriff auf Unbeteiligte.\nKein unnötiger Schaden.\nIch bleibe der Spieler. Die Wesenheit bleibt Werk, nicht Herr."],
-      ["Entlassen","Der Auftrag ist gegeben und begrenzt.\nIch danke. Du gehst, wenn die Arbeit getan ist.\nAlle Verbindungen zu mir lösen sich.\nIch schließe den Kontakt jetzt."],
-      ["Rückkehr","Ich bin nicht die Wesenheit.\nIch kehre vollständig in mich zurück.\nMeine Energie gehört mir.\nSo sei es. Erden. Wasser, Alltag."]
-    ]
-  });
-  if(typeof PREP==="object") PREP.wesen="Eigenes Feld zuerst. Auftrag klar. Kontakt kurz. Entlassen Pflicht.";
-  if(typeof renderList==="function") renderList();
+  var STEPS=[
+    ["Vorbereitung",
+      "Auftrag oben eingeben. Kurz und klar.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur dieser Auftrag.\nKein Mehr.\nIch bleibe ich."],
+    ["Ankommen",
+      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler.\nDer Beobachter ist wach."],
+    ["Feld hart",
+      "Tu:\nGrenze um den Körper. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nNichts Fremdes hat Zutritt.\nMeine Energie gehört mir."],
+    ["Rufen",
+      "Tu:\nFeld bleibt hart. Einen Atem. Mitte halten.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur: [Auftrag].\nKein Theater. Kein Sog. Kein Mehr."],
+    ["Auftrag geben",
+      "Sprich:\nTrage nur [Auftrag].\nNur das. Ein Ende.\nKein eigener Krieg.\nKein Bleiben in mir.\nDanach gehst du vollständig."],
+    ["Wort",
+      "Sprich:\n[Auftrag] geschieht jetzt.\nDu trägst. Ich führe.\nDas Mass hält."],
+    ["369",
+      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nDer Auftrag ist gegeben.\n\nSechs:\nEs wird getragen.\n\nNeun:\nEs ist gesetzt."],
+    ["Es ist so",
+      "Sprich dreimal:\nEs ist so."],
+    ["Siegel",
+      "Tu:\nHand vor die Flamme oder aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
+    ["Entlassen",
+      "Tu:\nNicht nachwinken. Tor zu.\n\nSprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor."],
+    ["Rückkehr",
+      "Tu:\nHaut. Atem. Füsse. Raum.\n\nSprich:\nIch bin nicht die Wesenheit.\nIch kehre vollständig zurück.\nMeine Energie gehört mir."],
+    ["Schluss",
+      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nTu:\nWasser. Alltag. Nicht nachkontrollieren."]
+  ];
+  if(typeof R==="undefined") return;
+  var found=false;
+  for(var i=0;i<R.length;i++){
+    if(R[i].id==="wesen"){
+      R[i].t="Wesenheit für Auftrag";
+      R[i].s="Kontakt mit Auftrag. Mass halten.";
+      R[i].tag="Feld";
+      R[i].need=["Auftrag"];
+      R[i].steps=STEPS;
+      found=true;
+    }
+  }
+  if(!found) R.push({id:"wesen",t:"Wesenheit für Auftrag",s:"Kontakt mit Auftrag. Mass halten.",tag:"Feld",need:["Auftrag"],steps:STEPS});
 })();
