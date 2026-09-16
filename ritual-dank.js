@@ -1,24 +1,43 @@
 (function(){
   var KEY="rr25_dank";
+  var STEPS=[
+    ["Vorbereitung",
+      "Tu:\nVier Kerzen anzünden.\nSalz bereit.\nGlocke bereit.\nWasser danach.\n\nSprich:\nDie vier stehen:\nGesundheit und Glück.\nLiebe.\nGeld.\nSchutz."],
+    ["Ankommen",
+      "Tu:\nFüsse auf den Boden. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler.\nDer Beobachter ist wach."],
+    ["Danke",
+      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nTu:\nGlocke dreimal."],
+    ["So ist es",
+      "Sprich dreimal:\nSo ist es.\n\nTu:\nGlocke dreimal."],
+    ["Gesundheit und Glück",
+      "Sprich dreimal:\nIch bin gesund.\nIch bin glücklich.\n\nTu:\nGlocke dreimal."],
+    ["Liebe",
+      "Sprich dreimal:\nIch bin geliebt.\n\nTu:\nGlocke dreimal."],
+    ["Geld",
+      "Sprich dreimal:\nIch bin versorgt.\n\nTu:\nGlocke dreimal."],
+    ["Schutz",
+      "Sprich dreimal:\nIch bin geschützt.\n\nTu:\nGlocke dreimal."],
+    ["Es ist so",
+      "Sprich dreimal:\nEs ist so.\n\nTu:\nGlocke dreimal."],
+    ["Salz",
+      "Tu:\nDreimal Salz auf jede Kerze.\n\nSprich:\nVersiegelt."],
+    ["Schluss",
+      "Sprich:\nDanke. Liebe.\nGott. Universum. Energien. Feld.\nDie Arbeit ist übergeben.\n\nTu:\nWasser. Alltag."]
+  ];
   function day(){
     var n=new Date();
     return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
   }
-  function done(){ return localStorage.getItem(KEY)===day(); }
-  function setDone(){ localStorage.setItem(KEY, day()); mark(); }
+  function done(){ try{ return localStorage.getItem(KEY)===day(); }catch(e){ return false; } }
+  function setDone(){ try{ localStorage.setItem(KEY, day()); }catch(e){} mark(); }
   if(typeof R!=="undefined"){
     for(var i=R.length-1;i>=0;i--) if(R[i].id==="dank") R.splice(i,1);
     R.unshift({
-      id:"dank",t:"Tägliches Dankesritual",s:"Gesundheit · Liebe · Geld · Schutz",tag:"Alltag",
-      steps:[
-        ["Ankommen","Füsse auf den Boden. Drei Atemzüge.\nIch bin der Spieler. Der Beobachter ist wach.\nHeute danke ich, ohne zu handeln."],
-        ["Gesundheit","Dreimal: Danke für Gesundheit.\nDer Körper darf sich erinnern."],
-        ["Liebe","Dreimal: Danke für Liebe.\nWärme darf sein."],
-        ["Geld","Dreimal: Danke für Geld und Versorgung.\nEs fliesst, ohne Hetze."],
-        ["Schutz","Dreimal: Danke für Schutz durch das Feld.\nDie Grenze hält."],
-        ["Setzen","Ich bin gesund. Es ist so.\nIch bin geliebt. Es ist so.\nIch bin versorgt. Es ist so.\nIch bin geschützt. Es ist so."],
-        ["Abschluss","Dreimal: Danke für alles.\nDie Arbeit ist dem Feld übergeben.\nWasser, Alltag."]
-      ]
+      id:"dank",
+      t:"Tägliches Dankesritual",
+      s:"Gesundheit und Glück · Liebe · Geld · Schutz",
+      tag:"Alltag",
+      steps:STEPS
     });
   }
   function mark(){
@@ -27,6 +46,8 @@
     pin.classList.toggle("done", done());
     var ok=pin.querySelector(".ok");
     if(ok) ok.textContent=done()?"\u2713":"";
+    var sm=pin.querySelector("small");
+    if(sm) sm.textContent="Gesundheit und Glück · Liebe · Geld · Schutz";
   }
   function pin(){
     var home=document.getElementById("home");
@@ -37,10 +58,12 @@
       el.type="button";
       el.id="pinDank";
       el.className="card";
-      el.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit · Liebe · Geld · Schutz</small><span class=\"ok\"></span>";
+      el.innerHTML="<b>Tägliches Dankesritual</b><small>Gesundheit und Glück · Liebe · Geld · Schutz</small><span class=\"ok\"></span>";
       el.onclick=function(){ if(typeof fromPlan!=="undefined") fromPlan=null; if(typeof openR==="function") openR("dank"); };
+      var kast=document.getElementById("kasten");
       var cats=document.getElementById("cats");
-      if(cats) home.insertBefore(el, cats);
+      if(kast && kast.nextSibling) home.insertBefore(el, kast.nextSibling);
+      else if(cats) home.insertBefore(el, cats);
       else home.appendChild(el);
     }
     mark();
