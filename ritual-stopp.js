@@ -44,4 +44,18 @@
   if(!found){
     R.push({id:"stopp",t:"Schaden stoppen",s:"Angriff endet. Ruf. Feld zu.",tag:"Schutz",need:["Name"],steps:STEPS});
   }
+  var run=document.getElementById("run");
+  if(run && window.MutationObserver){
+    new MutationObserver(function(){
+      var h=run.querySelector("h2");
+      var sub=run.querySelector(".sub");
+      if(!h || !/Prüfen/i.test(h.textContent||"")) return;
+      if(!sub || !/Schaden stoppen/i.test(sub.textContent||"")) return;
+      var n=document.getElementById("pNein");
+      var j=document.getElementById("pJa");
+      var row=n && n.parentNode;
+      if(row && row.classList && row.classList.contains("row")) row.remove();
+      else { if(n) n.remove(); if(j) j.remove(); }
+    }).observe(run,{childList:true,subtree:true});
+  }
 })();
