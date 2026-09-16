@@ -6,6 +6,14 @@
   }
   function addShots(el, srcs){
     if(!el || !srcs || !srcs.length) return;
+    var seen={};
+    var uniq=[];
+    srcs.forEach(function(src){
+      if(!src || seen[src]) return;
+      seen[src]=1;
+      uniq.push(src);
+    });
+    el.querySelectorAll(".shots").forEach(function(s,i){ if(i>0) s.remove(); });
     var strip=el.querySelector(".shots");
     if(!strip){
       strip=document.createElement("div");
@@ -14,9 +22,8 @@
       if(row) el.insertBefore(strip, row);
       else el.appendChild(strip);
     }
-    strip.innerHTML=srcs.map(function(src){
-      return '<img alt="" src="'+src+'">';
-    }).join("");
+    if(strip.querySelector("img")) return;
+    strip.innerHTML=uniq.map(function(src){ return '<img alt="" src="'+src+'">'; }).join("");
     strip.querySelectorAll("img").forEach(function(img){
       img.onclick=function(ev){
         ev.stopPropagation();
@@ -54,7 +61,7 @@
     var detail=!!box.querySelector("#logNote, #logSave, [data-cmt]");
     box.querySelectorAll(".meta").forEach(function(el){
       var t=el.textContent||"";
-      if(/ohne Namen/i.test(t) || /^Ohne Wesenheit$/i.test(t.trim())) el.style.display="none";
+      if(/ohne Namen|Ohne Wesenheit|Mit Wesenheit/i.test(t)) el.style.display="none";
     });
     if(!detail){
       box.querySelectorAll("button").forEach(function(b){
@@ -62,7 +69,6 @@
       });
     }
     pics();
-    if(typeof enhanceLogFotos==="function") enhanceLogFotos();
   }
   paintLog=function(){
     if(prev) prev();
