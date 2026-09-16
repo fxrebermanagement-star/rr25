@@ -11,7 +11,7 @@
     ["Rufen",
       "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nWer klar, erkennbar und für diesen Stopp geeignet ist, darf sich zeigen.\nKein Theater. Kein Sog."],
     ["Prüfen",
-      "Tu:\nMitte prüfen.\nKlar oder Nebel. Druck oder Ruhe.\n\nKlar: weiter zum Auftrag.\nNicht klar: ohne Wesenheit zum Wort. Kein Stehenbleiben."],
+      "Tu:\nMitte spüren. Klar oder Nebel. Druck oder Ruhe.\nBei Nebel: einen Atem. Feld nochmals hart. Warten, bis es still ist.\nDann weiter.\n\nSprich:\nDie Mitte hält.\nIch gebe den Auftrag."],
     ["Auftrag geben",
       "Sprich:\nTrage den Stopp gegen [Name].\nNur [Name]. Nur Stopp. Ein Ende.\nKein Mehr. Kein eigener Krieg.\nDanach gehst du vollständig."],
     ["Wort",
