@@ -43,7 +43,8 @@
     "ritual-gate.js?v=15",
     "ritual-stabil.js?v=1",
     "ritual-entlass-fix.js?v=1",
-    "ritual-run-bind.js?v=1"
+    "ritual-run-bind.js?v=1",
+    "ritual-nohak.js?v=1"
   ];
   files.forEach(function(src){
     var s=document.createElement("script");
