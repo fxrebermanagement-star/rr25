@@ -1,58 +1,5 @@
 (function(){
   if("serviceWorker" in navigator){
-    navigator.serviceWorker.register("./sw.js?v=3").catch(function(){});
+    navigator.serviceWorker.register("./sw.js?v=4").catch(function(){});
   }
-  var files=[
-    "ritual-core-fix.js?v=1",
-    "ritual-list.js?v=4",
-    "ritual-navkill.js?v=1",
-    "ritual-look.js?v=13",
-    "ritual-feinschliff.js?v=2",
-    "ritual-order.js?v=1",
-    "ritual-backup.js?v=7",
-    "ritual-zahl.js?v=3",
-    "ritual-mond.js?v=1",
-    "ritual-zfix.js?v=1",
-    "ritual-design.js?v=3",
-    "ritual-sigil.js?v=9",
-    "ritual-type.js?v=4",
-    "ritual-sigil-live.js?v=2",
-    "ritual-sigil-auto.js?v=2",
-    "ritual-karten.js?v=6",
-    "ritual-fein-all.js?v=1",
-    "ritual-fluch.js?v=3",
-    "ritual-segen.js?v=5",
-    "ritual-ueber-full.js?v=2",
-    "ritual-chronik.js?v=1",
-    "ritual-alle.js?v=4",
-    "ritual-schutz-weg.js?v=3",
-    "ritual-all8.js?v=6",
-    "ritual-wortfix.js?v=1",
-    "ritual-wesen-lead.js?v=4",
-    "ritual-dank.js?v=3",
-    "ritual-schutz.js?v=2",
-    "ritual-stopp.js?v=3",
-    "ritual-schutz2.js?v=2",
-    "ritual-zur.js?v=1",
-    "ritual-heil.js?v=1",
-    "ritual-karma.js?v=1",
-    "ritual-liebe.js?v=2",
-    "ritual-liebe2.js?v=1",
-    "ritual-trenn.js?v=1",
-    "ritual-trenn2.js?v=1",
-    "ritual-ahn.js?v=1",
-    "ritual-wesen.js?v=2",
-    "ritual-gate.js?v=15",
-    "ritual-stabil.js?v=1",
-    "ritual-entlass-fix.js?v=1",
-    "ritual-run-bind.js?v=1",
-    "ritual-nohak.js?v=2",
-    "ritual-sort.js?v=3"
-  ];
-  files.forEach(function(src){
-    var s=document.createElement("script");
-    s.src=src;
-    s.async=false;
-    document.body.appendChild(s);
-  });
 })();
