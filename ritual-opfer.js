@@ -61,7 +61,7 @@
     if(!box.querySelector("#opferTitel")){
       box.innerHTML=
         '<div class="hero"><h2>Gabe</h2></div>'+
-        '<div class="card">'+
+        '<div id="gabeNew" class="card">'+
         '<input id="opferTitel" placeholder="Titel" autocomplete="off">'+
         '<textarea id="opferT" placeholder="Was du gibst. Für wen. Warum."></textarea>'+
         '<div id="opferPrev" class="shots"></div>'+
@@ -70,14 +70,16 @@
         '<button type="button" class="btn primary" id="opferGo">Speichern</button>'+
         '</div>'+
         '</div>'+
-        '<div class="row"><button type="button" class="btn ghost" id="opferFoto">Foto dazu</button></div>'+
+        '<div class="row" id="gabeFotoRow"><button type="button" class="btn ghost" id="opferFoto">Foto dazu</button></div>'+
         '<p class="msg" id="opferMsg"></p>'+
-        '<div id="gabeList"></div>';
+        '<div id="gabeList"></div>'+
+        '<div id="gabeOpen"></div>';
     }
     if(!box.querySelector("#gabeList")){
-      var hold=document.createElement("div");
-      hold.id="gabeList";
-      box.appendChild(hold);
+      var hold=document.createElement("div"); hold.id="gabeList"; box.appendChild(hold);
+    }
+    if(!box.querySelector("#gabeOpen")){
+      var op=document.createElement("div"); op.id="gabeOpen"; box.appendChild(op);
     }
     paintGabe();
   }
@@ -92,6 +94,13 @@
     var a=document.getElementById("opferT"); if(a) a.value="";
     preview();
   }
+  function showList(){
+    var n=document.getElementById("gabeNew"); if(n) n.style.display="block";
+    var r=document.getElementById("gabeFotoRow"); if(r) r.style.display="flex";
+    var l=document.getElementById("gabeList"); if(l) l.style.display="block";
+    var o=document.getElementById("gabeOpen"); if(o){ o.style.display="none"; o.innerHTML=""; }
+    paintGabe();
+  }
   function paintGabe(){
     var hold=document.getElementById("gabeList");
     if(!hold) return;
@@ -99,15 +108,17 @@
     try{ rows=(read().log||[]).filter(isGabe); }catch(e){ rows=[]; }
     if(!rows.length){ hold.innerHTML="<p class='meta'>Noch keine Gabe.</p>"; return; }
     hold.innerHTML=rows.map(function(e){
+      var note=String(e.note||"");
+      if(note.toLowerCase()==="gabe" || note===String(e.titel||"")) note="";
       return '<div class="logrow" data-gid="'+e.id+'">'+ 
         '<div><b>'+String(e.titel||"Gabe").replace(/</g,"")+'</b>'+
         '<div class="meta">'+String(e.t||"")+'</div>'+
-        (e.note?'<p style="margin:.35rem 0 0;white-space:pre-wrap">'+String(e.note).replace(/</g,"")+'</p>':'')+
+        (note?'<p style="margin:.35rem 0 0;white-space:pre-wrap">'+note.replace(/</g,"")+'</p>':'')+
         '<button type="button" class="logact" data-gopen="'+e.id+'">Öffnen</button></div>'+
         '<div class="logpic" data-gpic="'+e.id+'"></div></div>';
     }).join("");
     hold.querySelectorAll("[data-gopen]").forEach(function(b){
-      b.onclick=function(){ if(typeof openLog==="function") openLog(b.getAttribute("data-gopen")); };
+      b.onclick=function(ev){ ev.preventDefault(); openGabe(b.getAttribute("data-gopen")); };
     });
     rows.forEach(function(e){
       var cell=hold.querySelector('[data-gpic="'+e.id+'"]');
@@ -115,12 +126,96 @@
       function put(src){
         if(!src||cell.querySelector("img")) return;
         var img=document.createElement("img");
-        img.src=src; img.onclick=function(){ if(typeof openLog==="function") openLog(e.id); };
+        img.src=src;
+        img.onclick=function(){ openGabe(e.id); };
         cell.appendChild(img);
       }
       if(e.img) put(e.img);
       if(typeof fotoGet==="function") fotoGet(e.id).then(function(a){ if(a&&a[0]) put(a[0]); });
     });
+  }
+  function find(id){
+    try{ return (read().log||[]).filter(function(x){ return String(x.id)===String(id); })[0]; }catch(e){ return null; }
+  }
+  function openGabe(id){
+    var e=find(id);
+    if(!e){ showList(); return; }
+    var n=document.getElementById("gabeNew"); if(n) n.style.display="none";
+    var r=document.getElementById("gabeFotoRow"); if(r) r.style.display="none";
+    var l=document.getElementById("gabeList"); if(l) l.style.display="none";
+    var o=document.getElementById("gabeOpen");
+    if(!o) return;
+    o.style.display="block";
+    o.innerHTML=
+      '<div class="card">'+
+      '<p class="meta">'+String(e.t||"")+'</p>'+
+      '<input id="gTitel" value="'+String(e.titel||"").replace(/"/g,"")+'">'+
+      '<textarea id="gNote">'+String(e.note||"").replace(/</g,"")+'</textarea>'+
+      '<div id="gShots" class="shots"></div>'+
+      '<div class="row">'+
+      '<button type="button" class="btn ghost" id="gBack">Liste</button>'+
+      '<button type="button" class="btn primary" id="gSave">Speichern</button>'+
+      '</div>'+
+      '<div class="row"><button type="button" class="btn ghost" id="gDel">Löschen</button></div>'+
+      '</div>'+
+      '<div class="row"><button type="button" class="btn ghost" id="gFoto">Foto dazu</button></div>';
+    function shots(){
+      var sh=document.getElementById("gShots"); if(!sh) return;
+      sh.innerHTML="";
+      function add(src){
+        if(!src) return;
+        var img=document.createElement("img"); img.src=src; sh.appendChild(img);
+      }
+      if(e.img) add(e.img);
+      if(typeof fotoGet==="function") fotoGet(id).then(function(a){ (a||[]).forEach(add); });
+    }
+    shots();
+    document.getElementById("gBack").onclick=function(){ showList(); };
+    document.getElementById("gSave").onclick=function(){
+      var d=read();
+      var x=(d.log||[]).filter(function(z){ return String(z.id)===String(id); })[0];
+      if(x){
+        x.titel=((document.getElementById("gTitel")||{}).value||"Gabe").trim()||"Gabe";
+        x.note=((document.getElementById("gNote")||{}).value||"").trim();
+        x.kind="gabe";
+        persist(d);
+      }
+      showList();
+    };
+    document.getElementById("gDel").onclick=function(){
+      if(!confirm("Diese Gabe löschen?")) return;
+      var d=read();
+      d.log=(d.log||[]).filter(function(z){ return String(z.id)!==String(id); });
+      persist(d);
+      showList();
+    };
+    document.getElementById("gFoto").onclick=function(){
+      if(typeof pickFoto==="function"){
+        pickFoto(id, function(){ var cur=find(id); if(cur) e=cur; shots(); });
+        return;
+      }
+      var inp=document.createElement("input");
+      inp.type="file"; inp.accept="image/*"; inp.capture="environment";
+      inp.onchange=function(ev){
+        var f=ev.target.files && ev.target.files[0];
+        if(!f) return;
+        var done=function(data){
+          if(!data) return;
+          var d=read();
+          var x=(d.log||[]).filter(function(z){ return String(z.id)===String(id); })[0];
+          if(x){ x.img=data; x.kind="gabe"; persist(d); e=x; }
+          if(typeof fotoPut==="function") fotoPut(id,[data]);
+          shots();
+        };
+        if(typeof compressPic==="function") compressPic(f).then(done);
+        else {
+          var rdr=new FileReader();
+          rdr.onload=function(){ done(String(rdr.result||"")); };
+          rdr.readAsDataURL(f);
+        }
+      };
+      inp.click();
+    };
   }
   function pick(){
     var inp=document.createElement("input");
@@ -160,7 +255,7 @@
     if(pic && typeof fotoPut==="function") fotoPut(id,[pic]);
     wipe();
     if(msg) msg.textContent="Abgelegt.";
-    paintGabe();
+    showList();
     setTimeout(function(){ if(msg && msg.textContent==="Abgelegt.") msg.textContent=""; }, 2200);
   }
   label();
@@ -171,6 +266,7 @@
     if(e.target.closest("#opferGo")){ e.preventDefault(); ablegen(); }
     if(e.target.closest("#opferList")){
       e.preventDefault();
+      showList();
       var list=document.getElementById("gabeList");
       if(list) list.scrollIntoView({behavior:"smooth",block:"start"});
     }
@@ -179,7 +275,7 @@
     var sh=show;
     show=function(id){
       var r=sh.apply(this,arguments);
-      if(id==="opfer"){ label(); form(); paintGabe(); }
+      if(id==="opfer"){ label(); form(); showList(); }
       return r;
     };
     show._gabe=1;
