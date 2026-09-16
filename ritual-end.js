@@ -1,44 +1,38 @@
 (function(){
-  var st=document.createElement("style");
-  st.textContent="#afterStay,#stay{display:none!important}#run label.check,#run #back{display:none!important}";
-  document.head.appendChild(st);
-
+  function wipe(){
+    ["afterStay","stay"].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.remove();
+    });
+    document.querySelectorAll("button").forEach(function(b){
+      var t=(b.textContent||"").trim();
+      if(t==="Später" || t==="Bleiben") b.remove();
+    });
+    var go=document.getElementById("afterGo");
+    if(go){
+      go.textContent="Fertig";
+      go.onclick=function(){ if(typeof show==="function") show("home"); };
+    }
+  }
   document.addEventListener("click", function(e){
     var btn=e.target && e.target.closest && e.target.closest("#run #next");
     if(!btn) return;
     var back=document.getElementById("back");
     if(back) back.checked=true;
   }, true);
-
-  function goHome(){
-    if(typeof show==="function") show("home");
-  }
-
-  function bindAfter(){
-    var go=document.getElementById("afterGo");
-    if(go && !go._end){
-      go._end=1;
-      go.textContent="Fertig";
-      go.onclick=function(){ goHome(); };
-    }
-    var stay=document.getElementById("afterStay");
-    if(stay) stay.onclick=goHome;
-  }
-  bindAfter();
-
+  wipe();
   if(typeof show==="function" && !show._end){
     var prev=show;
     show=function(id){
       var r=prev.apply(this,arguments);
-      if(id==="after"){
-        bindAfter();
-        setTimeout(function(){
-          var go=document.getElementById("afterGo");
-          if(go) go.focus();
-        }, 30);
-      }
+      setTimeout(wipe,0);
+      setTimeout(wipe,80);
       return r;
     };
     show._end=1;
+  }
+  if(window.MutationObserver){
+    var after=document.getElementById("after");
+    if(after) new MutationObserver(wipe).observe(after,{childList:true,subtree:true});
   }
 })();
