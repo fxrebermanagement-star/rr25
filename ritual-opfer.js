@@ -6,12 +6,29 @@
     "#home .duo{display:grid!important;grid-template-columns:1fr 1fr!important;gap:.4rem!important}",
     "#kOut,#sigilBox{display:block!important;aspect-ratio:1/1!important;max-height:none!important;min-height:9.2rem!important}",
     "#tools{display:grid!important;grid-template-columns:repeat(4,1fr)!important;margin-top:.4rem!important}",
-    "#sigRow{display:grid!important}"
+    "#sigRow{display:grid!important}",
+    "#list:empty{display:none}"
   ].join("");
   document.head.appendChild(s);
   var home=document.getElementById("home");
   var kast=document.getElementById("kasten");
   if(home && kast && home.firstChild!==kast) home.insertBefore(kast, home.firstChild);
+  try{ cat=""; }catch(e){}
+  if(typeof renderList==="function" && !renderList._start){
+    var rl=renderList;
+    renderList=function(){
+      var list=document.getElementById("list");
+      var cats=document.getElementById("cats");
+      if(!cat || cat==="Alle" || cat==="Alltag"){
+        cat="";
+        rl();
+        if(list) list.innerHTML="";
+        if(cats) cats.querySelectorAll(".chip").forEach(function(b){ b.classList.remove("on"); });
+      } else rl();
+    };
+    renderList._start=1;
+  }
+  if(typeof renderList==="function") try{ renderList(); }catch(e){}
 })();
 (function(){
   var pic="";
