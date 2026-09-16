@@ -40,8 +40,6 @@
     return new Date().toLocaleString("de-CH");
   }
   function label(){
-    var h=document.querySelector("#opfer h2");
-    if(h) h.textContent="Gabe";
     var bar=document.querySelector("nav");
     var btn=bar && bar.querySelector('[data-v="opfer"]');
     var buch=bar && bar.querySelector('[data-v="buch"]');
@@ -50,10 +48,35 @@
       if(buch) bar.insertBefore(btn, buch);
     }
   }
+  function form(){
+    var box=document.getElementById("opfer");
+    if(!box || box.querySelector("#opferTitel")) return;
+    box.innerHTML=
+      '<div class="hero"><h2>Gabe</h2></div>'+
+      '<div class="card">'+
+      '<input id="opferTitel" placeholder="Titel" autocomplete="off">'+
+      '<textarea id="opferT" placeholder="Was du gibst. Für wen. Warum."></textarea>'+
+      '<div id="opferPrev" class="shots"></div>'+
+      '<div class="row">'+
+      '<button type="button" class="btn ghost" id="opferList">Liste</button>'+
+      '<button type="button" class="btn primary" id="opferGo">Speichern</button>'+
+      '</div>'+
+      '<div class="row"><button type="button" class="btn ghost" id="opferDel">Löschen</button></div>'+
+      '</div>'+
+      '<div class="row"><button type="button" class="btn ghost" id="opferFoto">Foto dazu</button></div>'+
+      '<p class="msg" id="opferMsg"></p>';
+  }
   function preview(){
     var el=document.getElementById("opferPrev");
     if(!el) return;
     el.innerHTML=pic?'<img alt="" src="'+pic+'">':'';
+  }
+  function wipe(){
+    pic="";
+    var t=document.getElementById("opferTitel"); if(t) t.value="";
+    var a=document.getElementById("opferT"); if(a) a.value="";
+    var m=document.getElementById("opferMsg"); if(m) m.textContent="";
+    preview();
   }
   function pick(){
     var inp=document.createElement("input");
@@ -72,17 +95,18 @@
     inp.click();
   }
   function ablegen(){
+    var titel=((document.getElementById("opferTitel")||{}).value||"").trim();
     var t=((document.getElementById("opferT")||{}).value||"").trim();
     var msg=document.getElementById("opferMsg");
-    if(!t && !pic){
-      if(msg) msg.textContent="Wort oder Foto.";
+    if(!titel && !t && !pic){
+      if(msg) msg.textContent="Titel, Wort oder Foto.";
       return;
     }
     var d=read();
     if(!d || typeof d!=="object") d={log:[],planned:[]};
     d.log=d.log||[]; d.planned=d.planned||[];
     var id=nid();
-    var e={id:id,t:when(),titel:"Gabe",wer:"",note:t,wesen:false};
+    var e={id:id,t:when(),titel:titel||"Gabe",wer:"",note:t,wesen:false};
     if(pic) e.img=pic;
     d.log.unshift(e);
     try{ persist(d); }catch(err){
@@ -90,15 +114,29 @@
       else { if(msg) msg.textContent="Speicher voll."; return; }
     }
     if(pic && typeof fotoPut==="function") fotoPut(id,[pic]);
-    pic="";
-    var ta=document.getElementById("opferT"); if(ta) ta.value="";
-    preview();
+    wipe();
     if(msg) msg.textContent="In der Chronik.";
-    setTimeout(function(){ if(typeof show==="function") show("log"); }, 200);
+    setTimeout(function(){
+      if(typeof paintLog==="function") paintLog();
+      if(typeof show==="function") show("log");
+    }, 180);
   }
   label();
+  form();
   document.addEventListener("click", function(e){
-    if(e.target.closest && e.target.closest("#opferFoto")){ e.preventDefault(); pick(); }
-    if(e.target.closest && e.target.closest("#opferGo")){ e.preventDefault(); ablegen(); }
+    if(!e.target.closest) return;
+    if(e.target.closest("#opferFoto")){ e.preventDefault(); pick(); }
+    if(e.target.closest("#opferGo")){ e.preventDefault(); ablegen(); }
+    if(e.target.closest("#opferList")){ e.preventDefault(); if(typeof show==="function") show("log"); }
+    if(e.target.closest("#opferDel")){ e.preventDefault(); wipe(); }
   });
+  if(typeof show==="function" && !show._gabe){
+    var sh=show;
+    show=function(id){
+      var r=sh.apply(this,arguments);
+      if(id==="opfer"){ label(); form(); }
+      return r;
+    };
+    show._gabe=1;
+  }
 })();
