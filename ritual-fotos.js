@@ -1,16 +1,23 @@
 (function(){
   var css=document.createElement("style");
   css.textContent=[
-    "#entries .logrow{display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:start;padding:.9rem 0;border-top:1px solid rgba(126,200,255,.16)}",
-    "#entries .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
-    "#entries .logrow .meta{margin-top:.2rem}",
-    "#entries .logact{margin-top:.4rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem}",
-    "#entries .logpic img,#logShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
+    "#entries .logrow,#gabeList .logrow{display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:start;padding:.9rem 0;border-top:1px solid rgba(126,200,255,.16)}",
+    "#entries .logrow b,#gabeList .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
+    "#entries .logrow .meta,#gabeList .logrow .meta{margin-top:.2rem}",
+    "#entries .logact,#gabeList .logact{margin-top:.4rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem}",
+    "#entries .logpic img,#gabeList .logpic img,#logShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
     "#entries .logpic img.sig,#logShots img.sig{object-fit:contain}",
     "#entries .shots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}"
   ].join("");
   document.head.appendChild(css);
 
+  function isGabe(e){
+    if(typeof window._isGabe==="function") return window._isGabe(e);
+    if(!e) return false;
+    if(e.kind==="gabe") return true;
+    var t=String(e.titel||"").toLowerCase();
+    return t==="gabe" || t==="opfer" || t==="opfergabe";
+  }
   function zoom(src){
     var old=document.getElementById("picZoom"); if(old) old.remove();
     var w=document.createElement("div");
@@ -41,6 +48,7 @@
     if(!box) return;
     var rows=[];
     try{ rows=(load().log)||[]; }catch(e){ rows=[]; }
+    rows=rows.filter(function(e){ return !isGabe(e); });
     if(!rows.length){ box.innerHTML="<p class='meta'>Noch leer.</p>"; return; }
     box.innerHTML=rows.map(function(e){
       var note=String(e.note||"");
