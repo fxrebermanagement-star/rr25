@@ -9,7 +9,7 @@
     ["Lage",
       "Sprich:\nSchaden von [Name] endet hier.\nIch halte das auf.\nOhne Hass.\nOhne mich zu verlieren."],
     ["Rufen",
-      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nWer klar, erkennbar und für diesen Stopp geeignet ist, darf sich zeigen.\nKein Theater. Kein Sog."],
+      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur diesen Stopp.\nKein Theater. Kein Sog. Kein Mehr."],
     ["Prüfen",
       "Tu:\nMitte spüren. Klar oder Nebel. Druck oder Ruhe.\nBei Nebel: einen Atem. Feld nochmals hart. Warten, bis es still ist.\nDann weiter.\n\nSprich:\nDie Mitte hält.\nIch gebe den Auftrag."],
     ["Auftrag geben",
@@ -52,10 +52,8 @@
       if(!h || !/Prüfen/i.test(h.textContent||"")) return;
       if(!sub || !/Schaden stoppen/i.test(sub.textContent||"")) return;
       var n=document.getElementById("pNein");
-      var j=document.getElementById("pJa");
       var row=n && n.parentNode;
       if(row && row.classList && row.classList.contains("row")) row.remove();
-      else { if(n) n.remove(); if(j) j.remove(); }
     }).observe(run,{childList:true,subtree:true});
   }
 })();
