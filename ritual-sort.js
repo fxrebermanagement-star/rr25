@@ -39,31 +39,46 @@
     ["Rückkehr","Tu:\nHaut. Atem. Füsse. Raum.\n\nSprich:\nIch bin nicht [Name].\nIch bin nicht die Wesenheit.\nIch kehre vollständig zurück.\nMeine Energie gehört mir."],
     ["Schluss","Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nKein zweites Ritual aus Unruhe heute.\n\nTu:\nWasser. Alltag. Nicht nachsetzen."]
   ];
-  function go(){
-    if(typeof R==="undefined") return;
-    var hasS=false, hasF=false;
-    for(var i=R.length-1;i>=0;i--){
-      var r=R[i];
-      if(r.id==="finst" || r.id==="fremd") R.splice(i,1);
-      else if(r.id==="schaden"){ r.tag="Person X"; r.t="Schadenszauber"; r.s="Vorhanden. Nicht Pflicht."; }
-      else if(r.id==="wesen"){ r.t="Wesenheit für Auftrag"; r.s="Kontakt mit Auftrag. Mass halten."; r.tag="Feld"; }
-      else if(r.id==="segen"){
-        hasS=true;
-        r.t="Segen"; r.s="Ein Name. Ein Satz Wofür."; r.tag="Person X";
-        r.need=["Name","Wofür"]; r.steps=SEGEN;
-      }
-      else if(r.id==="fluch"){
-        hasF=true;
-        r.t="Fluch"; r.s="Ein Name. Ein Satz Mass."; r.tag="Person X";
-        r.need=["Name","Mass"]; r.steps=FLUCH;
+  function put(id,t,s,need,steps){
+    var found=false;
+    for(var i=0;i<R.length;i++){
+      if(R[i].id===id){
+        R[i].t=t; R[i].s=s; R[i].tag="Person X"; R[i].need=need; R[i].steps=steps;
+        found=true;
       }
     }
-    if(!hasS) R.push({id:"segen",t:"Segen",s:"Ein Name. Ein Satz Wofür.",tag:"Person X",need:["Name","Wofür"],steps:SEGEN});
-    if(!hasF) R.push({id:"fluch",t:"Fluch",s:"Ein Name. Ein Satz Mass.",tag:"Person X",need:["Name","Mass"],steps:FLUCH});
-    if(typeof renderList==="function") renderList();
+    if(!found) R.push({id:id,t:t,s:s,tag:"Person X",need:need,steps:steps});
+  }
+  function go(){
+    if(typeof R==="undefined") return;
+    for(var i=R.length-1;i>=0;i--){
+      if(R[i].id==="finst" || R[i].id==="fremd") R.splice(i,1);
+      else if(R[i].id==="schaden"){ R[i].tag="Person X"; R[i].t="Schadenszauber"; R[i].s="Vorhanden. Nicht Pflicht."; }
+      else if(R[i].id==="wesen"){ R[i].t="Wesenheit für Auftrag"; R[i].s="Kontakt mit Auftrag. Mass halten."; R[i].tag="Feld"; }
+    }
+    put("segen","Segen","Ein Name. Ein Satz Wofür.",["Name","Wofür"],SEGEN);
+    put("fluch","Fluch","Ein Name. Ein Satz Mass.",["Name","Mass"],FLUCH);
+  }
+  function paint(){
+    var list=document.getElementById("list");
+    if(!list || typeof cat==="undefined" || cat!=="Person X") return;
+    if(list.querySelector('[data-id="segen"]')) return;
+    var b=document.createElement("button");
+    b.type="button"; b.className="card"; b.setAttribute("data-id","segen");
+    b.innerHTML="<b>Segen</b><small>Ein Name. Ein Satz Wofür.</small>";
+    b.onclick=function(){ fromPlan=null; openR("segen"); };
+    var fl=list.querySelector('[data-id="fluch"]');
+    if(fl) list.insertBefore(b, fl); else list.appendChild(b);
   }
   go();
-  setTimeout(go,200);
-  setTimeout(go,900);
-  setTimeout(go,2000);
+  if(typeof renderList==="function" && !renderList._px){
+    var prev=renderList;
+    renderList=function(){
+      go();
+      prev();
+      paint();
+    };
+    renderList._px=1;
+  }
+  if(typeof renderList==="function") renderList();
 })();
