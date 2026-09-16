@@ -8,5 +8,5 @@
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=5").catch(function(){});
+  navigator.serviceWorker.register("./sw.js?v=0").catch(function(){});
 })();
