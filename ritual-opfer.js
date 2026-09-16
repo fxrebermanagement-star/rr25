@@ -50,7 +50,7 @@
   }
   function form(){
     var box=document.getElementById("opfer");
-    if(!box) return;
+    if(!box || box.querySelector("#opferTitel")) return;
     box.innerHTML=
       '<div class="hero"><h2>Gabe</h2></div>'+
       '<div class="card">'+
@@ -74,7 +74,6 @@
     pic="";
     var t=document.getElementById("opferTitel"); if(t) t.value="";
     var a=document.getElementById("opferT"); if(a) a.value="";
-    var m=document.getElementById("opferMsg"); if(m) m.textContent="";
     preview();
   }
   function pick(){
@@ -114,11 +113,8 @@
     }
     if(pic && typeof fotoPut==="function") fotoPut(id,[pic]);
     wipe();
-    if(msg) msg.textContent="In der Chronik.";
-    setTimeout(function(){
-      if(typeof paintLog==="function") paintLog();
-      if(typeof show==="function") show("log");
-    }, 180);
+    if(msg) msg.textContent="Abgelegt.";
+    setTimeout(function(){ if(msg && msg.textContent==="Abgelegt.") msg.textContent=""; }, 2200);
   }
   label();
   form();
