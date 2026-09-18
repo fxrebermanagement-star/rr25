@@ -72,6 +72,54 @@
     if(bar&&bar.nextSibling) host.insertBefore(p, bar.nextSibling);
     else if(bar) bar.parentNode.appendChild(p);
   }
+  function fname(){
+    var n=new Date();
+    var m=String(n.getMonth()+1).padStart(2,"0");
+    var d=String(n.getDate()).padStart(2,"0");
+    return "RR25-Sicherung-"+n.getFullYear()+"-"+m+"-"+d+".json";
+  }
+  function fileOut(){
+    snap();
+    mark();
+    var raw=JSON.stringify(pack());
+    try{
+      var blob=new Blob([raw],{type:"application/json"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download=fname();
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
+    }catch(e){
+      pane(raw, counts(pack()), "out");
+    }
+    hint(document.getElementById("log"));
+    hint(document.getElementById("notiz"));
+  }
+  function fileIn(){
+    var inp=document.createElement("input");
+    inp.type="file"; inp.accept="application/json,.json,text/plain";
+    inp.onchange=function(ev){
+      var f=ev.target.files && ev.target.files[0];
+      if(!f) return;
+      var r=new FileReader();
+      r.onload=function(){
+        try{
+          var p=JSON.parse(String(r.result||"").trim());
+          if(!apply(p)) throw new Error("leer");
+          snap(); mark();
+          var k=counts(p);
+          alert("Drin: Chronik "+k.log+", Notizen "+k.notes);
+          if(typeof paintLog==="function") paintLog();
+          if(typeof paintNotes==="function") paintNotes();
+          hint(document.getElementById("log"));
+          hint(document.getElementById("notiz"));
+        }catch(err){ alert("Datei nicht lesbar."); }
+      };
+      r.readAsText(f);
+    };
+    inp.click();
+  }
 
   function pane(raw,c,mode){
     var old=document.getElementById("bakPane");
@@ -141,15 +189,21 @@
   function bar(host){
     if(!host||host.querySelector(".bakBar")) return;
     var box=document.createElement("div");
-    box.className="row bakBar";
+    box.className="bakBar";
     box.style.margin=".15rem 0 .55rem";
-    box.innerHTML='<button type="button" class="btn ghost bakOut">Sichern</button>'+
-      '<button type="button" class="btn ghost bakIn">Einfügen</button>';
+    box.innerHTML='<div class="row" style="margin:0">'+
+      '<button type="button" class="btn ghost bakOut">Text</button>'+
+      '<button type="button" class="btn ghost bakFile">Datei</button>'+
+      '<button type="button" class="btn ghost bakIn">Einfügen</button></div>';
     var hero=host.querySelector(".hero");
     if(hero&&hero.nextSibling) host.insertBefore(box, hero.nextSibling);
     else host.insertBefore(box, host.firstChild);
     box.querySelector(".bakOut").onclick=dump;
-    box.querySelector(".bakIn").onclick=openIn;
+    box.querySelector(".bakFile").onclick=fileOut;
+    box.querySelector(".bakIn").onclick=function(){
+      if(confirm("Datei vom Handy nehmen?")) fileIn();
+      else openIn();
+    };
   }
   function place(){
     bar(document.getElementById("log"));
