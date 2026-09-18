@@ -197,13 +197,19 @@
   function openIn(){ pane("", {log:0,notes:0,plan:0}, "in"); }
 
   function bar(host){
-    if(!host||host.querySelector(".bakBar")) return;
+    if(!host) return;
+    var exist=host.querySelector(".bakBar");
+    if(exist){
+      var f=exist.querySelector(".bakFile");
+      if(f) f.textContent="Speichern";
+      return;
+    }
     var box=document.createElement("div");
     box.className="bakBar";
     box.style.margin=".15rem 0 .55rem";
     box.innerHTML='<div class="row" style="margin:0">'+
       '<button type="button" class="btn ghost bakOut">Text</button>'+
-      '<button type="button" class="btn ghost bakFile">Datei</button>'+
+      '<button type="button" class="btn ghost bakFile">Speichern</button>'+
       '<button type="button" class="btn ghost bakIn">Einfügen</button></div>';
     var hero=host.querySelector(".hero");
     if(hero&&hero.nextSibling) host.insertBefore(box, hero.nextSibling);
