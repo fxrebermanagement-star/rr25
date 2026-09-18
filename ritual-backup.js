@@ -78,21 +78,31 @@
     var d=String(n.getDate()).padStart(2,"0");
     return "RR25-Sicherung-"+n.getFullYear()+"-"+m+"-"+d+".json";
   }
+  function linkOut(raw){
+    var blob=new Blob([raw],{type:"application/json"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download=fname();
+    a.rel="noopener";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1200);
+  }
   function fileOut(){
     snap();
     mark();
     var raw=JSON.stringify(pack());
+    var name=fname();
     try{
-      var blob=new Blob([raw],{type:"application/json"});
-      var a=document.createElement("a");
-      a.href=URL.createObjectURL(blob);
-      a.download=fname();
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 800);
-    }catch(e){
-      pane(raw, counts(pack()), "out");
-    }
+      var file=new File([raw], name, {type:"application/json"});
+      if(navigator.canShare && navigator.canShare({files:[file]}) && navigator.share){
+        navigator.share({files:[file], title:name}).catch(function(){ linkOut(raw); });
+        hint(document.getElementById("log"));
+        hint(document.getElementById("notiz"));
+        return;
+      }
+    }catch(e){}
+    try{ linkOut(raw); }catch(e2){ pane(raw, counts(pack()), "out"); }
     hint(document.getElementById("log"));
     hint(document.getElementById("notiz"));
   }
