@@ -1,6 +1,7 @@
 (function(){
   var css=document.createElement("style");
   css.textContent=[
+    "#logFind{width:100%;margin:.15rem 0 .55rem}",
     "#entries .logrow,#gabeList .logrow{display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:start;padding:.9rem 0;border-top:1px solid rgba(126,200,255,.16)}",
     "#entries .logrow b,#gabeList .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
     "#entries .logrow .meta,#gabeList .logrow .meta{margin-top:.2rem}",
@@ -17,6 +18,19 @@
     if(e.kind==="gabe") return true;
     var t=String(e.titel||"").toLowerCase();
     return t==="gabe" || t==="opfer" || t==="opfergabe";
+  }
+  function qbox(){
+    var log=document.getElementById("log");
+    if(!log || log.querySelector("#logFind")) return;
+    var inp=document.createElement("input");
+    inp.id="logFind";
+    inp.type="search";
+    inp.placeholder="Suchen · Name, Ritual, Datum";
+    inp.autocomplete="off";
+    var entries=document.getElementById("entries");
+    if(entries) log.insertBefore(inp, entries);
+    else log.appendChild(inp);
+    inp.addEventListener("input", function(){ paintLog(); });
   }
   function zoom(src){
     var old=document.getElementById("picZoom"); if(old) old.remove();
@@ -44,12 +58,23 @@
   }
 
   paintLog=function(){
+    qbox();
     var box=document.getElementById("entries");
     if(!box) return;
     var rows=[];
     try{ rows=(load().log)||[]; }catch(e){ rows=[]; }
     rows=rows.filter(function(e){ return !isGabe(e); });
-    if(!rows.length){ box.innerHTML="<p class='meta'>Noch leer.</p>"; return; }
+    var q=((document.getElementById("logFind")||{}).value||"").trim().toLowerCase();
+    if(q){
+      rows=rows.filter(function(e){
+        var hay=((e.titel||"")+" "+(e.wer||"")+" "+(e.note||"")+" "+(e.t||"")).toLowerCase();
+        return hay.indexOf(q)>=0;
+      });
+    }
+    if(!rows.length){
+      box.innerHTML=q?"<p class='meta'>Nichts gefunden.</p>":"<p class='meta'>Noch leer.</p>";
+      return;
+    }
     box.innerHTML=rows.map(function(e){
       var note=String(e.note||"");
       if(note && note===String(e.titel||"")) note="";
@@ -93,9 +118,10 @@
     var shw=show;
     show=function(id){
       var r=shw.apply(this,arguments);
-      if(id==="log") setTimeout(function(){ paintLog(); }, 30);
+      if(id==="log") setTimeout(function(){ qbox(); paintLog(); }, 30);
       return r;
     };
     show._foto2=1;
   }
+  qbox();
 })();
