@@ -1,8 +1,19 @@
 (function(){
+  var css=document.createElement("style");
+  css.textContent='#cats .chip.on{background:linear-gradient(165deg,#ff7ad9,#7ef0e6)!important;color:#14081c!important;border-color:transparent!important;font-weight:650}';
+  document.head.appendChild(css);
   function grab(id){
     if(typeof R==="undefined") return null;
     for(var i=0;i<R.length;i++) if(R[i].id===id) return R[i];
     return null;
+  }
+  function mark(){
+    var cats=document.getElementById("cats");
+    if(!cats) return;
+    var now=String(cat||"");
+    cats.querySelectorAll(".chip").forEach(function(b){
+      b.classList.toggle("on", b.getAttribute("data-cat")===now);
+    });
   }
   function ensure(){
     if(typeof R==="undefined") return;
@@ -34,8 +45,16 @@
       ensure();
       rl();
       cards();
+      mark();
     };
     renderList._px=1;
   }
+  document.addEventListener("click", function(e){
+    var b=e.target && e.target.closest && e.target.closest("#cats .chip");
+    if(!b) return;
+    setTimeout(mark, 0);
+    setTimeout(mark, 40);
+  });
   if(typeof renderList==="function") try{ renderList(); }catch(e){}
+  mark();
 })();
