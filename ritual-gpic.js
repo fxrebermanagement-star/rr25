@@ -1,7 +1,5 @@
 (function(){
   window._picMemo=window._picMemo||{};
-  var hold=document.getElementById("gabeList");
-  if(!hold) return;
   function fill(){
     var list=document.getElementById("gabeList");
     if(!list) return;
@@ -9,34 +7,44 @@
       if(cell.querySelector("img")) return;
       var id=cell.getAttribute("data-gpic");
       var src=(window._picMemo||{})[id];
+      if(!src && typeof fotoGet==="function"){
+        fotoGet(id).then(function(a){
+          if(a&&a[0]&&!cell.querySelector("img")){
+            var img=document.createElement("img"); img.src=a[0]; cell.appendChild(img);
+          }
+        });
+        return;
+      }
       if(!src) return;
       var img=document.createElement("img");
       img.src=src;
-      img.onclick=function(){
-        var b=list.querySelector('[data-gopen="'+id+'"]');
-        if(b) b.click();
-      };
       cell.appendChild(img);
     });
   }
   document.addEventListener("click", function(e){
     if(!e.target || !e.target.closest) return;
-    if(e.target.closest("#opferGo")){
+    if(e.target.closest("#opferGo") || e.target.closest("#opferFoto")){
       var prev=document.querySelector("#opferPrev img");
       if(prev && prev.src) window._lastGabePic=prev.src;
+    }
+    if(e.target.closest("#opferGo")){
       setTimeout(function(){
-        var rows=document.querySelectorAll("#gabeList [data-gpic]");
-        var first=rows[0];
+        var first=document.querySelector("#gabeList [data-gpic]");
         if(first && window._lastGabePic){
-          var id=first.getAttribute("data-gpic");
-          window._picMemo[id]=window._lastGabePic;
+          window._picMemo[first.getAttribute("data-gpic")]=window._lastGabePic;
         }
         fill();
-      }, 80);
-      setTimeout(fill, 400);
+      }, 60);
+      setTimeout(fill, 350);
     }
   }, true);
-  if(window.MutationObserver && hold){
-    new MutationObserver(fill).observe(hold,{childList:true,subtree:true});
+  if(typeof show==="function" && !show._gpic){
+    var sh=show;
+    show=function(id){
+      var r=sh.apply(this,arguments);
+      if(id==="opfer") setTimeout(fill, 50);
+      return r;
+    };
+    show._gpic=1;
   }
 })();
