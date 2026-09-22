@@ -6,9 +6,11 @@
     "#entries .logrow b,#gabeList .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
     "#entries .logrow .meta,#gabeList .logrow .meta{margin-top:.2rem}",
     "#entries .logact,#gabeList .logact{margin-top:.4rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem}",
-    "#entries .logpic img,#gabeList .logpic img,#logShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
+    "#entries .logpic img,#gabeList .logpic img,#logShots img,#gShots img,#opferPrev img,#afterShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
     "#entries .logpic img.sig,#logShots img.sig{object-fit:contain}",
-    "#entries .shots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}"
+    "#entries .shots,#gShots,#opferPrev,#afterShots,#logShots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}",
+    "#picZoom{position:fixed;inset:0;background:rgba(4,2,10,.94);z-index:120;display:flex;align-items:center;justify-content:center;padding:1rem}",
+    "#picZoom img{max-width:100%;max-height:94%;border-radius:1rem;object-fit:contain}"
   ].join("");
   document.head.appendChild(css);
 
@@ -33,20 +35,28 @@
     inp.addEventListener("input", function(){ paintLog(); });
   }
   function zoom(src){
+    if(!src) return;
     var old=document.getElementById("picZoom"); if(old) old.remove();
     var w=document.createElement("div");
     w.id="picZoom";
-    w.style.cssText="position:fixed;inset:0;background:rgba(4,2,10,.92);z-index:80;display:flex;align-items:center;justify-content:center;padding:1.2rem";
-    w.innerHTML='<img alt="" src="'+src+'" style="max-width:100%;max-height:92%;border-radius:1rem">';
+    w.innerHTML='<img alt="" src="'+src+'">';
     w.onclick=function(){ w.remove(); };
     document.body.appendChild(w);
   }
+  window._zoomPic=zoom;
+  document.addEventListener("click", function(e){
+    if(!e.target || e.target.tagName!=="IMG") return;
+    if(e.target.closest("#picZoom")){ var z=document.getElementById("picZoom"); if(z) z.remove(); e.preventDefault(); return; }
+    if(!e.target.closest(".shots,.logpic,#opferPrev,#gShots,#logShots,#afterShots,#gabeOpen")) return;
+    e.preventDefault();
+    e.stopPropagation();
+    zoom(e.target.src);
+  }, true);
   function putImg(hold, src, sig){
     if(!hold||!src||hold.querySelector("img")) return;
     var img=document.createElement("img");
     img.src=src;
     if(sig) img.className="sig";
-    img.onclick=function(ev){ ev.stopPropagation(); zoom(src); };
     hold.appendChild(img);
   }
   function attach(id, hold, titel, fallback){
