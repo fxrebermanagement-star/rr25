@@ -102,11 +102,21 @@ textarea{min-height:5.2rem}
 <div class="card"><textarea id="noteT" placeholder="Neue Notiz"></textarea>
 <div class="row"><button type="button" class="btn primary" id="noteAdd">Speichern</button></div></div>
 <div id="notesOnly"></div></section>
-<section class="screen" id="opfer"><div class="hero"><h2>Gabe</h2></div>
-<div class="card"><textarea id="opferT" placeholder="Was du gibst. Für wen. Warum."></textarea>
+<section class="screen" id="opfer">
+<div class="hero"><h2>Gabe</h2></div>
+<div class="card" id="gabeNew">
+<input id="opferTitel" placeholder="Titel" autocomplete="off">
+<textarea id="opferT" placeholder="Was du gibst. Für wen. Warum."></textarea>
 <div id="opferPrev" class="shots"></div>
-<div class="row"><button type="button" class="btn ghost" id="opferFoto">Foto</button><button type="button" class="btn primary" id="opferGo">Ablegen</button></div>
-<p class="msg" id="opferMsg"></p></div></section>
+<div class="row">
+<button type="button" class="btn ghost" id="opferFoto">Foto</button>
+<button type="button" class="btn primary" id="opferGo">Ablegen</button>
+</div>
+</div>
+<p class="msg" id="opferMsg"></p>
+<div id="gabeList"></div>
+<div id="gabeOpen"></div>
+</section>
 <section class="screen" id="log"><div class="hero"><h2>Chronik</h2></div><div id="entries"></div></section>
 <section class="screen" id="buch"><div class="hero"><h2>Buch</h2></div><article class="card book" id="page"></article></section>
 <section class="screen" id="kal">
@@ -181,6 +191,6 @@ textarea{min-height:5.2rem}
 <script src="ritual-navlove.js?v=1"></script>
 <script src="ritual-final.js?v=3"></script>
 <script src="ritual-tones.js?v=1"></script>
-<script src="ritual-gabe-fix.js?v=1"></script>
+<script src="ritual-gabe-fix.js?v=2"></script>
 </body>
 </html>
