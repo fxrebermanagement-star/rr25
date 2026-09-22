@@ -8,7 +8,7 @@
       return out;
     };
   }
-  try{ if(typeof cat!=="undefined" && (cat==="Alle"||cat==="Alltag")) cat=""; }catch(e){}
+  try{ cat=""; }catch(e){}
   renderList=function(){
     var order=["Schutz","Energie","Liebe","Trennung","Person X","Feld"];
     var cats=document.getElementById("cats");
@@ -36,5 +36,15 @@
       b.onclick=function(){ fromPlan=null; openR(b.getAttribute("data-id")); };
     });
   };
+  if(typeof show==="function" && !show._startlist){
+    var sh=show;
+    show=function(id){
+      if(id==="home") try{ cat=""; }catch(e){}
+      var r=sh.apply(this,arguments);
+      if(id==="home") renderList();
+      return r;
+    };
+    show._startlist=1;
+  }
   renderList();
 })();
