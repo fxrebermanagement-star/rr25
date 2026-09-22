@@ -1,11 +1,24 @@
-self.addEventListener("install", function(e){ self.skipWaiting(); });
+var CACHE="rr25-v4";
+self.addEventListener("install", function(e){
+  self.skipWaiting();
+});
 self.addEventListener("activate", function(e){
   e.waitUntil(
     caches.keys().then(function(keys){
-      return Promise.all(keys.map(function(k){ return caches.delete(k); }));
+      return Promise.all(keys.map(function(k){
+        if(k!==CACHE) return caches.delete(k);
+      }));
     }).then(function(){ return self.clients.claim(); })
   );
 });
 self.addEventListener("fetch", function(e){
-  e.respondWith(fetch(e.request, {cache:"no-store"}).catch(function(){ return caches.match(e.request); }));
+  var req=e.request;
+  if(req.method!=="GET") return;
+  e.respondWith(
+    fetch(req, {cache:"no-store"}).then(function(res){
+      return res;
+    }).catch(function(){
+      return caches.match(req);
+    })
+  );
 });
