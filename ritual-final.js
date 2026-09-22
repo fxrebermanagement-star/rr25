@@ -23,7 +23,8 @@
     "#mondSag span{letter-spacing:.18em;font-size:.58rem!important}",
     "#pinDank{margin:.18rem 0 .22rem!important;padding:.68rem .8rem!important;border-radius:1.15rem;background:linear-gradient(180deg,rgba(72,28,88,.55),rgba(18,10,28,.88));border:1px solid rgba(255,122,217,.2)}",
     "#pinDank b{font-size:1.02rem}",
-    "#cats{margin:.18rem 0 .08rem!important;gap:.32rem!important}",
+    "#cats{display:flex!important;flex-wrap:nowrap!important;gap:.22rem!important;margin:.18rem 0 .08rem!important;overflow:hidden}",
+    "#cats .chip{flex:1 1 0;min-width:0;padding:.38rem .12rem!important;font-size:.64rem!important;min-height:1.95rem!important;white-space:nowrap;text-align:center}",
     ".chip{border-radius:999px;background:rgba(18,10,28,.75);border-color:rgba(255,255,255,.1)}",
     "#skizze{margin:.18rem auto 0!important;width:96%!important;max-width:26rem!important}",
     "#skizze svg{height:12.6rem!important}",
@@ -39,9 +40,4 @@
     "#home{overflow:hidden}"
   ].join("");
   document.head.appendChild(css);
-
-  var home=document.getElementById("home");
-  if(home){
-    home.style.overflow="hidden";
-  }
 })();
