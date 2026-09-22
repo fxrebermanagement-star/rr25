@@ -48,11 +48,14 @@
   css.textContent=[
     "nav{grid-template-columns:repeat(7,1fr)!important}",
     "nav button{font-size:.5rem!important}",
+    ".kalcard{border-left:5px solid transparent;padding-left:.72rem}",
     ".kalcard p{margin:.35rem 0 0;color:#c4b4e0;font-size:.78rem;line-height:1.45}",
-    ".kalcard.soft{border-color:rgba(126,240,230,.35)}",
-    ".kalcard.hard{border-color:rgba(255,122,217,.4)}",
-    ".kalcard.echo{border-color:rgba(126,200,255,.35)}",
-    ".kalcard.still{border-color:rgba(180,160,220,.28)}"
+    ".kalcard.soft{border-color:#2ecc71;border-left-color:#2ecc71;background:rgba(46,204,113,.14)}",
+    ".kalcard.soft b{color:#7dffb0}",
+    ".kalcard.hard{border-color:#e74c3c;border-left-color:#e74c3c;background:rgba(231,76,60,.16)}",
+    ".kalcard.hard b{color:#ff8a7a}",
+    ".kalcard.echo{border-color:#5dade2;border-left-color:#5dade2;background:rgba(93,173,226,.12)}",
+    ".kalcard.still{border-color:#9b8bb8;border-left-color:#9b8bb8;background:rgba(155,139,184,.12)}"
   ].join("");
   document.head.appendChild(css);
   if(typeof show==="function" && !show._kal){
