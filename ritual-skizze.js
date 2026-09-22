@@ -39,10 +39,7 @@
   }
   function setMode(m){ try{ localStorage.setItem(KEY,m); }catch(e){} }
   function startOnly(){
-    var on=document.querySelector("#cats .chip.on");
-    var list=document.getElementById("list");
-    var cards=list && list.querySelector(".card,[data-id]");
-    return !on && !cards;
+    return !document.querySelector("#cats .chip.on");
   }
   function draw(el){
     el.innerHTML=(mode()==="emu"?B:A)+'<p class="skHint">tippen zum Wechseln</p>';
@@ -74,14 +71,15 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "#skizze{margin:.7rem auto .2rem;width:92%;max-width:24rem;cursor:pointer}",
+    "#skizze{display:block;margin:.7rem auto .2rem;width:92%;max-width:24rem;cursor:pointer}",
     "#skizze svg{display:block;width:100%;height:15rem}",
     "#skizze .skHint{margin:.1rem 0 0;text-align:center;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:#7a6a88}",
-    "#home:has(#cats .chip.on) #skizze{display:none!important}",
-    "#home:has(#list .card) #skizze,#home:has(#list button) #skizze{display:none!important}"
+    "#home:has(#cats .chip.on) #skizze{display:none!important}"
   ].join("");
   document.head.appendChild(css);
   mount(); paint();
+  setTimeout(paint, 80);
+  setTimeout(paint, 240);
   document.addEventListener("click", function(e){
     if(e.target.closest && e.target.closest("#skizze")) return;
     setTimeout(paint, 0); setTimeout(paint, 80);
@@ -90,5 +88,14 @@
     var rl=renderList;
     renderList=function(){ rl(); paint(); };
     renderList._sk=1;
+  }
+  if(typeof show==="function" && !show._sk){
+    var sh=show;
+    show=function(id){
+      var r=sh.apply(this,arguments);
+      if(id==="home") setTimeout(paint, 30);
+      return r;
+    };
+    show._sk=1;
   }
 })();
