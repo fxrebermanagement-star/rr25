@@ -1,7 +1,6 @@
 (function(){
   window._picMemo=window._picMemo||{};
   var hold="";
-  var fileInp=null;
   var bound=false;
 
   function read(){
@@ -38,39 +37,40 @@
     return t==="gabe"||t==="opfer"||t==="opfergabe";
   }
   window._isGabe=isGabe;
-
-  function ensureFile(){
-    if(fileInp && document.body.contains(fileInp)) return fileInp;
-    fileInp=document.createElement("input");
-    fileInp.type="file";
-    fileInp.accept="image/*";
-    fileInp.id="gabeFile";
-    fileInp.style.cssText="position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0";
-    document.body.appendChild(fileInp);
-    fileInp.addEventListener("change", function(){
-      var f=fileInp.files && fileInp.files[0];
-      fileInp.value="";
-      if(!f) return;
-      var go=function(data){
-        if(!data) return;
-        hold=data;
-        var prev=document.getElementById("opferPrev");
-        if(prev) prev.innerHTML='<img alt="" src="'+data+'">';
-        say("Foto bereit.");
-      };
-      if(typeof compressPic==="function"){
-        Promise.resolve(compressPic(f)).then(function(d){ if(d) go(d); else raw(f,go); });
-      } else raw(f,go);
-    });
-    return fileInp;
-  }
   function raw(f,go){
     var r=new FileReader();
     r.onload=function(){ go(String(r.result||"")); };
     r.readAsDataURL(f);
   }
   function say(t){ var m=document.getElementById("opferMsg"); if(m) m.textContent=t||""; }
-  function pick(){ try{ ensureFile().click(); }catch(e){} }
+
+  function pick(done){
+    var inp=document.createElement("input");
+    inp.type="file";
+    inp.accept="image/*";
+    inp.setAttribute("capture","environment");
+    inp.style.cssText="position:fixed;left:0;bottom:0;width:1px;height:1px;opacity:0";
+    document.body.appendChild(inp);
+    inp.onchange=function(){
+      var f=inp.files && inp.files[0];
+      try{ inp.remove(); }catch(e){}
+      if(!f) return;
+      var go=function(data){
+        if(!data) return;
+        if(done) done(data);
+        else {
+          hold=data;
+          var prev=document.getElementById("opferPrev");
+          if(prev) prev.innerHTML='<img alt="" src="'+data+'">';
+          say("Foto bereit.");
+        }
+      };
+      if(typeof compressPic==="function"){
+        Promise.resolve(compressPic(f)).then(function(d){ if(d) go(d); else raw(f,go); });
+      } else raw(f,go);
+    };
+    inp.click();
+  }
 
   function layout(){
     var box=document.getElementById("opfer");
@@ -101,7 +101,6 @@
     }
     var go=document.getElementById("opferGo");
     if(go) go.textContent="Ablegen";
-    ensureFile();
     paintList();
   }
 
@@ -190,7 +189,16 @@
       if(!confirm("Diese Gabe löschen?")) return;
       var d=read(); d.log=(d.log||[]).filter(function(z){ return String(z.id)!==String(id); }); persist(d); showList();
     };
-    document.getElementById("gFoto").onclick=function(){ pick(); };
+    document.getElementById("gFoto").onclick=function(){
+      pick(function(data){
+        window._picMemo[id]=data;
+        if(typeof fotoPut==="function") try{ fotoPut(id,[data]); }catch(err){}
+        var d=read();
+        var x=(d.log||[]).filter(function(z){ return String(z.id)===String(id); })[0];
+        if(x){ x.kind="gabe"; x.pics=1; persist(d); e=x; }
+        shots();
+      });
+    };
   }
 
   function ablegen(){
