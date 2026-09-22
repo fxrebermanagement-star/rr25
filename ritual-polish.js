@@ -32,15 +32,34 @@
     ".kcard b,.kcard small,.kcard .group{display:block}",
     "#sigilT{text-transform:uppercase}",
     "input:focus,textarea:focus,select:focus{outline:0;border-color:rgba(255,122,217,.55);box-shadow:0 0 0 3px rgba(255,122,217,.12)}",
-    "nav{padding:.36rem .14rem calc(.4rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.82);backdrop-filter:blur(16px);border-top:1px solid rgba(255,122,217,.16);border-left:0;border-right:0;border-bottom:0}",
-    "nav button{padding:.56rem .04rem .46rem;font-size:.58rem;gap:.16rem}",
-    "nav button svg{width:19px;height:19px}",
+    "nav{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;gap:.16rem!important;padding:.32rem .22rem calc(.4rem + env(safe-area-inset-bottom))!important}",
+    "nav .navR{display:grid!important;gap:.16rem}",
+    "nav .navR:first-child{grid-template-columns:repeat(4,1fr)!important}",
+    "nav .navR:last-child{grid-template-columns:repeat(3,1fr)!important;padding:0 7%}",
+    "nav button{padding:.44rem .04rem .36rem!important;font-size:.6rem!important;gap:.14rem!important;min-height:2.5rem}",
+    "nav button svg{width:18px!important;height:18px!important}",
     "nav button.on{box-shadow:0 0 18px rgba(255,122,217,.25)}",
+    "main{padding-bottom:8.4rem!important}",
     ".bakBar .btn{min-height:2.15rem;font-size:.74rem;letter-spacing:.02em}",
     "#logFind{margin:.15rem 0 .55rem;min-height:2.25rem}",
     "#afterStay,#stay,.check{display:none!important}"
   ].join("");
   document.head.appendChild(s);
+
+  var nav=document.querySelector("nav");
+  if(nav && !nav.querySelector(".navR")){
+    var map={};
+    [].slice.call(nav.querySelectorAll("button")).forEach(function(b){ map[b.getAttribute("data-v")]=b; });
+    function row(ids){
+      var d=document.createElement("div");
+      d.className="navR";
+      ids.forEach(function(id){ if(map[id]) d.appendChild(map[id]); });
+      return d;
+    }
+    nav.innerHTML="";
+    nav.appendChild(row(["home","geplant","kal","log"]));
+    nav.appendChild(row(["notiz","opfer","buch"]));
+  }
 
   var run=document.getElementById("run");
   if(run){
