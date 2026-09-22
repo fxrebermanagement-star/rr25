@@ -46,8 +46,6 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "nav{grid-template-columns:repeat(7,1fr)!important}",
-    "nav button{font-size:.5rem!important}",
     ".kalcard{border-left:5px solid transparent;padding-left:.72rem}",
     ".kalcard p{margin:.35rem 0 0;color:#c4b4e0;font-size:.78rem;line-height:1.45}",
     ".kalcard.soft{border-color:#2ecc71;border-left-color:#2ecc71;background:rgba(46,204,113,.14)}",
