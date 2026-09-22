@@ -26,35 +26,68 @@ async function fotoPut(id,arr){
     });
   }catch(e){}
 }
+function readRaw(file){
+  return new Promise(resolve=>{
+    const r=new FileReader();
+    r.onload=()=>resolve(String(r.result||""));
+    r.onerror=()=>resolve("");
+    r.readAsDataURL(file);
+  });
+}
 function compressPic(file){
   return new Promise(resolve=>{
+    const finish=data=>resolve(data||"");
     const url=URL.createObjectURL(file);
     const img=new Image();
     img.onload=()=>{
       let w=img.width,h=img.height,max=1280;
       if(w>max){h=Math.round(h*max/w);w=max}
       if(h>max){w=Math.round(w*max/h);h=max}
-      const c=document.createElement("canvas");
-      c.width=w;c.height=h;
-      c.getContext("2d").drawImage(img,0,0,w,h);
-      URL.revokeObjectURL(url);
-      resolve(c.toDataURL("image/jpeg",0.72));
+      try{
+        const c=document.createElement("canvas");
+        c.width=w;c.height=h;
+        c.getContext("2d").drawImage(img,0,0,w,h);
+        URL.revokeObjectURL(url);
+        finish(c.toDataURL("image/jpeg",0.72));
+      }catch(e){
+        URL.revokeObjectURL(url);
+        readRaw(file).then(finish);
+      }
     };
-    img.onerror=()=>{URL.revokeObjectURL(url);resolve("")};
+    img.onerror=()=>{
+      URL.revokeObjectURL(url);
+      readRaw(file).then(finish);
+    };
     img.src=url;
   });
 }
-function pickFoto(id,done){
+function openPicPicker(done){
   const inp=document.createElement("input");
-  inp.type="file"; inp.accept="image/*"; inp.capture="environment";
+  inp.type="file";
+  inp.accept="image/*";
+  inp.style.cssText="position:fixed;left:-9999px;opacity:0";
+  document.body.appendChild(inp);
   inp.onchange=async ev=>{
-    const f=ev.target.files&&ev.target.files[0]; if(!f)return;
-    const data=await compressPic(f); if(!data)return;
-    const pics=await fotoGet(id); pics.push(data); await fotoPut(id,pics);
-    const d=load(); const e=(d.log||[]).find(x=>x.id===id); if(e){e.pics=pics.length; save(d)}
-    if(done) done(pics);
+    const f=ev.target.files&&ev.target.files[0];
+    try{ inp.remove(); }catch(e){}
+    if(!f) return;
+    let data="";
+    try{ data=await compressPic(f); }catch(e){}
+    if(!data) data=await readRaw(f);
+    if(data && done) done(data);
   };
-  inp.click();
+  setTimeout(function(){ inp.click(); }, 30);
+}
+function pickFoto(id,done){
+  openPicPicker(async data=>{
+    if(!data) return;
+    const pics=await fotoGet(id); pics.push(data); await fotoPut(id,pics);
+    try{
+      const d=load(); const e=(d.log||[]).find(x=>String(x.id)===String(id));
+      if(e){ e.pics=pics.length; e.img=e.img||data; save(d); }
+    }catch(err){}
+    if(done) done(pics);
+  });
 }
 function lastLogId(){const rows=(load().log||[]); return rows[0]&&rows[0].id}
 function bindAfterFoto(){
@@ -97,7 +130,8 @@ async function enhanceLogFotos(){
       card.parentElement&&card.parentElement.appendChild(strip);
     }
     const pics=await fotoGet(e.id);
-    strip.innerHTML=pics.map(src=>'<img src="'+src+'" alt="">').join("");
+    if(pics.length) strip.innerHTML=pics.map(src=>'<img src="'+src+'" alt="">').join("");
+    else if(e.img) strip.innerHTML='<img src="'+e.img+'" alt="">';
   }
 }
 const _openLog=typeof openLog==="function"?openLog:null;
