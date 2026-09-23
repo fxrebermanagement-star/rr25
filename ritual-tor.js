@@ -1,21 +1,5 @@
 (function(){
   var HARD={fluch:1,ueber:1,liebe2:1,trenn2:1};
-  var LOCK="rr25_hard24";
-  function locked(){
-    try{
-      var t=parseInt(localStorage.getItem(LOCK)||"0",10);
-      return t && (Date.now()-t)<24*60*60*1000;
-    }catch(e){ return false; }
-  }
-  function lockNow(){ try{ localStorage.setItem(LOCK, String(Date.now())); }catch(e){} }
-  function left(){
-    try{
-      var t=parseInt(localStorage.getItem(LOCK)||"0",10);
-      var ms=24*60*60*1000-(Date.now()-t);
-      var h=Math.max(1, Math.ceil(ms/3600000));
-      return h;
-    }catch(e){ return 24; }
-  }
   function pane(html){
     var run=document.getElementById("run");
     if(!run) return;
@@ -51,47 +35,36 @@
       };
     }
     function gate(){
-      if(locked()){
-        pane('<div class="hero"><p class="sub">24 Stunden</p><h2>Nicht nachladen</h2></div><p class="words">Hard war gesetzt. Noch etwa '+left()+' Stunden stehen lassen. Abbruch gilt.</p><div class="row"><button type="button" class="btn primary" id="tHome3">Liste</button></div>');
-        document.getElementById("tHome3").onclick=function(){ show("home"); };
-        return;
-      }
+      var extra=id==="fluch"
+        ? '<textarea id="tGrund" placeholder="Grund"></textarea><p class="meta">Ohne Grund kein Fluch.</p>'
+        : '';
       pane(
         '<div class="hero"><p class="sub">Hard · Gate</p><h2>Preis · Gegenseite · Rückkehr</h2></div>'+
         '<p class="words">Ich nenne den Preis. Ich sehe die Gegenseite. Ich kehre zurück. Ohne das kein Zug.</p>'+
+        extra+
         '<div class="row"><button type="button" class="btn ghost" id="tNein">Nicht heute</button>'+
-        '<button type="button" class="btn primary" id="tJa">Steht. Setzen</button></div>'
+        '<button type="button" class="btn primary" id="tJa">Steht. Setzen</button></div>'+
+        '<p class="msg" id="tMsg"></p>'
       );
       document.getElementById("tNein").onclick=function(){ show("home"); };
       document.getElementById("tJa").onclick=function(){
-        window._hardLock=1;
+        if(id==="fluch"){
+          var g=((document.getElementById("tGrund")||{}).value||"").trim();
+          if(!g){
+            var m=document.getElementById("tMsg");
+            if(m) m.textContent="Grund zuerst.";
+            return;
+          }
+          window._grund=g;
+        }
         start();
+        setTimeout(function(){
+          try{
+            if(window._grund && typeof mem==="object") mem.Grund=window._grund;
+          }catch(e){}
+        }, 80);
       };
     }
     timing();
   };
-  if(typeof show==="function" && !show._tor){
-    var sh=show;
-    show=function(id){
-      if(id==="after" && window._hardLock){
-        lockNow();
-        window._hardLock=0;
-        setTimeout(function(){
-          var run=document.getElementById("after");
-          if(!run) return;
-          if(run.querySelector("#hard24")) return;
-          var p=document.createElement("p");
-          p.id="hard24";
-          p.className="meta";
-          p.style.textAlign="center";
-          p.textContent="24 Stunden nicht nachladen.";
-          var hero=run.querySelector(".hero");
-          if(hero&&hero.nextSibling) run.insertBefore(p, hero.nextSibling);
-          else run.appendChild(p);
-        }, 40);
-      }
-      return sh.apply(this,arguments);
-    };
-    show._tor=1;
-  }
 })();
