@@ -1,5 +1,5 @@
 (function(){
-  var ID="1qQJ4jg87ZcHqtIGLQZ-VXto_zKy9vZKN";
+  var ID="1ddPNShv1NKKxTcV5j4Xj0P_S_9QZJAHr";
   var PREVIEW="https://drive.google.com/file/d/"+ID+"/preview";
   var OPEN="https://drive.google.com/file/d/"+ID+"/view";
   var css=document.createElement("style");
@@ -14,7 +14,7 @@
     var page=document.getElementById("page");
     if(!page) return;
     page.innerHTML=
-      '<p class="meta">So sei es · 85 Seiten · im Fenster blättern</p>'+
+      '<p class="meta">So sei es · gestraffte Auflage · 23 Seiten</p>'+
       '<div class="row" style="margin:.2rem 0 .45rem">'+
       '<button type="button" class="btn primary" id="buchOpen">Ganzes PDF öffnen</button>'+
       '</div>'+
@@ -26,12 +26,8 @@
     var box=document.getElementById("buchTxt");
     var wait=document.getElementById("buchWait");
     try{
-      var nums=[0,1,2,3,4];
-      var parts=await Promise.all(nums.map(function(n){
-        return fetch("pdfpart"+n+".txt?v=2026c",{cache:"reload"}).then(function(r){ return r.ok?r.text():""; });
-      }));
-      var tx=parts.filter(function(t){ return t && t.indexOf("PLACEHOLDER")<0 && t.length>80; }).join("\n\n");
-      if(box && tx.length>200) box.textContent=tx;
+      var tx=await fetch("pdfpart0.txt?v=2026d",{cache:"reload"}).then(function(r){ return r.ok?r.text():""; });
+      if(box && tx && tx.length>80 && tx.indexOf("PLACEHOLDER")<0) box.textContent=tx;
       if(wait) wait.textContent="";
     }catch(e){
       if(wait) wait.textContent="";
