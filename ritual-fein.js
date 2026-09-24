@@ -16,14 +16,12 @@
       if(!kast) return;
       el=document.createElement("p");
       el.id="kHint";
-      el.className="meta";
-      el.style.textAlign="center";
-      el.style.margin=".15rem 0 .35rem";
       kast.parentNode.insertBefore(el, kast.nextSibling);
     }
-    if(p>0.47&&p<0.53) el.textContent="Vollmond · Echo. Nicht nachsetzen.";
-    else if(p>0.72) el.textContent="Abnehmend · Still. Buch zu.";
-    else if(p<0.04||p>0.96) el.textContent="Neumond · Soft setzen erlaubt.";
+    el.className="kHintLine";
+    if(p>0.47&&p<0.53) el.textContent="Vollmond \u00b7 Echo. Nicht nachsetzen.";
+    else if(p>0.72) el.textContent="Abnehmend \u00b7 Still. Buch zu.";
+    else if(p<0.04||p>0.96) el.textContent="Neumond \u00b7 Soft setzen erlaubt.";
     else el.textContent="";
   }
   function toneOf(e){
@@ -41,14 +39,10 @@
     if(old) old.remove();
     var n=document.createElement("div");
     n.id="logFilt";
-    n.style.display="flex";
-    n.style.gap=".35rem";
-    n.style.margin=".2rem 0 .5rem";
-    n.style.flexWrap="wrap";
     ["alle","soft","hard","feld"].forEach(function(k){
       var b=document.createElement("button");
       b.type="button";
-      b.className="chip"+(FILT===k?" on":"");
+      b.className="chip logchip log-"+k+(FILT===k?" on":"");
       b.textContent=k==="alle"?"Alle":k==="soft"?"Soft":k==="hard"?"Hard":"Feld";
       b.onclick=function(){ FILT=k; if(typeof paintLog==="function") paintLog(); };
       n.appendChild(b);
@@ -78,8 +72,7 @@
     if(!list||typeof load!=="function") return;
     var d=load();
     list.querySelectorAll(".entry").forEach(function(el,i){
-      var items=d.planned||[];
-      var p=items[i];
+      var p=(d.planned||[])[i];
       if(!p) return;
       if(p.fenster && !p.id){
         var setBtn=el.querySelector(".btn.primary");
@@ -91,10 +84,6 @@
             var w=document.getElementById("plW");
             if(w) w.value=p.titel||"";
             if(sel) sel.focus();
-            var m=document.createElement("p");
-            m.className="msg";
-            m.textContent="Fenster merken. Ritual oben wählen, dann Vormerken.";
-            el.appendChild(m);
           };
         }
       }
@@ -102,14 +91,24 @@
   }
   if(typeof paintPlan==="function" && !paintPlan._fein){
     var pp=paintPlan;
-    paintPlan=function(){
-      pp();
-      setTimeout(planFix,40);
-    };
+    paintPlan=function(){ pp(); setTimeout(planFix,40); };
     paintPlan._fein=1;
   }
   var css=document.createElement("style");
-  css.textContent="#kHint{color:#7ec8ff;letter-spacing:.08em;font-size:.68rem}";
+  css.textContent=[
+    ".kHintLine{margin:.08rem 0 .22rem;text-align:center;color:#7ec8ff;letter-spacing:.12em;font-size:.62rem;text-transform:uppercase;min-height:.7rem}",
+    "#logFilt{display:flex;gap:.35rem;margin:.15rem 0 .55rem;flex-wrap:wrap}",
+    "#logFilt .log-soft{border-color:#2ecc71;color:#7dffb0}",
+    "#logFilt .log-soft.on{background:rgba(46,204,113,.25);color:#b6ffd4}",
+    "#logFilt .log-hard{border-color:#e74c3c;color:#ff8a7a}",
+    "#logFilt .log-hard.on{background:rgba(231,76,60,.22);color:#ffc4bc}",
+    "#logFilt .log-feld{border-color:#9b8cff;color:#c9b8ff}",
+    "#logFilt .log-feld.on{background:rgba(155,140,255,.22);color:#e4dcff}",
+    ".kaltoday{padding:1.05rem .95rem!important}",
+    ".kaltoday b{font-size:1.18rem!important}",
+    "#kalList .kalcard:not(.kaltoday){padding:.55rem .7rem;opacity:.92}",
+    "#cats{margin-top:.15rem!important}"
+  ].join("");
   document.head.appendChild(css);
   hint();
   if(typeof show==="function" && !show._fein){
