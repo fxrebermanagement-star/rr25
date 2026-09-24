@@ -4,14 +4,8 @@
     ".kHintLine:empty{display:none}",
     "#sigilT{text-transform:uppercase}",
     "#logFilt + #logFilt{display:none!important}",
-    "#home #kasten{margin-bottom:.05rem}",
-    "#skizze{margin:.02rem auto .08rem!important}",
-    "#skizze svg{height:6.6rem!important}",
-    "#skizze .skForm{margin:0!important}",
-    "#skizze .skForm span{margin-bottom:.06rem!important}",
-    "#skizze .skForm input{margin:.06rem 0 .2rem!important;padding:.42rem .55rem!important}",
-    "#skizze .skForm .btn{min-height:2.15rem;padding:.45rem .4rem}",
-    "#skizze .skZiel{margin:.02rem 0 .08rem!important}"
+    "#home #kasten{margin-bottom:.1rem}",
+    ".logrow b{word-break:break-word}"
   ].join("");
   document.head.appendChild(css);
   function up(){
