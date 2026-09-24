@@ -1,27 +1,6 @@
 (function(){
   var KEY="rr25_skizze";
-  var ZIEL=[
-    "Heute stehen. Ein Satz. Nicht vermehren.",
-    "Feld zu. Dann erst öffnen.",
-    "Die 9 halten. Nicht nachladen.",
-    "Wasser. Körper. Alltag. Das ist das Siegel.",
-    "Nur den Faden. Kein Urteil.",
-    "Setzen und weg. Der Beobachter bleibt wach.",
-    "Soft reicht. Hard nur mit Gate.",
-    "Was steht, steht. Nicht nachschauen.",
-    "Heimkehren bevor du fragst, ob es wirkt.",
-    "Dank zuerst. Saat danach.",
-    "Grenze spüren. Der Raum bleibt deiner.",
-    "Ein Ziel. Kein Theater.",
-    "Still, wenn es still ist. Nicht aus Pflicht zünden.",
-    "Die Karte rät. Das Ritual setzt du getrennt.",
-    "Bei den Deinen bleiben. Nicht die Geschichte des anderen werden.",
-    "Echo-Tag: sichtbar lassen. Nicht nachsetzen.",
-    "Versorgt. Geschützt. Es ist so.",
-    "Die Bahn trägt. Du musst nicht schieben.",
-    "Drei Atemzüge. Ich bin der Spieler.",
-    "Loslassen ist auch Arbeit."
-  ];
+  var ZKEY="rr25_tagesziel_v1";
   var A=
     '<svg viewBox="0 0 360 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
     '<line x1="96" y1="62" x2="138" y2="62" stroke="#8a7aa0" stroke-width="1.6"/>'+
@@ -54,6 +33,19 @@
     '<path d="M280 138 C 180 172, 180 172, 80 138" fill="none" stroke="#a8889c" stroke-width="1.5"/>'+
     '<polyline points="90,146 80,138 92,134" fill="none" stroke="#a8889c" stroke-width="1.5"/>'+
     '</svg>';
+  function today(){
+    var n=new Date();
+    return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
+  }
+  function loadZ(){
+    try{ return JSON.parse(localStorage.getItem(ZKEY)||"{}"); }catch(e){ return {}; }
+  }
+  function saveZ(d){ try{ localStorage.setItem(ZKEY, JSON.stringify(d)); }catch(e){} }
+  function locked(){
+    var d=loadZ();
+    return (d.day===today() && d.txt) ? d : null;
+  }
+  function esc(s){ return String(s||"").replace(/&/g,"&").replace(/</g,"<").replace(/>/g,">"); }
   function mode(){
     try{ return localStorage.getItem(KEY)==="emu"?"emu":"369"; }catch(e){ return "369"; }
   }
@@ -61,16 +53,54 @@
   function startOnly(){
     return !document.querySelector("#cats .chip.on");
   }
-  function dayZiel(){
-    var n=new Date();
-    var key=n.getFullYear()+"-"+n.getMonth()+"-"+n.getDate();
-    var h=0;
-    for(var i=0;i<key.length;i++) h=(h*33+key.charCodeAt(i))%ZIEL.length;
-    return ZIEL[h];
+  function toLog(txt){
+    if(typeof load!=="function"||typeof save!=="function") return;
+    var d=load();
+    d.log=d.log||[];
+    var day=today();
+    var exists=d.log.some(function(e){
+      return e.titel==="Tagesziel" && String(e.day||"")===day;
+    });
+    if(exists) return;
+    d.log.unshift({
+      id: typeof uid==="function"?uid():("z"+Date.now().toString(36)),
+      t: typeof now==="function"?now():new Date().toLocaleString("de-CH"),
+      titel:"Tagesziel",
+      wer: txt,
+      note: txt,
+      day: day
+    });
+    try{ save(d); }catch(e){}
+  }
+  function bindForm(el){
+    var go=el.querySelector("#skZielGo");
+    var inp=el.querySelector("#skZielT");
+    if(!go||!inp) return;
+    go.onclick=function(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      var t=String(inp.value||"").trim();
+      if(!t) return;
+      t=t.slice(0,180);
+      saveZ({day:today(), txt:t});
+      toLog(t);
+      draw(el);
+    };
   }
   function draw(el){
-    var z=dayZiel();
-    el.innerHTML=(mode()==="emu"?B:A)+'<p class="skZiel"><span>Tagesziel</span>'+z+'</p>';
+    var z=locked();
+    var svg=mode()==="emu"?B:A;
+    if(z){
+      el.innerHTML=svg+'<p class="skZiel"><span>Tagesziel</span>'+esc(z.txt)+'</p>';
+    } else {
+      el.innerHTML=svg+
+        '<div class="skForm">'+
+        '<span>Tagesziel</span>'+
+        '<input id="skZielT" maxlength="180" placeholder="Ein Satz für heute" autocomplete="off">'+
+        '<button type="button" class="btn primary" id="skZielGo">Setzen</button>'+
+        '</div>';
+      bindForm(el);
+    }
   }
   function mount(){
     var home=document.getElementById("home");
@@ -83,13 +113,15 @@
       if(list) home.insertBefore(el, list);
       else home.appendChild(el);
       el.addEventListener("click", function(ev){
-        if(ev.target.closest && ev.target.closest(".skZiel")) return;
+        if(ev.target.closest && (ev.target.closest(".skZiel")||ev.target.closest(".skForm"))) return;
         ev.stopPropagation();
         setMode(mode()==="emu"?"369":"emu");
         draw(el);
       });
+    } else {
+      draw(el);
     }
-    draw(el);
+    if(!el.querySelector("svg")) draw(el);
     return el;
   }
   function paint(){
@@ -102,7 +134,9 @@
     "#skizze{display:block;margin:.15rem auto .2rem;width:92%;max-width:24rem;cursor:pointer}",
     "#skizze svg{display:block;width:100%;height:10.6rem}",
     "#skizze .skZiel{margin:.05rem 0 .15rem;text-align:center;font-family:Georgia,serif;font-size:.92rem;line-height:1.4;color:#ead8ff;cursor:default}",
-    "#skizze .skZiel span{display:block;margin-bottom:.12rem;letter-spacing:.16em;text-transform:uppercase;font-size:.58rem;font-family:system-ui,sans-serif;color:#ff7ad9}",
+    "#skizze .skZiel span,#skizze .skForm span{display:block;margin-bottom:.12rem;letter-spacing:.16em;text-transform:uppercase;font-size:.58rem;font-family:system-ui,sans-serif;color:#ff7ad9}",
+    "#skizze .skForm{margin:.1rem 0 .2rem;text-align:center;cursor:default}",
+    "#skizze .skForm input{text-align:center;margin:.2rem 0}",
     "#home:has(#cats .chip.on) #skizze{display:none!important}"
   ].join("");
   document.head.appendChild(css);
