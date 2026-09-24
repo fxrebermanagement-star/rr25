@@ -6,10 +6,7 @@
     "#logFilt + #logFilt{display:none!important}",
     "#home #kasten{margin-bottom:.1rem}",
     ".logrow b{word-break:break-word}",
-    "#skizze svg{height:10.15rem!important}",
-    "#skizze .skForm{margin-top:-.18rem!important;margin-bottom:0!important}",
-    "#skizze .skForm input{margin:.08rem 0 .12rem!important}",
-    "#skizze .skForm .btn{min-height:2.15rem;padding:.42rem .4rem}"
+    "#skizze svg{height:9.9rem!important}"
   ].join("");
   document.head.appendChild(css);
   function up(){
