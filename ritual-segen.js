@@ -7,31 +7,31 @@
   }
   var STEPS=[
     ["Vorbereitung",
-      "Name und Wofür oben eingeben.\nWofür: ein Satz. Nicht drei Wünsche.\nFoto wenn da: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur Segen auf [Name].\nNur [Wofür].\nGabe, kein Handel."],
+      "Name und Wofür oben eingeben.\nWofür: ein Satz.\nFoto wenn da: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur Segen auf [Name].\nNur [Wofür].\nIch bleibe ich."],
     ["Standort",
       "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."],
     ["Feld hart",
       "Tu:\nGrenze um den Körper. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nIch gebe Wort, nicht mich."],
-    ["Versetzen",
-      "Tu:\nName laut. Foto wenn da. Einmal stehen.\n\nSprich:\nIch bin [Name].\nNur für [Wofür].\nWärme ja. Verschmelzen nein."],
+    ["Ausrichten",
+      "Tu:\n[Name] wahrnehmen. Foto umgedreht. Nicht werden.\n\nSprich:\nDer Segen geht zu [Name].\nIch bleibe hier."],
     ["Rufen",
-      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur den Segen [Wofür].\nKein Theater. Kein Sog. Kein Mehr."],
+      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur den Segen [Wofür] zu [Name]."],
     ["Auftrag",
-      "Sprich aus [Name] heraus:\nIch nehme [Wofür] an.\nRein. Ohne Bindung.\nKein Bleiben über den Segen hinaus."],
+      "Sprich:\nTrage zu [Name] nur [Wofür].\nRein. Ohne Bindung.\nKein Bleiben in [Name].\nDanach gehst du vollständig."],
     ["Wort",
-      "Sprich:\nIch bin [Name].\nSegen sitzt: [Wofür].\nDas darf wachsen.\nLast und Zugriff bleiben draussen.\nDer Segen bindet nicht."],
+      "Sprich:\nSegen auf [Name].\nWofür: [Wofür].\nDas darf wachsen.\nLast bleibt draussen.\nDer Segen bindet nicht."],
     ["369",
-      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nDer Segen sitzt.\n\nSechs:\n[Wofür] darf wachsen.\n\nNeun:\nDas Wort ist gelegt."],
+      "Tu:\nZähler. Halte das Wort.\n\nDrei:\nDer Segen sitzt.\n\nSechs:\n[Wofür] darf wachsen.\n\nNeun:\nDas Wort ist gelegt."],
     ["Es ist so",
       "Sprich dreimal:\nEs ist so."],
     ["Siegel",
-      "Tu:\nHand aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
+      "Tu:\nHand aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt."],
     ["Entlassen",
-      "Tu:\nNicht nachwinken. Tor zu.\n\nSprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor."],
+      "Sprich:\nAuftrag beendet.\nDu bist frei.\nTor zu."],
     ["Rückkehr",
-      "Tu:\nHaut. Atem. Füsse. Raum.\n\nSprich:\nIch bin nicht [Name].\nIch bin wieder ich.\nIch bin hier.\nFeld zu.\nDer Segen bleibt bei [Name].\nMeine Energie gehört mir."],
+      "Tu:\nHaut. Atem. Füsse.\n\nSprich:\nIch bin hier.\nFeld zu."],
     ["Schluss",
-      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nTu:\nWasser. Alltag. Nicht nachkontrollieren."]
+      "Sprich:\nDanke Feld.\n\nTu:\nWasser. Alltag."]
   ];
   function apply(){
     if(typeof R==="undefined") return;
@@ -39,16 +39,15 @@
     for(var i=0;i<R.length;i++){
       if(R[i].id==="segen"){
         R[i].t="Segen";
-        R[i].s="Ich bin [Name]. Ein Satz Wofür.";
+        R[i].s="Ich bleibe ich. Wort geht hin.";
         R[i].tag="Person X";
         R[i].need=["Name","Wofür"];
         R[i].steps=STEPS;
         found=true;
       }
     }
-    if(!found) R.push({id:"segen",t:"Segen",s:"Ich bin [Name]. Ein Satz Wofür.",tag:"Person X",need:["Name","Wofür"],steps:STEPS});
+    if(!found) R.push({id:"segen",t:"Segen",s:"Ich bleibe ich. Wort geht hin.",tag:"Person X",need:["Name","Wofür"],steps:STEPS});
   }
   apply();
-  setTimeout(apply,300);
-  setTimeout(apply,900);
+  setTimeout(apply,400);
 })();
