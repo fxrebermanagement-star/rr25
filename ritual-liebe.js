@@ -1,31 +1,31 @@
 (function(){
   var STEPS=[
     ["Vorbereitung",
-      "Name von [Name] oben eingeben.\nFoto wenn da: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nLiebe und Bindung auf [Name].\nHart. Klar.\nIch bleibe ich.\n[Name] bleibt [Name]."],
-    ["Ankommen",
-      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler.\nDer Beobachter ist wach."],
+      "Name oben eingeben.\nFoto wenn da: Anker, dann umdrehen. Erst dann weiter.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur Bindung auf [Name].\nIch bleibe ich.\n[Name] bleibt [Name]."],
+    ["Standort",
+      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."],
     ["Feld hart",
-      "Tu:\nGrenze um den Körper. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nNichts Fremdes hat Zutritt.\nMeine Energie gehört mir."],
+      "Tu:\nGrenze um den Körper.\n\nSprich:\nIch schliesse mein Feld hart.\nMeine Energie gehört mir."],
     ["Ausrichten",
-      "Tu:\n[Name] wahrnehmen, ohne [Name] zu werden.\n\nSprich:\nIch richte fest auf [Name].\nKein Verschmelzen."],
+      "Tu:\n[Name] wahrnehmen. Nicht werden.\n\nSprich:\nIch richte auf [Name].\nKein Verschmelzen."],
     ["Rufen",
-      "Tu:\nFeld bleibt hart. Einen Atem. Mitte halten.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur Bindung und Weg zu [Name].\nKein Theater. Kein Sog. Kein Mehr."],
-    ["Auftrag geben",
-      "Sprich:\nBinde [Name] an den Weg zu mir.\nDie Anziehung hält.\nDer Kontakt findet mich.\nKein Bleiben in [Name].\nKein Zerlegen des Lebens.\nNur Bindung. Nur Weg.\nDanach gehst du vollständig."],
+      "Tu:\nEinen Atem. Mitte halten.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur Bindung und Weg zu [Name]."],
+    ["Auftrag",
+      "Sprich:\nBinde [Name] an den Weg zu mir.\nKein Bleiben in [Name].\nNur Bindung. Nur Weg.\nDanach gehst du vollständig."],
     ["Wort",
-      "Sprich:\n[Name] fühlt die Bindung.\n[Name] denkt an mich.\nDer Weg zu mir steht offen und zieht.\nDie Nähe geschieht.\nDu trägst. Ich führe."],
+      "Sprich:\nDie Bindung sitzt.\nDer Weg zu mir zieht.\nDie Nähe geschieht."],
     ["369",
-      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nDie Bindung sitzt.\n\nSechs:\nDer Weg zieht [Name] zu mir.\n\nNeun:\nEs ist gesetzt."],
+      "Tu:\nZähler. Halte das Wort.\n\nDrei:\nDie Bindung sitzt.\n\nSechs:\nDer Weg zieht.\n\nNeun:\nEs ist gesetzt."],
     ["Es ist so",
       "Sprich dreimal:\nEs ist so."],
     ["Siegel",
-      "Tu:\nHand vor die Flamme oder aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
+      "Tu:\nHand aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt."],
     ["Entlassen",
-      "Tu:\nNicht nachwinken. Tor zu.\n\nSprich:\nDer Auftrag ist beendet.\nIch danke dir.\nDu bist frei.\nAlle Verbindungen lösen sich.\nDu bleibst nicht.\nIch schliesse das Tor."],
+      "Sprich:\nAuftrag beendet.\nDu bist frei.\nTor zu."],
     ["Rückkehr",
-      "Tu:\nHaut. Atem. Füsse. Raum.\n\nSprich:\nIch bin nicht [Name].\nIch bin nicht die Wesenheit.\nIch kehre vollständig zurück.\nMeine Energie gehört mir."],
+      "Tu:\nHaut. Atem. Füsse.\n\nSprich:\nIch bin nicht [Name].\nIch bin hier.\nFeld zu."],
     ["Schluss",
-      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nKein zweites Ritual aus Unruhe heute.\n\nTu:\nWasser. Alltag. Nicht nachkontrollieren."]
+      "Sprich:\nDanke Feld.\n\nTu:\nWasser. Alltag."]
   ];
   if(typeof R==="undefined") return;
   for(var i=R.length-1;i>=0;i--) if(R[i].id==="liebezw") R.splice(i,1);
@@ -33,13 +33,12 @@
   for(var j=0;j<R.length;j++){
     if(R[j].id==="liebe"){
       R[j].t="Liebesritual";
-      R[j].s="Hart. Bindung auf Person X.";
+      R[j].s="Ich bleibe ich. Bindung auf [Name].";
       R[j].tag="Liebe";
       R[j].need=["Name"];
       R[j].steps=STEPS;
       found=true;
     }
   }
-  if(!found) R.push({id:"liebe",t:"Liebesritual",s:"Hart. Bindung auf Person X.",tag:"Liebe",need:["Name"],steps:STEPS});
-  if(typeof renderList==="function") renderList();
+  if(!found) R.push({id:"liebe",t:"Liebesritual",s:"Ich bleibe ich. Bindung auf [Name].",tag:"Liebe",need:["Name"],steps:STEPS});
 })();
