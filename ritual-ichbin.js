@@ -1,12 +1,11 @@
 (function(){
-  var SKIP={fluch:1,segen:1,ueber:1};
+  var SKIP={fluch:1,segen:1,ueber:1,liebe:1,liebe2:1,weg:1};
+  var NOVER={segen:1,liebe:1,liebe2:1,weg:1,schutz:1};
   var STAND=["Standort","Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."];
-  var BACK="\n\nSprich:\nIch bin wieder ich.\nIch bin hier.\nFeld zu.";
   function hasName(r){
     var n=r.need||[];
-    if(n.indexOf("Name")>=0) return true;
-    var s=JSON.stringify(r.steps||[]);
-    return s.indexOf("[Name]")>=0;
+    if(n.indexOf("Name")>=0||n.indexOf("A")>=0) return true;
+    return JSON.stringify(r.steps||[]).indexOf("[Name]")>=0;
   }
   function patch(r){
     if(!r||!r.steps||!r.steps.length||SKIP[r.id]) return;
@@ -14,39 +13,24 @@
     var steps=r.steps.slice();
     var first=String(steps[0][0]||"");
     var txt=String(steps[0][1]||"");
-    if(first==="Vorbereitung" || first==="Ankommen"){
-      if(txt.indexOf("Ich bin hier")<0){
-        if(first==="Ankommen"){
-          steps[0]=STAND;
-        } else {
-          steps.splice(1,0,STAND);
-        }
-      }
-    } else if(JSON.stringify(steps).indexOf("Ich bin hier")<0){
-      steps.splice(0,0,STAND);
+    if(JSON.stringify(steps).indexOf("Ich bin hier")<0){
+      if(first==="Ankommen") steps[0]=STAND;
+      else if(first==="Vorbereitung") steps.splice(1,0,STAND);
+      else steps.splice(0,0,STAND);
     }
-    if(hasName(r)){
+    if(hasName(r) && !NOVER[r.id]){
       var joined=JSON.stringify(steps);
       if(joined.indexOf("Ich bin [Name]")<0){
         var ix=1;
         for(var i=0;i<steps.length;i++){
           if(String(steps[i][0])==="Standort"||String(steps[i][0])==="Feld hart") ix=i+1;
         }
-        steps.splice(ix,0,["Versetzen","Tu:\nName laut. Foto wenn da. Einmal stehen.\n\nSprich:\nIch bin [Name].\nNur für diesen Auftrag.\nNicht die ganze Biografie."]);
+        steps.splice(ix,0,["Versetzen","Tu:\nFoto umdrehen. Name laut. Einmal stehen.\n\nSprich:\nIch bin [Name].\nNur für diesen Auftrag."]);
       }
-      var last=steps[steps.length-1];
-      if(last && String(last[1]||"").indexOf("Ich bin wieder ich")<0){
-        if(String(last[0])==="Schluss"||String(last[0])==="Rückkehr"){
-          last[1]=String(last[1]||"")+BACK;
-        } else {
-          steps.push(["Rückkehr","Tu:\nHaut. Atem. Füsse.\n\nSprich:\nIch bin nicht [Name].\nIch bin wieder ich.\nIch bin hier.\nFeld zu."]);
-        }
-      }
-    } else {
-      var end=steps[steps.length-1];
-      if(end && String(end[1]||"").indexOf("Ich bin hier")<0){
-        end[1]=String(end[1]||"")+"\n\nSprich:\nIch bin hier.\nFeld zu.";
-      }
+    }
+    var end=steps[steps.length-1];
+    if(end && String(end[1]||"").indexOf("Feld zu")<0){
+      end[1]=String(end[1]||"")+"\n\nSprich:\nIch bin hier.\nFeld zu.";
     }
     r.steps=steps;
     r._ich=1;
