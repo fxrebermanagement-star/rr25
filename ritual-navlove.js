@@ -9,7 +9,6 @@
     buch:'<svg viewBox="0 0 24 24"><path d="M6 5.4h10.2A2.6 2.6 0 0119 8v11.2H8.4A2.4 2.4 0 016 16.8V5.4z"/><path d="M8.2 19.2A2.4 2.4 0 016 16.8"/></svg>'
   };
   var LAB={home:"Rituale",geplant:"Geplant",kal:"Kalender",log:"Chronik",notiz:"Notiz",opfer:"Gabe",buch:"Buch"};
-  var COL={home:"#ff7ad9",geplant:"#ff8b7a",kal:"#9b8cff",log:"#7ef0e6",notiz:"#c9a6ff",opfer:"#8ee6a8",buch:"#7ec8ff"};
   function paint(){
     document.querySelectorAll("nav button[data-v]").forEach(function(b){
       var v=b.getAttribute("data-v");
@@ -31,8 +30,15 @@
     "nav button[data-v=notiz] .ic{background:linear-gradient(160deg,#3a2460,#1a1230);color:#d2b6ff}",
     "nav button[data-v=opfer] .ic{background:linear-gradient(160deg,#1c3a28,#101c16);color:#9eecc0}",
     "nav button[data-v=buch] .ic{background:linear-gradient(160deg,#16324a,#101820);color:#8fd4ff}",
-    "nav button.on{background:transparent!important;color:#fff!important;box-shadow:none!important}",
-    "nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 18px rgba(255,122,217,.32),inset 0 0 0 1px rgba(255,255,255,.16)}",
+    "nav button.on{background:rgba(255,255,255,.06)!important;color:#fff!important}",
+    "nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}",
+    "nav button[data-v=home].on{background:rgba(255,122,217,.16)!important}",
+    "nav button[data-v=geplant].on{background:rgba(255,139,122,.16)!important}",
+    "nav button[data-v=kal].on{background:rgba(155,140,255,.16)!important}",
+    "nav button[data-v=log].on{background:rgba(126,240,230,.14)!important}",
+    "nav button[data-v=notiz].on{background:rgba(201,166,255,.16)!important}",
+    "nav button[data-v=opfer].on{background:rgba(142,230,168,.14)!important}",
+    "nav button[data-v=buch].on{background:rgba(126,200,255,.14)!important}",
     "nav button .lb{line-height:1.1}",
     "main{padding-bottom:9.1rem!important}"
   ].join("");
