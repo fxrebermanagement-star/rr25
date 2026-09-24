@@ -3,7 +3,6 @@
     var home=document.getElementById("home");
     if(!home) return;
     var kast=document.getElementById("kasten");
-    var hint=document.getElementById("kHint");
     var mond=document.getElementById("mondSag");
     var dank=document.getElementById("pinDank");
     var cats=document.getElementById("cats");
@@ -15,12 +14,11 @@
       else if(ref) home.appendChild(el);
     }
     if(kast){
-      if(hint) after(kast, hint);
-      if(sk) after(hint||kast, sk);
-      if(mond) after(sk||hint||kast, mond);
-      if(dank) after(mond||sk||kast, dank);
-      if(cats) after(dank||mond||sk||kast, cats);
-      if(list) after(cats||sk, list);
+      if(mond) after(kast, mond);
+      if(dank) after(mond||kast, dank);
+      if(cats) after(dank||mond||kast, cats);
+      if(sk) after(cats||dank||mond||kast, sk);
+      if(list) after(sk||cats, list);
     }
   }
   function quiet(){
@@ -40,8 +38,8 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "#cats{margin:.2rem 0 .1rem!important}",
-    "#skizze{margin:.05rem auto .1rem!important}",
+    "#cats{margin:.28rem 0 .2rem!important}",
+    "#skizze{margin:.15rem auto .15rem!important}",
     "#home:not(:has(#cats .chip.on)) #skizze{display:block!important}",
     "#home:not(:has(#cats .chip.on)) #list{display:none!important}",
     "#home:has(#cats .chip.on) #skizze{display:none!important}",
