@@ -4,9 +4,14 @@
     ".kHintLine:empty{display:none}",
     "#sigilT{text-transform:uppercase}",
     "#logFilt + #logFilt{display:none!important}",
-    "#home #kasten{margin-bottom:.1rem}",
-    ".logrow b{word-break:break-word}",
-    "#skizze .skForm .btn{margin-top:.15rem}"
+    "#home #kasten{margin-bottom:.05rem}",
+    "#skizze{margin:.02rem auto .08rem!important}",
+    "#skizze svg{height:6.6rem!important}",
+    "#skizze .skForm{margin:0!important}",
+    "#skizze .skForm span{margin-bottom:.06rem!important}",
+    "#skizze .skForm input{margin:.06rem 0 .2rem!important;padding:.42rem .55rem!important}",
+    "#skizze .skForm .btn{min-height:2.15rem;padding:.45rem .4rem}",
+    "#skizze .skZiel{margin:.02rem 0 .08rem!important}"
   ].join("");
   document.head.appendChild(css);
   function up(){
@@ -21,14 +26,10 @@
   }
   function oneFilt(){
     var bars=document.querySelectorAll("#logFilt");
-    if(bars.length>1){
-      for(var i=1;i<bars.length;i++) bars[i].remove();
-    }
+    if(bars.length>1){ for(var i=1;i<bars.length;i++) bars[i].remove(); }
   }
   if(typeof paintLog==="function" && !paintLog._chk){
-    var pl=paintLog;
-    paintLog=function(){ pl(); oneFilt(); };
-    paintLog._chk=1;
+    var pl=paintLog; paintLog=function(){ pl(); oneFilt(); }; paintLog._chk=1;
   }
   if(typeof show==="function" && !show._chk){
     var sh=show;
