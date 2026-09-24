@@ -1,30 +1,30 @@
 (function(){
-  var KEY="rr25_karte_v1";
+  var KEY="rr25_karte_v2";
   var DECK=[
-    {t:"Der Spieler",z:"☉",x:"Du bist nicht die Figur. Beobachter wach. Aus der Mitte handeln."},
-    {t:"Die 9",z:"∴",x:"Nicht vermehren. Vollenden. Was gesetzt ist, darf stehen."},
-    {t:"Feld zu",z:"⛨",x:"Grenze spüren. Nichts Fremdes hat Zutritt. Der Raum bleibt deiner."},
-    {t:"Faden",z:"ᛅ",x:"Nur den Faden. Kein Urteil. Kein Nachsetzen."},
-    {t:"Rückkehr",z:"↩",x:"Ich bin nicht der andere. Energie zurück. Wasser, Körper, Alltag."},
-    {t:"Segen",z:"☥",x:"Setzen, nicht bitten. Danke. Es ist so. Abgeben."},
-    {t:"Grenze",z:"⬡",x:"So weit öffnen, wie es stimmig ist. Unklares bleibt draußen."},
-    {t:"369",z:"⋮",x:"Dreimal setzen. Sechsmal halten. Neunmal vollenden. Dann loslassen."},
-    {t:"Halt",z:"▣",x:"Heute nicht mehr Arbeit. Was steht, steht. Nicht nachkontrollieren."},
-    {t:"Erden",z:"▽",x:"Füße. Atem. Wasser. Der Auftrag endet im Körper."},
-    {t:"Schutz",z:"⛤",x:"Feld geschlossen. Fremdes prallt ab oder geht in die Erde."},
-    {t:"Liebe ohne Zwang",z:"❦",x:"Nähe nur wenn sie wahr ist. Jeder bleibt frei."},
-    {t:"Trennung",z:"⚔",x:"Was zieht, darf gehen. Was stimmig ist, bleibt."},
-    {t:"Ausgleich",z:"⚖",x:"Nicht Rache. Was genommen wurde, kehrt rein zurück."},
-    {t:"Ahnen",z:"ᛟ",x:"Ehren und begrenzen. Nähe ja. Verschmelzung nein."},
-    {t:"Wesenheit",z:"◈",x:"Nur wenn der Faden nicht reicht. Hartes Ende. Danach zurück."},
-    {t:"Filter",z:"⬢",x:"Nur klare Präsenz. Was drängt, bleibt draußen."},
-    {t:"Saat",z:"✱",x:"Ein Satz. Setzen. Nicht wässern aus Angst."},
-    {t:"Loslassen",z:"☾",x:"Die Arbeit ist übergeben. So sei es."},
-    {t:"Mitte",z:"⊕",x:"Nicht die Geschichte des anderen werden. Bei dir bleiben."},
-    {t:"Klarheit",z:"◇",x:"Nebelig? Druck? Theater? Dann schliessen, nicht vertiefen."},
-    {t:"Versorgung",z:"☼",x:"Ich bin versorgt. Es ist so. Ohne zu hetzen."},
-    {t:"Gesundheit",z:"☤",x:"Der Körper erinnert sich. Arzt parallel. Kein Erzwingen."},
-    {t:"Nacht",z:"☽",x:"Nichts Neues setzen. Feld halten. Schlafen lassen."}
+    {t:"Der Spieler",z:"☉",x:"Du bist nicht die Figur. Beobachter wach. Karte rät. Ritual setzt du getrennt."},
+    {t:"Die 9",z:"∴",x:"Nicht vermehren. Vollenden. Was gesetzt ist, darf stehen. Aufstehen vom Tisch."},
+    {t:"Feld zu",z:"⛨",x:"Grenze spüren. Nichts Fremdes hat Zutritt. Soft-Schutz. Kein Name als Auftrag."},
+    {t:"Faden",z:"ᛅ",x:"Nur den Faden. Kein Urteil. Kein Nachsetzen. Soft-Trennung, nicht Hard aus der Karte."},
+    {t:"Rückkehr",z:"↩",x:"Ich bin nicht der andere. Energie zurück. Wasser, Körper, Alltag. Die 9."},
+    {t:"Segen",z:"☥",x:"Setzen, nicht bitten. Ein Satz. Danke. Es ist so. Soft. Abgeben."},
+    {t:"Grenze",z:"⬡",x:"So weit öffnen, wie es stimmig ist. Unklares bleibt draußen. Hard braucht Gate, nicht diese Karte."},
+    {t:"369",z:"⋮",x:"Dreimal setzen. Sechsmal halten. Neunmal vollenden. Dann loslassen. Ohne 9 bleibt die 6."},
+    {t:"Halt",z:"▣",x:"Heute nicht mehr Arbeit. Was steht, steht. Nicht nachladen. Nicht nachschauen."},
+    {t:"Erden",z:"▽",x:"Füße. Atem. Wasser. Der Auftrag endet im Körper. Handy weg."},
+    {t:"Schutz",z:"⛤",x:"Feld geschlossen. Fremdes prallt ab oder geht in die Erde. Soft. Kein Nachschlagen."},
+    {t:"Liebe ohne Zwang",z:"❦",x:"Nähe nur wenn sie wahr ist. Jeder bleibt frei. Halten wollen ist Bindung — anderes Ritual."},
+    {t:"Trennung",z:"⚔",x:"Der Faden zu dir darf gehen. Zwei andere schneiden ist Hard. Hier nur dein Faden."},
+    {t:"Ausgleich",z:"⚖",x:"Nicht Rache. Was genommen wurde, kehrt rein zurück. Kein Blick auf den Fall des anderen."},
+    {t:"Ahnen",z:"ᛟ",x:"Ehren und begrenzen. Nähe ja. Verschmelzung nein. Last bleibt draußen."},
+    {t:"Wesenheit",z:"◈",x:"Nur wenn der Faden nicht reicht. Hartes Ende. Danach zurück. Kein Alltagskontakt."},
+    {t:"Filter",z:"⬢",x:"Nur klare Präsenz. Was drängt, bleibt draußen. Nebel? Schliessen."},
+    {t:"Saat",z:"✱",x:"Ein Satz. Setzen. Nicht wässern aus Angst. Soft öffnet. Hard startest du nicht von hier."},
+    {t:"Loslassen",z:"☾",x:"Die Arbeit ist übergeben. Nicht nachladen. So sei es."},
+    {t:"Mitte",z:"⊕",x:"Nicht die Geschichte des anderen werden. Bei dir bleiben. Spieler, nicht Spiegel."},
+    {t:"Klarheit",z:"◇",x:"Zieht? Steht? Still? Nebelig oder Druck: schliessen, nicht vertiefen."},
+    {t:"Versorgung",z:"☼",x:"Ich bin versorgt. Es ist so. Ohne zu hetzen. Soft."},
+    {t:"Gesundheit",z:"☤",x:"Der Körper erinnert sich. Arzt parallel. Kein Erzwingen. Soft."},
+    {t:"Nacht",z:"☽",x:"Nichts Neues setzen. Feld halten. Schlafen lassen. Still."}
   ];
   function loadK(){try{return JSON.parse(localStorage.getItem(KEY)||"{}")}catch(e){return{}}}
   function saveK(d){localStorage.setItem(KEY,JSON.stringify(d))}
@@ -58,7 +58,7 @@
   function showDrei(){
     var a=pick([]),b=pick([a.t]),c=pick([a.t,b.t]);
     var box=document.getElementById("dreiList");
-    if(box) box.innerHTML=html(a,"Lage")+html(b,"Block")+html(c,"Weg");
+    if(box) box.innerHTML=html(a,"Lage · steht")+html(b,"Block · zieht")+html(c,"Weg · still");
     go("drei");
   }
   document.addEventListener("click",function(e){
