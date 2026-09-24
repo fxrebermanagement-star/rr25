@@ -1,5 +1,27 @@
 (function(){
   var KEY="rr25_skizze";
+  var ZIEL=[
+    "Heute stehen. Ein Satz. Nicht vermehren.",
+    "Feld zu. Dann erst öffnen.",
+    "Die 9 halten. Nicht nachladen.",
+    "Wasser. Körper. Alltag. Das ist das Siegel.",
+    "Nur den Faden. Kein Urteil.",
+    "Setzen und weg. Der Beobachter bleibt wach.",
+    "Soft reicht. Hard nur mit Gate.",
+    "Was steht, steht. Nicht nachschauen.",
+    "Heimkehren bevor du fragst, ob es wirkt.",
+    "Dank zuerst. Saat danach.",
+    "Grenze spüren. Der Raum bleibt deiner.",
+    "Ein Ziel. Kein Theater.",
+    "Still, wenn es still ist. Nicht aus Pflicht zünden.",
+    "Die Karte rät. Das Ritual setzt du getrennt.",
+    "Bei den Deinen bleiben. Nicht die Geschichte des anderen werden.",
+    "Echo-Tag: sichtbar lassen. Nicht nachsetzen.",
+    "Versorgt. Geschützt. Es ist so.",
+    "Die Bahn trägt. Du musst nicht schieben.",
+    "Drei Atemzüge. Ich bin der Spieler.",
+    "Loslassen ist auch Arbeit."
+  ];
   var A=
     '<svg viewBox="0 0 360 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
     '<line x1="96" y1="62" x2="138" y2="62" stroke="#8a7aa0" stroke-width="1.6"/>'+
@@ -39,8 +61,16 @@
   function startOnly(){
     return !document.querySelector("#cats .chip.on");
   }
+  function dayZiel(){
+    var n=new Date();
+    var key=n.getFullYear()+"-"+n.getMonth()+"-"+n.getDate();
+    var h=0;
+    for(var i=0;i<key.length;i++) h=(h*33+key.charCodeAt(i))%ZIEL.length;
+    return ZIEL[h];
+  }
   function draw(el){
-    el.innerHTML=mode()==="emu"?B:A;
+    var z=dayZiel();
+    el.innerHTML=(mode()==="emu"?B:A)+'<p class="skZiel"><span>Tagesziel</span>'+z+'</p>';
   }
   function mount(){
     var home=document.getElementById("home");
@@ -53,6 +83,7 @@
       if(list) home.insertBefore(el, list);
       else home.appendChild(el);
       el.addEventListener("click", function(ev){
+        if(ev.target.closest && ev.target.closest(".skZiel")) return;
         ev.stopPropagation();
         setMode(mode()==="emu"?"369":"emu");
         draw(el);
@@ -68,9 +99,10 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "#skizze{display:block;margin:.15rem auto 0;width:92%;max-width:24rem;cursor:pointer}",
+    "#skizze{display:block;margin:.15rem auto .2rem;width:92%;max-width:24rem;cursor:pointer}",
     "#skizze svg{display:block;width:100%;height:10.6rem}",
-    "#skizze .skHint{display:none!important}",
+    "#skizze .skZiel{margin:.05rem 0 .15rem;text-align:center;font-family:Georgia,serif;font-size:.92rem;line-height:1.4;color:#ead8ff;cursor:default}",
+    "#skizze .skZiel span{display:block;margin-bottom:.12rem;letter-spacing:.16em;text-transform:uppercase;font-size:.58rem;font-family:system-ui,sans-serif;color:#ff7ad9}",
     "#home:has(#cats .chip.on) #skizze{display:none!important}"
   ].join("");
   document.head.appendChild(css);
