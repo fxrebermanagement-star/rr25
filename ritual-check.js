@@ -6,7 +6,8 @@
     "#logFilt + #logFilt{display:none!important}",
     "#home #kasten{margin-bottom:.1rem}",
     ".logrow b{word-break:break-word}",
-    "#skizze svg{height:9.9rem!important}"
+    "#skizze{width:100%!important;max-width:none!important;margin:.1rem 0 .2rem!important}",
+    "#skizze svg{height:12.6rem!important;width:100%!important}"
   ].join("");
   document.head.appendChild(css);
   function up(){
