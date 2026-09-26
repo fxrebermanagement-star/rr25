@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#090614">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="RR25">
+<meta name="rr25-build" content="11">
 <title>Rolf Reber 25</title>
 <link rel="manifest" href="manifest.webmanifest?v=0">
 <link rel="icon" href="icon.svg">
@@ -123,6 +124,70 @@ html body main{padding-left:.75rem!important;padding-right:.75rem!important;padd
 html body .app.runmode main{padding-bottom:1.1rem!important}
 html nav:not(:has(#navMehr .lb)){visibility:hidden}
 </style>
+<style id="ruheCrit">
+/* Startseite ruhig: Kopf und Inhalt erst zeigen, wenn alle Skripte fertig sind (kein Nachrutschen).
+   Dazu die Startseiten-Regeln aus design-v3 (Heute-Leiste, Mondzeile, «Rituale»-Überschrift) mit «html» davor, damit sie ab dem ersten Bild gelten. */
+html:not(.rr25-ruhig) .app>header,html:not(.rr25-ruhig) .app>main{visibility:hidden}
+html #v3Home{margin:.35rem 0 .5rem!important}
+html #v3Home>#bakCard{display:none!important}
+html #heuteStrip{border-radius:1.1rem;background:linear-gradient(180deg,rgba(40,18,62,.72),rgba(14,8,24,.9));border:1px solid rgba(126,200,255,.22);padding:.42rem .5rem .38rem;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+html #heuteStrip[hidden],html #heuteStrip [hidden]{display:none!important}
+html #heuteStrip .hsHead{display:flex;justify-content:space-between;align-items:baseline;padding:.05rem .3rem .25rem}
+html #heuteStrip .hsHead span{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
+html #heuteStrip .hsHead small{font-size:.62rem;color:#8e7aa8}
+html #heuteStrip .hsRow{display:flex;align-items:center;gap:.55rem;width:100%;min-height:2.55rem;padding:.3rem .35rem .3rem .4rem;border:0;border-top:1px solid rgba(255,255,255,.06);background:none;color:#f6f0ff;font:inherit;font-size:.84rem;text-align:left;border-radius:.7rem}
+html #heuteStrip .hsHead+.hsRow{border-top:0}
+html #heuteStrip .hsRow.on{background:rgba(126,200,255,.07)}
+html #heuteStrip .hsTx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e6dcf7}
+html #heuteStrip .hsTx b{font-weight:650;color:#fff}
+html #heuteStrip .hsMore{font-size:.66rem;color:#8e7aa8;border:1px solid rgba(142,122,168,.45);border-radius:999px;padding:0 .35rem;margin-left:.2rem}
+html #heuteStrip .hsDot{flex:none;width:.55rem;height:.55rem;border-radius:50%}
+html #heuteStrip .hsEcho{background:#7ec8ff;box-shadow:0 0 10px rgba(126,200,255,.8)}
+html #heuteStrip .hsBak{background:#ffb86b;box-shadow:0 0 10px rgba(255,184,107,.7)}
+html #heuteStrip .hsOk{background:#5fe0a0;box-shadow:0 0 10px rgba(95,224,160,.7)}
+html #heuteStrip em{flex:none;font-style:normal;font-size:.74rem;color:#7ec8ff;display:flex;align-items:center;gap:.25rem}
+html #heuteStrip .hsCh{display:inline-block;transform:rotate(90deg);font-size:.9rem;line-height:1;transition:transform .2s}
+html #heuteStrip .hsCh.up{transform:rotate(-90deg)}
+html #heuteStrip .hsBtn{flex:none;border:1px solid rgba(255,184,107,.45);background:rgba(255,184,107,.1);color:#ffd2a0;border-radius:999px;padding:.32rem .85rem;font:inherit;font-size:.74rem;font-weight:600;min-height:1.95rem}
+html #heuteStrip .hsMsg .hsTx{color:#9ee8e0;font-family:Georgia,serif}
+html #hsPanel{padding:.1rem .15rem .25rem}
+html #hsPanel #echoCard{margin:.1rem 0 .1rem!important;padding:.55rem .6rem .4rem!important;background:rgba(10,6,20,.55)!important;border:1px solid rgba(126,200,255,.16)!important;border-radius:.9rem!important;box-shadow:none}
+html #hsPanel #echoCard .ecTag{display:none}
+html #hsPanel #echoCard b{font-size:.98rem}
+html #hsPanel #echoCard .ecAbs{margin-top:.25rem}
+html #hsPanel #echoCard .ecQ{margin:.5rem 0 .1rem}
+html #hsPanel #echoCard .ecRow .btn{min-height:2.2rem;font-size:.76rem}
+html #hsPanel #echoCard .ecLater{margin-top:.25rem}
+html #home #kasten{margin:0 0 .15rem!important}
+html #mondSag{display:flex;align-items:center;gap:.45rem;margin:.55rem 0 .5rem!important;padding:0 .15rem;font-size:.86rem!important;color:#e0d0f6!important}
+html #mondSag span{margin:0!important;flex:none}
+html #mondSag[data-hint]::after{content:attr(data-hint);margin-left:auto;flex:none;font-family:system-ui,sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:#7ec8ff;border:1px solid rgba(126,200,255,.3);border-radius:999px;padding:.12rem .5rem}
+html #home>#kHint{display:none!important}
+html #pinDank{margin:0 0 .15rem!important}
+html #v3CatLab{margin:.95rem .15rem .35rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
+html #home:has(#cats .chip.on) #v3CatLab{margin-top:.8rem}
+html #cats{margin:0 0 .3rem!important}
+html #skizze{margin:.55rem 0 0!important}
+html #skizze svg{height:10.6rem!important}
+html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
+</style>
+<script>
+/* Startseite erst aufdecken, wenn alle Skripte gelaufen sind und 150 ms lang nichts mehr umgebaut wurde (höchstens 1,2 s warten, Notnagel 10 s). */
+(function(){
+  var d=document.documentElement, done=0;
+  function show(){ if(done) return; done=1; d.classList.add("rr25-ruhig"); }
+  setTimeout(show,10000);
+  document.addEventListener("DOMContentLoaded",function(){
+    var app=document.querySelector(".app"), t=0, cap=0, mo=null;
+    function fin(){ clearTimeout(t); clearTimeout(cap); if(mo) mo.disconnect(); requestAnimationFrame(show); }
+    if(app && window.MutationObserver){
+      mo=new MutationObserver(function(){ clearTimeout(t); t=setTimeout(fin,150); });
+      mo.observe(app,{childList:true,subtree:true,attributes:true,characterData:true});
+    }
+    t=setTimeout(fin,150); cap=setTimeout(fin,1200);
+  });
+})();
+</script>
 </head>
 <body>
 <div class="app">
@@ -150,7 +215,7 @@ html nav:not(:has(#navMehr .lb)){visibility:hidden}
 <button type="button" class="btn ghost" id="sigilSave">Ablegen</button>
 </div>
 </div>
-<div id="cats"></div><div id="list"></div>
+<p id="v3CatLab">Rituale</p><div id="cats"></div><div id="list"></div>
 </section>
 <section class="screen" id="drei"><div class="hero"><h2>Drei</h2></div><div id="dreiList"></div><div class="row"><button type="button" class="btn ghost" id="dreiBack">Zurück</button></div></section>
 <section class="screen" id="zahl"><div class="hero"><h2>369</h2></div><div id="zahlBox"></div><div class="row"><button type="button" class="btn ghost" id="zahlBack">Zurück</button></div></section>
@@ -220,7 +285,7 @@ html nav:not(:has(#navMehr .lb)){visibility:hidden}
 <script src="ritual-zahl.js?v=5"></script>
 <script src="ritual-home.js?v=0"></script>
 <script src="ritual-backup.js?v=9"></script>
-<script src="pwa.js?v=9"></script>
+<script src="pwa.js?v=10"></script>
 <script src="ritual-log-fix.js?v=5"></script>
 <script src="ritual-polish.js?v=3"></script>
 <script src="ritual-mond.js?v=1"></script>
