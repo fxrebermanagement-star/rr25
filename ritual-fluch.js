@@ -1,29 +1,31 @@
 (function(){
   var STEPS=[
     ["Vorbereitung",
-      "Name oben. Foto umdrehen. Bleibt unten.\n\nTu:\nEine Kerze. Wasser danach."],
+      "Name oben eingeben.\n\nTu:\nEine Kerze. Wasser danach.\nFoto noch nicht."],
     ["Standort",
-      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage.\nNoch nicht [Name]."],
+      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."],
     ["Mein Feld",
-      "Tu:\nGrenze um DICH. Bevor du gehst.\n\nSprich:\nIch schliesse mein Feld hart."],
+      "Tu:\nGrenze um DICH.\n\nSprich:\nIch schliesse mein Feld hart."],
+    ["Foto",
+      "Tu:\nJetzt Foto. Kurz Anker.\nDann umdrehen. Bleibt unten."],
     ["Ruf",
       "Tu:\nEinen Atem. Nicht fragen.\n\nSprich:\nDie Bahn trägt.\nIch führe."],
     ["Versetzen",
-      "Tu:\nFoto unten. Name laut.\n\nSprich:\nIch bin [Name].\nNur für dieses Wort."],
+      "Tu:\nName laut.\n\nSprich:\nIch bin [Name].\nNur für dieses Wort."],
     ["Auftrag",
-      "Tu:\nVon innen. Dein Satz.\nKein Roman.\n\nSprich jetzt."],
+      "Tu:\nVon innen. Dein Satz.\n\nSprich jetzt."],
     ["Wort",
-      "Tu:\nVon innen. Das Wort, das du kennst.\nDie Bahn hält.\nNicht zum Träger.\n\nSprich jetzt."],
+      "Tu:\nVon innen. Dein Wort.\nBahn hält. Nicht zum Träger.\n\nSprich jetzt."],
     ["369",
-      "Tu:\nZähler. Noch [Name]. Nicht Feld schliessen.\nWort halten. Nicht neu erfinden."],
+      "Tu:\nZähler. Noch [Name]. Nicht Feld schliessen."],
     ["Es ist so",
       "Sprich dreimal:\nEs ist so."],
     ["Rückkehr",
-      "Tu:\nSofort raus. Haut. Atem. Füsse.\n\nSprich:\nIch bin wieder ich.\nIch bin nicht [Name].\nIch bin hier.\nFeld zu."],
+      "Tu:\nSofort raus.\n\nSprich:\nIch bin wieder ich.\nIch bin nicht [Name].\nIch bin hier.\nFeld zu."],
     ["Siegel",
       "Tu:\nAls du. Hand vor die Flamme.\n\nSprich:\nVersiegelt.\nÜbergeben.\nEs läuft."],
     ["Schluss",
-      "Tu:\nWasser. Alltag.\nFoto bleibt unten."]
+      "Tu:\nWasser. Foto bleibt unten. Alltag."]
   ];
   if(typeof R==="undefined") return;
   var found=false;
