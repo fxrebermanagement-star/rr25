@@ -49,11 +49,17 @@
     var kind, txt;
     if(best){ kind=String(best.t||"").split("·")[0].trim().toUpperCase(); txt=String(best.t||""); }
     else{
-      var p=moonP();
-      if(p<0.04||p>0.96){ kind="SOFT"; txt="SOFT · Neumond"; }
+      var md=window.RR25_MOND?window.RR25_MOND.day():null, p=md?md.p:moonP();
+      if(md){
+        if(md.key==="neu"){ kind="SOFT"; txt="SOFT · Neumond"; }
+        else if(md.key==="voll"){ kind="ECHO"; txt="ECHO · Vollmond"; }
+        else if(md.key==="ab"&&p>0.72){ kind="STILL"; txt="STILL · Abnehmend"; }
+        else { kind="SOFT"; txt="SOFT · "+md.name; }
+      }
+      else if(p<0.04||p>0.96){ kind="SOFT"; txt="SOFT · Neumond"; }
       else if(p>0.47&&p<0.53){ kind="ECHO"; txt="ECHO · Vollmond"; }
       else if(p>0.72){ kind="STILL"; txt="STILL · Abnehmend"; }
-      else { kind="SOFT"; txt="SOFT · Zunehmend"; }
+      else { kind="SOFT"; txt="SOFT · "+(p<0.5?"Zunehmend":"Abnehmend"); }
     }
     if(!/^(SOFT|HARD|ECHO|STILL)$/.test(kind)) kind="SOFT";
     return {kind:kind,txt:txt};

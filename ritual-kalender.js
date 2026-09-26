@@ -32,6 +32,14 @@
     return age;
   }
   function moonLabel(ms){
+    var M=window.RR25_MOND;
+    if(M){
+      var m=M.day(ms), q=m.p;
+      if(m.key==="neu") return "Neumond · setzen";
+      if(m.key==="voll") return "Vollmond · nicht nachsetzen";
+      if(m.key==="zu") return m.viertel===1?"Zunehmend · Form":(q<0.22?"Zunehmend · wachsen":(q<0.28?"Zunehmend · Form":"Zunehmend · Kraft"));
+      return m.viertel===3?"Abnehmend · lösen":(q<0.72?"Abnehmend · abgeben":(q<0.78?"Abnehmend · lösen":"Abnehmend · leeren"));
+    }
     var p=moonAge(ms)/29.53058867;
     if(p<0.03||p>0.97) return "Neumond · setzen";
     if(p<0.22) return "Zunehmend · wachsen";
@@ -70,8 +78,13 @@
       var sun=sunTimes(d);
       var age=moonAge(d.getTime());
       var p=age/29.53058867;
-      var k="soft", tag="SOFT · Tag";
-      if(p<0.04||p>0.96){ k="soft"; tag="SOFT · Neumond"; }
+      var k="soft", tag="SOFT · Tag", md=window.RR25_MOND?window.RR25_MOND.day(d.getTime()):null;
+      if(md){
+        if(md.key==="neu"){ k="soft"; tag="SOFT · Neumond"; }
+        else if(md.key==="voll"){ k="echo"; tag="ECHO · Vollmond"; }
+        else if(md.key==="ab"&&md.p>0.72){ k="still"; tag="STILL · abnehmend"; }
+      }
+      else if(p<0.04||p>0.96){ k="soft"; tag="SOFT · Neumond"; }
       else if(p>0.47&&p<0.53){ k="echo"; tag="ECHO · Vollmond"; }
       else if(p>0.72){ k="still"; tag="STILL · abnehmend"; }
       out.push({t:tag+" · "+moonLabel(d.getTime()), start:dayKey(d), all:true, src:"calc"});

@@ -9,7 +9,7 @@
     return age/syn;
   }
   function hint(){
-    var p=moonP();
+    var p=moonP(), md=window.RR25_MOND?window.RR25_MOND.day():null;
     var el=document.getElementById("kHint");
     if(!el){
       var kast=document.getElementById("kasten");
@@ -19,7 +19,13 @@
       kast.parentNode.insertBefore(el, kast.nextSibling);
     }
     el.className="kHintLine";
-    if(p>0.47&&p<0.53) el.textContent="Vollmond \u00b7 Echo. Nicht nachsetzen.";
+    if(md){
+      if(md.key==="voll") el.textContent="Vollmond \u00b7 Echo. Nicht nachsetzen.";
+      else if(md.key==="neu") el.textContent="Neumond \u00b7 Soft setzen erlaubt.";
+      else if(md.key==="ab"&&md.p>0.72) el.textContent="Abnehmend \u00b7 Still. Buch zu.";
+      else el.textContent="";
+    }
+    else if(p>0.47&&p<0.53) el.textContent="Vollmond \u00b7 Echo. Nicht nachsetzen.";
     else if(p>0.72) el.textContent="Abnehmend \u00b7 Still. Buch zu.";
     else if(p<0.04||p>0.96) el.textContent="Neumond \u00b7 Soft setzen erlaubt.";
     else el.textContent="";

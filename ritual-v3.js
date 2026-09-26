@@ -184,7 +184,6 @@
     if(e.all||s.length<=10){ var p=s.slice(0,10).split("-"); return new Date(+p[0],+p[1]-1,+p[2]).getTime(); }
     return Date.parse(s);
   }
-  function moonP(){ var syn=29.53058867, nm=Date.UTC(2000,0,6,18,14)/1000; var a=((Date.now()/1000-nm)/86400)%syn; if(a<0)a+=syn; return a/syn; }
   /* gleiche Regel wie das Wetter im Tor (ritual-runner-v2.js) */
   function kindNow(){
     var today=ymdOf(new Date()), nowT=Date.now(), best=null;
@@ -199,10 +198,9 @@
     if(best){ kind=kindOf(best); kindNow.src="kal"; }
     else{
       kindNow.src="mond";
-      var p=moonP();
-      if(p<0.04||p>0.96) kind="SOFT";
-      else if(p>0.47&&p<0.53) kind="ECHO";
-      else if(p>0.72) kind="STILL";
+      var md=window.RR25_MOND.day();
+      if(md.key==="voll") kind="ECHO";
+      else if(md.key==="ab"&&md.p>0.72) kind="STILL";
       else kind="SOFT";
     }
     if(!/^(SOFT|HARD|ECHO|STILL)$/.test(kind)) kind="SOFT";
@@ -237,30 +235,9 @@
     });
     return out;
   }
-  /* Mondphasen nach Meeus (Astronomical Algorithms, Kap. 49), Genauigkeit rund eine Minute */
-  function phaseMs(k,full){
-    var rad=Math.PI/180, T=k/1236.85;
-    var jde=2451550.09766+29.530588861*k+0.00015437*T*T-0.00000015*T*T*T+0.00000000073*T*T*T*T;
-    var E=1-0.002516*T-0.0000074*T*T;
-    var M=(2.5534+29.1053567*k-0.0000014*T*T-0.00000011*T*T*T)*rad;
-    var Mp=(201.5643+385.81693528*k+0.0107582*T*T+0.00001238*T*T*T-0.000000058*T*T*T*T)*rad;
-    var F=(160.7108+390.67050284*k-0.0016118*T*T-0.00000227*T*T*T+0.000000011*T*T*T*T)*rad;
-    var O=(124.7746-1.56375588*k+0.0020672*T*T+0.00000215*T*T*T)*rad;
-    var s=Math.sin, c;
-    if(full) c=-0.40614*s(Mp)+0.17302*E*s(M)+0.01614*s(2*Mp)+0.01043*s(2*F)+0.00734*E*s(Mp-M)-0.00515*E*s(Mp+M)+0.00209*E*E*s(2*M);
-    else c=-0.4072*s(Mp)+0.17241*E*s(M)+0.01608*s(2*Mp)+0.01039*s(2*F)+0.00739*E*s(Mp-M)-0.00514*E*s(Mp+M)+0.00208*E*E*s(2*M);
-    c+=-0.00111*s(Mp-2*F)-0.00057*s(Mp+2*F)+0.00056*E*s(2*Mp+M)-0.00042*s(3*Mp)+0.00042*E*s(M+2*F)+0.00038*E*s(M-2*F)
-      -0.00024*E*s(2*Mp-M)-0.00017*s(O)-0.00007*s(Mp+2*M)+0.00004*s(2*Mp-2*F)+0.00004*s(3*M)+0.00003*s(Mp+M-2*F)
-      +0.00003*s(2*Mp+2*F)-0.00003*s(Mp+M+2*F)+0.00003*s(Mp-M+2*F)-0.00002*s(Mp-M-2*F)-0.00002*s(3*Mp+M)+0.00002*s(4*Mp);
-    return Math.round((jde+c-2440587.5)*DAY-69000);
-  }
+  /* Mondphasen: gemeinsame Quelle ritual-mondphase.js (Meeus) */
   function moonEvents(full,from,to){
-    var k0=Math.floor((from-946728000000)/(29.530588861*DAY))-1, out=[];
-    for(var k=k0;k<k0+4;k++){
-      var t=phaseMs(full?k+0.5:k,full);
-      if(t>=from&&t<=to) out.push(t);
-    }
-    return out;
+    return window.RR25_MOND.events(from,to).filter(function(e){ return e.q===(full?2:0); }).map(function(e){ return e.t; });
   }
   window.RR25_MOON=moonEvents;
   function feldLine(rid){
@@ -318,11 +295,38 @@
     names.forEach(function(k){ var v=get(k); if(v!=null && v!=="") p[k]=v; });
     return p;
   }
+  /* alle Fotos aus IndexedDB (rr25_fotos_v1 · pics) als [[id,[dataURL,…]],…] */
+  function fotosAll(){
+    return new Promise(function(res){
+      if(typeof idb!=="function"){ res([]); return; }
+      idb().then(function(db){
+        var out=[], q;
+        try{ q=db.transaction("pics").objectStore("pics").openCursor(); }catch(e){ res([]); return; }
+        q.onsuccess=function(){
+          var c=q.result;
+          if(!c){ res(out); return; }
+          if(Array.isArray(c.value) && c.value.length) out.push([c.key,c.value]);
+          c.continue();
+        };
+        q.onerror=function(){ res(out); };
+      }).catch(function(){ res([]); });
+    });
+  }
+  function packAll(){
+    var p=pack();
+    return fotosAll().then(function(f){ if(f.length) p.fotos=f; return p; });
+  }
   function fname(ext){ var n=new Date(); return "RR25-Sicherung-"+ymdOf(n)+"."+ext; }
   function lastBak(){
+    if(window.RR25_BAK) return window.RR25_BAK.last();
     var a=parseInt(get(SKEY)||"0",10)||0, b=parseInt(get("rr25_bak_at")||"0",10)||0;
     return Math.max(a,b);
   }
+  function bakStale(){
+    if(window.RR25_BAK) return window.RR25_BAK.stale();
+    var t=lastBak(); return !t||Date.now()-t>30*DAY;
+  }
+  function mb(n){ return n<1048576?Math.max(1,Math.round(n/1024))+" KB":(n/1048576).toFixed(1).replace(".",",")+" MB"; }
   function download(raw,name){
     var blob=new Blob([raw],{type:"application/json"});
     var a=document.createElement("a");
@@ -330,9 +334,18 @@
     document.body.appendChild(a); a.click();
     setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
   }
+  var busy=false;
   function sichern(cb){
-    var raw=JSON.stringify(pack());
-    function ok(){ var t=String(Date.now()); set(SKEY,t); set("rr25_bak_at",t); var hb=document.getElementById("bakHint"); if(hb) hb.remove(); paintBak("Gesichert. Danke."); if(cb) cb(true); }
+    if(busy) return;
+    busy=true;
+    var b=document.getElementById("bakGoV3"); if(b){ b.disabled=true; b.textContent="…"; }
+    packAll().then(function(p){ busy=false; sichern2(p,cb); }).catch(function(){ busy=false; sichern2(pack(),cb); });
+  }
+  function sichern2(p,cb){
+    var raw=JSON.stringify(p), nf=(p.fotos||[]).reduce(function(a,x){ return a+x[1].length; },0);
+    var info=mb(raw.length)+(nf?", "+nf+" Fotos":"");
+    sichern2.last={bytes:raw.length,fotos:nf};
+    function ok(){ var t=String(Date.now()); set(SKEY,t); set("rr25_bak_at",t); var hb=document.getElementById("bakHint"); if(hb) hb.remove(); paintBak("Gesichert. "+info+"."); if(cb) cb(true); }
     var files=[];
     try{
       files=[new File([raw],fname("json"),{type:"application/json"}), new File([raw],fname("txt"),{type:"text/plain"})];
@@ -350,21 +363,21 @@
     }
     try{ download(raw,fname("json")); ok(); }catch(e){ paintBak("Sichern ging nicht."); if(cb) cb(false); }
   }
-  window.RR25_V3={pack:pack,sichern:sichern,schedule:schedule,paintEcho:paintEcho,paintWin:paintWin,winLine:function(id){ return winLine(rit(id)); },kindNow:kindNow,dueList:dueList};
+  window.RR25_V3={pack:pack,packAll:packAll,fotosAll:fotosAll,sichern:sichern,sichern2:sichern2,schedule:schedule,paintEcho:paintEcho,paintWin:paintWin,winLine:function(id){ return winLine(rit(id)); },kindNow:kindNow,dueList:dueList};
   function paintBak(msg){
     var box=homeBox(); if(!box) return;
     var el=document.getElementById("bakCard");
     var t=lastBak(), days=t?Math.floor((Date.now()-t)/DAY):null;
-    var stale=!t||days>30;
+    var stale=bakStale();
     if(!stale && !msg){ if(el) el.remove(); return; }
     if(!el){ el=document.createElement("div"); el.id="bakCard"; el.className="card"; box.appendChild(el); }
     if(!stale){
       el.innerHTML='<p class="bkMsg">'+h(msg)+'</p>';
-      setTimeout(function(){ var x=document.getElementById("bakCard"); if(x && lastBak() && Date.now()-lastBak()<=30*DAY) x.remove(); },2500);
+      setTimeout(function(){ var x=document.getElementById("bakCard"); if(x && !bakStale()) x.remove(); },3500);
       return;
     }
     el.innerHTML='<div class="bkRow"><div><b>'+(t?'Letzte Sicherung: vor '+days+' Tagen':'Noch keine Sicherung')+'</b>'+
-      '<small>'+(msg?h(msg):'Eine Datei mit Chronik, Notizen und Zeichen. Fotos bleiben auf dem Gerät.')+'</small></div>'+
+      '<small>'+(msg?h(msg):'Eine Datei mit Chronik, Notizen, Zeichen und allen Fotos.')+'</small></div>'+
       '<button type="button" class="btn primary" id="bakGoV3">Sichern</button></div>';
     document.getElementById("bakGoV3").onclick=function(){ sichern(); };
   }
