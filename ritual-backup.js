@@ -3,7 +3,7 @@
   window.__rr25bak=1;
   var BAK="rr25_pack_bak";
   var WHEN="rr25_bak_at";
-  var WEEK=7*24*60*60*1000;
+  var RULE=30*24*60*60*1000; /* eine Regel für alle Hinweise: 30 Tage */
 
   function get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
   function set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
@@ -40,11 +40,19 @@
     if(p.rr25 && !p.rr25_ritual_v1) p.rr25_ritual_v1=typeof p.rr25==="string"?p.rr25:JSON.stringify(p.rr25);
     var n=0;
     Object.keys(p).forEach(function(k){
-      if(k==="v"||k==="t"||k==="rr25") return;
+      if(k==="v"||k==="t"||k==="rr25"||k==="fotos") return;
       if(p[k]==null) return;
       set(k, typeof p[k]==="string"?p[k]:JSON.stringify(p[k]));
       n++;
     });
+    apply.fotos=0;
+    apply.wait=Promise.resolve(0);
+    if(Array.isArray(p.fotos) && p.fotos.length && typeof fotoPut==="function"){
+      var list=p.fotos.filter(function(x){ return Array.isArray(x) && x.length===2 && Array.isArray(x[1]); });
+      apply.fotos=list.length;
+      apply.wait=list.reduce(function(pr,x){ return pr.then(function(){ return fotoPut(x[0],x[1]); }); }, Promise.resolve()).then(function(){ return list.reduce(function(a,x){ return a+x[1].length; },0); });
+      n+=list.length;
+    }
     return n>0;
   }
   function snap(){ try{ set(BAK, JSON.stringify(pack())); }catch(e){} }
@@ -53,11 +61,20 @@
   if(typeof saveNotes==="function"){ var _n=saveNotes; saveNotes=function(a){ _n(a); snap(); }; }
   snap();
 
-  function stale(){
-    var t=parseInt(get(WHEN)||"0",10);
-    if(!t) return true;
-    return (Date.now()-t)>WEEK;
+  function lastAt(){
+    var a=parseInt(get(WHEN)||"0",10)||0, b=parseInt(get("rr25_sicherung_at")||"0",10)||0;
+    return Math.max(a,b);
   }
+  function stale(){
+    var t=lastAt();
+    if(!t) return true;
+    return (Date.now()-t)>RULE;
+  }
+  function staleText(){
+    var t=lastAt();
+    return t?"Letzte Sicherung: vor "+Math.floor((Date.now()-t)/86400000)+" Tagen":"Noch keine Sicherung";
+  }
+  window.RR25_BAK={last:lastAt,stale:stale,text:staleText};
   function hint(host){
     if(!host) return;
     var old=host.querySelector("#bakHint");
@@ -66,7 +83,7 @@
     var p=document.createElement("p");
     p.id="bakHint";
     p.className="meta";
-    p.textContent="Sicherung steht an.";
+    p.textContent=staleText()+". Sichern speichert alles in eine Datei, mit Fotos.";
     p.style.margin="0 0 .45rem";
     var bar=host.querySelector(".bakBar");
     if(bar&&bar.nextSibling) host.insertBefore(p, bar.nextSibling);
@@ -119,11 +136,13 @@
           if(!apply(p)) throw new Error("leer");
           snap(); mark();
           var k=counts(p);
-          alert("Drin: Chronik "+k.log+", Notizen "+k.notes);
-          if(typeof paintLog==="function") paintLog();
-          if(typeof paintNotes==="function") paintNotes();
-          hint(document.getElementById("log"));
-          hint(document.getElementById("notiz"));
+          apply.wait.then(function(nf){
+            alert("Drin: Chronik "+k.log+", Notizen "+k.notes+(nf?", Fotos "+nf:""));
+            if(typeof paintLog==="function") paintLog();
+            if(typeof paintNotes==="function") paintNotes();
+            hint(document.getElementById("log"));
+            hint(document.getElementById("notiz"));
+          }).catch(function(){ alert("Chronik und Notizen drin. Fotos nicht ganz."); });
         }catch(err){ alert("Datei nicht lesbar."); }
       };
       r.readAsText(f);
@@ -138,7 +157,7 @@
     box.id="bakPane";
     box.className="card";
     if(mode==="out"){
-      box.innerHTML='<p class="sub">Sicherung · Chronik '+c.log+' · Notizen '+c.notes+'</p>'+
+      box.innerHTML='<p class="sub">Sicherung als Text · Chronik '+c.log+' · Notizen '+c.notes+' · ohne Fotos</p>'+
         '<textarea id="bakTx" readonly></textarea>'+
         '<div class="row"><button type="button" class="btn primary" id="bakCopy">Kopieren</button>'+
         '<button type="button" class="btn ghost" id="bakClose">Zu</button></div>';
@@ -174,8 +193,8 @@
         snap();
         mark();
         var k=counts(p);
-        alert("Drin: Chronik "+k.log+", Notizen "+k.notes);
         box.remove();
+        apply.wait.then(function(nf){ alert("Drin: Chronik "+k.log+", Notizen "+k.notes+(nf?", Fotos "+nf:"")); if(typeof paintLog==="function") paintLog(); });
         if(typeof paintLog==="function") paintLog();
         if(typeof paintNotes==="function") paintNotes();
         hint(document.getElementById("log"));
