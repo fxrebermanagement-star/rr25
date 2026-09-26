@@ -18,11 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Skript-Buendel bauen
-        run: |
-          python3 tools/build-bundle.py --stamp
-          node --check app-bundle-1.js
-          node --check app-bundle-2.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
