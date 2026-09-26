@@ -6,6 +6,7 @@
     var mond=document.getElementById("mondSag");
     var dank=document.getElementById("pinDank");
     var cats=document.getElementById("cats");
+    var lab=document.getElementById("v3CatLab"); /* «Rituale»-Überschrift bleibt direkt über den Chips (kein Nachrutschen) */
     var sk=document.getElementById("skizze");
     var list=document.getElementById("list");
     function after(ref, el){
@@ -16,7 +17,8 @@
     if(kast){
       if(mond) after(kast, mond);
       if(dank) after(mond||kast, dank);
-      if(cats) after(dank||mond||kast, cats);
+      if(lab) after(dank||mond||kast, lab);
+      if(cats) after(lab||dank||mond||kast, cats);
       if(sk) after(cats||dank||mond||kast, sk);
       if(list) after(sk||cats, list);
     }
