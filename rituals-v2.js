@@ -16,7 +16,7 @@
     ['Salz','Tu:|Dreimal Salz auf jede Kerze.||Sprich:|Versiegelt.'],
     ['So sei es','Sprich dreimal:|Danke für alles.||Tu:|Glocke dreimal. Das ist So sei es.'],
     ['Rückkehr','Sprich:|Ich bin hier. Ich bin ganz bei mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Tu:|Wasser. Alltag. Nicht nachrechnen.']
+    ['Schluss','Tu:|Wasser. Alltag.']
   ]},
 
   /* ---------- SCHUTZ ---------- */
@@ -47,7 +47,7 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Schaden stoppt.|Sechs: Der Zugriff fällt ab.|Neun: Ich bin frei und geschützt.'],
     ['So sei es','Tu:|Hand aufs Herz.||Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
+    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
   ]},
   {id:'weg',tone:'soft',t:'Schutz unterwegs',s:'Kurz. Soft.',cat:'Schutz',hard:false,skipTiming:true,flow:[
     ['Standort','Tu:|Füsse. Ein Atem.||Sprich:|Ich bin hier.'],
