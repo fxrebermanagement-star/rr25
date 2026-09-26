@@ -4,7 +4,14 @@
     var nm=Date.UTC(2000,0,6,18,14)/1000;
     var age=(((Date.now()/1000)-nm)/86400)%syn;
     if(age<0) age+=syn;
-    var p=age/syn;
+    var p=age/syn, md=window.RR25_MOND?window.RR25_MOND.day():null;
+    if(md){
+      p=md.p;
+      if(md.key==="neu") return {wort:"Setzen",satz:"Neu setzen. Still halten."};
+      if(md.key==="voll") return {wort:"Halten",satz:"Sichtbar. Nicht nachsetzen."};
+      if(md.key==="zu") return p<0.22?{wort:"Setzen",satz:"Wachsen lassen. Nicht hetzen."}:(p<0.28||md.viertel===1?{wort:"Halten",satz:"Form geben. Grenze halten."}:{wort:"Halten",satz:"Kraft sammeln. Klar bleiben."});
+      return (md.viertel===3||(p>=0.72&&p<0.78))?{wort:"Abgeben",satz:"Lösen. Zurück zur Mitte."}:(p<0.72?{wort:"Abgeben",satz:"Abgeben. Was fällt, darf fallen."}:{wort:"Abgeben",satz:"Leeren. Schlafen lassen."});
+    }
     if(p<0.03||p>0.97) return {wort:"Setzen",satz:"Neu setzen. Still halten."};
     if(p<0.22) return {wort:"Setzen",satz:"Wachsen lassen. Nicht hetzen."};
     if(p<0.28) return {wort:"Halten",satz:"Form geben. Grenze halten."};

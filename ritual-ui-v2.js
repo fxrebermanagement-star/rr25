@@ -44,6 +44,20 @@
     var z=Math.max(1,Math.round(-d));
     return (a<1.2?"Neumond":"Zunehmend")+"<br>Vollmond "+inT(z);
   }
-  function moon(){ var tx=document.getElementById("moonTxt"); if(tx) tx.innerHTML=moonLine(); }
+  var SATZ={neu:"Neu setzen. Still halten.",zu:"Wachsen lassen. Nicht hetzen.",voll:"Sichtbar. Nicht nachsetzen.",ab:"Abgeben. Was fällt, darf fallen."};
+  function moonLine2(m){
+    function inT(n){ return n<=1?"morgen":"in "+n+" Tagen"; }
+    if(m.key==="voll") return "Vollmond<br>heute";
+    if(m.key==="ab") return "Abnehmend<br>Neumond "+inT(m.newIn);
+    return m.name+"<br>Vollmond "+inT(m.fullIn);
+  }
+  function moon(){
+    var tx=document.getElementById("moonTxt");
+    var m=window.RR25_MOND?window.RR25_MOND.day():null;
+    if(!m){ if(tx) tx.innerHTML=moonLine(); return; }
+    if(tx) tx.innerHTML=moonLine2(m);
+    var sy=document.getElementById("moonSym"); if(sy) sy.textContent=m.sym;
+    var wr=document.getElementById("moonWrap"); if(wr) wr.title=m.name+" · "+SATZ[m.key];
+  }
   moon(); setTimeout(moon,300); setInterval(moon,30*60*1000);
 })();
