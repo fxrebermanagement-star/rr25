@@ -1,9 +1,9 @@
 (function(){
   var SOFT=[
-    ["Vorbereitung","Name oben.\n\nTu:\nEine Kerze. Wasser danach.\nFoto noch nicht."],
+    ["Vorbereitung","Name oben.\n\nTu:\nEine Kerze. Wasser danach."],
     ["Schutz","Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch schliesse mein Feld hart."],
-    ["Foto","Tu:\nJetzt Foto. Anker. Umdrehen."],
     ["Auftrag","Tu:\nNoch du. Dein Satz.\n\nSprich jetzt den Auftrag."],
+    ["Foto","Tu:\nJetzt Foto. Anker. Umdrehen."],
     ["369","Tu:\nZähler.\n\nDrei:\n[Name]\n\nSechs:\nDer Auftrag.\n\nNeun:\nEs ist gesetzt."],
     ["Es ist so","Sprich dreimal:\nEs ist so."],
     ["Rückkehr","Sprich:\nIch bin hier."],
@@ -11,10 +11,10 @@
     ["Schluss","Tu:\nWasser. Alltag."]
   ];
   var HART=[
-    ["Vorbereitung","Name oben.\n\nTu:\nEine Kerze. Wasser danach.\nFoto noch nicht."],
+    ["Vorbereitung","Name oben.\n\nTu:\nEine Kerze. Wasser danach."],
     ["Schutz","Tu:\nFüsse. Drei Atemzüge.\nGrenze um DICH.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch schliesse mein Feld hart."],
-    ["Foto","Tu:\nJetzt Foto. Anker. Umdrehen. Bleibt unten."],
     ["Auftrag","Tu:\nNoch du. Dein Satz.\n\nSprich jetzt den Auftrag."],
+    ["Foto","Tu:\nJetzt Foto. Anker. Umdrehen. Bleibt unten."],
     ["Ich bin","Tu:\nName laut.\n\nSprich:\nIch bin [Name]."],
     ["369","Tu:\nZähler. Noch [Name].\n\nDrei:\n[Name]\n\nSechs:\nDer Auftrag.\n\nNeun:\nEs ist gesetzt."],
     ["Es ist so","Sprich dreimal:\nEs ist so."],
@@ -30,13 +30,13 @@
     var found=false;
     for(var j=0;j<R.length;j++){
       if(R[j].id==="liebe"){
-        R[j].t="Liebesritual"; R[j].s="Schutz. Auftrag. 369. Raus. Feld hart."; R[j].tag="Liebe"; R[j].need=["Name"]; R[j].steps=steps; R[j]._ich=1; found=true;
+        R[j].t="Liebesritual"; R[j].s="Schutz. Auftrag. Foto. 369. Raus."; R[j].tag="Liebe"; R[j].need=["Name"]; R[j].steps=steps; R[j]._ich=1; found=true;
       }
     }
-    if(!found) R.push({id:"liebe",t:"Liebesritual",s:"Schutz. Auftrag. 369. Raus. Feld hart.",tag:"Liebe",need:["Name"],steps:SOFT,_ich:1});
+    if(!found) R.push({id:"liebe",t:"Liebesritual",s:"Schutz. Auftrag. Foto. 369. Raus.",tag:"Liebe",need:["Name"],steps:SOFT,_ich:1});
   }
   apply();
-  if(typeof openR==="function" && !openR._liebeR){
-    var _o=openR; openR=function(id){ apply(); return _o.apply(this,arguments); }; openR._liebeR=1;
+  if(typeof openR==="function" && !openR._liebeR2){
+    var _o=openR; openR=function(id){ apply(); return _o.apply(this,arguments); }; openR._liebeR2=1;
   }
 })();
