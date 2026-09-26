@@ -1,4 +1,4 @@
-var CACHE="rr25-v10";
+var CACHE="rr25-v11";
 self.addEventListener("install", function(e){
   self.skipWaiting();
 });
@@ -14,8 +14,13 @@ self.addEventListener("activate", function(e){
 self.addEventListener("fetch", function(e){
   var req=e.request;
   if(req.method!=="GET") return;
+  /* Seitenaufruf: Chrome übernimmt cache:"no-store" bei Navigationen nicht und liefert index.html sonst
+     bis zu 10 Minuten aus dem HTTP-Cache (GitHub Pages: max-age=600). Darum die Seite über die Adresse frisch holen. */
+  var net=req.mode==="navigate"
+    ? fetch(req.url, {cache:"no-store", credentials:"same-origin", redirect:"manual"})
+    : fetch(req, {cache:"no-store"});
   e.respondWith(
-    fetch(req, {cache:"no-store"}).then(function(res){
+    net.then(function(res){
       return res;
     }).catch(function(){
       return caches.match(req);
