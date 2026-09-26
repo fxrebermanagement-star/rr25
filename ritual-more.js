@@ -7,7 +7,10 @@
     if(a<0) a+=SYN;
     return a;
   }
+  function lab(t){ return new Date(t).toLocaleDateString("de-CH",{day:"numeric",month:"short"}); }
   function nextFull(){
+    var M=window.RR25_MOND;
+    if(M){ var m=M.day(); if(m.key==="voll") return {days:0,label:lab(m.at)}; return {days:m.fullIn,label:lab(m.nextFull)}; }
     var now=Date.now()/1000;
     var age=((now-NM)/86400)%SYN;
     if(age<0) age+=SYN;
@@ -17,6 +20,8 @@
     return {days:Math.max(0,Math.round(days)), label:d.toLocaleDateString("de-CH",{day:"numeric",month:"short"})};
   }
   function nextNew(){
+    var M=window.RR25_MOND;
+    if(M){ var m=M.day(); if(m.key==="neu") return {days:0,label:lab(m.at)}; return {days:m.newIn,label:lab(m.nextNew)}; }
     var now=Date.now()/1000;
     var age=((now-NM)/86400)%SYN;
     if(age<0) age+=SYN;
@@ -26,7 +31,7 @@
     return {days:Math.max(0,Math.round(days)), label:d.toLocaleDateString("de-CH",{day:"numeric",month:"short"})};
   }
   function isFullish(ms){
-    var a=ageAt(ms)/SYN;
+    var a=window.RR25_MOND?window.RR25_MOND.phase(ms+12*3600000):ageAt(ms)/SYN;
     return a>0.45 && a<0.55;
   }
   function parseT(s){
