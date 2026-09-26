@@ -272,10 +272,29 @@
   var SUB={notiz:"Gedanken, Träume",opfer:"Geben, mit Foto",buch:"Das ganze Buch"};
   function nav(){
     var nv=document.querySelector("nav"); if(!nv || nv._d3) return;
+    /* Seit dem Ladefix steht die Leiste fertig in index.html: dann nur noch die Knöpfe verdrahten, nichts umbauen */
+    var row=$("#navOne",nv), sheet=$("#mehrSheet",nv), mehr=$("#navMehr",nv);
+    if(!(row&&sheet&&mehr)){ build(nv); row=$("#navOne",nv); sheet=$("#mehrSheet",nv); mehr=$("#navMehr",nv); }
+    if(!(row&&sheet&&mehr)) return;
+    nv._d3=1;
+    var grid=$(".msGrid",sheet);
+    var veil=document.createElement("div"); veil.id="mehrVeil"; veil.hidden=true;
+    document.querySelector(".app").appendChild(veil);
+    function toggle(on){
+      sheet.hidden=!on; veil.hidden=!on;
+      mehr.classList.toggle("open",on);
+    }
+    mehr.addEventListener("click",function(ev){ ev.stopPropagation(); toggle(sheet.hidden); });
+    veil.onclick=function(){ toggle(false); };
+    grid.addEventListener("click",function(){ setTimeout(function(){ toggle(false); },0); });
+    row.addEventListener("click",function(ev){ if(ev.target.closest("button")!==mehr) toggle(false); });
+    window.__rr25mehr=toggle;
+  }
+  /* Rückfall für eine ältere index.html ohne fertige Leiste: Leiste wie bisher aus den alten Knöpfen bauen */
+  function build(nv){
     var btn={};
     $$("button[data-v]",nv).forEach(function(b){ btn[b.getAttribute("data-v")]=b; });
     if(!btn.home) return;
-    nv._d3=1;
     var row=document.createElement("div"); row.className="navR"; row.id="navOne";
     ["home","geplant","kal","log"].forEach(function(v){ if(btn[v]) row.appendChild(btn[v]); });
     var mehr=document.createElement("button");
@@ -294,17 +313,6 @@
     });
     nv.innerHTML="";
     nv.appendChild(sheet); nv.appendChild(row);
-    var veil=document.createElement("div"); veil.id="mehrVeil"; veil.hidden=true;
-    document.querySelector(".app").appendChild(veil);
-    function toggle(on){
-      sheet.hidden=!on; veil.hidden=!on;
-      mehr.classList.toggle("open",on);
-    }
-    mehr.addEventListener("click",function(ev){ ev.stopPropagation(); toggle(sheet.hidden); });
-    veil.onclick=function(){ toggle(false); };
-    grid.addEventListener("click",function(){ setTimeout(function(){ toggle(false); },0); });
-    row.addEventListener("click",function(ev){ if(ev.target.closest("button")!==mehr) toggle(false); });
-    window.__rr25mehr=toggle;
   }
   function navMark(id){
     var m=document.getElementById("navMehr");
