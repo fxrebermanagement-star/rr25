@@ -63,6 +63,66 @@ textarea{min-height:5.2rem}
 #home:has(#cats .chip.on) #skizze{display:none!important}
 #home:not(:has(#cats .chip.on)) #list{display:none!important}
 </style>
+<style id="navCrit">
+/* Untere Leiste ab dem ersten Bild fertig: dieselben Regeln wie ritual-nav, ritual-polish, ritual-navlove, ritual-more und design-v3,
+   in gleicher Reihenfolge, mit «html» davor, damit spätere Zwischenstände der Skripte die Leiste nicht mehr umbauen. */
+html nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(232,160,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}
+html nav .navR{display:grid;gap:.18rem}
+html nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
+html nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 8%}
+html nav button{font-size:.6rem!important;padding:.42rem .04rem .34rem!important;min-height:2.55rem}
+html nav button svg{width:18px!important;height:18px!important}
+html header nav{display:none}
+html nav{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;gap:.16rem!important;padding:.32rem .22rem calc(.4rem + env(safe-area-inset-bottom))!important}
+html nav .navR{display:grid!important;gap:.16rem}
+html nav .navR:first-child{grid-template-columns:repeat(4,1fr)!important}
+html nav .navR:last-child{grid-template-columns:repeat(3,1fr)!important;padding:0 7%}
+html nav button{padding:.44rem .04rem .36rem!important;font-size:.6rem!important;gap:.14rem!important;min-height:2.5rem}
+html nav button svg{width:18px!important;height:18px!important}
+html nav button.on{box-shadow:0 0 18px rgba(255,122,217,.25)}
+html nav{background:rgba(10,6,18,.94)!important;border-color:rgba(255,122,217,.16)!important;box-shadow:0 -10px 28px rgba(0,0,0,.35)}
+html nav .navR{gap:.28rem!important}
+html nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}
+html nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}
+html nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+html nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#ff9ae4}
+html nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}
+html nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}
+html nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}
+html nav button[data-v=notiz] .ic{background:linear-gradient(160deg,#3a2460,#1a1230);color:#d2b6ff}
+html nav button[data-v=opfer] .ic{background:linear-gradient(160deg,#1c3a28,#101c16);color:#9eecc0}
+html nav button[data-v=buch] .ic{background:linear-gradient(160deg,#16324a,#101820);color:#8fd4ff}
+html nav button.on{background:rgba(255,255,255,.06)!important;color:#fff!important}
+html nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}
+html nav button[data-v=home].on{background:rgba(255,122,217,.16)!important}
+html nav button[data-v=geplant].on{background:rgba(255,139,122,.16)!important}
+html nav button[data-v=kal].on{background:rgba(155,140,255,.16)!important}
+html nav button[data-v=log].on{background:rgba(126,240,230,.14)!important}
+html nav button[data-v=notiz].on{background:rgba(201,166,255,.16)!important}
+html nav button[data-v=opfer].on{background:rgba(142,230,168,.14)!important}
+html nav button[data-v=buch].on{background:rgba(126,200,255,.14)!important}
+html nav button .lb{line-height:1.1}
+html .app.runmode nav{display:none!important}
+html nav{padding:.3rem .3rem calc(.38rem + env(safe-area-inset-bottom))!important}
+html nav #navOne.navR{grid-template-columns:repeat(5,1fr)!important;padding:0!important;gap:.12rem!important}
+html nav #navOne button{min-height:3.35rem!important}
+html nav button[data-v=mehr] .ic{background:linear-gradient(160deg,#3c1f52,#1a1026);color:#e7b8ff}
+html nav button[data-v=mehr].on,html nav button[data-v=mehr].open{background:rgba(231,184,255,.13)!important;color:#fff!important}
+html nav button[data-v=mehr].on .ic,html nav button[data-v=mehr].open .ic{box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}
+html #mehrSheet{position:absolute;left:.5rem;right:.5rem;bottom:calc(100% + .5rem);padding:.6rem .6rem .65rem;border-radius:1.2rem;background:rgba(18,9,30,.98);border:1px solid rgba(232,160,255,.25);box-shadow:0 -12px 40px rgba(0,0,0,.55),0 0 24px rgba(255,122,217,.08);animation:v3up .18s ease-out}
+html #mehrSheet[hidden]{display:none!important}
+html #mehrSheet .msHead{margin:.05rem .3rem .45rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
+html #mehrSheet .msGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
+html #mehrSheet .msItem{min-height:5.6rem!important;border:1px solid rgba(255,255,255,.07)!important;background:rgba(255,255,255,.03)!important;border-radius:1rem!important;padding:.6rem .2rem .5rem!important;font-size:.72rem!important;gap:.3rem!important}
+html #mehrSheet .msItem .ic{width:2.8rem;height:2.8rem}
+html #mehrSheet .msSub{font-size:.54rem;color:#8e7aa8;font-weight:400;line-height:1.2}
+html #mehrVeil{position:fixed;inset:0;z-index:39;background:rgba(4,2,10,.55);backdrop-filter:blur(2px)}
+html #mehrVeil[hidden]{display:none}
+@keyframes v3up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+html body main{padding-left:.75rem!important;padding-right:.75rem!important;padding-bottom:5.9rem!important}
+html body .app.runmode main{padding-bottom:1.1rem!important}
+html nav:not(:has(#navMehr .lb)){visibility:hidden}
+</style>
 </head>
 <body>
 <div class="app">
@@ -129,16 +189,17 @@ textarea{min-height:5.2rem}
 <section class="screen" id="bye"></section>
 </main>
 <nav>
-<div class="navR">
-<button type="button" class="on" data-v="home">Rituale</button>
-<button type="button" data-v="geplant">Geplant</button>
-<button type="button" data-v="kal">Kalender</button>
-<button type="button" data-v="log">Chronik</button>
-</div>
-<div class="navR">
-<button type="button" data-v="notiz">Notiz</button>
-<button type="button" data-v="opfer">Gabe</button>
-<button type="button" data-v="buch">Buch</button>
+<div id="mehrSheet" hidden><p class="msHead">Mehr</p><div class="msGrid">
+<button type="button" data-v="notiz" class="msItem"><span class="ic"><svg viewBox="0 0 24 24"><path d="M7.2 5.2h8.2L19 8.8V19H7.2z"></path><path d="M15.2 5.2V9H19M9 12.5h6M9 15.6h4"></path></svg></span><span class="lb">Notiz</span><small class="msSub">Gedanken, Träume</small></button>
+<button type="button" data-v="opfer" class="msItem"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4.2l2.4 4.8 5.2 1.1-4 3.4 1.2 5.1L12 16.4 7.2 18.6l1.2-5.1-4-3.4 5.2-1.1z"></path></svg></span><span class="lb">Gabe</span><small class="msSub">Geben, mit Foto</small></button>
+<button type="button" data-v="buch" class="msItem"><span class="ic"><svg viewBox="0 0 24 24"><path d="M6 5.4h10.2A2.6 2.6 0 0119 8v11.2H8.4A2.4 2.4 0 016 16.8V5.4z"></path><path d="M8.2 19.2A2.4 2.4 0 016 16.8"></path></svg></span><span class="lb">Buch</span><small class="msSub">Das ganze Buch</small></button>
+</div></div>
+<div class="navR" id="navOne">
+<button type="button" class="on" data-v="home"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 19c0-2 1.6-4 4-5.2C14.4 15 16 17 16 19"></path><path d="M12 4.2l1.1 3.2 3.4.1-2.7 2.1.9 3.3L12 11.2 9.3 12.9l.9-3.3-2.7-2.1 3.4-.1z"></path></svg></span><span class="lb">Rituale</span></button>
+<button type="button" data-v="geplant"><span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="6" width="14" height="13" rx="2.2"></rect><path d="M8 4v3M16 4v3M5 10h14"></path><path d="M8 14h3M13 17h3"></path></svg></span><span class="lb">Geplant</span></button>
+<button type="button" data-v="kal"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="6.2"></circle><path d="M12 9.4v3.8l2.4 1.4"></path><path d="M9 4.6h6"></path></svg></span><span class="lb">Kalender</span></button>
+<button type="button" data-v="log"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"></circle><path d="M12 8v4.4l2.8 1.6"></path></svg></span><span class="lb">Chronik</span></button>
+<button type="button" id="navMehr" data-v="mehr"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="6.5" cy="12" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="17.5" cy="12" r="1.6"></circle><path d="M12 3.8l.8 2.2M12 18l.8 2.2" opacity=".55"></path></svg></span><span class="lb">Mehr</span></button>
 </div>
 </nav>
 </div>
@@ -159,7 +220,7 @@ textarea{min-height:5.2rem}
 <script src="ritual-zahl.js?v=5"></script>
 <script src="ritual-home.js?v=0"></script>
 <script src="ritual-backup.js?v=9"></script>
-<script src="pwa.js?v=8"></script>
+<script src="pwa.js?v=9"></script>
 <script src="ritual-log-fix.js?v=5"></script>
 <script src="ritual-polish.js?v=3"></script>
 <script src="ritual-mond.js?v=1"></script>
@@ -181,6 +242,6 @@ textarea{min-height:5.2rem}
 <script src="ritual-check.js?v=6"></script>
 <script src="ritual-ui-v2.js?v=2"></script>
 <script src="ritual-v3.js?v=2"></script>
-<script src="design-v3.js?v=1"></script>
+<script src="design-v3.js?v=2"></script>
 </body>
 </html>
