@@ -1,13 +1,13 @@
 (function(){
   var STEPS=[
     ["Vorbereitung",
-      "Name oben.\n\nTu:\nEine Kerze. Wasser danach.\nFoto noch nicht."],
+      "Name oben.\n\nTu:\nEine Kerze. Wasser danach."],
     ["Schutz",
       "Tu:\nFüsse. Drei Atemzüge.\nGrenze um DICH.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch schliesse mein Feld hart."],
-    ["Foto",
-      "Tu:\nJetzt Foto. Kurz Anker.\nDann umdrehen. Bleibt unten."],
     ["Auftrag",
       "Tu:\nNoch du. Dein Satz.\n\nSprich jetzt den Auftrag."],
+    ["Foto",
+      "Tu:\nJetzt Foto. Kurz Anker.\nDann umdrehen. Bleibt unten."],
     ["Ich bin",
       "Tu:\nName laut.\n\nSprich:\nIch bin [Name]."],
     ["369",
@@ -25,8 +25,8 @@
   var found=false;
   for(var i=0;i<R.length;i++){
     if(R[i].id==="fluch"){
-      R[i].t="Fluch"; R[i].s="Schutz. Auftrag. Ich bin. 369. Raus. Feld hart."; R[i].tag="Person X"; R[i].need=["Name"]; R[i].steps=STEPS; R[i]._ich=1; found=true;
+      R[i].t="Fluch"; R[i].s="Schutz. Auftrag. Foto. Ich bin. 369. Raus."; R[i].tag="Person X"; R[i].need=["Name"]; R[i].steps=STEPS; R[i]._ich=1; found=true;
     }
   }
-  if(!found) R.push({id:"fluch",t:"Fluch",s:"Schutz. Auftrag. Ich bin. 369. Raus. Feld hart.",tag:"Person X",need:["Name"],steps:STEPS,_ich:1});
+  if(!found) R.push({id:"fluch",t:"Fluch",s:"Schutz. Auftrag. Foto. Ich bin. 369. Raus.",tag:"Person X",need:["Name"],steps:STEPS,_ich:1});
 })();
