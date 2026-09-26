@@ -10,7 +10,7 @@
     {t:"Grenze",z:"\u2b21",x:"So weit öffnen, wie es stimmig ist. Unklares bleibt draußen. Hard braucht Gate, nicht diese Karte."},
     {t:"369",z:"\u22ee",x:"Dreimal setzen. Sechsmal halten. Neunmal vollenden. Dann loslassen. Ohne 9 bleibt die 6."},
     {t:"Halt",z:"\u25a3",x:"Heute nicht mehr Arbeit. Was steht, steht. Nicht nachladen. Nicht nachschauen."},
-    {t:"Erden",z:"\u25bd",x:"Füße. Atem. Wasser. Der Auftrag endet im Körper. Handy weg."},
+    {t:"Erden",z:"\u25bd",x:"Füße. Atem. Wasser. Der Auftrag endet im Körper. Danach App zu."},
     {t:"Schutz",z:"\u26e4",x:"Feld geschlossen. Fremdes prallt ab oder geht in die Erde. Soft. Kein Nachschlagen."},
     {t:"Liebe ohne Zwang",z:"\u2766",x:"Nähe nur wenn sie wahr ist. Jeder bleibt frei. Halten wollen ist Bindung — anderes Ritual."},
     {t:"Trennung",z:"\u2694",x:"Der Faden zu dir darf gehen. Zwei andere schneiden ist Hard. Hier nur dein Faden."},
@@ -58,7 +58,7 @@
   function showDrei(){
     var a=pick([]),b=pick([a.t]),c=pick([a.t,b.t]);
     var box=document.getElementById("dreiList");
-    if(box) box.innerHTML=html(a,"Lage \u00b7 steht","soft")+html(b,"Block \u00b7 zieht","hard")+html(c,"Weg \u00b7 still","echo");
+    if(box) box.innerHTML=html(a,"Lage · steht","soft")+html(b,"Block · zieht","hard")+html(c,"Weg · still","echo");
     go("drei");
   }
   document.addEventListener("click",function(e){

@@ -16,7 +16,7 @@
     ['Salz','Tu:|Dreimal Salz auf jede Kerze.||Sprich:|Versiegelt.'],
     ['So sei es','Sprich dreimal:|Danke für alles.||Tu:|Glocke dreimal. Das ist So sei es.'],
     ['Rückkehr','Sprich:|Ich bin hier. Ich bin ganz bei mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Tu:|Wasser. Alltag.']
+    ['Schluss','Tu:|Wasser. Alltag. Nicht nachrechnen.']
   ]},
 
   /* ---------- SCHUTZ ---------- */
@@ -47,7 +47,7 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Schaden stoppt.|Sechs: Der Zugriff fällt ab.|Neun: Ich bin frei und geschützt.'],
     ['So sei es','Tu:|Hand aufs Herz.||Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
+    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
   ]},
   {id:'weg',tone:'soft',t:'Schutz unterwegs',s:'Kurz. Soft.',cat:'Schutz',hard:false,skipTiming:true,flow:[
     ['Standort','Tu:|Füsse. Ein Atem.||Sprich:|Ich bin hier.'],
@@ -123,7 +123,7 @@
     ['Schluss','Tu:|Wasser. Alltag. Nicht nachrechnen.']
   ]},
   {id:'schlaf',tone:'soft',t:'Schlaf und Traum',s:'Ruhe. Still.',cat:'Energie',hard:false,skipTiming:true,noStatus:true,flow:[
-    ['Vorbereitung','Am Bett. Licht tief.||Tu:|Ein Atem. Handy weg.||Sprich:|Nichts Neues mehr. Nur Ruhe.'],
+    ['Vorbereitung','Am Bett. Licht tief.||Tu:|Ein Atem. Handy lautlos, nur diese App offen.||Sprich:|Nichts Neues mehr. Nur Ruhe.'],
     ['Feld','Sprich:|Ich schliesse mein Feld. Nichts Fremdes hat Zutritt.|Der Raum ist ruhig und sicher.'],
     ['Absicht','Sprich:|Ich schlafe tief und ruhig.|Was mir dienen soll, darf im Traum klar werden.|Am Morgen erinnere ich, was wichtig ist.'],
     ['So sei es','Sprich leise:|So sei es.'],
@@ -265,7 +265,7 @@
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin hier. Ich bin klar.'],
     ['Dank und Ernte','Sprich:|Danke für das, was reif geworden ist.|Was fällt, darf fallen. Ich halte nichts fest.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Ich sehe die Ernte.|Sechs: Ich danke.|Neun: Ich lasse los.'],
-    ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
+    ['So sei es','Sprich:|Versiegelt. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Ich setze heute nichts nach.|Füsse. Atem. Raum.'],
     ['Schluss','Tu:|Wasser. Alltag.']
   ]},
