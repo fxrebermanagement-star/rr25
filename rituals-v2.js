@@ -265,7 +265,7 @@
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin hier. Ich bin klar.'],
     ['Dank und Ernte','Sprich:|Danke für das, was reif geworden ist.|Was fällt, darf fallen. Ich halte nichts fest.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Ich sehe die Ernte.|Sechs: Ich danke.|Neun: Ich lasse los.'],
-    ['So sei es','Sprich:|Versiegelt. So sei es.'],
+    ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Ich setze heute nichts nach.|Füsse. Atem. Raum.'],
     ['Schluss','Tu:|Wasser. Alltag.']
   ]},
