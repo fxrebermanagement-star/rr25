@@ -1,6 +1,4 @@
 (function(){
-  var HARD=/fluch|bindung|person|übernehm|nagel|anderer|wesenheit/i;
-  var SOFT=/dank|schutz|segen|heil|anzieh|liebe(?!.*zwang)|trenn.*selbst|energie|zurück|karma|ahn|filter|gabe|karte/i;
   function moonP(){
     var syn=29.53058867;
     var nm=Date.UTC(2000,0,6,18,14)/1000;
@@ -30,13 +28,40 @@
     else if(p<0.04||p>0.96) el.textContent="Neumond \u00b7 Soft setzen erlaubt.";
     else el.textContent="";
   }
-  function toneOf(e){
-    var t=String((e&&e.titel)||"");
-    var id=String((e&&e.id)||"");
-    if(HARD.test(t)||HARD.test(id)||/fluch|bind|px|trenn2|liebe2/.test(id)) return "hard";
-    if(SOFT.test(t)) return "soft";
-    return "feld";
+  /* Ton eines Chronik-Eintrags über Ritual-ID/Typ (rituals-v2.js), nicht über Textsuche.
+     Reihenfolge: rid aus dem Echo-Rückblick -> Titel = Ritualname (ohne « · Härte» / « · abgebrochen»)
+     -> ältere Ritualnamen -> Tagesziel/Sigille/Gabe sind neutral (nur unter «Alle»). */
+  var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
+  var OLD={"Trennung — selbst":"soft","Trennung zweier anderer":"hard","Nur wenn nötig — Wesenheit":"hard","Liebesritual":"soft","Anziehung und Kontakt":"soft","Finsternis":"feld","Ahnenkontakt":"feld","Fremde Wesenheit":"hard","Filterübung":"feld","Feld zu":"soft"};
+  function rlist(){ try{ return R; }catch(e){ return []; } }
+  function rById(id){ id=ALIAS[id]||id; var L=rlist(); for(var i=0;i<L.length;i++) if(L[i].id===id) return L[i]; return null; }
+  function rTone(r){ return r.hard?"hard":(r.tone==="hard"||r.tone==="feld"||r.tone==="neutral")?r.tone:"soft"; }
+  var ridMemo=null, ridAt=0;
+  function ridOf(id){
+    if(!ridMemo || Date.now()-ridAt>1500){
+      ridMemo={}; ridAt=Date.now();
+      try{ (JSON.parse(localStorage.getItem("rr25_echo_v1")||"{}").items||[]).forEach(function(it){ if(it&&it.eid&&it.rid) ridMemo[it.eid]=it.rid; }); }catch(e){}
+    }
+    return ridMemo[id]||"";
   }
+  function toneOf(e){
+    if(!e) return "neutral";
+    var t=String(e.titel||"").trim();
+    if(e.kind==="gabe" || /^(Tagesziel|Sigille|Gabe|Opfer|Opfergabe)$/i.test(t)) return "neutral";
+    var r=rById(ridOf(e.id));
+    if(!r){
+      var base=t.replace(/ · abgebrochen$/,""), best=null;
+      rlist().forEach(function(x){ if(x&&x.t&&(base===x.t||base.indexOf(x.t+" · ")===0)&&(!best||x.t.length>best.t.length)) best=x; });
+      r=best;
+    }
+    if(r) return rTone(r);
+    var base2=t.replace(/ · .*$/,"");
+    if(OLD[base2]) return OLD[base2];
+    if(/fluch|bindung|übernehm|nagelhart|wesenheit/i.test(t)) return "hard";
+    if(/mond|ahnen|finsternis/i.test(t)) return "feld";
+    return "soft";
+  }
+  window.RR25_TONE=toneOf;
   var FILT="alle";
   function bar(){
     var box=document.getElementById("entries");
