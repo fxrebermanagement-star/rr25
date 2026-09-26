@@ -13,7 +13,7 @@
     ["Auftrag",
       "Sprich von innen:\nIch trage das Wort hart.\nKein Ausweichen.\nEin Ende."],
     ["Wort",
-      "Sprich:\nDie Bahn gegen die Quelle bricht und bleibt gebrochen.\nWas gesetzt wird, kehrt zur Quelle.\nKein Nachsatz."],
+      "Sprich:\nDie Bahn bricht dort und bleibt gebrochen.\nWas dort gesetzt ist, bleibt dort.\nNicht zu mir.\nKein Nachsatz."],
     ["369",
       "Tu:\nZähler. Nicht neu setzen.\n\nDrei:\nDas Wort sitzt.\n\nSechs:\nDie Bahn ist zu.\n\nNeun:\nEs bleibt gesetzt."],
     ["Es ist so",
