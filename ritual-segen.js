@@ -1,53 +1,41 @@
 (function(){
-  if(typeof fill==="function"){
+  if(typeof fill==="function" && !fill._seg2){
     var _f=fill;
     fill=function(s,m){
       return _f(s,m).split("[Wofür]").join((m&&m["Wofür"])||"[Wofür]");
     };
+    fill._seg2=1;
   }
   var STEPS=[
     ["Vorbereitung",
-      "Name und Wofür oben eingeben.\nWofür: ein Satz.\nFoto wenn da: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur Segen auf [Name].\nNur [Wofür].\nIch bleibe ich."],
+      "Name und Wofür oben. Ein Satz.\nFoto: Anker, dann umdrehen.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nSegen auf [Name].\nNur [Wofür].\nIch bleibe ich."],
     ["Standort",
       "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."],
     ["Feld hart",
-      "Tu:\nGrenze um den Körper. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nIch gebe Wort, nicht mich."],
-    ["Ausrichten",
-      "Tu:\n[Name] wahrnehmen. Foto umgedreht. Nicht werden.\n\nSprich:\nDer Segen geht zu [Name].\nIch bleibe hier."],
-    ["Rufen",
-      "Tu:\nFeld bleibt hart. Einen Atem.\n\nSprich:\nDu bist da.\nIch führe.\nDu trägst nur den Segen [Wofür] zu [Name]."],
+      "Sprich:\nIch schliesse mein Feld hart."],
+    ["Ruf",
+      "Tu:\nEinen Atem. Nicht fragen.\n\nSprich:\nDie Bahn trägt.\nIch führe.\nSegen [Wofür] zu [Name]."],
     ["Auftrag",
-      "Sprich:\nTrage zu [Name] nur [Wofür].\nRein. Ohne Bindung.\nKein Bleiben in [Name].\nDanach gehst du vollständig."],
+      "Sprich einmal:\nTrage zu [Name] nur [Wofür].\nEin Ende.\nDann gehst du."],
     ["Wort",
-      "Sprich:\nSegen auf [Name].\nWofür: [Wofür].\nDas darf wachsen.\nLast bleibt draussen.\nDer Segen bindet nicht."],
+      "Sprich:\nSegen auf [Name].\n[Wofür] sitzt."],
     ["369",
-      "Tu:\nZähler. Halte das Wort.\n\nDrei:\nDer Segen sitzt.\n\nSechs:\n[Wofür] darf wachsen.\n\nNeun:\nDas Wort ist gelegt."],
+      "Tu:\nZähler.\n\nDrei:\nDer Segen sitzt.\n\nSechs:\n[Wofür] läuft.\n\nNeun:\nGesetzt."],
     ["Es ist so",
       "Sprich dreimal:\nEs ist so."],
     ["Siegel",
-      "Tu:\nHand aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt."],
-    ["Entlassen",
-      "Sprich:\nAuftrag beendet.\nDu bist frei.\nTor zu."],
+      "Sprich:\nVersiegelt.\nÜbergeben."],
     ["Rückkehr",
-      "Tu:\nHaut. Atem. Füsse.\n\nSprich:\nIch bin hier.\nFeld zu."],
+      "Sprich:\nIch bin hier.\nFeld zu."],
     ["Schluss",
       "Sprich:\nDanke Feld.\n\nTu:\nWasser. Alltag."]
   ];
-  function apply(){
-    if(typeof R==="undefined") return;
-    var found=false;
-    for(var i=0;i<R.length;i++){
-      if(R[i].id==="segen"){
-        R[i].t="Segen";
-        R[i].s="Ich bleibe ich. Wort geht hin.";
-        R[i].tag="Person X";
-        R[i].need=["Name","Wofür"];
-        R[i].steps=STEPS;
-        found=true;
-      }
+  if(typeof R==="undefined") return;
+  var found=false;
+  for(var i=0;i<R.length;i++){
+    if(R[i].id==="segen"){
+      R[i].t="Segen"; R[i].s="Wort geht hin. Ich bleibe."; R[i].tag="Person X"; R[i].need=["Name","Wofür"]; R[i].steps=STEPS; R[i]._ich=1; found=true;
     }
-    if(!found) R.push({id:"segen",t:"Segen",s:"Ich bleibe ich. Wort geht hin.",tag:"Person X",need:["Name","Wofür"],steps:STEPS});
   }
-  apply();
-  setTimeout(apply,400);
+  if(!found) R.push({id:"segen",t:"Segen",s:"Wort geht hin. Ich bleibe.",tag:"Person X",need:["Name","Wofür"],steps:STEPS,_ich:1});
 })();
