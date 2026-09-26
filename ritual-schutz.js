@@ -1,56 +1,44 @@
 (function(){
   var STEPS=[
     ["Vorbereitung",
-      "Tu:\nEine Kerze anzünden.\nWasser danach bereitstellen.\nFüsse können den Boden.\n\nSprich:\nNur Schutz. Nur ich.\nKein Auftrag nach aussen."],
-    ["Ankommen",
-      "Tu:\nFüsse auf den Boden. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler.\nDer Beobachter ist wach.\nIch handle aus klarer Mitte."],
+      "Tu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur Schutz. Nur ich."],
+    ["Standort",
+      "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."],
     ["Feld hart",
-      "Tu:\nGrenze um den Körper spüren. Einmal feststehen.\n\nSprich:\nIch schliesse mein Feld hart.\nNichts Fremdes hat Zutritt.\nMeine Energie gehört mir."],
+      "Tu:\nGrenze um den Körper.\n\nSprich:\nIch schliesse mein Feld hart."],
     ["Wort",
-      "Sprich:\nIch schütze mich jetzt vollständig.\nFeld und Energien tragen die Grenze.\nFremdes prallt ab oder geht in die Erde.\nMeine Energie gehört allein mir."],
+      "Sprich:\nIch schütze mich vollständig.\nDie Grenze hält.\nFremdes findet keinen Halt."],
     ["369",
-      "Tu:\nZähler. Halte das Wort. Nicht neu setzen.\n\nDrei:\nMein Feld ist hart geschlossen.\n\nSechs:\nAlles Fremde prallt ab und findet keinen Halt.\n\nNeun:\nIch bin klar, geschützt und bei mir."],
+      "Tu:\nZähler. Nicht neu setzen.\n\nDrei:\nDas Feld ist hart.\n\nSechs:\nFremdes prallt ab.\n\nNeun:\nIch bin bei mir."],
+    ["Es ist so",
+      "Sprich dreimal:\nEs ist so."],
     ["Siegel",
-      "Tu:\nHand kurz vor die Flamme oder flach aufs Herz. Einen Atem.\n\nSprich:\nVersiegelt.\nDas Feld hat es."],
+      "Tu:\nHand aufs Herz.\n\nSprich:\nVersiegelt."],
     ["Schluss",
-      "Sprich dreimal:\nDanke Gott.\nDanke Universum.\nDanke Energien.\nDanke Feld.\n\nSprich:\nIch schliesse.\n\nTu:\nWasser. Alltag."]
+      "Sprich:\nIch bin hier.\nFeld zu.\n\nTu:\nWasser. Alltag."]
   ];
   var WEG=[
-    ["Ankommen",
-      "Tu:\nStehen bleiben oder weitergehen, Füsse spüren.\nEinen Atem.\n\nSprich:\nIch bin da.\nIch bleibe ich."],
+    ["Standort",
+      "Tu:\nFüsse. Einen Atem.\n\nSprich:\nIch bin hier."],
     ["Feld hart",
-      "Tu:\nGrenze um den Körper. Schultern locker.\n\nSprich:\nIch schliesse mein Feld hart.\nNichts Fremdes hat Zutritt.\nMeine Energie gehört mir."],
+      "Sprich:\nIch schliesse mein Feld hart."],
     ["Wort",
-      "Sprich:\nIch bin geschützt unterwegs.\nDie Bahn bleibt bei mir.\nFremdes prallt ab."],
+      "Sprich:\nIch bin geschützt unterwegs.\nDie Bahn bleibt bei mir."],
     ["Es ist so",
       "Sprich dreimal:\nEs ist so."],
     ["Schluss",
-      "Sprich:\nDanke Feld.\nIch gehe weiter.\n\nTu:\nNicht nachprüfen. Alltag."]
+      "Sprich:\nFeld zu.\n\nTu:\nWeitergehen."]
   ];
   if(typeof R==="undefined") return;
   var found=false, foundW=false;
   for(var i=0;i<R.length;i++){
     if(R[i].id==="schutz"){
-      R[i].t="Schutz selbst";
-      R[i].s="Feld schliessen. Kerze. Feld und Energien.";
-      R[i].tag="Schutz";
-      R[i].steps=STEPS;
-      delete R[i].need;
-      found=true;
+      R[i].t="Schutz selbst"; R[i].s="Feld hart. Wort. Zu."; R[i].tag="Schutz"; R[i].steps=STEPS; delete R[i].need; found=true;
     }
     if(R[i].id==="weg"){
-      R[i].t="Schutz unterwegs";
-      R[i].s="Kurz. Ohne Kerze. 3× Es ist so.";
-      R[i].tag="Schutz";
-      R[i].steps=WEG;
-      delete R[i].need;
-      foundW=true;
+      R[i].t="Schutz unterwegs"; R[i].s="Kurz. 3× Es ist so."; R[i].tag="Schutz"; R[i].steps=WEG; delete R[i].need; foundW=true;
     }
   }
-  if(!found){
-    R.push({id:"schutz",t:"Schutz selbst",s:"Feld schliessen. Kerze. Feld und Energien.",tag:"Schutz",steps:STEPS});
-  }
-  if(!foundW){
-    R.push({id:"weg",t:"Schutz unterwegs",s:"Kurz. Ohne Kerze. 3× Es ist so.",tag:"Schutz",steps:WEG});
-  }
+  if(!found) R.push({id:"schutz",t:"Schutz selbst",s:"Feld hart. Wort. Zu.",tag:"Schutz",steps:STEPS});
+  if(!foundW) R.push({id:"weg",t:"Schutz unterwegs",s:"Kurz. 3× Es ist so.",tag:"Schutz",steps:WEG});
 })();
