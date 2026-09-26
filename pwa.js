@@ -8,7 +8,7 @@
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=4").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=5").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }

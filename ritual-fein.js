@@ -1,5 +1,5 @@
 (function(){
-  var HARD=/fluch|bindung|person|schaden|übernehm|hart|nagel/i;
+  var HARD=/fluch|bindung|person|übernehm|nagel|anderer|wesenheit/i;
   var SOFT=/dank|schutz|segen|heil|anzieh|liebe(?!.*zwang)|trenn.*selbst|energie|zurück|karma|ahn|filter|gabe|karte/i;
   function moonP(){
     var syn=29.53058867;
