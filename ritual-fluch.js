@@ -1,7 +1,7 @@
 (function(){
   var STEPS=[
     ["Vorbereitung",
-      "Name oben eingeben.\nFoto wenn da: Anker, dann umdrehen. Bild bleibt unten.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur [Name].\nNur das Wort.\nKein Nachsetzen."],
+      "Name oben eingeben.\nFoto wenn da: Anker, dann umdrehen. Bild bleibt unten.\n\nTu:\nEine Kerze. Wasser danach.\n\nSprich:\nNur [Name].\nNur das Wort."],
     ["Standort",
       "Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin hier.\nIch bin klar.\nIch trage."],
     ["Feld hart",
@@ -11,26 +11,26 @@
     ["Versetzen",
       "Tu:\nFoto bleibt unten. Name laut. Einmal stehen.\n\nSprich:\nIch bin [Name].\nNur für dieses Wort."],
     ["Auftrag",
-      "Sprich von innen:\nIch trage das Wort hart.\nKein Ausweichen.\nEin Ende."],
+      "Sprich von innen:\nIch trage das Wort hart.\nKein Ausweichen.\nKein Ende.\nEs bleibt."],
     ["Wort",
-      "Sprich:\nDie Bahn bricht dort und bleibt gebrochen.\nWas dort gesetzt ist, bleibt dort.\nNicht zu mir.\nKein Nachsatz."],
+      "Sprich:\nDie Bahn hält dort.\nDas Wort sitzt dort.\nEs bleibt dort.\nNicht zu mir."],
     ["369",
-      "Tu:\nZähler. Nicht neu setzen.\n\nDrei:\nDas Wort sitzt.\n\nSechs:\nDie Bahn ist zu.\n\nNeun:\nEs bleibt gesetzt."],
+      "Tu:\nZähler. Nicht neu setzen.\n\nDrei:\nDas Wort sitzt.\n\nSechs:\nDie Bahn hält.\n\nNeun:\nEs bleibt."],
     ["Es ist so",
       "Sprich dreimal:\nEs ist so."],
     ["Siegel",
-      "Tu:\nHand vor die Flamme oder aufs Herz.\n\nSprich:\nVersiegelt.\nÜbergeben."],
+      "Tu:\nHand vor die Flamme oder aufs Herz.\n\nSprich:\nVersiegelt.\nÜbergeben.\nEs läuft."],
     ["Rückkehr",
       "Tu:\nSofort. Haut. Atem. Füsse.\n\nSprich:\nIch bin wieder ich.\nIch bin nicht [Name].\nIch bin hier.\nFeld zu."],
     ["Schluss",
-      "Sprich:\nDanke Feld.\n\nTu:\nWasser. Alltag.\nKein zweites Ritual aus Unruhe."]
+      "Sprich:\nDanke Feld.\n\nTu:\nWasser. Alltag."]
   ];
   if(typeof R==="undefined") return;
   var found=false;
   for(var i=0;i<R.length;i++){
     if(R[i].id==="fluch"){
       R[i].t="Fluch";
-      R[i].s="Hart. Bahn trägt. Wort von innen.";
+      R[i].s="Hart. Bahn hält. Wort bleibt.";
       R[i].tag="Person X";
       R[i].need=["Name"];
       R[i].steps=STEPS;
@@ -38,5 +38,5 @@
       found=true;
     }
   }
-  if(!found) R.push({id:"fluch",t:"Fluch",s:"Hart. Bahn trägt. Wort von innen.",tag:"Person X",need:["Name"],steps:STEPS,_ich:1});
+  if(!found) R.push({id:"fluch",t:"Fluch",s:"Hart. Bahn hält. Wort bleibt.",tag:"Person X",need:["Name"],steps:STEPS,_ich:1});
 })();
