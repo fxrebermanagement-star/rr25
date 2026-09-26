@@ -1,3 +1,0 @@
-(function(){
-  /* alte Sammeltexte abgeschaltet */
-})();
