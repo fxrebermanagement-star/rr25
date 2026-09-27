@@ -169,70 +169,26 @@
   }
 
   /* ================= 2 · Nächstes passendes Fenster ================= */
-  var KAL=null, kalState="load";
+  /* Kalender: gemeinsame Regel und Daten aus ritual-zeit.js (RR25_KAL), dieselbe wie Kalender-Tab und Wetter im Tor */
+  var KZ=window.RR25_KAL, kalState="load";
   function loadKal(){
-    try{
-      var n=new Date();
-      fetch("kalender.json?v="+ymdOf(n),{cache:"no-store"}).then(function(r){ return r.json(); })
-        .then(function(d){ KAL=(d&&d.events)||[]; kalState="ok"; paintWin(true); })
-        .catch(function(){ kalState="fail"; paintWin(true); });
-    }catch(e){ kalState="fail"; }
+    if(!KZ){ kalState="fail"; return; }
+    KZ.onReady(function(){ kalState=KZ.status()==="ok"?"ok":"fail"; paintWin(true); });
   }
-  function kindOf(e){ return String(e.t||"").split("·")[0].trim().toUpperCase(); }
-  function evStart(e){
-    var s=String(e.start||"");
-    if(e.all||s.length<=10){ var p=s.slice(0,10).split("-"); return new Date(+p[0],+p[1]-1,+p[2]).getTime(); }
-    return Date.parse(s);
-  }
-  /* gleiche Regel wie das Wetter im Tor (ritual-runner-v2.js) */
   function kindNow(){
-    var today=ymdOf(new Date()), nowT=Date.now(), best=null;
-    (KAL||[]).forEach(function(e){
-      var s=String(e.start||"");
-      if(s.slice(0,10)!==today) return;
-      var t=e.all?0:Date.parse(s);
-      if(!best) best=e;
-      else if(!e.all && t<=nowT) best=e;
-    });
-    var kind;
-    if(best){ kind=kindOf(best); kindNow.src="kal"; }
-    else{
-      kindNow.src="mond";
-      var md=window.RR25_MOND.day();
-      if(md.key==="voll") kind="ECHO";
-      else if(md.key==="ab"&&md.p>0.72) kind="STILL";
-      else kind="SOFT";
-    }
-    if(!/^(SOFT|HARD|ECHO|STILL)$/.test(kind)) kind="SOFT";
-    return kind;
+    var s=KZ.state();
+    kindNow.src=s.src==="mond"?"mond":"kal";
+    kindNow.st=s;
+    return s.kind;
   }
   function nextKal(K){
-    var n=Date.now(), lim=n+30*DAY, today=ymdOf(new Date());
-    var ev=(KAL||[]).map(function(e){ return {e:e,t:evStart(e),k:kindOf(e),all:!!e.all||String(e.start||"").length<=10}; })
-      .filter(function(x){ return !isNaN(x.t); })
-      .sort(function(a,b){ return a.t-b.t; });
-    var hit=null;
-    for(var i=0;i<ev.length;i++){
-      var x=ev[i];
-      if(x.k!==K || x.t>lim) continue;
-      if(x.all ? ymdOf(new Date(x.t))>today : x.t>n){ hit=x; break; }
-    }
-    if(!hit) return null;
-    var day=ymdOf(new Date(hit.t)), end=null, more=[];
-    ev.forEach(function(y){
-      if(y===hit||y.all||ymdOf(new Date(y.t))!==day||y.t<=hit.t) return;
-      if(y.k===K){ if(end===null) more.push(tstr(new Date(y.t))); }
-      else if(end===null) end=y.t;
-    });
-    return {t:hit.t,all:hit.all,end:end,more:more};
+    var n=KZ.next(K,Date.now());
+    if(!n||n.x.s>Date.now()+30*DAY) return null;
+    return {t:n.x.s,all:n.x.all,end:n.x.all?null:n.x.e,bandEnd:n.x.all?n.x.e:null,more:n.more.map(function(y){ return tstr(new Date(y.s)); }),calc:n.x.src==="calc"};
   }
   function laterToday(K){
-    var n=Date.now(), today=ymdOf(new Date()), out=[];
-    (KAL||[]).forEach(function(e){
-      if(e.all||kindOf(e)!==K) return;
-      var t=Date.parse(e.start);
-      if(t>n && ymdOf(new Date(t))===today) out.push(tstr(new Date(t)));
-    });
+    var n=Date.now(), s=KZ.state(n), out=[];
+    s.items.forEach(function(x){ if(!x.all&&x.k===K&&x.s>n) out.push(tstr(new Date(x.s))); });
     return out;
   }
   /* Mondphasen: gemeinsame Quelle ritual-mondphase.js (Meeus) */
@@ -258,19 +214,21 @@
     if(r.tone==="feld") return feldLine(r.id);
     var K=r.hard?"HARD":"SOFT", nm=r.hard?"Hard":"Soft";
     if(kalState==="load") return "Nächstes "+nm+"-Fenster wird gesucht …";
-    if(kalState==="fail") return "Kalender nicht geladen. Kein Fenster berechnet.";
-    var pre="";
-    if(kindNow()===K){
-      if(kindNow.src==="kal"){
-        var lt=r.hard?laterToday(K):[];
-        return '<b>Jetzt ist ein gutes Fenster.</b>'+(lt.length?' Später heute auch: '+lt.join(" · ")+'.':'');
+    if(!KZ) return "Kalender nicht geladen. Kein Fenster berechnet.";
+    var pre="", k=kindNow(), st=kindNow.st;
+    if(k===K){
+      if(st.open){
+        var lt=laterToday(K);
+        return '<b>Jetzt ist ein gutes Fenster.</b> Offen bis '+tstr(new Date(st.open.e))+'.'+(lt.length?' Später heute auch: '+lt.join(" · ")+'.':'');
       }
+      if(kindNow.src==="kal") return '<b>Jetzt ist ein gutes Fenster.</b>'+(st.band?' Soft-Band bis '+dstr(new Date(st.band.e-1)).replace(/\.$/,"")+'.':'');
       pre='Heute kein Kalendereintrag, die Mondphase trägt '+nm+'.<br>';
     }
+    if(kalState==="fail") pre+='Kalender nicht geladen, gerechnet nach Mondphase.<br>';
     var x=nextKal(K);
-    if(!x) return pre+"Im Kalender steht in den nächsten 30 Tagen kein "+nm+"-Fenster.";
+    if(!x) return pre+"Im Kalender steht in den nächsten 30 Tagen kein "+(r.hard?"Hard-Feintakt":"Soft-Fenster")+".";
     var d=new Date(x.t);
-    var s=pre+'Nächstes '+nm+'-Fenster: <b>'+rel(x.t)+dstr(d)+', '+(x.all?'ganzer Tag':'ab '+tstr(d))+(x.end?' bis '+tstr(new Date(x.end)):'')+'</b>';
+    var s=pre+(r.hard?'Nächster Hard-Feintakt':'Nächstes Soft-Fenster')+': <b>'+rel(x.t)+dstr(d)+', '+(x.all?(x.bandEnd&&x.bandEnd-x.t>DAY?'ab diesem Tag (Band bis '+dstr(new Date(x.bandEnd-1))+')':'ganzer Tag'):tstr(d)+(x.end?'–'+tstr(new Date(x.end)):''))+'</b>'+(x.calc?' <span class="meta">(gerechnet)</span>':'');
     if(x.more.length) s+='<br><span class="meta">Am selben Tag auch: '+x.more.join(" · ")+'</span>';
     return s;
   }
