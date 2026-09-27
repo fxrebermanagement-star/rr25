@@ -8,7 +8,7 @@
   if(typeof R==="undefined") return;
   var CATS=window.RR_CATS||["Schutz","Energie","Liebe","Trennung","Person X","Feld"];
   var DAYS=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
-  var PLANET=["Sonne · Kraft, Sichtbarkeit","Mond · Gefühl, Traum","Mars · Grenze, Hard","Merkur · Wort, Kontakt","Jupiter · Fülle","Venus · Liebe","Saturn · Grenze, Trennung, Hard"];
+  var PLANET=["Sonne · Kraft, Sichtbarkeit","Mond · Gefühl, Traum","Mars · Grenze, Mut","Merkur · Wort, Kontakt","Jupiter · Fülle","Venus · Liebe","Saturn · Grenze, Trennung"];
   var TONE_NAME={soft:"Soft",hard:"Hard",feld:"Feld",neutral:"Abbruch"};
   var ANKER="Anker: Daumen und Zeigefinger zusammen. Eigener Vorname laut.";
   var ABBR_TXT="Ich stoppe jetzt. Die Arbeit ist nicht gesetzt.\nIch kehre vollständig in mich zurück.\nDas Feld ist geschlossen. So ist es.";
@@ -25,52 +25,51 @@
   function run(){ return document.getElementById("run"); }
   function ymd(){ var n=new Date(); return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0"); }
 
-  /* ---------- Wetter ---------- */
-  var KAL=null;
-  function loadKal(){
-    if(KAL!==null) return;
-    KAL=[];
-    try{
-      fetch("kalender.json?v="+ymd(),{cache:"no-store"}).then(function(r){ return r.json(); })
-        .then(function(d){ KAL=(d&&d.events)||[]; var w=document.getElementById("wetter"); if(w) w.innerHTML=wetterHtml(cur&&cur.r); })
-        .catch(function(){});
-    }catch(e){}
+  /* ---------- Wetter ----------
+     Gemeinsame Regel mit dem Kalender-Tab (ritual-zeit.js): Bänder von Start bis Ende, Hard nur im offenen Feintakt,
+     nie aus künftigen Terminen. Ohne Kalender-Daten rechnet ritual-zeit.js nach der Mondregel. */
+  var KZ=window.RR25_KAL;
+  function two(n){ return String(n).padStart(2,"0"); }
+  function hm(ms){ var d=new Date(ms); return two(d.getHours())+":"+two(d.getMinutes()); }
+  function relDay(ms){
+    var a=new Date(ms), b=new Date(); a.setHours(0,0,0,0); b.setHours(0,0,0,0);
+    var n=Math.round((a-b)/86400000), dn=["So","Mo","Di","Mi","Do","Fr","Sa"];
+    return n===0?"heute":(n===1?"morgen":dn[a.getDay()]+" "+a.getDate()+"."+(a.getMonth()+1)+".");
   }
-  function moonP(){ var syn=29.53058867, nm=Date.UTC(2000,0,6,18,14)/1000; var a=((Date.now()/1000-nm)/86400)%syn; if(a<0)a+=syn; return a/syn; }
+  function loadKal(){
+    if(!KZ||loadKal.on) return;
+    loadKal.on=1;
+    KZ.onReady(function(){ var w=document.getElementById("wetter"); if(w) w.innerHTML=wetterHtml(cur&&cur.r); });
+  }
   function wetter(){
-    var today=ymd(), nowT=Date.now(), best=null;
-    (KAL||[]).forEach(function(e){
-      var s=String(e.start||"");
-      if(s.slice(0,10)!==today) return;
-      var t=e.all?0:Date.parse(s);
-      if(!best) best=e;
-      else if(!e.all && t<=nowT) best=e;
-    });
-    var kind, txt;
-    if(best){ kind=String(best.t||"").split("·")[0].trim().toUpperCase(); txt=String(best.t||""); }
-    else{
-      var md=window.RR25_MOND?window.RR25_MOND.day():null, p=md?md.p:moonP();
-      if(md){
-        if(md.key==="neu"){ kind="SOFT"; txt="SOFT · Neumond"; }
-        else if(md.key==="voll"){ kind="ECHO"; txt="ECHO · Vollmond"; }
-        else if(md.key==="ab"&&p>0.72){ kind="STILL"; txt="STILL · Abnehmend"; }
-        else { kind="SOFT"; txt="SOFT · "+md.name; }
-      }
-      else if(p<0.04||p>0.96){ kind="SOFT"; txt="SOFT · Neumond"; }
-      else if(p>0.47&&p<0.53){ kind="ECHO"; txt="ECHO · Vollmond"; }
-      else if(p>0.72){ kind="STILL"; txt="STILL · Abnehmend"; }
-      else { kind="SOFT"; txt="SOFT · "+(p<0.5?"Zunehmend":"Abnehmend"); }
-    }
-    if(!/^(SOFT|HARD|ECHO|STILL)$/.test(kind)) kind="SOFT";
-    return {kind:kind,txt:txt};
+    if(!KZ) return {kind:"SOFT",txt:"SOFT",s:null};
+    var s=KZ.state(), txt;
+    if(s.open) txt=s.open.t;
+    else if(s.src==="tag"&&s.single) txt=s.single.t;
+    else if(s.src==="band"&&s.band) txt=s.band.t;
+    else if(s.src==="mondtag"&&s.marker) txt=s.marker.t;
+    else txt=s.kind+" · "+(window.RR25_MOND?window.RR25_MOND.day().name:"");
+    return {kind:s.kind,txt:txt,s:s};
   }
   function wetterHtml(r){
-    var w=wetter(), d=new Date().getDay();
-    var say={SOFT:"Soft-Fenster. Weiche Arbeit trägt.",HARD:"Hard-Fenster. Scharf. Nur mit Gate und Rückkehr.",ECHO:"Echo. Nicht nachsetzen. Schliessen, danken, ernten.",STILL:"Still. Heute eher nichts setzen."}[w.kind];
+    var w=wetter(), s=w.s, d=new Date().getDay(), now=Date.now();
+    var say={SOFT:"Soft-Fenster. Weiche Arbeit trägt.",HARD:"Hard-Feintakt offen. Scharf. Nur mit Gate und Rückkehr.",ECHO:"Echo. Nicht nachsetzen. Schliessen, danken, ernten.",STILL:"Still. Heute eher nichts setzen."}[w.kind];
+    var extra="";
+    if(s&&s.open){
+      var m=Math.max(1,Math.ceil((s.open.e-now)/60000));
+      extra+='<br><span class="meta">Offen bis '+hm(s.open.e)+' · noch '+(m<60?m+' Min.':Math.floor(m/60)+' Std. '+(m%60?m%60+' Min.':''))+'</span>';
+      if(s.band) extra+='<br><span class="meta">Band '+({SOFT:"Soft",STILL:"Still",ECHO:"Echo",HARD:"Hard"}[s.band.k])+' bis '+relDay(s.band.e-1)+'</span>';
+    }
     var warn="";
-    if(r && r.hard && (w.kind==="ECHO"||w.kind==="STILL")) warn="<br><b>Für Hard eher nicht heute.</b>";
-    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(w.txt)+'</span><br>'+say+warn+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
+    if(r && r.hard && w.kind!=="HARD" && KZ){
+      var n=KZ.next("HARD",now);
+      warn='<br><b>Hard jetzt nicht offen.</b>'+(n?' Nächster Feintakt: '+relDay(n.x.s)+' '+hm(n.x.s)+'–'+hm(n.x.e)+'.':' Kein Feintakt im Kalender.');
+      if((w.kind==="ECHO"||w.kind==="STILL") && !(n&&relDay(n.x.s)==="heute")) warn+='<br><b>Für Hard eher nicht heute.</b>';
+    }
+    var fein=s&&s.hard&&s.hard.length?' · Feintakte '+s.hard.map(function(x){ return hm(x.s); }).join(" · "):"";
+    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(w.txt)+'</span><br>'+say+extra+warn+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+fein+'</span>';
   }
+  setInterval(function(){ var w=document.getElementById("wetter"); if(w&&cur){ var x=wetterHtml(cur.r); if(x!==w.innerHTML) w.innerHTML=x; } },30000);
 
   /* ---------- Ablauf ---------- */
   var cur=null;
@@ -417,7 +416,7 @@
     "#run .abortBtn{flex:none;margin:0 auto;background:transparent;border:1px solid rgba(154,150,168,.45);color:#b8b3c6;font-weight:500;padding:.4rem 1.2rem;min-height:2rem}",
     "#run .wetter{margin:.3rem 0 .6rem;padding:.6rem .75rem;border-radius:.9rem;background:rgba(20,10,34,.7);border:1px solid rgba(126,200,255,.18);font-size:.86rem;line-height:1.5}",
     "#run .wk{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:650}",
-    ".wk-soft{color:#5fe0a0}.wk-hard{color:#ff5470}.wk-echo{color:#7ec8ff}.wk-still{color:#b8b3c6}",
+    ".wk-soft{color:#5fe0a0}.wk-hard{color:#ff5470}.wk-echo{color:#c99bff}.wk-still{color:#b8b3c6}",
     "#run .lv,#run .wq{display:block}",
     "#run .card.lv[data-lv=weich]{border-left:3px solid #5fe0a0}#run .card.lv[data-lv=mittel]{border-left:3px solid #ffb86b}#run .card.lv[data-lv=nagel]{border-left:3px solid #ff5470}",
     ".z369v2{display:grid;gap:.4rem;margin:.6rem 0}",
