@@ -1,1 +1,1 @@
-$file:/workspace/rr25-karten/design-v3.js
+PLACEHOLDER_LOAD_FROM_FILE
