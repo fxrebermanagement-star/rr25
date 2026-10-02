@@ -1,1 +1,2 @@
-$file:/workspace/rr25-karten/ritual-zeit.js
+/* ritual-zeit placeholder — full push pending */
+(function(){ if(window.RR25_KAL) return; window.RR25_KAL={load:function(){return Promise.resolve(null);},onReady:function(f){f();},state:function(){return {kind:"SOFT",src:"smoke",open:null,hard:[],anker:null};},next:function(){return null;},list:function(){return [];},dayParts:function(){return {kind:"SOFT"};},RANK:{HARD:4,ECHO:3,STILL:2,SOFT:1},ORT:"Zürich"}; })();
