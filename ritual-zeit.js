@@ -115,8 +115,20 @@
   function load(){
     if(st==="ok"||st==="fail") return Promise.resolve(DATA);
     if(load.p) return load.p;
-    load.p=fetch("kalender.json?v="+ymd(Date.now())+"-"+Math.floor(Date.now()/3600000),{cache:"no-store"})
+    var bust=ymd(Date.now())+"-"+Math.floor(Date.now()/3600000);
+    load.p=fetch("kalender.json?v="+bust,{cache:"no-store"})
       .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        if(!d||!d.more) return d;
+        return fetch(String(d.more)+"?v="+bust,{cache:"no-store"}).then(function(r2){
+          if(!r2.ok) return d;
+          return r2.json().then(function(m){
+            var extra=(m&&m.events)||[];
+            d.events=(d.events||[]).concat(extra);
+            return d;
+          });
+        });
+      })
       .then(function(d){ setData(d); st="ok"; })
       .catch(function(){ setData({events:[]}); st="fail"; })
       .then(function(){ var w=waiters; waiters=[]; w.forEach(function(f){ try{ f(); }catch(e){} }); return DATA; });
