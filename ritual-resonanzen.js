@@ -1,19 +1,8 @@
 (function(){
-  var DATA=[
-    {id:"rosmarin",name:"Rosmarin",tone:"Soft",cat:"kraeuter",text:"Klarheit und Schutz am Rand, nicht hart."},
-    {id:"salbei",name:"Salbei",tone:"Soft/Grenze",cat:"kraeuter",text:"Raum reinigen, Rauch kurz und bewusst."},
-    {id:"lavendel",name:"Lavendel",tone:"Soft",cat:"kraeuter",text:"Nerven und Nacht, Feld weich halten."},
-    {id:"beifuss",name:"Beifuß",tone:"Soft→Hard",cat:"kraeuter",text:"Traum/Schwelle, nur mit Rückkehr."},
-    {id:"wermut",name:"Wermut",tone:"Hard",cat:"kraeuter",text:"Scharfes Trennen, Ethik und Anker Pflicht."},
-    {id:"salz",name:"Salz",tone:"Soft",cat:"hausmittel",text:"Grenze ziehen, Kreis schließen."},
-    {id:"zucker",name:"Zucker / Honig",tone:"Soft",cat:"hausmittel",text:"Anziehen und Süßen, nicht erzwingen."},
-    {id:"zimt",name:"Zimt",tone:"Soft",cat:"hausmittel",text:"Wärme, Tempo, Geld/Fluss anstupsen."},
-    {id:"obsidian",name:"Schwarzer Obsidian",tone:"Soft/Grenze",cat:"steine",text:"Spiegel und Absaugen, danach erden."},
-    {id:"bergkristall",name:"Bergkristall",tone:"Soft",cat:"steine",text:"Verstärken was schon klar ist, nicht ersetzen."}
-  ];
+  var DATA=[];
   var CAT_LAB={kraeuter:"Kräuter",hausmittel:"Hausmittel",steine:"Steine"};
   var TAB_ORDER=["kraeuter","hausmittel","steine"];
-  var tab="kraeuter", q="";
+  var tab="kraeuter", q="", ready=0;
 
   var css=document.createElement("style");
   css.id="rr25-resonanzen";
@@ -41,7 +30,7 @@
     });
   }
   function match(e){
-    if(e.cat!==tab) return false;
+    if(!e || e.cat!==tab) return false;
     if(!q) return true;
     var hay=(e.name+" "+e.tone+" "+e.text+" "+(CAT_LAB[e.cat]||"")).toLowerCase();
     return hay.indexOf(q)>=0;
@@ -60,6 +49,10 @@
       });
     }
     if(!list) return;
+    if(ready!==2){
+      list.innerHTML='<p class="rzEmpty">Lädt…</p>';
+      return;
+    }
     var rows=DATA.filter(match);
     if(!rows.length){
       list.innerHTML='<p class="rzEmpty">Nichts gefunden.</p>';
@@ -73,6 +66,30 @@
       "</article>";
     }).join("");
   }
+  function load(){
+    if(ready===2){ paint(); return; }
+    if(ready===1) return;
+    ready=1;
+    paint();
+    function one(url){
+      return fetch(url,{cache:"no-store"}).then(function(r){
+        if(!r.ok) throw new Error("lex");
+        return r.json();
+      });
+    }
+    Promise.all([
+      one("resonanzen-a.json?v=18"),
+      one("resonanzen-b.json?v=18")
+    ]).then(function(ps){
+      DATA=(ps[0]||[]).concat(ps[1]||[]);
+      ready=2;
+      paint();
+    }).catch(function(){
+      ready=0;
+      var list=document.getElementById("rzList");
+      if(list) list.innerHTML='<p class="rzEmpty">Lexikon nicht geladen.</p>';
+    });
+  }
   function boot(){
     var find=document.getElementById("rzFind");
     if(find && !find._rz){
@@ -82,7 +99,7 @@
         paint();
       });
     }
-    paint();
+    load();
   }
   if(typeof show==="function" && !show._rz){
     var sh=show;
