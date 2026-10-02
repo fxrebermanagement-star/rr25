@@ -1,0 +1,84 @@
+html nav button[data-v=buch].on{background:rgba(126,200,255,.14)!important}
+html nav button .lb{line-height:1.1}
+html .app.runmode nav{display:none!important}
+html nav{padding:.3rem .3rem calc(.38rem + env(safe-area-inset-bottom))!important}
+html nav #navOne.navR{grid-template-columns:repeat(5,1fr)!important;padding:0!important;gap:.12rem!important}
+html nav #navOne button{min-height:3.35rem!important}
+html nav button[data-v=mehr] .ic{background:linear-gradient(160deg,#3c1f52,#1a1026);color:#e7b8ff}
+html nav button[data-v=mehr].on,html nav button[data-v=mehr].open{background:rgba(231,184,255,.13)!important;color:#fff!important}
+html nav button[data-v=mehr].on .ic,html nav button[data-v=mehr].open .ic{box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}
+html #mehrSheet{position:absolute;left:.5rem;right:.5rem;bottom:calc(100% + .5rem);padding:.6rem .6rem .65rem;border-radius:1.2rem;background:rgba(18,9,30,.98);border:1px solid rgba(232,160,255,.25);box-shadow:0 -12px 40px rgba(0,0,0,.55),0 0 24px rgba(255,122,217,.08);animation:v3up .18s ease-out}
+html #mehrSheet[hidden]{display:none!important}
+html #mehrSheet .msHead{margin:.05rem .3rem .45rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
+html #mehrSheet .msGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
+html #mehrSheet .msItem{min-height:5.6rem!important;border:1px solid rgba(255,255,255,.07)!important;background:rgba(255,255,255,.03)!important;border-radius:1rem!important;padding:.6rem .2rem .5rem!important;font-size:.72rem!important;gap:.3rem!important}
+html #mehrSheet .msItem .ic{width:2.8rem;height:2.8rem}
+html #mehrSheet .msSub{font-size:.54rem;color:#8e7aa8;font-weight:400;line-height:1.2}
+html #mehrVeil{position:fixed;inset:0;z-index:39;background:rgba(4,2,10,.55);backdrop-filter:blur(2px)}
+html #mehrVeil[hidden]{display:none}
+@keyframes v3up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+html body main{padding-left:.75rem!important;padding-right:.75rem!important;padding-bottom:5.9rem!important}
+html body .app.runmode main{padding-bottom:1.1rem!important}
+html nav:not(:has(#navMehr .lb)){visibility:hidden}
+
+
+/* Startseite ruhig: Kopf und Inhalt erst zeigen, wenn alle Skripte fertig sind (kein Nachrutschen).
+   Dazu die Startseiten-Regeln aus design-v3 (Heute-Leiste, Mondzeile, «Rituale»-Überschrift) mit «html» davor, damit sie ab dem ersten Bild gelten. */
+html:not(.rr25-ruhig) .app>header,html:not(.rr25-ruhig) .app>main{visibility:hidden}
+html #v3Home{margin:.35rem 0 .5rem!important}
+html #v3Home>#bakCard{display:none!important}
+html #heuteStrip{border-radius:1.1rem;background:linear-gradient(180deg,rgba(40,18,62,.72),rgba(14,8,24,.9));border:1px solid rgba(126,200,255,.22);padding:.42rem .5rem .38rem;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+html #heuteStrip[hidden],html #heuteStrip [hidden]{display:none!important}
+html #heuteStrip .hsHead{display:flex;justify-content:space-between;align-items:baseline;padding:.05rem .3rem .25rem}
+html #heuteStrip .hsHead span{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
+html #heuteStrip .hsHead small{font-size:.62rem;color:#8e7aa8}
+html #heuteStrip .hsRow{display:flex;align-items:center;gap:.55rem;width:100%;min-height:2.55rem;padding:.3rem .35rem .3rem .4rem;border:0;border-top:1px solid rgba(255,255,255,.06);background:none;color:#f6f0ff;font:inherit;font-size:.84rem;text-align:left;border-radius:.7rem}
+html #heuteStrip .hsHead+.hsRow{border-top:0}
+html #heuteStrip .hsRow.on{background:rgba(126,200,255,.07)}
+html #heuteStrip .hsTx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e6dcf7}
+html #heuteStrip .hsTx b{font-weight:650;color:#fff}
+html #heuteStrip .hsMore{font-size:.66rem;color:#8e7aa8;border:1px solid rgba(142,122,168,.45);border-radius:999px;padding:0 .35rem;margin-left:.2rem}
+html #heuteStrip .hsDot{flex:none;width:.55rem;height:.55rem;border-radius:50%}
+html #heuteStrip .hsEcho{background:#7ec8ff;box-shadow:0 0 10px rgba(126,200,255,.8)}
+html #heuteStrip .hsBak{background:#ffb86b;box-shadow:0 0 10px rgba(255,184,107,.7)}
+html #heuteStrip .hsOk{background:#5fe0a0;box-shadow:0 0 10px rgba(95,224,160,.7)}
+html #heuteStrip em{flex:none;font-style:normal;font-size:.74rem;color:#7ec8ff;display:flex;align-items:center;gap:.25rem}
+html #heuteStrip .hsCh{display:inline-block;transform:rotate(90deg);font-size:.9rem;line-height:1;transition:transform .2s}
+html #heuteStrip .hsCh.up{transform:rotate(-90deg)}
+html #heuteStrip .hsBtn{flex:none;border:1px solid rgba(255,184,107,.45);background:rgba(255,184,107,.1);color:#ffd2a0;border-radius:999px;padding:.32rem .85rem;font:inherit;font-size:.74rem;font-weight:600;min-height:1.95rem}
+html #heuteStrip .hsMsg .hsTx{color:#9ee8e0;font-family:Georgia,serif}
+html #hsPanel{padding:.1rem .15rem .25rem}
+html #hsPanel #echoCard{margin:.1rem 0 .1rem!important;padding:.55rem .6rem .4rem!important;background:rgba(10,6,20,.55)!important;border:1px solid rgba(126,200,255,.16)!important;border-radius:.9rem!important;box-shadow:none}
+html #hsPanel #echoCard .ecTag{display:none}
+html #hsPanel #echoCard b{font-size:.98rem}
+html #hsPanel #echoCard .ecAbs{margin-top:.25rem}
+html #hsPanel #echoCard .ecQ{margin:.5rem 0 .1rem}
+html #hsPanel #echoCard .ecRow .btn{min-height:2.2rem;font-size:.76rem}
+html #hsPanel #echoCard .ecLater{margin-top:.25rem}
+html #home #kasten{margin:0 0 .15rem!important}
+html #mondSag{display:flex;align-items:center;gap:.45rem;margin:.55rem 0 .5rem!important;padding:0 .15rem;font-size:.86rem!important;color:#e0d0f6!important}
+html #mondSag span{margin:0!important;flex:none}
+html #mondSag[data-hint]::after{content:attr(data-hint);margin-left:auto;flex:none;font-family:system-ui,sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:#7ec8ff;border:1px solid rgba(126,200,255,.3);border-radius:999px;padding:.12rem .5rem}
+html #home>#kHint{display:none!important}
+html #pinDank{margin:0 0 .15rem!important}
+html #v3CatLab{margin:.95rem .15rem .35rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
+html #home:has(#cats .chip.on) #v3CatLab{margin-top:.8rem}
+html #cats{margin:0 0 .3rem!important}
+html #skizze{margin:.55rem 0 0!important}
+html #skizze svg{height:10.6rem!important}
+html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
+html #toneRow{display:flex;align-items:center;gap:.5rem;height:2rem;margin:.6rem .1rem 0;overflow:hidden;white-space:nowrap}
+html #toneChip{flex:none;display:inline-flex;align-items:center;gap:.4rem;height:1.7rem;min-height:0;padding:0 .75rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.6);color:#e6dcff;font:500 .72rem system-ui,sans-serif;letter-spacing:.04em;box-shadow:none}
+html #toneChip i{width:.5rem;height:.5rem;border-radius:50%;background:#9a96a6}
+html #toneChip[data-tone=soft]{border-color:rgba(46,204,113,.55)}html #toneChip[data-tone=soft] i{background:#2ecc71}
+html #toneChip[data-tone=hard]{border-color:rgba(255,84,112,.6)}html #toneChip[data-tone=hard] i{background:#ff5470}
+html #toneChip[data-tone=echo]{border-color:rgba(179,107,255,.6)}html #toneChip[data-tone=echo] i{background:#b36bff}
+html #toneChip[data-tone=still]{border-color:rgba(154,150,166,.55)}
+html #toneAnker{margin-left:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:.72rem;color:#cdb6ff;text-decoration:none;border-bottom:1px dotted rgba(205,182,255,.55)}
+html #toneAnker[hidden]{display:none}
+html #toneRow+#v3CatLab{margin-top:.6rem}
+html #mehrSheet .msOpt{margin:.55rem .15rem 0;padding-top:.45rem;border-top:1px solid rgba(255,255,255,.07)}
+html #mehrSheet .msTog{display:flex;gap:.55rem;align-items:flex-start;margin:.3rem 0;font-size:.74rem;color:#e6dcff;line-height:1.3}
+html #mehrSheet .msTog input{width:1.1rem;height:1.1rem;margin:.05rem 0 0;flex:none;accent-color:#ff7ad9}
+html #mehrSheet .msTog small{display:block;font-size:.58rem;color:#8e7aa8}
+html #mehrSheet .msMsg{margin:.2rem 0 0;min-height:.9rem;font-size:.6rem;color:#ffb86b}
