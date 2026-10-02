@@ -1,0 +1,89 @@
+:root{--bg:#090614;--elev:rgba(48,18,72,.7);--line:rgba(126,200,255,.2);--ink:#f6f0ff;--dim:#c4b4e0;--pink:#ff7ad9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#090614;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+.app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+header{padding:calc(.38rem + env(safe-area-inset-top)) .8rem .42rem;position:sticky;top:0;background:rgba(10,6,20,.8);backdrop-filter:blur(14px);z-index:5}
+#headRow{position:relative;min-height:54px}
+#moonWrap{position:absolute;left:0;top:0;text-align:center;width:4.4rem}
+#sunWrap{position:absolute;right:0;top:0;text-align:center;width:4.6rem}
+#moonSym,#sunSym{display:block;font-size:2.05rem;line-height:1}
+#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.6rem;color:#c4b4e0;line-height:1.25}
+.doll{width:54px;height:54px;object-fit:cover;border-radius:17px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.55)}
+.brand{font-family:Georgia,serif;letter-spacing:.32em;font-size:.7rem;color:#ff7ad9;text-align:center;margin:.14rem 0 0}
+.sub{display:none}
+nav{display:flex;flex-direction:column;gap:.16rem;padding:.32rem .2rem calc(.36rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
+nav .navR{display:grid;gap:.16rem}
+nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
+nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 7%}
+nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.44rem .04rem .34rem;font:inherit;font-size:.6rem;display:flex;flex-direction:column;align-items:center;gap:.14rem;min-height:2.5rem}
+nav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+nav button.on{background:transparent;color:#fff;font-weight:650}
+.app.runmode header .doll,.app.runmode header .brand,.app.runmode #moonWrap,.app.runmode #sunWrap,.app.runmode #headRow{display:none}
+main{flex:1;padding:0 .8rem 9.2rem}
+.hero h2{font-family:Georgia,serif;font-weight:500;margin:.45rem 0 .28rem;font-size:1.28rem}
+#cats{display:flex;flex-wrap:wrap;gap:.36rem;margin:.35rem 0 .2rem}
+#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}
+.card{background:var(--elev);border:1px solid var(--line);border-radius:1.15rem;padding:.75rem .8rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.24rem 0}
+.card b{display:block;font-family:Georgia,serif}
+.card small{display:block;color:var(--dim);margin-top:.16rem;font-size:.75rem}
+.screen{display:none}.screen.on{display:block}
+.words{font-family:Georgia,serif;font-size:1.05rem;line-height:1.6;white-space:pre-wrap}
+input,textarea,select{width:100%;background:#140a22;border:1px solid var(--line);color:var(--ink);border-radius:.85rem;padding:.62rem .7rem;font:inherit;margin:.28rem 0}
+textarea{min-height:5.2rem}
+.row{display:flex;gap:.35rem;margin-top:.7rem}
+.btn{flex:1;border:0;border-radius:999px;padding:.62rem .4rem;font:inherit;font-size:.78rem;font-weight:650;min-height:2.4rem}
+.primary{background:linear-gradient(135deg,#ff7ad9,#7ec8ff);color:#14081c}
+.ghost{background:var(--elev);color:var(--ink)}
+.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.42rem .72rem;font:inherit;font-size:.76rem;min-height:2.05rem}
+.chip.on{color:#14081c;background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border-color:transparent}
+.group{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:1.1rem 0 .3rem}
+.check{display:none}
+.msg{color:var(--pink);font-style:italic}
+.meta{color:#8e7aa8;font-size:.68rem}
+.shots img{width:5.2rem;height:5.2rem;object-fit:cover;border-radius:.8rem}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:.42rem}
+#kOut,#sigilBox{aspect-ratio:1/1;border-radius:1.15rem;overflow:hidden}
+#kOut{border:1px solid rgba(255,122,217,.38)}
+#sigilBox{background:#0a0612;border:1px solid rgba(46,230,214,.28)}
+#sigilC{width:100%;height:100%;display:block}
+#run label.check,#afterStay,#stay,#under{display:none!important}
+#list{display:block}
+#home:has(#cats .chip.on) #skizze{display:none!important}
+#home:not(:has(#cats .chip.on)) #list{display:none!important}
+
+
+/* Untere Leiste ab dem ersten Bild fertig: dieselben Regeln wie ritual-nav, ritual-polish, ritual-navlove, ritual-more und design-v3,
+   in gleicher Reihenfolge, mit «html» davor, damit spätere Zwischenstände der Skripte die Leiste nicht mehr umbauen. */
+html nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(232,160,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}
+html nav .navR{display:grid;gap:.18rem}
+html nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
+html nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 8%}
+html nav button{font-size:.6rem!important;padding:.42rem .04rem .34rem!important;min-height:2.55rem}
+html nav button svg{width:18px!important;height:18px!important}
+html header nav{display:none}
+html nav{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;gap:.16rem!important;padding:.32rem .22rem calc(.4rem + env(safe-area-inset-bottom))!important}
+html nav .navR{display:grid!important;gap:.16rem}
+html nav .navR:first-child{grid-template-columns:repeat(4,1fr)!important}
+html nav .navR:last-child{grid-template-columns:repeat(3,1fr)!important;padding:0 7%}
+html nav button{padding:.44rem .04rem .36rem!important;font-size:.6rem!important;gap:.14rem!important;min-height:2.5rem}
+html nav button svg{width:18px!important;height:18px!important}
+html nav button.on{box-shadow:0 0 18px rgba(255,122,217,.25)}
+html nav{background:rgba(10,6,18,.94)!important;border-color:rgba(255,122,217,.16)!important;box-shadow:0 -10px 28px rgba(0,0,0,.35)}
+html nav .navR{gap:.28rem!important}
+html nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}
+html nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}
+html nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+html nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#ff9ae4}
+html nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}
+html nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}
+html nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}
+html nav button[data-v=notiz] .ic{background:linear-gradient(160deg,#3a2460,#1a1230);color:#d2b6ff}
+html nav button[data-v=opfer] .ic{background:linear-gradient(160deg,#1c3a28,#101c16);color:#9eecc0}
+html nav button[data-v=buch] .ic{background:linear-gradient(160deg,#16324a,#101820);color:#8fd4ff}
+html nav button.on{background:rgba(255,255,255,.06)!important;color:#fff!important}
+html nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}
+html nav button[data-v=home].on{background:rgba(255,122,217,.16)!important}
+html nav button[data-v=geplant].on{background:rgba(255,139,122,.16)!important}
+html nav button[data-v=kal].on{background:rgba(155,140,255,.16)!important}
+html nav button[data-v=log].on{background:rgba(126,240,230,.14)!important}
+html nav button[data-v=notiz].on{background:rgba(201,166,255,.16)!important}
+html nav button[data-v=opfer].on{background:rgba(142,230,168,.14)!important}

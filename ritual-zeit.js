@@ -115,8 +115,20 @@
   function load(){
     if(st==="ok"||st==="fail") return Promise.resolve(DATA);
     if(load.p) return load.p;
-    load.p=fetch("kalender.json?v="+ymd(Date.now())+"-"+Math.floor(Date.now()/3600000),{cache:"no-store"})
+    var bust=ymd(Date.now())+"-"+Math.floor(Date.now()/3600000);
+    load.p=fetch("kalender.json?v="+bust,{cache:"no-store"})
       .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(d){
+        if(!d||!d.more) return d;
+        return fetch(String(d.more)+"?v="+bust,{cache:"no-store"}).then(function(r2){
+          if(!r2.ok) return d;
+          return r2.json().then(function(m){
+            var extra=(m&&m.events)||[];
+            d.events=(d.events||[]).concat(extra);
+            return d;
+          });
+        });
+      })
       .then(function(d){ setData(d); st="ok"; })
       .catch(function(){ setData({events:[]}); st="fail"; })
       .then(function(){ var w=waiters; waiters=[]; w.forEach(function(f){ try{ f(); }catch(e){} }); return DATA; });
@@ -177,7 +189,33 @@
     var M=window.RR25_MOND; t=t==null?Date.now():t;
     return M?{neu:M.next(0,t),voll:M.next(2,t)}:{};
   }
-  window.RR25_KAL={load:load,onReady:onReady,state:state,next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },
+  /* ---------- Planetenstunden (nur Info, ändert nie den Ton) ----------
+     Chaldäische Reihenfolge Saturn, Jupiter, Mars, Sonne, Venus, Merkur, Mond. Tag = Sonnenaufgang bis -untergang in 12 gleiche
+     Stunden, Nacht = Untergang bis nächster Aufgang in 12. Die erste Tagesstunde gehört dem Tagesherrscher (So Sonne … Sa Saturn).
+     Vor Sonnenaufgang gilt noch die Nacht des Vortags. Zeiten aus sun() (NOAA, Zürich). */
+  var CHAL=["Saturn","Jupiter","Mars","Sonne","Venus","Merkur","Mond"], RULER=[3,6,2,5,1,4,0];
+  function planetDay(ms){
+    var d0=day0(ms), S=sun(d0+12*3600000), N=sun(addDays(d0,1)+12*3600000), wd=new Date(d0).getDay(), out=[];
+    var dl=(S.set-S.rise)/12, nl=(N.rise-S.set)/12;
+    for(var i=0;i<24;i++){
+      var s=i<12?S.rise+i*dl:S.set+(i-12)*nl, e=i<12?s+dl:s+nl;
+      out.push({p:CHAL[(RULER[wd]+i)%7],s:s,e:e,nacht:i>=12,n:i+1});
+    }
+    return out;
+  }
+  function planetAt(t){
+    t=t==null?Date.now():t;
+    var L=planetDay(t); if(t<L[0].s) L=planetDay(addDays(day0(t),-1));
+    for(var i=0;i<L.length;i++) if(L[i].s<=t&&t<L[i].e) return {cur:L[i],list:L,i:i};
+    return {cur:null,list:L,i:-1};
+  }
+  function venusNext(t){
+    t=t==null?Date.now():t;
+    for(var k=-1;k<3;k++){ var L=planetDay(addDays(day0(t),k)); for(var i=0;i<L.length;i++) if(L[i].p==="Venus"&&L[i].e>t) return L[i]; }
+    return null;
+  }
+  window.RR25_KAL={load:load,onReady:onReady,state:state,next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },dayPartsIn:dayParts,
+    planetDay:planetDay,planetAt:planetAt,venusNext:venusNext,
     sun:sun,moonNext:moonNext,coverage:function(){ return COV; },status:function(){ return st; },data:function(){ return DATA; },
     kindOf:kindOf,ORT:ORT,RANK:RANK};
   load();

@@ -6,171 +6,11 @@
 <meta name="theme-color" content="#090614">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="RR25">
-<meta name="rr25-build" content="12">
+<meta name="rr25-build" content="13">
 <title>Rolf Reber 25</title>
 <link rel="manifest" href="manifest.webmanifest?v=0">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon.svg">
-<style>
-:root{--bg:#090614;--elev:rgba(48,18,72,.7);--line:rgba(126,200,255,.2);--ink:#f6f0ff;--dim:#c4b4e0;--pink:#ff7ad9}
-*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#090614;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
-.app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
-header{padding:calc(.38rem + env(safe-area-inset-top)) .8rem .42rem;position:sticky;top:0;background:rgba(10,6,20,.8);backdrop-filter:blur(14px);z-index:5}
-#headRow{position:relative;min-height:54px}
-#moonWrap{position:absolute;left:0;top:0;text-align:center;width:4.4rem}
-#sunWrap{position:absolute;right:0;top:0;text-align:center;width:4.6rem}
-#moonSym,#sunSym{display:block;font-size:2.05rem;line-height:1}
-#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.6rem;color:#c4b4e0;line-height:1.25}
-.doll{width:54px;height:54px;object-fit:cover;border-radius:17px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.55)}
-.brand{font-family:Georgia,serif;letter-spacing:.32em;font-size:.7rem;color:#ff7ad9;text-align:center;margin:.14rem 0 0}
-.sub{display:none}
-nav{display:flex;flex-direction:column;gap:.16rem;padding:.32rem .2rem calc(.36rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
-nav .navR{display:grid;gap:.16rem}
-nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
-nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 7%}
-nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.44rem .04rem .34rem;font:inherit;font-size:.6rem;display:flex;flex-direction:column;align-items:center;gap:.14rem;min-height:2.5rem}
-nav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
-nav button.on{background:transparent;color:#fff;font-weight:650}
-.app.runmode header .doll,.app.runmode header .brand,.app.runmode #moonWrap,.app.runmode #sunWrap,.app.runmode #headRow{display:none}
-main{flex:1;padding:0 .8rem 9.2rem}
-.hero h2{font-family:Georgia,serif;font-weight:500;margin:.45rem 0 .28rem;font-size:1.28rem}
-#cats{display:flex;flex-wrap:wrap;gap:.36rem;margin:.35rem 0 .2rem}
-#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}
-.card{background:var(--elev);border:1px solid var(--line);border-radius:1.15rem;padding:.75rem .8rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.24rem 0}
-.card b{display:block;font-family:Georgia,serif}
-.card small{display:block;color:var(--dim);margin-top:.16rem;font-size:.75rem}
-.screen{display:none}.screen.on{display:block}
-.words{font-family:Georgia,serif;font-size:1.05rem;line-height:1.6;white-space:pre-wrap}
-input,textarea,select{width:100%;background:#140a22;border:1px solid var(--line);color:var(--ink);border-radius:.85rem;padding:.62rem .7rem;font:inherit;margin:.28rem 0}
-textarea{min-height:5.2rem}
-.row{display:flex;gap:.35rem;margin-top:.7rem}
-.btn{flex:1;border:0;border-radius:999px;padding:.62rem .4rem;font:inherit;font-size:.78rem;font-weight:650;min-height:2.4rem}
-.primary{background:linear-gradient(135deg,#ff7ad9,#7ec8ff);color:#14081c}
-.ghost{background:var(--elev);color:var(--ink)}
-.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.42rem .72rem;font:inherit;font-size:.76rem;min-height:2.05rem}
-.chip.on{color:#14081c;background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border-color:transparent}
-.group{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:1.1rem 0 .3rem}
-.check{display:none}
-.msg{color:var(--pink);font-style:italic}
-.meta{color:#8e7aa8;font-size:.68rem}
-.shots img{width:5.2rem;height:5.2rem;object-fit:cover;border-radius:.8rem}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:.42rem}
-#kOut,#sigilBox{aspect-ratio:1/1;border-radius:1.15rem;overflow:hidden}
-#kOut{border:1px solid rgba(255,122,217,.38)}
-#sigilBox{background:#0a0612;border:1px solid rgba(46,230,214,.28)}
-#sigilC{width:100%;height:100%;display:block}
-#run label.check,#afterStay,#stay,#under{display:none!important}
-#list{display:block}
-#home:has(#cats .chip.on) #skizze{display:none!important}
-#home:not(:has(#cats .chip.on)) #list{display:none!important}
-</style>
-<style id="navCrit">
-/* Untere Leiste ab dem ersten Bild fertig: dieselben Regeln wie ritual-nav, ritual-polish, ritual-navlove, ritual-more und design-v3,
-   in gleicher Reihenfolge, mit «html» davor, damit spätere Zwischenstände der Skripte die Leiste nicht mehr umbauen. */
-html nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(232,160,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}
-html nav .navR{display:grid;gap:.18rem}
-html nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
-html nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 8%}
-html nav button{font-size:.6rem!important;padding:.42rem .04rem .34rem!important;min-height:2.55rem}
-html nav button svg{width:18px!important;height:18px!important}
-html header nav{display:none}
-html nav{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;gap:.16rem!important;padding:.32rem .22rem calc(.4rem + env(safe-area-inset-bottom))!important}
-html nav .navR{display:grid!important;gap:.16rem}
-html nav .navR:first-child{grid-template-columns:repeat(4,1fr)!important}
-html nav .navR:last-child{grid-template-columns:repeat(3,1fr)!important;padding:0 7%}
-html nav button{padding:.44rem .04rem .36rem!important;font-size:.6rem!important;gap:.14rem!important;min-height:2.5rem}
-html nav button svg{width:18px!important;height:18px!important}
-html nav button.on{box-shadow:0 0 18px rgba(255,122,217,.25)}
-html nav{background:rgba(10,6,18,.94)!important;border-color:rgba(255,122,217,.16)!important;box-shadow:0 -10px 28px rgba(0,0,0,.35)}
-html nav .navR{gap:.28rem!important}
-html nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}
-html nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}
-html nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
-html nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#ff9ae4}
-html nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}
-html nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}
-html nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}
-html nav button[data-v=notiz] .ic{background:linear-gradient(160deg,#3a2460,#1a1230);color:#d2b6ff}
-html nav button[data-v=opfer] .ic{background:linear-gradient(160deg,#1c3a28,#101c16);color:#9eecc0}
-html nav button[data-v=buch] .ic{background:linear-gradient(160deg,#16324a,#101820);color:#8fd4ff}
-html nav button.on{background:rgba(255,255,255,.06)!important;color:#fff!important}
-html nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}
-html nav button[data-v=home].on{background:rgba(255,122,217,.16)!important}
-html nav button[data-v=geplant].on{background:rgba(255,139,122,.16)!important}
-html nav button[data-v=kal].on{background:rgba(155,140,255,.16)!important}
-html nav button[data-v=log].on{background:rgba(126,240,230,.14)!important}
-html nav button[data-v=notiz].on{background:rgba(201,166,255,.16)!important}
-html nav button[data-v=opfer].on{background:rgba(142,230,168,.14)!important}
-html nav button[data-v=buch].on{background:rgba(126,200,255,.14)!important}
-html nav button .lb{line-height:1.1}
-html .app.runmode nav{display:none!important}
-html nav{padding:.3rem .3rem calc(.38rem + env(safe-area-inset-bottom))!important}
-html nav #navOne.navR{grid-template-columns:repeat(5,1fr)!important;padding:0!important;gap:.12rem!important}
-html nav #navOne button{min-height:3.35rem!important}
-html nav button[data-v=mehr] .ic{background:linear-gradient(160deg,#3c1f52,#1a1026);color:#e7b8ff}
-html nav button[data-v=mehr].on,html nav button[data-v=mehr].open{background:rgba(231,184,255,.13)!important;color:#fff!important}
-html nav button[data-v=mehr].on .ic,html nav button[data-v=mehr].open .ic{box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}
-html #mehrSheet{position:absolute;left:.5rem;right:.5rem;bottom:calc(100% + .5rem);padding:.6rem .6rem .65rem;border-radius:1.2rem;background:rgba(18,9,30,.98);border:1px solid rgba(232,160,255,.25);box-shadow:0 -12px 40px rgba(0,0,0,.55),0 0 24px rgba(255,122,217,.08);animation:v3up .18s ease-out}
-html #mehrSheet[hidden]{display:none!important}
-html #mehrSheet .msHead{margin:.05rem .3rem .45rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
-html #mehrSheet .msGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
-html #mehrSheet .msItem{min-height:5.6rem!important;border:1px solid rgba(255,255,255,.07)!important;background:rgba(255,255,255,.03)!important;border-radius:1rem!important;padding:.6rem .2rem .5rem!important;font-size:.72rem!important;gap:.3rem!important}
-html #mehrSheet .msItem .ic{width:2.8rem;height:2.8rem}
-html #mehrSheet .msSub{font-size:.54rem;color:#8e7aa8;font-weight:400;line-height:1.2}
-html #mehrVeil{position:fixed;inset:0;z-index:39;background:rgba(4,2,10,.55);backdrop-filter:blur(2px)}
-html #mehrVeil[hidden]{display:none}
-@keyframes v3up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-html body main{padding-left:.75rem!important;padding-right:.75rem!important;padding-bottom:5.9rem!important}
-html body .app.runmode main{padding-bottom:1.1rem!important}
-html nav:not(:has(#navMehr .lb)){visibility:hidden}
-</style>
-<style id="ruheCrit">
-/* Startseite ruhig: Kopf und Inhalt erst zeigen, wenn alle Skripte fertig sind (kein Nachrutschen).
-   Dazu die Startseiten-Regeln aus design-v3 (Heute-Leiste, Mondzeile, «Rituale»-Überschrift) mit «html» davor, damit sie ab dem ersten Bild gelten. */
-html:not(.rr25-ruhig) .app>header,html:not(.rr25-ruhig) .app>main{visibility:hidden}
-html #v3Home{margin:.35rem 0 .5rem!important}
-html #v3Home>#bakCard{display:none!important}
-html #heuteStrip{border-radius:1.1rem;background:linear-gradient(180deg,rgba(40,18,62,.72),rgba(14,8,24,.9));border:1px solid rgba(126,200,255,.22);padding:.42rem .5rem .38rem;box-shadow:0 8px 22px rgba(0,0,0,.22)}
-html #heuteStrip[hidden],html #heuteStrip [hidden]{display:none!important}
-html #heuteStrip .hsHead{display:flex;justify-content:space-between;align-items:baseline;padding:.05rem .3rem .25rem}
-html #heuteStrip .hsHead span{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
-html #heuteStrip .hsHead small{font-size:.62rem;color:#8e7aa8}
-html #heuteStrip .hsRow{display:flex;align-items:center;gap:.55rem;width:100%;min-height:2.55rem;padding:.3rem .35rem .3rem .4rem;border:0;border-top:1px solid rgba(255,255,255,.06);background:none;color:#f6f0ff;font:inherit;font-size:.84rem;text-align:left;border-radius:.7rem}
-html #heuteStrip .hsHead+.hsRow{border-top:0}
-html #heuteStrip .hsRow.on{background:rgba(126,200,255,.07)}
-html #heuteStrip .hsTx{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e6dcf7}
-html #heuteStrip .hsTx b{font-weight:650;color:#fff}
-html #heuteStrip .hsMore{font-size:.66rem;color:#8e7aa8;border:1px solid rgba(142,122,168,.45);border-radius:999px;padding:0 .35rem;margin-left:.2rem}
-html #heuteStrip .hsDot{flex:none;width:.55rem;height:.55rem;border-radius:50%}
-html #heuteStrip .hsEcho{background:#7ec8ff;box-shadow:0 0 10px rgba(126,200,255,.8)}
-html #heuteStrip .hsBak{background:#ffb86b;box-shadow:0 0 10px rgba(255,184,107,.7)}
-html #heuteStrip .hsOk{background:#5fe0a0;box-shadow:0 0 10px rgba(95,224,160,.7)}
-html #heuteStrip em{flex:none;font-style:normal;font-size:.74rem;color:#7ec8ff;display:flex;align-items:center;gap:.25rem}
-html #heuteStrip .hsCh{display:inline-block;transform:rotate(90deg);font-size:.9rem;line-height:1;transition:transform .2s}
-html #heuteStrip .hsCh.up{transform:rotate(-90deg)}
-html #heuteStrip .hsBtn{flex:none;border:1px solid rgba(255,184,107,.45);background:rgba(255,184,107,.1);color:#ffd2a0;border-radius:999px;padding:.32rem .85rem;font:inherit;font-size:.74rem;font-weight:600;min-height:1.95rem}
-html #heuteStrip .hsMsg .hsTx{color:#9ee8e0;font-family:Georgia,serif}
-html #hsPanel{padding:.1rem .15rem .25rem}
-html #hsPanel #echoCard{margin:.1rem 0 .1rem!important;padding:.55rem .6rem .4rem!important;background:rgba(10,6,20,.55)!important;border:1px solid rgba(126,200,255,.16)!important;border-radius:.9rem!important;box-shadow:none}
-html #hsPanel #echoCard .ecTag{display:none}
-html #hsPanel #echoCard b{font-size:.98rem}
-html #hsPanel #echoCard .ecAbs{margin-top:.25rem}
-html #hsPanel #echoCard .ecQ{margin:.5rem 0 .1rem}
-html #hsPanel #echoCard .ecRow .btn{min-height:2.2rem;font-size:.76rem}
-html #hsPanel #echoCard .ecLater{margin-top:.25rem}
-html #home #kasten{margin:0 0 .15rem!important}
-html #mondSag{display:flex;align-items:center;gap:.45rem;margin:.55rem 0 .5rem!important;padding:0 .15rem;font-size:.86rem!important;color:#e0d0f6!important}
-html #mondSag span{margin:0!important;flex:none}
-html #mondSag[data-hint]::after{content:attr(data-hint);margin-left:auto;flex:none;font-family:system-ui,sans-serif;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:#7ec8ff;border:1px solid rgba(126,200,255,.3);border-radius:999px;padding:.12rem .5rem}
-html #home>#kHint{display:none!important}
-html #pinDank{margin:0 0 .15rem!important}
-html #v3CatLab{margin:.95rem .15rem .35rem;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:#ff9ae4}
-html #home:has(#cats .chip.on) #v3CatLab{margin-top:.8rem}
-html #cats{margin:0 0 .3rem!important}
-html #skizze{margin:.55rem 0 0!important}
-html #skizze svg{height:10.6rem!important}
-html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
-</style>
 <script>
 /* Startseite erst aufdecken, wenn alle Skripte gelaufen sind und 150 ms lang nichts mehr umgebaut wurde (höchstens 1,2 s warten, Notnagel 10 s). */
 (function(){
@@ -188,6 +28,8 @@ html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
   });
 })();
 </script>
+<link rel="stylesheet" href="styles-v13a.css?v=13">
+<link rel="stylesheet" href="styles-v13b.css?v=13">
 </head>
 <body>
 <div class="app">
@@ -215,6 +57,7 @@ html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
 <button type="button" class="btn ghost" id="sigilSave">Ablegen</button>
 </div>
 </div>
+<div id="toneRow"><button type="button" id="toneChip" class="toneChip"><i></i><span>Ton</span></button><a id="toneAnker" href="#anker" hidden></a></div>
 <p id="v3CatLab">Rituale</p><div id="cats"></div><div id="list"></div>
 </section>
 <section class="screen" id="drei"><div class="hero"><h2>Drei</h2></div><div id="dreiList"></div><div class="row"><button type="button" class="btn ghost" id="dreiBack">Zurück</button></div></section>
@@ -258,7 +101,7 @@ html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
 <button type="button" data-v="notiz" class="msItem"><span class="ic"><svg viewBox="0 0 24 24"><path d="M7.2 5.2h8.2L19 8.8V19H7.2z"></path><path d="M15.2 5.2V9H19M9 12.5h6M9 15.6h4"></path></svg></span><span class="lb">Notiz</span><small class="msSub">Gedanken, Träume</small></button>
 <button type="button" data-v="opfer" class="msItem"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 4.2l2.4 4.8 5.2 1.1-4 3.4 1.2 5.1L12 16.4 7.2 18.6l1.2-5.1-4-3.4 5.2-1.1z"></path></svg></span><span class="lb">Gabe</span><small class="msSub">Geben, mit Foto</small></button>
 <button type="button" data-v="buch" class="msItem"><span class="ic"><svg viewBox="0 0 24 24"><path d="M6 5.4h10.2A2.6 2.6 0 0119 8v11.2H8.4A2.4 2.4 0 016 16.8V5.4z"></path><path d="M8.2 19.2A2.4 2.4 0 016 16.8"></path></svg></span><span class="lb">Buch</span><small class="msSub">Das ganze Buch</small></button>
-</div></div>
+</div><div class="msOpt"><label class="msTog"><input type="checkbox" id="optNotify"><span>Erinnerung 10 Min. vor Hard und Anker<small>nur solange die App offen ist</small></span></label><label class="msTog"><input type="checkbox" id="optPlanet"><span>Planetenstunden im Kalender<small>nur Info, ändert den Ton nicht</small></span></label><p class="msMsg" id="optMsg"></p></div></div>
 <div class="navR" id="navOne">
 <button type="button" class="on" data-v="home"><span class="ic"><svg viewBox="0 0 24 24"><path d="M8 19c0-2 1.6-4 4-5.2C14.4 15 16 17 16 19"></path><path d="M12 4.2l1.1 3.2 3.4.1-2.7 2.1.9 3.3L12 11.2 9.3 12.9l.9-3.3-2.7-2.1 3.4-.1z"></path></svg></span><span class="lb">Rituale</span></button>
 <button type="button" data-v="geplant"><span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="6" width="14" height="13" rx="2.2"></rect><path d="M8 4v3M16 4v3M5 10h14"></path><path d="M8 14h3M13 17h3"></path></svg></span><span class="lb">Geplant</span></button>
@@ -271,9 +114,9 @@ html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
 <script src="doll.js?v=0"></script>
 <script src="ritual-core.js?v=0"></script>
 <script src="ritual-mondphase.js?v=1"></script>
-<script src="ritual-zeit.js?v=1"></script>
-<script src="rituals-v2.js?v=3"></script>
-<script src="ritual-runner-v2.js?v=3"></script>
+<script src="ritual-zeit.js?v=2"></script>
+<script src="rituals-v2.js?v=5"></script>
+<script src="ritual-runner-v2.js?v=6"></script>
 <script src="ritual-karten.js?v=4"></script>
 <script src="ritual-sigil.js?v=0"></script>
 <script src="ritual-log.js?v=0"></script>
@@ -286,15 +129,15 @@ html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
 <script src="ritual-zahl.js?v=5"></script>
 <script src="ritual-home.js?v=0"></script>
 <script src="ritual-backup.js?v=9"></script>
-<script src="pwa.js?v=11"></script>
+<script src="pwa.js?v=13"></script>
 <script src="ritual-log-fix.js?v=5"></script>
 <script src="ritual-polish.js?v=3"></script>
 <script src="ritual-mond.js?v=1"></script>
 <script src="ritual-skizze.js?v=12"></script>
 <script src="ritual-fotos.js?v=9"></script>
 <script src="ritual-gpic.js?v=1"></script>
-<script src="ritual-kalender.js?v=6"></script>
-<script src="ritual-start.js?v=6"></script>
+<script src="ritual-kalender.js?v=8"></script>
+<script src="ritual-start.js?v=7"></script>
 <script src="ritual-buch.js?v=4"></script>
 <script src="ritual-navlove.js?v=2"></script>
 <script src="ritual-final.js?v=3"></script>
@@ -304,10 +147,11 @@ html #skizze .skZiel,html #skizze .skForm{margin-top:-.2rem!important}
 <script src="ritual-cam.js?v=1"></script>
 <script src="ritual-sigil-save.js?v=2"></script>
 <script src="ritual-more.js?v=2"></script>
-<script src="ritual-fein.js?v=5"></script>
+<script src="ritual-fein.js?v=6"></script>
 <script src="ritual-check.js?v=6"></script>
 <script src="ritual-ui-v2.js?v=2"></script>
-<script src="ritual-v3.js?v=3"></script>
-<script src="design-v3.js?v=2"></script>
+<script src="ritual-v3.js?v=5"></script>
+<script src="design-v3.js?v=3"></script>
+<script src="ritual-ton.js?v=2"></script>
 </body>
 </html>

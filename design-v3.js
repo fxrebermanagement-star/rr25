@@ -107,7 +107,7 @@
   function homeTidy(){ watchHome(); sync(); moonLine(); catLabel(); }
 
   /* =============== 2 · Chronik als Karten =============== */
-  var TONE_LAB={soft:"Soft",hard:"Hard",feld:"Feld",neutral:""};
+  var TONE_LAB={soft:"Soft",hard:"Hard",grenze:"Grenze",feld:"Feld",neutral:""};
   function ritOf(titel){
     var t=String(titel||""), best=null;
     rituals().forEach(function(r){ if(r && r.t && t.indexOf(r.t)===0 && (!best || r.t.length>best.t.length)) best=r; });
@@ -118,7 +118,7 @@
     var t=String(e.titel||"");
     if(e.kind==="gabe" || /^(Tagesziel|Sigille|Gabe|Opfer)$/i.test(t)) return "neutral";
     var r=ritOf(t.replace(/ · abgebrochen$/,""));
-    return r?(r.hard?"hard":r.tone||"soft"):"soft";
+    return r?(r.hard?"hard":(r.tone||"soft")):"soft";
   }
   function fmtT(s){
     var m=String(s||"").match(/(\d{1,2})\.(\d{1,2})\.(\d{4}),?\s*(\d{1,2}):(\d{2})/);
@@ -375,7 +375,7 @@
     "#entries .logrow.v3c{position:relative;display:grid;grid-template-columns:1fr auto;gap:.65rem;align-items:center;padding:.62rem .7rem .62rem .95rem!important;border:1px solid rgba(255,255,255,.07)!important;border-radius:1rem;background:linear-gradient(180deg,rgba(38,18,58,.62),rgba(14,8,24,.88));overflow:hidden;cursor:pointer;min-height:3.9rem}",
     "#entries .logrow.v3c::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--t);box-shadow:0 0 12px var(--t)}",
     "#entries .logrow.v3c:active{transform:scale(.99)}",
-    "#entries .v3c.tone-soft{--t:#5fe0a0}#entries .v3c.tone-hard{--t:#ff5470}#entries .v3c.tone-feld{--t:#b98cff}#entries .v3c.tone-neutral{--t:#8f8aa0}",
+    "#entries .v3c.tone-soft{--t:#5fe0a0}#entries .v3c.tone-hard{--t:#ff5470}#entries .v3c.tone-grenze{--t:#ffb86b}#entries .v3c.tone-feld{--t:#b98cff}#entries .v3c.tone-neutral{--t:#8f8aa0}",
     "#entries .v3c>div:first-child{min-width:0}",
     "#entries .v3c .v3top{display:flex;align-items:center;gap:.45rem;min-width:0}",
     "#entries .v3c .v3top b{flex:0 1 auto;min-width:0;font-size:.98rem!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",

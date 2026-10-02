@@ -173,7 +173,7 @@
   ]},
 
   /* ---------- TRENNUNG ---------- */
-  {id:'trenn',tone:'soft',t:'Trennung selbst',s:'Nur dein Faden. Soft.',cat:'Trennung',hard:false,need:['Name'],flow:[
+  {id:'trenn',tone:'grenze',t:'Trennung selbst',s:'Nur dein Faden. Grenze.',cat:'Trennung',hard:false,grenze:true,need:['Name'],flow:[
     ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur der Faden zu [Name]. Kein Urteil. Kein Nachsetzen. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Der Beobachter ist wach.'],
     ['Absicht','Sprich:|Die Verbindung zwischen mir und [Name] löst sich jetzt.|Alle unstimmigen Fäden werden getrennt. Ich lasse frei und werde frei.'],
@@ -182,10 +182,10 @@
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig in mich zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
   ]},
-  {id:'band',tone:'soft',t:'Band lösen',s:'Sanft. Nur der Faden. Soft.',cat:'Trennung',hard:false,need:['Name'],needOpt:true,flow:[
+  {id:'band',tone:'grenze',t:'Band lösen',s:'Sanft. Nur der Faden. Grenze.',cat:'Trennung',hard:false,grenze:true,need:['Name'],needOpt:true,flow:[
     ['Vorbereitung','Name oben, wenn es um eine Person geht.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur das Band. Kein Urteil. Kein Nachsetzen.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Der Beobachter ist wach.'],
-    ['Lösen','Sprich:|Das Band, das nicht mehr stimmt, darf sich lösen.|Das Band zwischen mir und [Name] löst sich.|Alle unstimmigen Fäden fallen ab. Ich lasse frei und werde frei.'],
+    ['Absicht','Sprich:|Das Band, das nicht mehr stimmt, darf sich lösen.|Das Band zwischen mir und [Name] löst sich.|Alle unstimmigen Fäden fallen ab. Ich lasse frei und werde frei.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Band löst sich.|Sechs: Die Fäden fallen ab.|Neun: Es ist im Gange.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name].|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
@@ -227,17 +227,17 @@
   ]},
 
   /* ---------- FELD ---------- */
-  {id:'wesen',tone:'hard',t:'Wesenheit für Auftrag',s:'Nur wenn der Faden nicht reicht. Hartes Ende.',cat:'Feld',hard:true,wesenSelf:true,need:['Auftrag'],
+  {id:'wesen',tone:'hard',t:'Wesenheit für Auftrag',s:'Nur wenn der Faden nicht reicht. Hartes Ende.',cat:'Feld',hard:true,wesenSelf:true,need:['Name','Auftrag'],
     preis:'Ein Mitspieler mehr im Feld — du bleibst verantwortlich.',gegen:'Täuschung möglich. Filter und klares Ende sind Pflicht.',flow:[
-    ['Vorbereitung','Auftrag oben. Ein Satz.||Tu:|Eine Kerze. Wasser danach.'],
+    ['Vorbereitung','Name und Auftrag oben. Ein Satz.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur [Auftrag]. Für [Name] nur, wenn gesetzt. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge. Grenze um dich.||Sprich:|Ich bin der Spieler. Der Beobachter ist wach.|Ich schliesse mein Feld hart.'],
-    ['Filter','Sprich:|Nur klare, stimmige Präsenz. Was drängt, bleibt draussen.|Ich behalte den Raum.'],
+    ['Grenze','Sprich:|Ich behalte den Raum.|Nur klare, stimmige Präsenz. Was drängt, bleibt draussen.|Kein Verschmelzen. Kein Nachlaufen.'],
     ['Fragen','Sprich:|Wer bereit und geeignet ist, [Auftrag] zu tragen, möge sich zeigen.'],
     ['Auftrag','Sprich:|Dein Auftrag ist: [Auftrag]. Nur in diesem Rahmen.|Ohne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Gegeben.|Sechs: Getragen.|Neun: Gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. So sei es.'],
     ['Entlassen','Sprich:|Der Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.|Du bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt.'],
-    ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört nur mir.|Alles Fremde löst sich und geht.|Füsse. Atem. Raum.'],
+    ['Rückkehr','Sprich:|Ich bin nicht die Wesenheit. Ich bin ganz bei mir.|Meine Energie gehört nur mir. Alles Fremde löst sich und geht.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'ahn',tone:'feld',t:'Ahnen rufen',s:'Ehren, begrenzen, entlassen. Feld.',cat:'Feld',hard:false,need:['Name'],flow:[
@@ -268,6 +268,17 @@
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Ich setze heute nichts nach.|Füsse. Atem. Raum.'],
     ['Schluss','Tu:|Wasser. Alltag.']
+  ]},
+  {id:'anker',tone:'feld',t:'Rückkehr · Anker',s:'Nach der Arbeit schliessen. Etwa 3 Minuten.',cat:'Schutz',hard:false,skipTiming:true,noStatus:true,anker:true,flow:[
+    ['Körper','Tu:|Füsse auf den Boden. Hände spüren. Das Gewicht sinkt nach unten.||Sprich:|Ich bin in meinem Körper.'],
+    ['Raum','Tu:|Bewusst umschauen. Ein, zwei Dinge laut benennen.||Sprich:|Ich bin hier, nicht mehr im Ritual.'],
+    ['Atem','Tu:|Einige ruhige Atemzüge. Länger aus als ein.||Sprich:|Ich bin ruhig. Ich bin bei mir.'],
+    ['Feld zu','Tu:|Abschlussgeste: Hände zusammen, dann lösen.||Sprich:|Das Feld ist zu. Es ist so.||Heute nicht weiterarbeiten.']
+  ]},
+  {id:'echo',tone:'feld',t:'Echo lesen',s:'Nur beobachten. Ein Satz. Kein neues Portal.',cat:'Feld',hard:false,skipTiming:true,noStatus:true,echoRead:true,flow:[
+    ['Beobachten','Tu:|Still werden. Keine Kerze aus Pflicht.||Sprich:|Nur lesen. Nicht nachladen. Kein neues Portal.'],
+    ['Ein Satz','Tu:|Was sich gezeigt hat, in einem Satz notieren.|Anruf, Gefühl, Zufall — nur Rohdaten.||Sprich:|Ich schaue. Ich deute nicht.'],
+    ['Schluss','Sprich:|Danke Feld. Buch zu.||Tu:|Wasser. Alltag. Heute nichts nachsetzen.']
   ]},
   {id:'abbr',tone:'neutral',t:'Abbruch',s:'Laufenden Zug beenden. Heimkehren.',cat:'Feld',hard:false,neutral:true,skipTiming:true,noStatus:true,flow:[
     ['Lage','Sprich:|Ein Zug läuft noch. Ich breche ab. Kein neuer Auftrag.'],

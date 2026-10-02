@@ -1,0 +1,1 @@
+ok-full-write-test

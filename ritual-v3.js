@@ -7,7 +7,7 @@
   var DAY=86400000;
   var EKEY="rr25_echo_v1", SKEY="rr25_sicherung_at";
   var DN=["So","Mo","Di","Mi","Do","Fr","Sa"];
-  var NO_ECHO={dank:1,kreis:1,weg:1,schlaf:1,abbr:1};
+  var NO_ECHO={dank:1,kreis:1,weg:1,schlaf:1,abbr:1,anker:1,echo:1};
   var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
   var ANS={wirkt:"wirkt",teilweise:"teilweise",offen:"noch offen"};
 
@@ -48,7 +48,7 @@
     var d=eLoad();
     for(var i=0;i<d.items.length;i++) if(d.items[i].eid===e.id) return;
     var t=Date.now();
-    d.items.push({eid:e.id,rid:rid,titel:String(e.titel||""),wer:String(e.wer||""),note:String(e.note||""),absicht:absicht(),done:t,
+    d.items.push({eid:e.id,rid:rid,titel:String(e.titel||""),wer:String(e.wer||""),note:String(e.note||""),absicht:(window._rr25Absicht||absicht()),done:t,
       checks:{"3":{due:t+3*DAY,snooze:0},"9":{due:t+9*DAY,snooze:0}}});
     eSave(d);
   }
@@ -111,6 +111,7 @@
       '<p class="ecQ">Was hat sich gezeigt?</p>'+
       '<textarea id="ecTxt" placeholder="Ein Satz genügt (optional)"></textarea>'+
       '<div class="row ecRow"><button type="button" class="btn ghost" data-a="wirkt">wirkt</button><button type="button" class="btn ghost" data-a="teilweise">teilweise</button><button type="button" class="btn ghost" data-a="offen">noch offen</button></div>'+
+      '<button type="button" class="btn ghost ecRead" id="ecRead">Echo lesen</button>'+
       '<button type="button" class="ecLater" data-a="later">später</button>';
     [].slice.call(el.querySelectorAll("[data-a]")).forEach(function(b){
       b.onclick=function(){
@@ -119,6 +120,8 @@
         paintEcho(a!=="later");
       };
     });
+    var er=document.getElementById("ecRead");
+    if(er) er.onclick=function(){ if(window.RR25_OPEN) window.RR25_OPEN("echo",{title:"Echo · Tag "+x.k,kind:"ECHO"}); };
   }
 
   /* Chronik: Marker an den Einträgen und Bilanz je Ritual */
@@ -135,14 +138,16 @@
       if(!it||row.querySelector(".echoMark")) return;
       var parts=[];
       ["3","9"].forEach(function(k){
-        var c=it.checks&&it.checks[k]; if(!c||!c.a) return;
-        parts.push('<span class="em-'+c.a+'">Echo T'+k+': '+ANS[c.a]+'</span>'+(c.txt?' <i>'+h(c.txt)+'</i>':''));
+        var c=it.checks&&it.checks[k]; if(!c) return;
+        if(c.a) parts.push('<span class="em-'+c.a+'">Echo T'+k+': '+ANS[c.a]+'</span>'+(c.txt?' <i>'+h(c.txt)+'</i>':''));
+        else if(c.due && c.due<=Date.now()) parts.push('<span class="echoDue"><a href="#echo" data-echo="1">Echo T'+k+' · lesen</a></span>');
       });
       if(!parts.length) return;
       var d=document.createElement("div"); d.className="echoMark"; d.innerHTML=parts.join("<br>");
       var host=row.firstElementChild||row;
       var meta=host.querySelector(".meta");
       if(meta&&meta.nextSibling) host.insertBefore(d, meta.nextSibling); else host.appendChild(d);
+      d.querySelectorAll("[data-echo]").forEach(function(a){ a.onclick=function(ev){ ev.preventDefault(); if(window.RR25_OPEN) window.RR25_OPEN("echo"); }; });
     });
     summary();
   }
@@ -358,7 +363,7 @@
     "#echoCard textarea{min-height:3.2rem}",
     "#echoCard .ecRow{margin-top:.35rem}",
     "#echoCard .ecRow .btn{font-weight:550}",
-    "#echoCard .ecLater{display:block;margin:.45rem auto 0;background:none;border:0;color:#8e7aa8;font:inherit;font-size:.74rem;text-decoration:underline;padding:.3rem .8rem}",
+    "#echoCard .ecLater{display:block;margin:.45rem auto 0;background:none;border:0;color:#8e7aa8;font:inherit;font-size:.74rem;text-decoration:underline;padding:.3rem .8rem}","#echoCard .ecRead{width:100%;margin:.35rem 0 0;min-height:2.1rem;font-size:.78rem;border-color:rgba(126,200,255,.35)}",".echoDue a{color:#7ec8ff;text-decoration:none;border-bottom:1px dotted rgba(126,200,255,.55)}",
     "#echoCard .ecThanks,#bakCard .bkMsg{margin:.1rem 0;font-family:Georgia,serif;color:#9ee8e0}",
     "#bakCard .bkRow{display:flex;gap:.6rem;align-items:center}",
     "#bakCard .bkRow>div{flex:1}",

@@ -35,7 +35,7 @@
   var OLD={"Trennung — selbst":"soft","Trennung zweier anderer":"hard","Nur wenn nötig — Wesenheit":"hard","Liebesritual":"soft","Anziehung und Kontakt":"soft","Finsternis":"feld","Ahnenkontakt":"feld","Fremde Wesenheit":"hard","Filterübung":"feld","Feld zu":"soft"};
   function rlist(){ try{ return R; }catch(e){ return []; } }
   function rById(id){ id=ALIAS[id]||id; var L=rlist(); for(var i=0;i<L.length;i++) if(L[i].id===id) return L[i]; return null; }
-  function rTone(r){ return r.hard?"hard":(r.tone==="hard"||r.tone==="feld"||r.tone==="neutral")?r.tone:"soft"; }
+  function rTone(r){ return r.hard?"hard":(r.tone==="hard"||r.tone==="grenze"||r.tone==="feld"||r.tone==="neutral")?r.tone:"soft"; }
   var ridMemo=null, ridAt=0;
   function ridOf(id){
     if(!ridMemo || Date.now()-ridAt>1500){
@@ -58,7 +58,8 @@
     var base2=t.replace(/ · .*$/,"");
     if(OLD[base2]) return OLD[base2];
     if(/fluch|bindung|übernehm|nagelhart|wesenheit/i.test(t)) return "hard";
-    if(/mond|ahnen|finsternis/i.test(t)) return "feld";
+    if(/trennung|band lösen|grenze/i.test(t)) return "grenze";
+    if(/mond|ahnen|finsternis|echo lesen/i.test(t)) return "feld";
     return "soft";
   }
   window.RR25_TONE=toneOf;
@@ -70,11 +71,11 @@
     if(old) old.remove();
     var n=document.createElement("div");
     n.id="logFilt";
-    ["alle","soft","hard","feld"].forEach(function(k){
+    ["alle","soft","grenze","hard","feld"].forEach(function(k){
       var b=document.createElement("button");
       b.type="button";
       b.className="chip logchip log-"+k+(FILT===k?" on":"");
-      b.textContent=k==="alle"?"Alle":k==="soft"?"Soft":k==="hard"?"Hard":"Feld";
+      b.textContent=k==="alle"?"Alle":k==="soft"?"Soft":k==="grenze"?"Grenze":k==="hard"?"Hard":"Feld";
       b.onclick=function(){ FILT=k; if(typeof paintLog==="function") paintLog(); };
       n.appendChild(b);
     });
@@ -131,7 +132,7 @@
     "#logFilt{display:flex;gap:.35rem;margin:.15rem 0 .55rem;flex-wrap:wrap}",
     "#logFilt .log-soft{border-color:#2ecc71;color:#7dffb0}",
     "#logFilt .log-soft.on{background:rgba(46,204,113,.25);color:#b6ffd4}",
-    "#logFilt .log-hard{border-color:#e74c3c;color:#ff8a7a}",
+    "#logFilt .log-grenze{border-color:#ffb86b;color:#ffd19a}","#logFilt .log-grenze.on{background:rgba(255,184,107,.22);color:#ffe2bd}","#logFilt .log-hard{border-color:#e74c3c;color:#ff8a7a}",
     "#logFilt .log-hard.on{background:rgba(231,76,60,.22);color:#ffc4bc}",
     "#logFilt .log-feld{border-color:#9b8cff;color:#c9b8ff}",
     "#logFilt .log-feld.on{background:rgba(155,140,255,.22);color:#e4dcff}",

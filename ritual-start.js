@@ -14,12 +14,15 @@
       if(ref && ref.nextSibling) home.insertBefore(el, ref.nextSibling);
       else if(ref) home.appendChild(el);
     }
+    var tone=document.getElementById("toneRow"); /* Ton-Chip (v13) direkt unter dem Kasten, Platz steht fest in index.html */
     if(kast){
-      if(mond) after(kast, mond);
-      if(dank) after(mond||kast, dank);
-      if(lab) after(dank||mond||kast, lab);
-      if(cats) after(lab||dank||mond||kast, cats);
-      if(sk) after(cats||dank||mond||kast, sk);
+      if(tone) after(kast, tone);
+      var base=tone||kast;
+      if(mond) after(base, mond);
+      if(dank) after(mond||base, dank);
+      if(lab) after(dank||mond||base, lab);
+      if(cats) after(lab||dank||mond||base, cats);
+      if(sk) after(cats||dank||mond||base, sk);
       if(list) after(sk||cats, list);
     }
   }

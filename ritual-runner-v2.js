@@ -9,7 +9,7 @@
   var CATS=window.RR_CATS||["Schutz","Energie","Liebe","Trennung","Person X","Feld"];
   var DAYS=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
   var PLANET=["Sonne · Kraft, Sichtbarkeit","Mond · Gefühl, Traum","Mars · Grenze, Mut","Merkur · Wort, Kontakt","Jupiter · Fülle","Venus · Liebe","Saturn · Grenze, Trennung"];
-  var TONE_NAME={soft:"Soft",hard:"Hard",feld:"Feld",neutral:"Abbruch"};
+  var TONE_NAME={soft:"Soft",hard:"Hard",grenze:"Grenze",feld:"Feld",neutral:"Abbruch"};
   var ANKER="Anker: Daumen und Zeigefinger zusammen. Eigener Vorname laut.";
   var ABBR_TXT="Ich stoppe jetzt. Die Arbeit ist nicht gesetzt.\nIch kehre vollständig in mich zurück.\nDas Feld ist geschlossen. So ist es.";
   var LV={weich:"Weich",mittel:"Mittel",nagel:"Nagelhart"};
@@ -51,6 +51,21 @@
     else txt=s.kind+" · "+(window.RR25_MOND?window.RR25_MOND.day().name:"");
     return {kind:s.kind,txt:txt,s:s};
   }
+  function fensterZeile(now){
+    if(!KZ) return "";
+    var L=KZ.list(now), d0=new Date(now); d0.setHours(0,0,0,0); d0=d0.getTime();
+    var soft=[], hard=[];
+    L.forEach(function(x){
+      if(x.all||x.e<=now||x.s>=d0+86400000) return;
+      if(x.k==="HARD") hard.push(x);
+      else if(x.k==="SOFT") soft.push(x);
+    });
+    var bits=[];
+    if(soft.length) bits.push('Soft-Fenster: '+soft.map(function(x){ return hm(x.s)+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
+    if(hard.length) bits.push('Hard-Feintakte: '+hard.map(function(x){ return hm(x.s)+(x.anker?' Anker':'')+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
+    if(!bits.length) bits.push('Heute kein Soft-Fenster und kein Hard-Feintakt mehr.');
+    return '<br><span class="meta fenLine">'+bits.join('<br>')+'</span>';
+  }
   function wetterHtml(r){
     var w=wetter(), s=w.s, d=new Date().getDay(), now=Date.now();
     var say={SOFT:"Soft-Fenster. Weiche Arbeit trägt.",HARD:"Hard-Feintakt offen. Scharf. Nur mit Gate und Rückkehr.",ECHO:"Echo. Nicht nachsetzen. Schliessen, danken, ernten.",STILL:"Still. Heute eher nichts setzen."}[w.kind];
@@ -63,19 +78,24 @@
     var warn="";
     if(r && r.hard && w.kind!=="HARD" && KZ){
       var n=KZ.next("HARD",now);
-      warn='<br><b>Hard jetzt nicht offen.</b>'+(n?' Nächster Feintakt: '+relDay(n.x.s)+' '+hm(n.x.s)+'–'+hm(n.x.e)+'.':' Kein Feintakt im Kalender.');
+      warn='<br><b>Jetzt nicht.</b> Hard-Fenster zu.'+(n?' Nächstes: '+relDay(n.x.s)+' '+hm(n.x.s)+'–'+hm(n.x.e)+'.':' Kein Feintakt im Kalender.');
       if((w.kind==="ECHO"||w.kind==="STILL") && !(n&&relDay(n.x.s)==="heute")) warn+='<br><b>Für Hard eher nicht heute.</b>';
+    } else if(r && !r.hard && !r.skipTiming && (w.kind==="STILL"||w.kind==="ECHO") && KZ){
+      var n2=KZ.next("SOFT",now);
+      warn='<br><b>Jetzt nicht.</b> '+(w.kind==="STILL"?'Still-Band.':'Echo-Tag.')+(n2?' Nächstes Soft-Fenster: '+relDay(n2.x.s)+' '+hm(n2.x.s)+'.':'');
     }
-    var fein=s&&s.hard&&s.hard.length?' · Feintakte '+s.hard.map(function(x){ return hm(x.s); }).join(" · "):"";
-    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(w.txt)+'</span><br>'+say+extra+warn+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+fein+'</span>';
+    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(w.txt)+'</span><br>'+say+extra+warn+fensterZeile(now)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
   }
   setInterval(function(){ var w=document.getElementById("wetter"); if(w&&cur){ var x=wetterHtml(cur.r); if(x!==w.innerHTML) w.innerHTML=x; } },30000);
 
   /* ---------- Ablauf ---------- */
   var cur=null;
+  function sigilAbsicht(){
+    try{ var d=JSON.parse(localStorage.getItem("rr25_sigil")||"{}"); return String(d.t||"").trim(); }catch(e){ return ""; }
+  }
   function fillT(s){
     var r=cur.r, m=cur.mem;
-    var keys=["Name","A","B","Auftrag","Wofür"];
+    var keys=["Name","A","B","Auftrag","Wofür","Absicht"];
     var lines=String(s).split("\n").filter(function(line){
       if(r.needOpt && !m.Name && line.indexOf("[Name]")>=0) return false;
       return true;
@@ -154,6 +174,17 @@
     window.scrollTo(0,0);
   }
   function msg(t){ var m=document.getElementById("msg"); if(m) m.textContent=t; }
+  /* Start aus einem Kalender-Eintrag: Fenster und Restzeit oben einblenden (nur Anzeige, die Regel bleibt die des Tors) */
+  function ctxHtml(){
+    var c=cur&&cur.ctx; if(!c||!c.s) return "";
+    var now=Date.now(), when;
+    if(c.all) when="ganzer Tag";
+    else if(now<c.s) when=relDay(c.s)+" · beginnt "+hm(c.s);
+    else if(now<c.e){ var m=Math.max(1,Math.ceil((c.e-now)/60000)); when="offen bis "+hm(c.e)+" · noch "+(m<60?m+" Min.":Math.floor(m/60)+" Std. "+(m%60?m%60+" Min.":"")); }
+    else when="vorbei seit "+hm(c.e);
+    var k=String(c.kind||"soft").toLowerCase();
+    return '<p class="ctxLine"><span class="wk wk-'+h(k)+'">Aus Kalender</span> '+h(c.title||"")+(c.all?"":" · "+hm(c.s)+"–"+hm(c.e))+'<br><span class="meta">'+when+'</span></p>';
+  }
 
   function diagnose(){
     var r=cur.r, soft=r.soft&&byId(r.soft);
@@ -182,7 +213,7 @@
   }
   function tor(){
     loadKal();
-    var body='<div class="wetter" id="wetter">'+wetterHtml(cur.r)+'</div>'+
+    var body=ctxHtml()+'<div class="wetter" id="wetter">'+wetterHtml(cur.r)+'</div>'+
       '<p class="words">Zwei Atemzüge. Dann hinhören:\nZieht es · Steht es · Ist es still?</p>'+
       '<div class="row tor3"><button type="button" class="btn ghost" id="tStill">Still</button><button type="button" class="btn ghost" id="tZieht">Zieht</button><button type="button" class="btn primary" id="tSteht">Steht</button></div>';
     frame({title:"Tor",body:body,prev:cur.r.hard?"Zurück":"Liste",noAbort:true});
@@ -255,10 +286,24 @@
       }).join("");
     }
     var body, title=t, nextTxt=last?"Weiter":"Weiter";
-    if(/^369$/.test(st[0])){ title="3 · 6 · 9"; body=counter(fillT(raw)); }
-    else if(/^So sei es$/.test(st[0])){ body=sealHtml()+'<p class="words">'+h(fillT(raw))+'</p>'; nextTxt="So sei es"; }
+    if(/^369$/.test(st[0])){
+      title="3 · 6 · 9";
+      body=(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+counter(fillT(raw));
+    }
+    else if(/^So sei es$/.test(st[0])){ body=sealHtml()+(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+'<p class="words">'+h(fillT(raw))+'</p>'; nextTxt="So sei es"; }
     else if(/^Rückkehr$/.test(st[0])){ body='<p class="words">'+h(fillT(raw))+'</p><label class="gchk rk"><input type="checkbox" id="rkOk"><span>Ich bin zurück. Ganz bei mir.</span></label>'; }
+    else if(/^Ein Satz$/.test(st[0])){
+      body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
+        '<label class="absLab">Ein Satz<input class="nm" id="echoSatz" data-n="Echo" placeholder="Was sich gezeigt hat" value="'+h(cur.mem.Echo||'')+'" autocomplete="off" maxlength="200"></label>';
+    }
+    else if(/^Absicht$/.test(st[0])){
+      if(!cur.mem.Absicht){ var sg=sigilAbsicht(); if(sg) cur.mem.Absicht=sg; }
+      body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
+        '<label class="absLab">Absicht · einmal<input class="nm" id="absT" data-n="Absicht" placeholder="Ein Satz" value="'+h(cur.mem.Absicht||'')+'" autocomplete="off" maxlength="200"></label>'+
+        (sigilAbsicht()?'<button type="button" class="btn ghost" id="absFromZ">Von Zeichen übernehmen</button>':'');
+    }
     else body='<p class="words" id="w0">'+h(fillT(raw))+'</p>';
+    if(cur.i===0 && r.skipTiming) inputs=ctxHtml()+inputs;
     frame({title:h(title),body:inputs+body,prev:"Zurück",next:nextTxt,n:(cur.i+1)+"/"+cur.steps.length,stepName:t});
     [].slice.call(document.querySelectorAll("#run .nm")).forEach(function(inp){
       inp.oninput=function(){
@@ -266,6 +311,8 @@
         var w=document.getElementById("w0"); if(w) w.innerHTML=h(fillT(raw));
       };
     });
+    var az=document.getElementById("absFromZ");
+    if(az) az.onclick=function(){ var v=sigilAbsicht(); if(!v) return; cur.mem.Absicht=v; var i=document.getElementById("absT"); if(i) i.value=v; };
     [].slice.call(document.querySelectorAll("#run .zrow")).forEach(function(b){
       b.onclick=function(){
         var c=+b.getAttribute("data-c"), m=+b.getAttribute("data-max");
@@ -289,7 +336,7 @@
         cur.back=true;
       }
       if(!last){ cur.i++; step(); return; }
-      if(r.noStatus) echo(); else status();
+      if(r.noStatus){ if(r.echoRead) finish((cur.mem.Echo||"").trim(),false); else echo(); } else status();
     };
   }
   function status(){
@@ -304,6 +351,11 @@
   }
   function echo(){
     var w=wetter();
+    if(cur.r.anker){
+      frame({title:"Status kurz",body:'<p class="words">Ein Satz: Wie bin ich jetzt da?\nDann Buch zu. Heute nichts mehr.</p><input id="echoT" class="nm" placeholder="Status · ein Satz für die Chronik" autocomplete="off" maxlength="160">',next:"In die Chronik",noAbort:true});
+      document.getElementById("next").onclick=function(){ finish(((document.getElementById("echoT")||{}).value||"").trim(),false); };
+      return;
+    }
     var body='<p class="words">Was klingt nach? Ein Satz genügt.\nNicht nachladen.'+(w.kind==="ECHO"?"\nHeute ist Echo: nur schauen.":"")+'</p>'+
       '<textarea id="echoT" placeholder="Echo · Notiz für die Chronik (optional)"></textarea>';
     frame({title:"Echo",body:body,next:"In die Chronik",noAbort:true});
@@ -318,11 +370,15 @@
     var titel=r.t+(cur.lvl?" · "+LV[cur.lvl]:"")+(aborted?" · abgebrochen":"");
     var e={id:uid(),t:now(),titel:titel,wer:werTxt(),wesen:!!(cur.wesen||r.wesenSelf)};
     if(note) e.note=note;
+    if(cur.mem.Absicht) e.absicht=cur.mem.Absicht;
     d.log=d.log||[]; d.log.unshift(e);
     if(!aborted && fromPlan){ d.planned=(d.planned||[]).filter(function(p){ return p.pid!==fromPlan; }); fromPlan=null; }
     save(d);
     if(r.id==="dank" && !aborted){ try{ localStorage.setItem("rr25_dank", ymd()); }catch(x){} }
     window._rid=r.id;
+    window._rr25Absicht=cur.mem.Absicht||"";
+    window._rr25Hard=!!(r.hard && !aborted);
+    window._rr25Wesen=!!((cur.wesen||r.wesenSelf) && !aborted);
     var done=cur; cur=null;
     if(aborted) show("home"); else show("after");
   }
@@ -345,11 +401,11 @@
     };
   }
 
-  function openV2(id,wer){
+  function openV2(id,wer,ctx){
     var r=byId(id); if(!r) return;
     var mem={};
     if(wer){ mem.Name=wer; var p=String(wer).split(/\s*·\s*/); mem.A=p[0]||wer; mem.B=p[1]||""; }
-    cur={r:r,mem:mem,wer:wer||"",i:0,lvl:null,wesen:false,steps:[],started:false};
+    cur={r:r,mem:mem,wer:wer||"",i:0,lvl:null,wesen:false,steps:[],started:false,ctx:ctx||null};
     window._rid=r.id;
     show("run");
     if(r.hard) diagnose();
@@ -357,6 +413,7 @@
     else tor();
   }
   openR=openV2;
+  window.RR25_OPEN=function(id,ctx){ try{ fromPlan=null; }catch(e){} openV2(id,"",ctx); };
 
   renderList=function(){
     var cats=document.getElementById("cats"), list=document.getElementById("list");
@@ -399,6 +456,22 @@
     if(id==="after"){
       var g=document.getElementById("afterGo");
       if(g){ g.textContent="Fertig"; g.onclick=function(){ show("home"); }; }
+      var af=document.getElementById("after"), old=document.getElementById("afterAnker");
+      if(old) old.remove();
+      if(af && window._rr25Hard){
+        var st=KZ?KZ.state():null, a=st&&st.anker&&st.anker.e>Date.now()?st.anker:null;
+        var p=document.createElement("p"); p.id="afterAnker"; p.className="ankerHint";
+        p.innerHTML='<a href="#anker">'+(a?"Heute "+hm(a.s)+" Rückkehr · Anker":"Rückkehr · Anker")+'</a>';
+        p.querySelector("a").onclick=function(ev){ ev.preventDefault(); window.RR25_OPEN("anker",a?{title:a.t,s:a.s,e:a.e,kind:a.k}:null); };
+        af.appendChild(p);
+      }
+      var oldE=document.getElementById("afterEcho"); if(oldE) oldE.remove();
+      if(af && window._rr25Wesen){
+        var pe=document.createElement("p"); pe.id="afterEcho"; pe.className="ankerHint";
+        pe.innerHTML='<a href="#echo">Danach: Echo lesen · nur beobachten</a>';
+        pe.querySelector("a").onclick=function(ev){ ev.preventDefault(); if(window.RR25_OPEN) window.RR25_OPEN("echo"); };
+        af.appendChild(pe);
+      }
     }
     if(id==="home") pinDank();
     return r;
@@ -407,7 +480,7 @@
   var css=document.createElement("style");
   css.textContent=[
     "#run{--tone:#5fe0a0}",
-    "#run[data-tone=hard]{--tone:#ff5470}#run[data-tone=feld]{--tone:#b98cff}#run[data-tone=neutral]{--tone:#9a96a8}",
+    "#run[data-tone=hard]{--tone:#ff5470}#run[data-tone=grenze]{--tone:#ffb86b}#run[data-tone=feld]{--tone:#b98cff}#run[data-tone=neutral]{--tone:#9a96a8}",
     "#run .tonetag{margin:.2rem 0 0;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tone)}",
     "#run .hero h2{border-left:3px solid var(--tone);padding-left:.55rem}",
     "#run .gchk{display:flex!important;gap:.6rem;align-items:flex-start;margin:.55rem 0;padding:.65rem .7rem;border:1px solid rgba(126,200,255,.2);border-radius:.9rem;background:rgba(20,10,34,.7);font-size:.92rem}",
@@ -431,10 +504,14 @@
     "#run .seal span{font-size:4rem;line-height:1;color:#ff7ad9;text-shadow:0 0 18px rgba(255,122,217,.7)}",
     "#run .tor3 .btn{min-height:2.8rem}",
     "#run .nm{text-transform:none!important;letter-spacing:normal!important}",
+    "#run .ctxLine{margin:.2rem 0 .5rem;padding:.5rem .7rem;border-radius:.8rem;background:rgba(20,10,34,.55);border:1px dashed rgba(126,200,255,.22);font-size:.82rem;line-height:1.45}",
+    ".ankerHint{margin:.9rem 0 0;text-align:center;font-size:.8rem}.ankerHint a{color:#cdb6ff;text-decoration:none;border-bottom:1px dotted rgba(205,182,255,.6)}",
     "#list .rcard{position:relative;border-left:3px solid #5fe0a0;padding-right:3.6rem}",
-    "#list .rcard.tone-hard{border-left-color:#ff5470}#list .rcard.tone-feld{border-left-color:#b98cff}#list .rcard.tone-neutral{border-left-color:#9a96a8}",
+    "#list .rcard.tone-hard{border-left-color:#ff5470}#list .rcard.tone-grenze{border-left-color:#ffb86b}#list .rcard.tone-feld{border-left-color:#b98cff}#list .rcard.tone-neutral{border-left-color:#9a96a8}",
     "#list .rcard i{position:absolute;right:.8rem;top:.8rem;font-style:normal;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:#5fe0a0}",
-    "#list .rcard.tone-hard i{color:#ff5470}#list .rcard.tone-feld i{color:#b98cff}#list .rcard.tone-neutral i{color:#9a96a8}",
+    "#list .rcard.tone-hard i{color:#ff5470}#list .rcard.tone-grenze i{color:#ffb86b}#list .rcard.tone-feld i{color:#b98cff}#list .rcard.tone-neutral i{color:#9a96a8}",
+    "#run .absLab{display:block;margin:.55rem 0 .2rem;font-size:.72rem;color:#c4b4e0}#run .absLab .nm{margin-top:.3rem}#run .absOnce{color:#e7c9ff!important;margin:.2rem 0 .45rem}#run #absFromZ{margin:.2rem 0 .4rem;min-height:2rem;font-size:.74rem}",
+    "#run .fenLine{color:#bfb2da!important}",
     "#pinDank{position:relative;padding-right:3.1rem}",
     "#pinDank .ok{position:absolute;right:.85rem;top:50%;transform:translateY(-50%);width:1.55rem;height:1.55rem;border-radius:50%;border:2px solid rgba(255,122,217,.45);display:flex;align-items:center;justify-content:center}",
     "#pinDank.done .ok{background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border:0;color:#14081c;font-weight:700}"
