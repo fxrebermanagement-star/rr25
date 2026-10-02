@@ -27,7 +27,7 @@
   function norm(e,src){
     var s0=String(e.start||""), all=!!e.all||s0.length<=10, s, en;
     if(all){ s=parseDay(s0); en=e.end?parseDay(e.end):addDays(s,1); }
-    else { s=Date.parse(s0); en=e.end?Date.parse(e.end):s+(/22:30/.test(e.t)?55:50)*MIN; }
+    else { s=Date.parse(s0); en=e.end?Date.parse(e.end):s+(/22:30/.test(e.t)?55:50)*MIN; } /* alte Dateien ohne Ende */
     if(isNaN(s)) return null;
     if(!(en>s)) en=all?addDays(s,1):s+50*MIN;
     var t=String(e.t||"");
@@ -35,6 +35,7 @@
       moon:/Vollmond/.test(t)?"voll":(/Neumond/.test(t)?"neu":""),anker:/Anker/.test(t),start:e.start,end:e.end};
   }
 
+  /* ---------- Sonne (NOAA, Refraktion −0,833°), Ergebnis in ms ---------- */
   var rad=Math.PI/180;
   function solar(jd){
     var T=(jd-2451545)/36525;
@@ -65,6 +66,7 @@
   }
   function floorMin(ms){ return Math.floor(ms/MIN)*MIN; }
 
+  /* ---------- Ersatzrechnung ohne Datei-Daten (wie Google aufgebaut, ohne Hard) ---------- */
   function mk(t,s,e,all){ return {t:t,k:kindOf(t),s:s,e:e,all:all,band:all&&Math.round((e-s)/DAY)>1,src:"calc",moon:/Vollmond/.test(t)?"voll":(/Neumond/.test(t)?"neu":""),anker:false}; }
   function calc(from,to){
     var M=window.RR25_MOND, out=[]; if(!M||!(to>from)) return out;
@@ -89,6 +91,7 @@
     return out;
   }
 
+  /* ---------- Daten ---------- */
   function setData(d){
     DATA=d||{events:[]};
     FILE=(DATA.events||[]).map(function(e){ return norm(e,"kal"); }).filter(Boolean);
@@ -104,7 +107,7 @@
     ref=ref==null?Date.now():ref;
     var r0=day0(ref), lo=addDays(r0,-40), hi=addDays(r0,80), key=lo+"/"+hi;
     if(LCACHE.key===key&&LCACHE.data===DATA) return LCACHE.list;
-    var extra=COV?calc(Math.max(COV.to,lo),hi).concat(calc(lo,Math.min(COV.from,hi))):calc(lo,hi);
+    var extra=COV?calc(Math.max(COV.to,lo),hi).concat(calc(lo,Math.min(COV.from,hi))):calc(lo,hi); /* nur ausserhalb der Datei */
     var L=FILE.concat(extra).sort(function(a,b){ return a.s-b.s||(b.all-a.all); });
     LCACHE={key:key,data:DATA,list:L};
     return L;
@@ -126,6 +129,7 @@
     var m=M.day(t);
     return m.key==="voll"?"ECHO":(m.key==="neu"?"SOFT":(m.key==="ab"?"STILL":"SOFT"));
   }
+  /* Tagesart ohne Feintakte (für Monatsübersicht und als Hintergrund) */
   function dayParts(t,L){
     var d0=day0(t), d1=addDays(d0,1), r={bands:[],singles:[],marker:null,items:[]};
     L.forEach(function(x){
@@ -160,7 +164,7 @@
       var x=L[i];
       if(x.k!==K||x.s<=t) continue;
       if(x.all&&K!=="SOFT") continue;
-      if(x.all&&dayParts(x.s,L).kind!=="SOFT") continue;
+      if(x.all&&dayParts(x.s,L).kind!=="SOFT") continue; /* Soft-Feiertag im Still-Band ist kein Soft-Tag */
       if(!hit||x.s<hit.s) hit=x;
     }
     if(!hit) return null;
@@ -172,6 +176,10 @@
     var M=window.RR25_MOND; t=t==null?Date.now():t;
     return M?{neu:M.next(0,t),voll:M.next(2,t)}:{};
   }
+  /* ---------- Planetenstunden (nur Info, ändert nie den Ton) ----------
+     Chaldäische Reihenfolge Saturn, Jupiter, Mars, Sonne, Venus, Merkur, Mond. Tag = Sonnenaufgang bis -untergang in 12 gleiche
+     Stunden, Nacht = Untergang bis nächster Aufgang in 12. Die erste Tagesstunde gehört dem Tagesherrscher (So Sonne … Sa Saturn).
+     Vor Sonnenaufgang gilt noch die Nacht des Vortags. Zeiten aus sun() (NOAA, Zürich). */
   var CHAL=["Saturn","Jupiter","Mars","Sonne","Venus","Merkur","Mond"], RULER=[3,6,2,5,1,4,0];
   function planetDay(ms){
     var d0=day0(ms), S=sun(d0+12*3600000), N=sun(addDays(d0,1)+12*3600000), wd=new Date(d0).getDay(), out=[];
