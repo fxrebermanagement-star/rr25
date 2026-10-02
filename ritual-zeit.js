@@ -157,6 +157,7 @@
       items:p.items,hard:timed.filter(function(x){ return x.k==="HARD"; }),anker:timed.filter(function(x){ return x.anker; })[0]||null,
       covered:!!COV&&t>=COV.from&&t<COV.to,calc:!COV||t>=COV.to||t<COV.from};
   }
+  /* nächstes Fenster der Art K nach t: zeitgebundene Fenster; bei SOFT auch Soft-Bänder/-Tage, die später beginnen */
   function next(K,t){
     t=t==null?Date.now():t;
     var L=list(t), hit=null;
