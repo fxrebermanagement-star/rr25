@@ -1,1 +1,1 @@
-$file:/workspace/rr25-karten/ritual-runner-v2.js
+PLACEHOLDER_WILL_REPLACE_WITH_FULL
