@@ -1,1 +1,66 @@
-PLACEHOLDER_LOAD_FROM_FILE
+<!DOCTYPE html>
+<html lang="de" data-edition="0">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#090614">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="RR25">
+<meta name="rr25-build" content="13">
+<title>Rolf Reber 25</title>
+<link rel="manifest" href="manifest.webmanifest?v=0">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+:root{--bg:#090614;--elev:rgba(48,18,72,.7);--line:rgba(126,200,255,.2);--ink:#f6f0ff;--dim:#c4b4e0;--pink:#ff7ad9}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#090614;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+.app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
+header{padding:calc(.38rem + env(safe-area-inset-top)) .8rem .42rem;position:sticky;top:0;background:rgba(10,6,20,.8);backdrop-filter:blur(14px);z-index:5}
+#headRow{position:relative;min-height:54px}
+#moonWrap{position:absolute;left:0;top:0;text-align:center;width:4.4rem}
+#sunWrap{position:absolute;right:0;top:0;text-align:center;width:4.6rem}
+#moonSym,#sunSym{display:block;font-size:2.05rem;line-height:1}
+#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.6rem;color:#c4b4e0;line-height:1.25}
+.doll{width:54px;height:54px;object-fit:cover;border-radius:17px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.55)}
+.brand{font-family:Georgia,serif;letter-spacing:.32em;font-size:.7rem;color:#ff7ad9;text-align:center;margin:.14rem 0 0}
+.sub{display:none}
+nav{display:flex;flex-direction:column;gap:.16rem;padding:.32rem .2rem calc(.36rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
+nav .navR{display:grid;gap:.16rem}
+nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
+nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 7%}
+nav button{border:0;background:transparent;color:var(--dim);border-radius:.75rem;padding:.44rem .04rem .34rem;font:inherit;font-size:.6rem;display:flex;flex-direction:column;align-items:center;gap:.14rem;min-height:2.5rem}
+nav button svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7}
+nav button.on{background:transparent;color:#fff;font-weight:650}
+.app.runmode header .doll,.app.runmode header .brand,.app.runmode #moonWrap,.app.runmode #sunWrap,.app.runmode #headRow{display:none}
+main{flex:1;padding:0 .8rem 9.2rem}
+.hero h2{font-family:Georgia,serif;font-weight:500;margin:.45rem 0 .28rem;font-size:1.28rem}
+#cats{display:flex;flex-wrap:wrap;gap:.36rem;margin:.35rem 0 .2rem}
+#cats [data-cat="Alle"],#cats [data-cat="Alltag"]{display:none!important}
+.card{background:var(--elev);border:1px solid var(--line);border-radius:1.15rem;padding:.75rem .8rem;width:100%;color:inherit;font:inherit;text-align:left;margin:.24rem 0}
+.card b{display:block;font-family:Georgia,serif}
+.card small{display:block;color:var(--dim);margin-top:.16rem;font-size:.75rem}
+.screen{display:none}.screen.on{display:block}
+.words{font-family:Georgia,serif;font-size:1.05rem;line-height:1.6;white-space:pre-wrap}
+input,textarea,select{width:100%;background:#140a22;border:1px solid var(--line);color:var(--ink);border-radius:.85rem;padding:.62rem .7rem;font:inherit;margin:.28rem 0}
+textarea{min-height:5.2rem}
+.row{display:flex;gap:.35rem;margin-top:.7rem}
+.btn{flex:1;border:0;border-radius:999px;padding:.62rem .4rem;font:inherit;font-size:.78rem;font-weight:650;min-height:2.4rem}
+.primary{background:linear-gradient(135deg,#ff7ad9,#7ec8ff);color:#14081c}
+.ghost{background:var(--elev);color:var(--ink)}
+.chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.42rem .72rem;font:inherit;font-size:.76rem;min-height:2.05rem}
+.chip.on{color:#14081c;background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border-color:transparent}
+.group{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:1.1rem 0 .3rem}
+.check{display:none}
+.msg{color:var(--pink);font-style:italic}
+.meta{color:#8e7aa8;font-size:.68rem}
+.shots img{width:5.2rem;height:5.2rem;object-fit:cover;border-radius:.8rem}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:.42rem}
+#kOut,#sigilBox{aspect-ratio:1/1;border-radius:1.15rem;overflow:hidden}
+#kOut{border:1px solid rgba(255,122,217,.38)}
+#sigilBox{background:#0a0612;border:1px solid rgba(46,230,214,.28)}
+#sigilC{width:100%;height:100%;display:block}
+#run label.check,#afterStay,#stay,#under{display:none!important}
+#list{display:block}
+#home:has(#cats .chip.on) #skizze{display:none!important}
+#home:not(:has(#cats .chip.on)) #list{display:none!important}
+</style>
