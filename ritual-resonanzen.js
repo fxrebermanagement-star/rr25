@@ -78,8 +78,8 @@
       });
     }
     Promise.all([
-      one("resonanzen-a.json?v=18"),
-      one("resonanzen-b.json?v=18")
+      one("resonanzen-a.json?v=19"),
+      one("resonanzen-b.json?v=19")
     ]).then(function(ps){
       DATA=(ps[0]||[]).concat(ps[1]||[]);
       ready=2;
