@@ -1,1 +1,1 @@
-$file:/workspace/rr25-karten/ritual-kalender.js
+$file:/home/box/.cursor/projects/workspace/agent-tools/v14-kal-content.txt
