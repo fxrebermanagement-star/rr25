@@ -1,4 +1,4 @@
-var CACHE="rr25-v12";
+var CACHE="rr25-v13";
 self.addEventListener("install", function(e){
   self.skipWaiting();
 });
@@ -26,4 +26,13 @@ self.addEventListener("fetch", function(e){
       return caches.match(req);
     })
   );
+});
+/* Tippen auf eine Erinnerung (nur mit Opt-in in «Mehr»): offene App nach vorne holen, sonst öffnen */
+self.addEventListener("notificationclick", function(e){
+  e.notification.close();
+  var url=(e.notification.data&&e.notification.data.url)||"./";
+  e.waitUntil(self.clients.matchAll({type:"window",includeUncontrolled:true}).then(function(cs){
+    for(var i=0;i<cs.length;i++){ if("focus" in cs[i]){ if(cs[i].navigate && url.indexOf("#")>0) cs[i].navigate(url); return cs[i].focus(); } }
+    return self.clients.openWindow(url);
+  }));
 });
