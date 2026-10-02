@@ -133,6 +133,8 @@
       var r=sh.apply(this,arguments);
       if(id==="resonanzen"){ closeCard(); boot(); }
       else closeCard();
+      var m=document.getElementById("navMehr");
+      if(m && id==="resonanzen") m.classList.add("on");
       return r;
     };
     show._rz=1;
