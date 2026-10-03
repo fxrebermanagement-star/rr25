@@ -14,7 +14,14 @@
     "#mehrSheet .msItem[data-v=resonanzen] .ic{background:linear-gradient(160deg,#4a1f6a,#1e1030);color:#e7b8ff}",
     "#resonanzen .rzTop{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;margin:.1rem 0 .45rem}",
     "#resonanzen .rzSearch{margin:0;flex:1 1 9rem;min-width:8.5rem}",
-    "#resonanzen .rzTones{display:flex;flex-wrap:wrap;gap:.32rem}",
+    "#resonanzen .rzTones{display:flex;flex-wrap:wrap;gap:.28rem;margin:0 0 .38rem}",
+    "#resonanzen .rzToneF{display:inline-flex;align-items:center;gap:.28rem;height:1.32rem;padding:0 .48rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.45);color:#d9d0e6;font:500 .62rem system-ui,sans-serif;letter-spacing:.01em}",
+    "#resonanzen .rzToneF i{width:.38rem;height:.38rem;border-radius:50%;background:#9a96a6;flex:none}",
+    "#resonanzen .rzToneF[data-tn=Soft]{border-color:rgba(46,204,113,.55)}#resonanzen .rzToneF[data-tn=Soft] i{background:#2ecc71}",
+    "#resonanzen .rzToneF[data-tn='Soft/Grenze']{border-color:rgba(255,196,92,.6)}#resonanzen .rzToneF[data-tn='Soft/Grenze'] i{background:#ffc45c}",
+    "#resonanzen .rzToneF[data-tn='Soft→Hard']{border-color:rgba(179,107,255,.6)}#resonanzen .rzToneF[data-tn='Soft→Hard'] i{background:#b36bff}",
+    "#resonanzen .rzToneF[data-tn=Hard]{border-color:rgba(255,84,112,.65)}#resonanzen .rzToneF[data-tn=Hard] i{background:#ff5470}",
+    "#resonanzen .rzToneF.on{color:#f6f0ff;background:rgba(255,255,255,.06)}",
     "#resonanzen .rzTabs{display:flex;flex-wrap:wrap;gap:.32rem;margin:0 0 .55rem}",
     "#resonanzen .rzList{display:flex;flex-direction:column;gap:.4rem}",
     "#resonanzen .rzRow{display:block;width:100%;text-align:left;border:1px solid rgba(232,160,255,.18);background:linear-gradient(180deg,rgba(48,18,72,.62),rgba(14,8,24,.9));border-radius:1.05rem;padding:.72rem .85rem .78rem;color:#f6f0ff}",
@@ -53,7 +60,7 @@
     var list=document.getElementById("rzList");
     if(tones){
       tones.innerHTML=TONE_CHIPS.map(function(c){
-        return '<button type="button" class="chip'+(toneF===c[0]?" on":"")+'" data-tn="'+c[0]+'">'+c[1]+"</button>";
+        return '<button type="button" class="rzToneF'+(toneF===c[0]?" on":"")+'" data-tn="'+c[0]+'"><i></i>'+c[1]+"</button>";
       }).join("");
       tones.querySelectorAll("[data-tn]").forEach(function(b){
         b.onclick=function(){ toneF=b.getAttribute("data-tn")||""; paint(); };
