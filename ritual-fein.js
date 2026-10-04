@@ -30,7 +30,7 @@
   }
   /* Ton eines Chronik-Eintrags über Ritual-ID/Typ (rituals-v2.js), nicht über Textsuche.
      Reihenfolge: rid aus dem Echo-Rückblick -> Titel = Ritualname (ohne « · Härte» / « · abgebrochen»)
-     -> ältere Ritualnamen -> Tagesziel/Sigille/Gabe sind neutral (nur unter «Alle»). */
+     -> ältere Ritualnamen -> Tagesziel/Sigille/Gabe sind neutral (nur unter «Alle»; Grau zeigt nur Tagesziel und Sigille). */
   var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
   var OLD={"Trennung — selbst":"soft","Trennung zweier anderer":"hard","Nur wenn nötig — Wesenheit":"hard","Liebesritual":"soft","Anziehung und Kontakt":"soft","Finsternis":"feld","Ahnenkontakt":"feld","Fremde Wesenheit":"hard","Filterübung":"feld","Feld zu":"soft"};
   function rlist(){ try{ return R; }catch(e){ return []; } }
@@ -71,11 +71,12 @@
     if(old) old.remove();
     var n=document.createElement("div");
     n.id="logFilt";
-    ["alle","soft","grenze","hard","feld"].forEach(function(k){
+    var LAB={alle:"Alle",soft:"Soft",grenze:"Grenze",hard:"Hard",feld:"Feld",grau:"Grau"};
+    ["alle","soft","grenze","hard","feld","grau"].forEach(function(k){
       var b=document.createElement("button");
       b.type="button";
       b.className="chip logchip log-"+k+(FILT===k?" on":"");
-      b.textContent=k==="alle"?"Alle":k==="soft"?"Soft":k==="grenze"?"Grenze":k==="hard"?"Hard":"Feld";
+      b.textContent=LAB[k];
       b.onclick=function(){ FILT=k; if(typeof paintLog==="function") paintLog(); };
       n.appendChild(b);
     });
@@ -90,11 +91,12 @@
       var box=document.getElementById("entries");
       if(!box) return;
       var rows=typeof load==="function"?(load().log||[]):[];
-      var map={};
-      rows.forEach(function(e){ map[e.id]=toneOf(e); });
+      var by={};
+      rows.forEach(function(e){ if(e) by[e.id]=e; });
       box.querySelectorAll("[data-eid]").forEach(function(el){
-        var id=el.getAttribute("data-eid");
-        if(map[id]!==FILT) el.style.display="none";
+        var e=by[el.getAttribute("data-eid")];
+        var ok=FILT==="grau"?/^(Tagesziel|Sigille)$/i.test(String(e&&e.titel||"").trim()):toneOf(e)===FILT;
+        if(!ok) el.style.display="none";
       });
     };
     paintLog._fein=1;
@@ -136,6 +138,8 @@
     "#logFilt .log-hard.on{background:rgba(231,76,60,.22);color:#ffc4bc}",
     "#logFilt .log-feld{border-color:#9b8cff;color:#c9b8ff}",
     "#logFilt .log-feld.on{background:rgba(155,140,255,.22);color:#e4dcff}",
+    "#logFilt .logchip.log-grau{border-color:#8f8aa0;color:#8f8aa0;background:transparent;font-size:.64rem;padding:.16rem .48rem;min-height:1.45rem;letter-spacing:.06em}",
+    "#logFilt .logchip.log-grau.on{background:rgba(143,138,160,.2);color:#bdb8c8;border-color:#8f8aa0;box-shadow:none}",
     ".kaltoday{padding:1.05rem .95rem!important}",
     ".kaltoday b{font-size:1.18rem!important}",
     "#kalList .kalcard:not(.kaltoday){padding:.55rem .7rem;opacity:.92}",
