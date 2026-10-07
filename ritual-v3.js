@@ -345,10 +345,9 @@
     document.getElementById("bakGoV3").onclick=function(){ sichern(); };
   }
   function chronikBtn(){
-    [].slice.call(document.querySelectorAll(".bakBar .bakFile")).forEach(function(b){
-      b.textContent="Sichern";
-      b.onclick=function(){ sichern(); };
-    });
+    /* Build 41: Sichern lebt in «Mehr» (Sichern/Wiederherstellen); hier bleiben nur Text und Einfügen */
+    [].slice.call(document.querySelectorAll(".bakBar .bakFile")).forEach(function(b){ b.remove(); });
+    [].slice.call(document.querySelectorAll(".bakBar .row .btn")).forEach(function(b){ b.style.flex="1 1 0"; });
   }
 
   /* ================= Einhängen ================= */
