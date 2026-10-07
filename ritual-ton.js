@@ -38,7 +38,9 @@
   var FEST=/Samhain|Imbolc|Yule|Wintersonnenwende|Sonnenwende|Tagundnacht|Ostara|Beltane|Litha|Lammas|Mabon/;
   function seasonNow(now){
     var Z=K.seasons?K.seasons(now):[], s=K.state(now), best=null;
-    Z.forEach(function(z){ var r=z.rank; if(!best||r>best.r) best={r:r,txt:z.sz==="Finsternis"&&!z.band?z.t.split("·").slice(1).join("·").trim():z.sz,tone:z.k.toLowerCase(),e:z.band?z.e:0}; });
+    Z.forEach(function(z){ var r=z.rank; if(!best||r>best.r) best={r:r,sz0:z.sz,txt:z.sz==="Finsternis"&&!z.band?z.t.split("·").slice(1).join("·").trim():z.sz,tone:z.k.toLowerCase(),e:z.band?z.e:0}; });
+    /* Build 33: Finsternis-Tag (kein Band) zeigt die Restdauer der umgebenden Finsternis-Saison */
+    if(best&&!best.e){ var en=Z.filter(function(z){ return z.sz===best.sz0&&z.band; })[0]; if(en&&best.sz0==="Finsternis"){ best.e=en.e; best.txt=best.txt+" · Saison"; } }
     if(best) return best;
     var f=(s.items||[]).filter(function(x){ return x.all&&FEST.test(x.t); })[0];
     if(f){ var m=f.t.match(FEST); return {txt:m?m[0]:f.t,tone:f.k.toLowerCase()}; }
@@ -51,7 +53,7 @@
     var z=seasonNow(Date.now()), sp=c.querySelector("span");
     if(!z){ if(!c.hidden) c.hidden=true; return; }
     var txt=z.txt.trim();
-    if(z.e){ /* Restdauer der Saison: «noch 38 Tage» / «noch 1 Tag» / «letzter Tag» */
+    if(z.e){ /* Restdauer der Saison: «noch 38 Tage» / «noch 1 Tag» / «leletzter Tag» */
       var t0=new Date(), d0=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()).getTime();
       var left=Math.round((z.e-d0)/86400000)-1;
       if(left>=0) txt+=" · "+(left===0?"letzter Tag":"noch "+left+(left===1?" Tag":" Tage"));
@@ -64,7 +66,10 @@
   (function(){
     var st=document.createElement("style");
     st.textContent="html #seasonChip{flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:.4rem;height:1.7rem;min-height:0;padding:0 .75rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.6);color:#e6dcff;font:500 .72rem system-ui,sans-serif;letter-spacing:.04em;box-shadow:none;overflow:hidden}"+
-      "html #seasonChip span{overflow:hidden;text-overflow:ellipsis}html #seasonChip[hidden]{display:none}"+
+      "html #seasonChip span{overflow:visible;white-space:normal;line-height:1.2}"+
+      "html #toneRow{flex-wrap:wrap;height:auto;min-height:2rem;row-gap:.35rem;overflow:visible;white-space:normal}html #toneRow>#toneChip{flex:none}html #seasonChip{height:auto;min-height:1.7rem;padding:.2rem .75rem}"+
+      "html #toneAnker{flex:1 0 100%;margin-left:.15rem;overflow:visible;white-space:normal}html #toneAnker[hidden]{display:none}"+
+      "html #ankerHintCard{position:relative;z-index:1;margin:.6rem 0 1.15rem}html #home:has(#ankerHintCard) #toneAnker{display:none}html #seasonChip[hidden]{display:none}"+
       "html #seasonChip i{flex:none;width:.5rem;height:.5rem;border-radius:1px;transform:rotate(45deg);background:#9a96a6}"+
       "html #seasonChip[data-tone=soft]{border-color:rgba(46,204,113,.55)}html #seasonChip[data-tone=soft] i{background:#2ecc71}"+
       "html #seasonChip[data-tone=hard]{border-color:rgba(255,84,112,.6)}html #seasonChip[data-tone=hard] i{background:#ff5470}"+
@@ -138,6 +143,7 @@
     var show1=false;
     try{ show1=hardToday(now)&&now>=K.sun(now).set&&!hintOff(now); }catch(e){}
     if(!show1){ if(box) box.remove(); return; }
+    if(box&&row&&row.nextElementSibling!==box) row.parentNode.insertBefore(box,row.nextSibling); /* Build 33: direkt unter der Ton-Zeile */
     if(box||!row) return;
     box=document.createElement("article"); box.id="ankerHintCard"; box.className="card ankerHintCard";
     box.innerHTML='<p>Heute Hard gearbeitet? <a href="#anker">Rückkehr · Anker</a> nicht vergessen</p><button type="button" aria-label="Hinweis für heute ausblenden">×</button>';

@@ -17,7 +17,9 @@
     var tone=document.getElementById("toneRow"); /* Ton-Chip (v13) direkt unter dem Kasten, Platz steht fest in index.html */
     if(kast){
       if(tone) after(kast, tone);
-      var base=tone||kast;
+      var hint=document.getElementById("ankerHintCard"); /* Build 33: Anker-Hinweis direkt unter der Ton-Zeile */
+      if(hint&&tone) after(tone, hint);
+      var base=(tone&&hint)||tone||kast;
       if(mond) after(base, mond);
       if(dank) after(mond||base, dank);
       if(lab) after(dank||mond||base, lab);
