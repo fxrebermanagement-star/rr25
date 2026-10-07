@@ -133,7 +133,7 @@
     var a=K.planetAt(now), v=K.venusNext(now), c=a.cur;
     if(!c) return "";
     var vt=v?(v.s<=now?"jetzt Venus-Stunde bis "+tstr(v.e):"nächste Venus-Stunde "+rel(v.s,now)+" "+tstr(v.s)+"–"+tstr(v.e)):"";
-    return '<p class="kalPlan"><span class="kpTag">Planetenstunde</span> '+c.p+(c.p==="Venus"?' ♀':'')+' · bis '+tstr(c.e)+(vt&&c.p!=="Venus"?' · '+vt:'')+'<br><span>Nur Info. Der Ton oben gilt.</span></p>';
+    return '<p class="kalPlan"><span class="kpTag">Planetenstunde</span> '+(c.p==="Mars"||c.p==="Saturn"?'<b class="kpHard">'+c.p+'</b>':c.p)+(c.p==="Venus"?' ♀':'')+' · bis '+tstr(c.e)+(vt&&c.p!=="Venus"?' · '+vt:'')+'<br><span>Nur Info. Der Ton oben gilt.</span></p>';
   }
   function yearView(now){
     var n=new Date(now), y0=n.getMonth()>=8?n.getFullYear():n.getFullYear()-1, out=[];
@@ -322,7 +322,7 @@
     ".kalGo{margin:.45rem 0 0!important}.kalGo .btn{min-height:2.1rem;font-size:.78rem;padding:.35rem .9rem}",
     ".kalPick{display:flex;flex-wrap:wrap;gap:.35rem;margin:.4rem 0 0}.kalPick .btn{flex:1 1 45%;min-height:2rem;font-size:.74rem;padding:.3rem .5rem;border-color:rgba(255,84,112,.4)}",
     ".kalAnker{color:#e7c9ff;text-decoration:none;border-bottom:1px dotted rgba(231,201,255,.6)}",
-    ".kalPlan{color:#bfb2da!important;font-size:.72rem!important}.kalPlan span{color:#8f80b8}.kalPlan .kpTag{color:#f0b8ff;letter-spacing:.08em;text-transform:uppercase;font-size:.6rem;margin-right:.25rem}",
+    ".kalPlan{color:#bfb2da!important;font-size:.72rem!important}.kalPlan span{color:#8f80b8}.kalPlan .kpHard{color:#ff5470!important;font-weight:600}.kalPlan .kpTag{color:#f0b8ff;letter-spacing:.08em;text-transform:uppercase;font-size:.6rem;margin-right:.25rem}",
     ".kmR{display:flex;gap:.35rem;align-items:center}.kmYear{height:2rem;padding:0 .7rem;border-radius:999px;border:1px solid rgba(155,140,255,.35);background:rgba(155,140,255,.08);color:#cbb8ff;font-size:.7rem;letter-spacing:.06em}",
     ".kmGhost{visibility:hidden;border:0;background:none}",
     ".kyGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}",
