@@ -57,7 +57,7 @@
     return '<article class="card kalcard '+k+(live?' kallive':'')+'" data-kal="1" data-kind="'+k+'" data-title="'+h(x.t).replace(/"/g,"")+'" data-sid="'+sug.id+'" data-slabel="'+sug.label+'">'+
       '<b>'+h(x.t)+'</b>'+
       '<div class="meta">'+when(x)+(live?' · <span class="kalOn">läuft, '+rest(x.e,now)+'</span>':'')+(x.band&&x.s<=now&&now<x.e?' · '+left(x,now):'')+(x.src==="calc"?" · gerechnet":"")+'</div>'+
-      '<p class="meta">'+hint+'</p>'+startBtn(x,now)+
+      (x.d?'<p class="kalD">'+h(x.d)+'</p>':'')+'<p class="meta">'+(x.all&&k==="hard"?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>'+startBtn(x,now)+
       '</article>';
   }
   function left(b,now){ var n=Math.round((b.e-day0(now))/DAY); return n<=1?"letzter Tag":"noch "+n+" Tage"; }
@@ -112,6 +112,7 @@
     var ec=echoChecks(), end=addDays(day0(now),1), soon=addDays(day0(now),3);
     ec.filter(function(x){ return x.due<end; }).slice(0,2).forEach(function(x){ hints.push("Echo · Tag "+x.k+": «"+h(x.name)+"» ist dran"); });
     ec.filter(function(x){ return x.due>=end&&x.due<soon; }).slice(0,1).forEach(function(x){ hints.push("Echo · Tag "+x.k+" für «"+h(x.name)+"» "+rel(x.due,now)); });
+    if(s.hardDay) hints.unshift('<span class="kalHd">'+h(s.hardDay.t)+'</span> · '+h(s.hardDay.d||"Abends Rückkehr · Anker."));
     if(hints.length) L.push('<p class="kalHint">'+hints.join("<br>")+'</p>');
     var mn=K.moonNext(now), mm=[];
     if(mn.neu) mm.push([mn.neu,"○ Neumond "+rel(mn.neu,now)+" "+tstr(mn.neu)]);
@@ -145,7 +146,7 @@
     }
     return '<div class="kalMonth kalYear"><div class="kmHead"><button type="button" class="kmNav" id="kyBack" aria-label="Zurück zum Monat">‹</button><b>Jahr · Sep '+y0+' – Aug '+(y0+1)+'</b><span class="kmNav kmGhost"></span></div>'+
       '<div class="kyGrid">'+out.join("")+'</div>'+
-      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="dh"></i>Hard-Tag · gestrichelt = gerechnet (ohne Hard)</p></div>';
+      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="kl hard"></i>Hard-Tag/Phase <i class="dh"></i>Hard-Feintakt · gestrichelt = gerechnet (ohne Hard)</p></div>';
   }
   function month(now){
     var m0=MONTH||new Date(new Date(now).getFullYear(),new Date(now).getMonth(),1).getTime();
@@ -166,7 +167,7 @@
     }
     return '<div class="kalMonth"><div class="kmHead"><button type="button" class="kmNav" data-m="-1" aria-label="Monat zurück">‹</button><b>'+MN[d.getMonth()]+' '+d.getFullYear()+'</b><span class="kmR"><button type="button" class="kmYear" id="kmYear">Jahr</button><button type="button" class="kmNav" data-m="1" aria-label="Monat vor">›</button></span></div>'+
       '<div class="kmGrid">'+cells.join("")+'</div>'+
-      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="dh"></i>Hard-Feintakt <i class="de"></i>Nachlauf ● Voll ○ Neu</p></div>';
+      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="kl hard"></i>Hard-Tag/Phase <i class="dh"></i>Hard-Feintakt <i class="de"></i>Nachlauf ● Voll ○ Neu</p></div>';
   }
   function dayDetail(dm,now){
     var p=K.dayParts(dm+12*3600000), hard=p.items.filter(function(x){ return !x.all&&x.k==="HARD"; }).length;
@@ -301,6 +302,7 @@
     ".kmDay.soft{border-bottom-color:#2ecc71;background:rgba(46,204,113,.10)}",
     ".kmDay.still{border-bottom-color:#9a96a6;background:rgba(154,150,166,.10)}",
     ".kmDay.echo{border-bottom-color:#b36bff;background:rgba(179,107,255,.14)}",
+    ".kmDay.hard{border-bottom-color:#e74c3c;background:rgba(231,76,60,.14)}",
     ".kmDay.calc{border-bottom-style:dashed}",
     ".kmDay.out{opacity:.32}",
     ".kmDay.today{box-shadow:inset 0 0 0 1.5px #ff7ad9}",
@@ -326,6 +328,7 @@
     ".kyD,.kyE{display:block;height:7px;border-radius:1.5px}.kyD{background:rgba(255,255,255,.06);box-sizing:border-box}",
     ".kyD.soft{background:rgba(46,204,113,.55)}.kyD.still{background:rgba(154,150,166,.5)}.kyD.echo{background:rgba(179,107,255,.65)}",
     ".kyD.calc{background:transparent!important;border:1px dashed rgba(200,190,230,.45)}.kyD.calc.soft{border-color:rgba(46,204,113,.7)}.kyD.calc.still{border-color:rgba(154,150,166,.7)}.kyD.calc.echo{border-color:rgba(179,107,255,.8)}",
+    ".kyD.hard{background:rgba(231,76,60,.6)}.kyD.calc.hard{border-color:rgba(231,76,60,.8)}.kl.hard{background:#e74c3c}.kalcard p.kalD{color:#ffb3a8}.kalHd{color:#ff8a7a;font-weight:600}",
     ".kyD.hd{box-shadow:inset 0 -2px 0 #ff5470}.kyD.today{outline:1.5px solid #ff7ad9;outline-offset:0}",
     ".kalCov.warn{color:#ffb86b}"
   ].join("");
