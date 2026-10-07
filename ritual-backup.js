@@ -199,10 +199,8 @@
       else openIn();
     };
   }
-  function place(){
-    bar(document.getElementById("log"));
-    bar(document.getElementById("notiz"));
-  }
+  /* Build 42: keine Leiste (Text / Einfügen) mehr in Chronik und Notiz. Sichern und Wiederherstellen leben in «Mehr». */
+  function place(){}
   var st=document.createElement("style");
   st.textContent="#bakPane{margin:.2rem 0 .8rem}#bakTx{min-height:8rem;font-size:.68rem}";
   document.head.appendChild(st);
