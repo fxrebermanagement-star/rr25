@@ -11,6 +11,8 @@
   var MN=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
   var NAME={SOFT:"Soft",HARD:"Hard",ECHO:"Echo",STILL:"Still",GRENZE:"Grenze"};
   function seas(t){ return K.seasons?K.seasons(t):[]; } /* Saisons: nur Anzeige, ändern den Ton nie */
+  /* Build 33: Datumsbereiche einheitlich mit Jahr («3.10. (…) – 14.11.2026» -> «3.10.2026 (…) – 14.11.2026», «30.1.–28.2.2027» -> «30.1.2027 – 28.2.2027») */
+  function yr(s){ return String(s==null?"":s).replace(/(\b\d{1,2})\.(\d{1,2})\.(?!\d)((?:\s*\([^)]*\))?)\s*–\s*(\d{1,2})\.(\d{1,2})\.(\d{4})/g,function(m,d1,m1,p,d2,m2,y){ return d1+"."+m1+"."+(+m1>+m2?y-1:y)+p+" – "+d2+"."+m2+"."+y; }); }
   function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function two(n){ return String(n).padStart(2,"0"); }
   function tstr(ms){ var d=new Date(ms); return two(d.getHours())+":"+two(d.getMinutes()); }
@@ -59,7 +61,7 @@
     return '<article class="card kalcard '+k+(sz?' saison':'')+(live?' kallive':'')+'"'+(sz?'':' data-kal="1"')+' data-kind="'+k+'" data-title="'+h(x.t).replace(/"/g,"")+'" data-sid="'+sug.id+'" data-slabel="'+sug.label+'">'+
       '<b>'+h(x.t)+'</b>'+
       '<div class="meta">'+when(x)+(live?' · <span class="kalOn">läuft, '+rest(x.e,now)+'</span>':'')+(x.band&&x.s<=now&&now<x.e?' · '+left(x,now):'')+(x.src==="calc"?" · gerechnet":"")+'</div>'+
-      (x.d?'<p class="kalD">'+h(x.d)+'</p>':'')+'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>'+startBtn(x,now)+
+      (x.d?'<p class="kalD">'+h(yr(x.d))+'</p>':'')+(x.all&&k==="hard"&&!sz&&/Rückkehr · Anker/.test(x.d)?'':'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>')+startBtn(x,now)+
       '</article>';
   }
   function left(b,now){ var n=Math.round((b.e-day0(now))/DAY); return n<=1?"letzter Tag":"noch "+n+" Tage"; }
@@ -89,12 +91,16 @@
     else if(s.src==="band"&&s.band) title=s.band.t;
     else if(s.src==="mondtag"&&s.marker) title=s.marker.t;
     else title=NAME[s.kind]+" · "+moonLabel(now);
+    /* Build 33: nur Anzeige. Hard-Tag/-Phase ohne offenen Feintakt: Kopf zeigt Hard wie die Tagesansicht (Ton/Gate unverändert). */
+    var dp=K.dayParts(now), hov=s.kind!=="HARD"&&dp.kind==="HARD";
+    if(hov){ tone="hard"; title=s.hardDay?s.hardDay.t:(dp.band&&dp.band.k==="HARD"?dp.band.t:(dp.single&&dp.single.k==="HARD"?dp.single.t:"HARD · Tag")); }
     var sag={
       HARD:"Feintakt offen. Nur mit Gate und Rückkehr.",
       STILL:"Heute still. Buch zu. Keine Kerze aus Pflicht.",
       ECHO:s.open?"Echo-Fenster. Lesen, nicht nachladen.":"Heute Nachlauf. Lesen, nicht nachladen.",
       SOFT:s.open?"Soft-Fenster offen. Öffnen erlaubt. Halten nicht.":"Heute soft. Öffnen erlaubt. Halten nicht."
     }[s.kind];
+    if(hov) sag="Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.";
     var L=[];
     if(s.open) L.push('<p class="kalNow"><span class="kalOn">offen</span> bis '+tstr(s.open.e)+' · '+rest(s.open.e,now)+'</p>');
     L.push('<p>'+sag+'</p>');
@@ -114,8 +120,8 @@
     var ec=echoChecks(), end=addDays(day0(now),1), soon=addDays(day0(now),3);
     ec.filter(function(x){ return x.due<end; }).slice(0,2).forEach(function(x){ hints.push("Echo · Tag "+x.k+": «"+h(x.name)+"» ist dran"); });
     ec.filter(function(x){ return x.due>=end&&x.due<soon; }).slice(0,1).forEach(function(x){ hints.push("Echo · Tag "+x.k+" für «"+h(x.name)+"» "+rel(x.due,now)); });
-    seas(now).slice(0,2).reverse().forEach(function(z){ hints.unshift('<span class="kalSz '+z.k.toLowerCase()+'">'+h(z.t)+'</span> · '+h(z.d)); });
-    if(s.hardDay) hints.unshift('<span class="kalHd">'+h(s.hardDay.t)+'</span> · '+h(s.hardDay.d||"Abends Rückkehr · Anker."));
+    seas(now).slice(0,2).reverse().forEach(function(z){ hints.unshift('<span class="kalSz '+z.k.toLowerCase()+'">'+h(z.t)+'</span> · '+h(yr(z.d))); });
+    if(s.hardDay) hints.unshift((hov&&title===s.hardDay.t?'':'<span class="kalHd">'+h(s.hardDay.t)+'</span> · ')+h(s.hardDay.d||"Abends Rückkehr · Anker."));
     if(hints.length) L.push('<p class="kalHint">'+hints.join("<br>")+'</p>');
     var mn=K.moonNext(now), mm=[];
     if(mn.neu) mm.push([mn.neu,"○ Neumond "+rel(mn.neu,now)+" "+tstr(mn.neu)]);
@@ -149,7 +155,7 @@
     }
     return '<div class="kalMonth kalYear"><div class="kmHead"><button type="button" class="kmNav" id="kyBack" aria-label="Zurück zum Monat">‹</button><b>Jahr · Sep '+y0+' – Aug '+(y0+1)+'</b><span class="kmNav kmGhost"></span></div>'+
       '<div class="kyGrid">'+out.join("")+'</div>'+
-      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="kl hard"></i>Hard-Tag/Phase <i class="dh"></i>Hard-Feintakt · gestrichelt = gerechnet (ohne Hard)</p></div>';
+      LEG(true)+'</div>';
   }
   function month(now){
     var m0=MONTH||new Date(new Date(now).getFullYear(),new Date(now).getMonth(),1).getTime();
@@ -171,7 +177,15 @@
     }
     return '<div class="kalMonth"><div class="kmHead"><button type="button" class="kmNav" data-m="-1" aria-label="Monat zurück">‹</button><b>'+MN[d.getMonth()]+' '+d.getFullYear()+'</b><span class="kmR"><button type="button" class="kmYear" id="kmYear">Jahr</button><button type="button" class="kmNav" data-m="1" aria-label="Monat vor">›</button></span></div>'+
       '<div class="kmGrid">'+cells.join("")+'</div>'+
-      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="kl hard"></i>Hard-Tag/Phase <i class="dh"></i>Hard-Feintakt <i class="de"></i>Nachlauf <i class="ds hard"></i>Saison ● Voll ○ Neu</p></div>';
+      LEG(false)+'</div>';
+  }
+  /* Legende (Build 33): Symbol+Text bleiben zusammen (nowrap je Eintrag, Zeile bricht zwischen Einträgen) */
+  function LEG(yr){
+    var a=['<i class="kl soft"></i>Soft','<i class="kl still"></i>Still','<i class="kl echo"></i>Echo','<i class="kl hard"></i>Hard-Tag/Phase','<i class="dh"></i>Hard-Feintakt'];
+    if(!yr) a.push('<i class="de"></i>Nachlauf');
+    a.push('<i class="ds hard"></i>Saison','● Voll','○ Neu');
+    if(yr) a.push('gestrichelt = gerechnet (ohne Hard)');
+    return '<p class="kmLeg">'+a.map(function(x){ return '<span class="kmLi">'+x+'</span>'; }).join("")+'</p>';
   }
   function dayDetail(dm,now){
     var p=K.dayParts(dm+12*3600000), hard=p.items.filter(function(x){ return !x.all&&x.k==="HARD"; }).length;
@@ -185,9 +199,9 @@
     var c=K.coverage(), stt=K.status();
     if(stt==="fail"||!c) return '<p class="kalCov warn">Kalender nicht geladen. Die App rechnet Bänder und Mondtage selbst (ohne Hard).</p>';
     var gen=(K.data()||{}).generated, days=Math.round((c.to-day0(now))/DAY);
-    var txt='Kalender reicht bis '+dstr(c.to-1)+new Date(c.to-1).getFullYear()+(gen?' · Stand '+dstr(Date.parse(gen)).replace(/\.$/,''):'');
+    var txt='Kalender reicht bis '+dstr(c.to-1)+new Date(c.to-1).getFullYear()+(gen?' · Stand '+dstr(Date.parse(gen)):'');
     if(days<=0) return '<p class="kalCov warn">Kalender-Daten sind ausgelaufen ('+dstr(c.to-1)+'). Die App rechnet selbst, ohne Hard. Bitte Kalender-Sync laufen lassen.</p>';
-    if(days<21) return '<p class="kalCov warn">'+txt+'. Nur noch '+days+' Tage, danach rechnet die App selbst (ohne Hard). Bitte Kalender-Sync laufen lassen.</p>';
+    if(days<21) return '<p class="kalCov warn">'+txt+(/\.$/.test(txt)?'':'.')+' Nur noch '+days+' Tage, danach rechnet die App selbst (ohne Hard). Bitte Kalender-Sync laufen lassen.</p>';
     return '<p class="kalCov">'+txt+'</p>';
   }
   function bindAnker(root){
@@ -204,8 +218,8 @@
     html+='<p class="group">7 Tage</p>';
     html+=week.length?week.map(function(x){ return card(x,T); }).join(""):"<p class='meta'>Keine Fenster in 7 Tagen.</p>";
     if(rest.length){
-      html+='<div class="row"><button type="button" class="btn ghost" id="kalMore">'+(OPENALL?"Woche":"Weiter · "+rest.length)+'</button></div>';
-      if(OPENALL) html+='<p class="group">Weiter</p>'+rest.map(function(x){ return card(x,T); }).join("");
+      html+='<div class="row"><button type="button" class="btn ghost" id="kalMore">'+(OPENALL?"Woche":"Weitere "+rest.length+" Einträge")+'</button></div>';
+      if(OPENALL) html+='<p class="group">Weitere</p>'+rest.map(function(x){ return card(x,T); }).join("");
     }
     html+=covLine(T);
     box.innerHTML=html;
@@ -316,7 +330,7 @@
     ".kmDots{display:flex;gap:2px;height:5px}",
     ".kmDots i,.kmLeg i.dh,.kmLeg i.de{display:inline-block;width:5px;height:5px;border-radius:50%}",
     "i.dh{background:#ff5470}i.de{background:#c77dff}i.dc{box-sizing:border-box;border:1.2px solid #ff7ad9}",
-    ".kmLeg{margin:.45rem .1rem 0;font-size:.62rem;color:#a996cf;line-height:1.6}",
+    ".kmLeg{margin:.45rem .1rem 0;font-size:.62rem;color:#a996cf;line-height:1.6;display:flex;flex-wrap:wrap;column-gap:.55rem;row-gap:0}.kmLeg .kmLi{white-space:nowrap}.kmLeg .kmLi>i:first-child{margin-left:0}",
     ".kmLeg i.dh,.kmLeg i.de{margin:0 .2rem 0 .35rem}",
     ".kalCov{margin:.8rem .1rem .2rem;font-size:.7rem;color:#8f80b8}",
     ".kalGo{margin:.45rem 0 0!important}.kalGo .btn{min-height:2.1rem;font-size:.78rem;padding:.35rem .9rem}",
