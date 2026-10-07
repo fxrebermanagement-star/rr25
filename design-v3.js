@@ -177,7 +177,7 @@
 
   /* =============== 3 · Ritual-Schritte =============== */
   var PH=["Tor","Absicht","3·6·9","So sei es","Rückkehr"];
-  var PRE=/^(Vorbereitung|Standort|Rahmen|Mitte|Position|Prüfen|Schutz|Filter|Ankommen)$/;
+  var PRE=/^(Vorbereitung|Standort|Rahmen|Mitte|Position|Prüfen|Schutz|Filter|Ankommen|Feld|Grenze)$/;
   function phaseOfName(n){
     n=String(n||"").trim();
     if(/^(369|3 · 6 · 9)$/.test(n)) return 2;
@@ -188,8 +188,9 @@
     return -1;
   }
   function curRit(sub){
-    var t=String(sub||"").split(" · ")[0].trim(), best=null;
-    rituals().forEach(function(r){ if(r.t===t) best=r; });
+    var id=window._rid||"", t=String(sub||"").split(" · ")[0].trim(), best=null;
+    rituals().forEach(function(r){ if(id && r.id===id) best=r; });
+    if(!best) rituals().forEach(function(r){ if(r.t===t || String(sub||"").indexOf(r.t)===0) best=r; });
     return best;
   }
   function phaseNow(run){
@@ -203,11 +204,18 @@
     if(!stepMode){
       if(/^(Status|Echo)$/.test(title)) p=5; else p=0;
     } else {
-      p=phaseOfName(title);
-      if(p<0){
-        var i=names.indexOf(title), q=-1;
-        for(var j=(i>=0?i:names.length)-1;j>=0;j--){ var x=phaseOfName(names[j]); if(x>=0){ q=x; break; } }
-        p=Math.max(1,q<0?1:q);
+      /* Phasen laufen nur vorwärts: ein spätes «Grenze» oder «Feld» fällt nicht auf «Tor» zurück */
+      var seq=[], last=0;
+      names.forEach(function(nm){ var x=phaseOfName(nm); if(x<0) x=Math.max(1,last); x=Math.max(x,last); seq.push(x); last=x; });
+      var i=names.indexOf(title);
+      if(i>=0) p=seq[i];
+      else {
+        p=phaseOfName(title);
+        if(p<0){
+          var q=-1;
+          for(var j=names.length-1;j>=0;j--){ var x=phaseOfName(names[j]); if(x>=0){ q=x; break; } }
+          p=Math.max(1,q<0?1:q);
+        }
       }
     }
     return {p:p,has369:has369,title:title,r:r,step:stepMode,wes:/ · Mit Wesenheit/.test(sub)};
@@ -252,6 +260,8 @@
       if(ph.wes && (i===1||i===3)) cls+=" wes";
       return '<span class="'+cls+'"><i></i><em>'+n+'</em></span>';
     }).join("")+'</div>';
+    /* Anker, Echo lesen, Abbruch: kein Fünf-Phasen-Ritual, darum keine Schrittleiste */
+    if(ph.r && (ph.r.anker||ph.r.echoRead||ph.r.neutral)) s.classList.add("v3noseg");
     var hero=run.querySelector(".hero");
     run.insertBefore(s, hero);
     /* Aktionen in den Daumenbereich */
@@ -407,6 +417,7 @@
     "#run .v3seg .now em{color:#fff;font-weight:650}",
     "#run .v3seg .skip i{background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 4px,transparent 4px 8px)}",
     "#run .v3seg .skip em{opacity:.5}",
+    "#run .v3step.v3noseg{display:none}",
     "#run .v3seg .wes em::after{content:' ✦';color:#ff5470}",
     "#run .v3seg .wes i{outline:1px solid rgba(255,84,112,.55);outline-offset:1px}",
     "#run.v3run .hero .sub{margin-bottom:.1rem!important}",

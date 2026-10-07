@@ -85,7 +85,7 @@
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachfragen.']
   ]},
   {id:'karma',tone:'soft',t:'Karma-Ausgleich',s:'Nicht Rache. Soft.',cat:'Energie',hard:false,need:['Name'],needOpt:true,flow:[
-    ['Vorbereitung','Name optional oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Ausgleich. Nicht Rache. Ohne Hass. Ich bleibe ich.'],
+    ['Vorbereitung','Tu:|Eine Kerze. Wasser danach.||Sprich:|Ausgleich. Nicht Rache. Ohne Hass. Ich bleibe ich.'],
     ['Schutz','Tu:|Grenze um dich.||Sprich:|Ich schliesse zuerst mein eigenes Feld.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Der Beobachter ist wach.'],
     ['Absicht','Sprich:|Was mir genommen oder aufgeladen wurde, kehrt in stimmiger Form zurück.|Der Ausgleich geschieht ohne Hass. Die Last darf gehen.|Ich schaue nicht auf den Fall des anderen.'],
@@ -95,7 +95,7 @@
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
   ]},
   {id:'zur',tone:'soft',t:'Energie zurückholen',s:'Nach Kontakt. Nur holen. Soft.',cat:'Energie',hard:false,need:['Name'],needOpt:true,flow:[
-    ['Vorbereitung','Name oben, wenn der Kontakt eine Person war. Sonst leer lassen.||Tu:|Eine Kerze am Platz. Wasser danach.||Sprich:|Nur zurück. Nichts rufen.|Was mein ist, kommt. Was nicht mein ist, geht.'],
+    ['Vorbereitung','Name oben, wenn der Kontakt eine Person war.||Tu:|Eine Kerze am Platz. Wasser danach.||Sprich:|Nur zurück. Nichts rufen.|Was mein ist, kommt. Was nicht mein ist, geht.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Der Beobachter ist wach. Ich bin in mir.'],
     ['Feld','Tu:|Grenze um dich.||Sprich:|Ich schliesse mein Feld. Meine Energie gehört mir.'],
     ['Absicht','Sprich:|Alles, was von mir genommen wurde oder an mir hängt, kehrt jetzt rein und vollständig zu mir zurück.|Fremde Energie löst sich und geht. Ich hole nicht nach. Ich empfange.'],
@@ -210,7 +210,7 @@
     ['Absicht','Sprich:|Was [Name] gesät hat, kehrt in klarer Form.|Die Bahn ist gesetzt. Ich setze und lasse los.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Bahn ist gesetzt.|Sechs: Der Ausgleich läuft.|Neun: Übergeben.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
-    ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir. Ich bleibe Spieler mit 9.|Füsse. Atem. Raum.'],
+    ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir. Ich bleibe im Spiel. Ich bleibe ich.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
   ]},
   {id:'ueber',tone:'hard',soft:'segen',haerte:true,t:'Person übernehmen',s:'Hinein. Sofort raus. Hart.',cat:'Person X',hard:true,ich:true,need:['Name','Auftrag'],
@@ -222,7 +222,7 @@
     ['Zurück aus [Name]','Sprich sofort:|Ich bin nicht mehr [Name].|Ich bin wieder ich. Der Beobachter hält.|Die Aufgabe läuft, ohne dass ich bleibe.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Saat gesetzt.|Sechs: Bewegung hält.|Neun: Ich bin zurück und klar.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
-    ['Rückkehr','Doppelt prüfen. Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört nur mir. Alles Fremde geht.|Füsse. Atem. Raum.'],
+    ['Rückkehr','Doppelt prüfen.||Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört nur mir. Alles Fremde geht.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
   ]},
 
@@ -231,12 +231,12 @@
     preis:'Ein Mitspieler mehr im Feld — du bleibst verantwortlich.',gegen:'Täuschung möglich. Filter und klares Ende sind Pflicht.',flow:[
     ['Vorbereitung','Name und Auftrag oben. Ein Satz.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur [Auftrag]. Für [Name] nur, wenn gesetzt. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge. Grenze um dich.||Sprich:|Ich bin der Spieler. Der Beobachter ist wach.|Ich schliesse mein Feld hart.'],
-    ['Grenze','Sprich:|Ich behalte den Raum.|Nur klare, stimmige Präsenz. Was drängt, bleibt draussen.|Kein Verschmelzen. Kein Nachlaufen.'],
-    ['Fragen','Sprich:|Wer bereit und geeignet ist, [Auftrag] zu tragen, möge sich zeigen.'],
-    ['Auftrag','Sprich:|Dein Auftrag ist: [Auftrag]. Nur in diesem Rahmen.|Ohne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist.'],
+    ['Wesenheit · Filter','Sprich:|Ich behalte den Raum.|Nur klare, stimmige Präsenz. Was drängt, bleibt draussen.|Kein Verschmelzen. Kein Nachlaufen.'],
+    ['Wesenheit · Rufen','Sprich:|Wer bereit und geeignet ist, [Auftrag] zu tragen, möge sich zeigen.'],
+    ['Wesenheit · Auftrag','Sprich:|Dein Auftrag ist: [Auftrag]. Nur in diesem Rahmen.|Ohne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Gegeben.|Sechs: Getragen.|Neun: Gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. So sei es.'],
-    ['Entlassen','Sprich:|Der Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.|Du bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt.'],
+    ['Wesenheit · Entlassen','Sprich:|Der Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.|Du bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt.'],
     ['Rückkehr','Sprich:|Ich bin nicht die Wesenheit. Ich bin ganz bei mir.|Meine Energie gehört nur mir. Alles Fremde löst sich und geht.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
   ]},

@@ -95,7 +95,7 @@
   }
   function fillT(s){
     var r=cur.r, m=cur.mem;
-    var keys=["Name","A","B","Auftrag","Wofür","Absicht"];
+    var keys=["Name","A","B","Auftrag","AuftragW","Wofür","Absicht"];
     var lines=String(s).split("\n").filter(function(line){
       if(r.needOpt && !m.Name && line.indexOf("[Name]")>=0) return false;
       return true;
@@ -135,17 +135,17 @@
       }
       var k=idx(/^Rückkehr$/);
       if(lv==="nagel" && k>=0){
-        var who=r.need&&r.need.indexOf("A")>=0?"Ich bin nicht [A]. Ich bin nicht [B].":"Ich bin nicht mehr [Name].";
+        var who=r.need&&r.need.indexOf("A")>=0?"Ich bin nicht [A]. Ich bin nicht [B].":((r.ichHart||r.ich)?"Ich bin nicht mehr [Name].":"Ich bin nicht [Name].");
         out[k][1]="Drei Schritte.\n\n1 Benennen:\n"+who+"\n\n2 Trennen:\nIch kehre vollständig in mich zurück. Meine Energie gehört nur mir. Alles Fremde löst sich und geht.\n\n3 Körper:\nFüsse. Atem. Hände. Raum.\nIch bin ganz bei mir. So ist es.";
       }
       var e=idx(/^Schluss$/);
-      if(e>=0 && lv==="nagel") out[e][1]+="\n\nFrist: nicht nachladen, nicht nachschauen. Die Arbeit läuft.";
+      if(e>=0 && lv==="nagel") out[e][1]=/\nTu:\n[^\n]*$/.test(out[e][1])?out[e][1].replace(/\nTu:\n[^\n]*$/,"\nTu:\nWasser. Alltag.\nFrist: nicht nachladen, nicht nachschauen. Die Arbeit läuft."):out[e][1]+"\n\nFrist: nicht nachladen, nicht nachschauen. Die Arbeit läuft.";
     }
     if(cur.wesen && !r.wesenSelf){
       var a3=idx(/^369$/); if(r.haerte&&lv!=="weich") a3=idx(/^Anker$/);
       out.splice(a3,0,
         ["Wesenheit · Filter","Sprich:\nNur klare, stimmige Präsenz. Was drängt, bleibt draussen.\nWer bereit und geeignet ist, möge sich zeigen."],
-        ["Wesenheit · Auftrag","Sprich:\nDein Auftrag ist: [Auftrag]. Nur in diesem Rahmen.\nOhne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist."]);
+        ["Wesenheit · Auftrag","Sprich:\nDein Auftrag ist: "+(ownAuf()?"[AuftragW]":"[Auftrag]")+". Nur in diesem Rahmen.\nOhne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist."]);
       var k2=idx(/^Rückkehr$/);
       out.splice(k2,0,["Wesenheit · Entlassen","Sprich:\nDer Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.\nDu bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt."]);
     }
@@ -153,11 +153,14 @@
     if(kk>=0 && r.id!=="schlaf") out[kk][1]+="\n\n"+ANKER;
     cur.steps=out;
   }
+  /* Ritual hat ein eigenes Auftragsfeld (z. B. Person übernehmen): die Wesenheit bekommt dann ein eigenes Feld */
+  function ownAuf(){ return (cur.r.need||[]).indexOf("Auftrag")>=0 && !cur.r.wesenSelf; }
   function needs(){
     var n=(cur.r.need||[]).slice();
-    if(cur.wesen && !cur.r.wesenSelf && n.indexOf("Auftrag")<0) n.push("Auftrag");
+    if(cur.wesen && !cur.r.wesenSelf) n.push(ownAuf()?"AuftragW":"Auftrag");
     return n;
   }
+  var NEED_LAB={AuftragW:"Auftrag der Wesenheit"};
 
   function frame(opt){
     var r=cur.r, el=run();
@@ -283,9 +286,9 @@
     if(cur.i===0 && n.length){
       inputs=n.map(function(k){
         var ph=k+((r.needOpt&&k==="Name")?" (optional)":"");
-        if(k==="Auftrag" && (cur.wesen||r.wesenSelf)){
+        if(k==="AuftragW" || (k==="Auftrag" && !ownAuf() && (cur.wesen||r.wesenSelf))){
           var aq="Was genau soll die Wesenheit tun? Ein Satz.";
-          return '<label class="absLab wAuf">Auftrag<input class="nm" data-n="Auftrag" placeholder="'+aq+'" aria-label="'+aq+'" value="'+h(cur.mem.Auftrag||"")+'" autocomplete="off" maxlength="200"></label>';
+          return '<label class="absLab wAuf">'+(k==="AuftragW"?"Auftrag der Wesenheit":"Auftrag")+'<input class="nm" data-n="'+k+'" placeholder="'+aq+'" aria-label="'+aq+'" value="'+h(cur.mem[k]||"")+'" autocomplete="off" maxlength="200"></label>';
         }
         return '<input class="nm" data-n="'+h(k)+'" placeholder="'+h(ph)+'" value="'+h(cur.mem[k]||"")+'" autocomplete="off" autocapitalize="words">';
       }).join("");
@@ -333,7 +336,7 @@
     document.getElementById("next").onclick=function(){
       if(cur.i===0){
         var miss=needs().filter(function(k){ return !(r.needOpt&&k==="Name") && !cur.mem[k]; });
-        if(miss.length){ msg(miss.join(", ")+" fehlt."); return; }
+        if(miss.length){ msg(miss.map(function(k){ return NEED_LAB[k]||k; }).join(", ")+" fehlt."); return; }
       }
       if(/^Rückkehr$/.test(st[0])){
         var ok=document.getElementById("rkOk");
@@ -356,7 +359,7 @@
   }
   function echo(){
     var w=wetter();
-    if(cur.r.anker){
+    if(cur.r.anker||cur.r.neutral){
       frame({title:"Status kurz",body:'<p class="words">Ein Satz: Wie bin ich jetzt da?\nDann Buch zu. Heute nichts mehr.</p><input id="echoT" class="nm" placeholder="Status · ein Satz für die Chronik" autocomplete="off" maxlength="160">',next:"In die Chronik",noAbort:true});
       document.getElementById("next").onclick=function(){ finish(((document.getElementById("echoT")||{}).value||"").trim(),false); };
       return;
