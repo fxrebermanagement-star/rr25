@@ -344,11 +344,6 @@
       '<button type="button" class="btn primary" id="bakGoV3">Sichern</button></div>';
     document.getElementById("bakGoV3").onclick=function(){ sichern(); };
   }
-  function chronikBtn(){
-    /* Build 41: Sichern lebt in «Mehr» (Sichern/Wiederherstellen); hier bleiben nur Text und Einfügen */
-    [].slice.call(document.querySelectorAll(".bakBar .bakFile")).forEach(function(b){ b.remove(); });
-    [].slice.call(document.querySelectorAll(".bakBar .row .btn")).forEach(function(b){ b.style.flex="1 1 0"; });
-  }
 
   /* ================= Einhängen ================= */
   var css=document.createElement("style");
@@ -388,7 +383,7 @@
       if(id==="after"){ try{ schedule(); }catch(e){} }
       var r=sh.apply(this,arguments);
       if(id==="home"){ paintEcho(); paintBak(); }
-      if(id==="log"||id==="notiz"){ chronikBtn(); setTimeout(markRows,60); }
+      if(id==="log"||id==="notiz"){ setTimeout(markRows,60); }
       return r;
     };
     show._v3=1;
@@ -400,6 +395,6 @@
   watch("run", function(){ paintWin(false); });
   watch("entries", markRows);
   loadKal();
-  paintEcho(); paintBak(); chronikBtn();
+  paintEcho(); paintBak();
   setTimeout(function(){ paintEcho(); paintBak(); },700);
 })();
