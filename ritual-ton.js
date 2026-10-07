@@ -33,8 +33,45 @@
       if(link.hidden!==!a) link.hidden=!a;
     }
   }
+  /* ---------- Saison-Chip neben dem Ton-Chip (nur Anzeige, ändert den Ton nie) ----------
+     Wichtigste zuerst: Finsternis > Rauhnächte > rückläufig > Jahreskreisfest > Hard-Phase/-Tag. Keine Saison: ausgeblendet. */
+  var FEST=/Samhain|Imbolc|Yule|Wintersonnenwende|Sonnenwende|Tagundnacht|Ostara|Beltane|Litha|Lammas|Mabon/;
+  function seasonNow(now){
+    var Z=K.seasons?K.seasons(now):[], s=K.state(now), best=null;
+    Z.forEach(function(z){ var r=z.rank; if(!best||r>best.r) best={r:r,txt:z.sz==="Finsternis"&&!z.band?z.t.split("·").slice(1).join("·").trim():z.sz,tone:z.k.toLowerCase()}; });
+    if(best) return best;
+    var f=(s.items||[]).filter(function(x){ return x.all&&FEST.test(x.t); })[0];
+    if(f){ var m=f.t.match(FEST); return {txt:m?m[0]:f.t,tone:f.k.toLowerCase()}; }
+    var hd=s.hardDay;
+    if(hd){ var p=hd.t.split("·").map(function(q){ return q.trim(); }); return {txt:hd.band?(p.slice(2).join(" ")||"Hard")+"-Phase":"Hard-Tag "+(p[2]||""),tone:"hard"}; }
+    return null;
+  }
+  function paintSeason(){
+    var c=document.getElementById("seasonChip"); if(!c||!K) return;
+    var z=seasonNow(Date.now()), sp=c.querySelector("span");
+    if(!z){ if(!c.hidden) c.hidden=true; return; }
+    var txt=z.txt.trim();
+    if(c.getAttribute("data-tone")!==z.tone) c.setAttribute("data-tone",z.tone);
+    if(sp&&sp.textContent!==txt) sp.textContent=txt;
+    c.setAttribute("aria-label","Saison: "+txt+". Kalender öffnen");
+    if(c.hidden) c.hidden=false;
+  }
+  (function(){
+    var st=document.createElement("style");
+    st.textContent="html #seasonChip{flex:0 1 auto;min-width:0;display:inline-flex;align-items:center;gap:.4rem;height:1.7rem;min-height:0;padding:0 .75rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.6);color:#e6dcff;font:500 .72rem system-ui,sans-serif;letter-spacing:.04em;box-shadow:none;overflow:hidden}"+
+      "html #seasonChip span{overflow:hidden;text-overflow:ellipsis}html #seasonChip[hidden]{display:none}"+
+      "html #seasonChip i{flex:none;width:.5rem;height:.5rem;border-radius:1px;transform:rotate(45deg);background:#9a96a6}"+
+      "html #seasonChip[data-tone=soft]{border-color:rgba(46,204,113,.55)}html #seasonChip[data-tone=soft] i{background:#2ecc71}"+
+      "html #seasonChip[data-tone=hard]{border-color:rgba(255,84,112,.6)}html #seasonChip[data-tone=hard] i{background:#ff5470}"+
+      "html #seasonChip[data-tone=echo]{border-color:rgba(179,107,255,.6)}html #seasonChip[data-tone=echo] i{background:#b36bff}"+
+      "html #seasonChip[data-tone=still]{border-color:rgba(154,150,166,.55)}"+
+      "html #seasonChip[data-tone=grenze]{border-color:rgba(255,159,67,.6)}html #seasonChip[data-tone=grenze] i{background:#ff9f43}";
+    document.head.appendChild(st);
+  })();
+  var _pc=paintChip; paintChip=function(){ _pc(); try{ paintSeason(); }catch(e){} };
   var chip=document.getElementById("toneChip"), link=document.getElementById("toneAnker");
   if(chip) chip.onclick=function(){ if(typeof show==="function") show("kal"); };
+  var szc=document.getElementById("seasonChip"); if(szc) szc.onclick=function(){ if(typeof show==="function") show("kal"); };
   if(link) link.onclick=function(ev){ ev.preventDefault(); openAnker(); };
   if(K){ paintChip(); K.onReady(paintChip); }
   setInterval(function(){ var h=document.getElementById("home"); if(h&&h.classList.contains("on")) paintChip(); tick(); },30000);

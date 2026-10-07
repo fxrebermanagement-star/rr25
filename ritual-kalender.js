@@ -9,7 +9,8 @@
   var DAY=86400000, OPENALL=false, MONTH=null, SEL=null, YEAR=false, CTX=[];
   var DN=["So","Mo","Di","Mi","Do","Fr","Sa"], WD=["Mo","Di","Mi","Do","Fr","Sa","So"];
   var MN=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-  var NAME={SOFT:"Soft",HARD:"Hard",ECHO:"Echo",STILL:"Still"};
+  var NAME={SOFT:"Soft",HARD:"Hard",ECHO:"Echo",STILL:"Still",GRENZE:"Grenze"};
+  function seas(t){ return K.seasons?K.seasons(t):[]; } /* Saisons: nur Anzeige, ändern den Ton nie */
   function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function two(n){ return String(n).padStart(2,"0"); }
   function tstr(ms){ var d=new Date(ms); return two(d.getHours())+":"+two(d.getMinutes()); }
@@ -53,11 +54,12 @@
   }
   function card(x,now){
     var k=x.k.toLowerCase(), sug=suggest(k), live=!x.all&&x.s<=now&&now<x.e;
-    var hint=k==="hard"?"Nur vormerken. Nicht automatisch setzen.":(sug.id?"Tippen legt nach Geplant.":"Nur lesen.");
-    return '<article class="card kalcard '+k+(live?' kallive':'')+'" data-kal="1" data-kind="'+k+'" data-title="'+h(x.t).replace(/"/g,"")+'" data-sid="'+sug.id+'" data-slabel="'+sug.label+'">'+
+    var sz=x.src==="saison";
+    var hint=sz?"Saison · nur lesen. Ändert Ton und Tor nicht.":k==="hard"?"Nur vormerken. Nicht automatisch setzen.":(sug.id?"Tippen legt nach Geplant.":"Nur lesen.");
+    return '<article class="card kalcard '+k+(sz?' saison':'')+(live?' kallive':'')+'"'+(sz?'':' data-kal="1"')+' data-kind="'+k+'" data-title="'+h(x.t).replace(/"/g,"")+'" data-sid="'+sug.id+'" data-slabel="'+sug.label+'">'+
       '<b>'+h(x.t)+'</b>'+
       '<div class="meta">'+when(x)+(live?' · <span class="kalOn">läuft, '+rest(x.e,now)+'</span>':'')+(x.band&&x.s<=now&&now<x.e?' · '+left(x,now):'')+(x.src==="calc"?" · gerechnet":"")+'</div>'+
-      (x.d?'<p class="kalD">'+h(x.d)+'</p>':'')+'<p class="meta">'+(x.all&&k==="hard"?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>'+startBtn(x,now)+
+      (x.d?'<p class="kalD">'+h(x.d)+'</p>':'')+'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>'+startBtn(x,now)+
       '</article>';
   }
   function left(b,now){ var n=Math.round((b.e-day0(now))/DAY); return n<=1?"letzter Tag":"noch "+n+" Tage"; }
@@ -112,6 +114,7 @@
     var ec=echoChecks(), end=addDays(day0(now),1), soon=addDays(day0(now),3);
     ec.filter(function(x){ return x.due<end; }).slice(0,2).forEach(function(x){ hints.push("Echo · Tag "+x.k+": «"+h(x.name)+"» ist dran"); });
     ec.filter(function(x){ return x.due>=end&&x.due<soon; }).slice(0,1).forEach(function(x){ hints.push("Echo · Tag "+x.k+" für «"+h(x.name)+"» "+rel(x.due,now)); });
+    seas(now).slice(0,2).reverse().forEach(function(z){ hints.unshift('<span class="kalSz '+z.k.toLowerCase()+'">'+h(z.t)+'</span> · '+h(z.d)); });
     if(s.hardDay) hints.unshift('<span class="kalHd">'+h(s.hardDay.t)+'</span> · '+h(s.hardDay.d||"Abends Rückkehr · Anker."));
     if(hints.length) L.push('<p class="kalHint">'+hints.join("<br>")+'</p>');
     var mn=K.moonNext(now), mm=[];
@@ -160,6 +163,7 @@
       if(p.items.some(function(x){ return !x.all&&x.k==="HARD"; })) dots+='<i class="dh"></i>';
       if(p.items.some(function(x){ return x.k==="ECHO"&&(x.all||!x.moon); })&&p.kind!=="ECHO"||(p.single&&p.single.k==="ECHO")) dots+='<i class="de"></i>';
       if(ec[ymd(dm)]) dots+='<i class="dc"></i>';
+      var zz=seas(dm+12*3600000)[0]; if(zz) dots+='<i class="ds '+zz.k.toLowerCase()+'"></i>';
       var mk=M?M.day(dm+12*3600000).key:"", moon=mk==="voll"?"●":(mk==="neu"?"○":"");
       var calc=!p.items.some(function(x){ return x.src==="kal"; });
       cells.push('<button type="button" class="kmDay '+p.kind.toLowerCase()+(dd.getMonth()!==d.getMonth()?' out':'')+(dm===day0(now)?' today':'')+(dm===SEL?' sel':'')+(calc?' calc':'')+'" data-day="'+dm+'" aria-label="'+dstr(dm)+' '+NAME[p.kind]+'">'+
@@ -167,12 +171,12 @@
     }
     return '<div class="kalMonth"><div class="kmHead"><button type="button" class="kmNav" data-m="-1" aria-label="Monat zurück">‹</button><b>'+MN[d.getMonth()]+' '+d.getFullYear()+'</b><span class="kmR"><button type="button" class="kmYear" id="kmYear">Jahr</button><button type="button" class="kmNav" data-m="1" aria-label="Monat vor">›</button></span></div>'+
       '<div class="kmGrid">'+cells.join("")+'</div>'+
-      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="kl hard"></i>Hard-Tag/Phase <i class="dh"></i>Hard-Feintakt <i class="de"></i>Nachlauf ● Voll ○ Neu</p></div>';
+      '<p class="kmLeg"><i class="kl soft"></i>Soft <i class="kl still"></i>Still <i class="kl echo"></i>Echo <i class="kl hard"></i>Hard-Tag/Phase <i class="dh"></i>Hard-Feintakt <i class="de"></i>Nachlauf <i class="ds hard"></i>Saison ● Voll ○ Neu</p></div>';
   }
   function dayDetail(dm,now){
     var p=K.dayParts(dm+12*3600000), hard=p.items.filter(function(x){ return !x.all&&x.k==="HARD"; }).length;
     var head=dstr(dm)+' · '+NAME[p.kind]+(p.band?'-Band':'')+(hard?' · '+hard+' Hard-Feintakte':'');
-    var items=p.items.slice().sort(function(a,b){ return (b.band-a.band)||(a.s-b.s); });
+    var items=p.items.concat(seas(dm+12*3600000)).sort(function(a,b){ return (b.band-a.band)||(a.s-b.s); });
     var vh="";
     if(planetOn()&&K.planetDay){ var V=K.planetDay(dm).filter(function(x){ return x.p==="Venus"; }); if(V.length) vh='<p class="kalPlan"><span class="kpTag">Venus-Stunden</span> '+V.map(function(x){ return tstr(x.s)+"–"+tstr(x.e)+(x.nacht?" (Nacht)":""); }).join(" · ")+'<br><span>Nur Info. Der Ton gilt.</span></p>'; }
     return '<div id="kalDay"><p class="group">'+head+'</p>'+vh+(items.length?items.map(function(x){ return card(x,now); }).join(""):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
@@ -330,7 +334,12 @@
     ".kyD.calc{background:transparent!important;border:1px dashed rgba(200,190,230,.45)}.kyD.calc.soft{border-color:rgba(46,204,113,.7)}.kyD.calc.still{border-color:rgba(154,150,166,.7)}.kyD.calc.echo{border-color:rgba(179,107,255,.8)}",
     ".kyD.hard{background:rgba(231,76,60,.6)}.kyD.calc.hard{border-color:rgba(231,76,60,.8)}.kl.hard{background:#e74c3c}.kalcard p.kalD{color:#ffb3a8}.kalHd{color:#ff8a7a;font-weight:600}",
     ".kyD.hd{box-shadow:inset 0 -2px 0 #ff5470}.kyD.today{outline:1.5px solid #ff7ad9;outline-offset:0}",
-    ".kalCov.warn{color:#ffb86b}"
+    ".kalCov.warn{color:#ffb86b}",
+    ".kalcard.grenze{border-color:#ff9f43;background:rgba(255,159,67,.13)}.kalcard.grenze b{color:#ffc58a}",
+    ".kalcard.saison{border-left-style:double}.kalcard.saison.soft p.kalD{color:#9dffc4}.kalcard.saison.echo p.kalD{color:#dcb8ff}.kalcard.saison.still p.kalD{color:#dcd8e4}.kalcard.saison.grenze p.kalD{color:#ffc58a}",
+    ".kalSz{font-weight:600}.kalSz.hard{color:#ff8a7a}.kalSz.soft{color:#7dffb0}.kalSz.echo{color:#dcb8ff}.kalSz.still{color:#dcd8e4}.kalSz.grenze{color:#ffc58a}",
+    "i.ds{display:inline-block;width:5px;height:5px;box-sizing:border-box;border-radius:1px;transform:rotate(45deg);background:#ff5470}.kmLeg i.ds{margin:0 .25rem 0 .35rem}",
+    "i.ds.soft{background:#2ecc71}i.ds.echo{background:#b36bff}i.ds.still{background:#c9c5d4}i.ds.grenze{background:#ff9f43}"
   ].join("");
   document.head.appendChild(css);
   if(typeof show==="function" && !show._kal){

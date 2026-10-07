@@ -10,12 +10,15 @@
    6. keine Daten: Mondregel wie Google (Neumond Soft, Tag nach Vollmond bis vor Neumond Still, sonst Soft, Vollmond Echo)
    Nie aus künftigen Terminen. Hard gibt es nur, solange ein Feintakt offen ist.
    Nach dem Ende der Datei rechnet die App Bänder, Mondtage und Sonnen-Fenster selbst (ohne Hard, «gerechnet»),
-   nie zusätzlich zu Datei-Terminen. Sonnenzeiten: NOAA-Formel mit Refraktion, Ort Zürich. */
+   nie zusätzlich zu Datei-Terminen. Sonnenzeiten: NOAA-Formel mit Refraktion, Ort Zürich.
+   Saisons (Einträge mit Feld "sz", z. B. Merkur rückläufig, Rauhnächte, Finsternis): nur Anzeige (Kalender, Chip).
+   Sie stehen NICHT in list() und ändern Ton, Tor und Gate nie. */
 (function(){
   if(window.RR25_KAL) return;
   var ORT="Zürich", LAT=47.3769, LON=8.5417, DAY=86400000, MIN=60000;
   var RANK={HARD:4,ECHO:3,STILL:2,SOFT:1};
-  var DATA=null, FILE=[], COV=null, st="load", waiters=[];
+  var SZRANK={"Finsternis":5,"Rauhnächte":4,"Merkur rückläufig":3,"Venus rückläufig":3,"Mars rückläufig":3};
+  var DATA=null, FILE=[], SEAS=[], COV=null, st="load", waiters=[];
   function two(n){ return String(n).padStart(2,"0"); }
   function ymd(ms){ var d=new Date(ms); return d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate()); }
   function day0(ms){ var d=new Date(ms); return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(); }
@@ -94,7 +97,12 @@
   /* ---------- Daten ---------- */
   function setData(d){
     DATA=d||{events:[]};
-    FILE=(DATA.events||[]).map(function(e){ return norm(e,"kal"); }).filter(Boolean);
+    var ev=DATA.events||[];
+    FILE=ev.filter(function(e){ return !e.sz; }).map(function(e){ return norm(e,"kal"); }).filter(Boolean);
+    SEAS=ev.filter(function(e){ return e.sz; }).map(function(e){
+      var x=norm(e,"saison"); if(!x) return null;
+      var k=String(e.k||x.k).toUpperCase(); x.k=k; x.sz=String(e.sz); x.rank=SZRANK[x.sz]||(k==="SOFT"||x.sz==="Samhain"?2:1); return x;
+    }).filter(Boolean);
     var f=Infinity, t=-Infinity;
     FILE.forEach(function(x){ f=Math.min(f,day0(x.s)); t=Math.max(t,x.all?x.e:addDays(day0(x.e-1),1)); });
     if(DATA.from) f=parseDay(DATA.from);
@@ -219,7 +227,12 @@
     for(var k=-1;k<3;k++){ var L=planetDay(addDays(day0(t),k)); for(var i=0;i<L.length;i++) if(L[i].p==="Venus"&&L[i].e>t) return L[i]; }
     return null;
   }
-  window.RR25_KAL={load:load,onReady:onReady,state:state,next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },dayPartsIn:dayParts,
+  /* Saisons eines Tages (nur Anzeige), wichtigste zuerst: Finsternis > Rauhnächte > rückläufig > Jahreskreisfest */
+  function seasons(t){
+    var d0=day0(t==null?Date.now():t);
+    return SEAS.filter(function(x){ return x.s<=d0&&x.e>d0; }).sort(function(a,b){ return (b.rank-a.rank)||(a.band-b.band)||(b.s-a.s); });
+  }
+  window.RR25_KAL={seasons:seasons,load:load,onReady:onReady,state:state,next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },dayPartsIn:dayParts,
     planetDay:planetDay,planetAt:planetAt,venusNext:venusNext,
     sun:sun,moonNext:moonNext,coverage:function(){ return COV; },status:function(){ return st; },data:function(){ return DATA; },
     kindOf:kindOf,ORT:ORT,RANK:RANK};

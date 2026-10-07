@@ -145,6 +145,16 @@
   {"t": "HARD · Scharf · 12:38 Mittag", "start": "2027-02-27T12:38:00+01:00", "end": "2027-02-27T13:28:00+01:00", "all": false},
   {"t": "HARD · Scharf · 18:07 Untergang", "start": "2027-02-27T18:07:00+01:00", "end": "2027-02-27T18:57:00+01:00", "all": false},
   {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-27T22:30:00+01:00", "end": "2027-02-27T23:25:00+01:00", "all": false},
-  {"t": "ECHO · Nachlauf", "start": "2027-02-28", "end": "2027-03-01", "all": true}
+  {"t": "ECHO · Nachlauf", "start": "2027-02-28", "end": "2027-03-01", "all": true},
+  {"t": "STILL · Venus rückläufig", "start": "2026-10-03", "end": "2026-11-15", "all": true, "d": "Venus rückläufig 3.10. (09:16 MESZ) – 14.11.2026 (01:30 MEZ). Beziehungen und Wert prüfen; nichts Neues binden, Altes klären.", "sz": "Venus rückläufig", "k": "STILL"},
+  {"t": "ECHO · Merkur rückläufig", "start": "2026-10-24", "end": "2026-11-14", "all": true, "d": "Merkur rückläufig 24.10. (09:13 MESZ) – 13.11.2026 (16:54 MEZ). Überprüfen, nachlesen, nichts Neues starten.", "sz": "Merkur rückläufig", "k": "ECHO"},
+  {"t": "SCHLEIER · Samhain", "start": "2026-10-31", "end": "2026-11-01", "all": true, "d": "Samhain · Schleierzeit. Ahnen ehren, Schutz zuerst. Hard-nah: nur mit Gate, danach Rückkehr · Anker.", "sz": "Samhain", "k": "HARD"},
+  {"t": "STILL · Rauhnächte", "start": "2026-12-25", "end": "2027-01-07", "all": true, "d": "Rauhnächte 25.12.2026 – 6.1.2027. Orakel, Rückschau, Echo; jede Nacht ein Monat des neuen Jahres.", "sz": "Rauhnächte", "k": "STILL"},
+  {"t": "GRENZE · Mars rückläufig", "start": "2027-01-10", "end": "2027-04-02", "all": true, "d": "Mars rückläufig 10.1. (13:49 MEZ) – 1.4.2027 (15:58 MESZ). Kraft zurückhalten, Konflikte meiden.", "sz": "Mars rückläufig", "k": "GRENZE"},
+  {"t": "FINSTERNIS · Saison", "start": "2027-01-30", "end": "2027-03-01", "all": true, "d": "Finsternis-Saison 30.1.–28.2.2027 (Sonnenfinsternis 6.2., Mondfinsternis 20./21.2.). Starke, unberechenbare Ladung: beobachten und Echo lesen, keine neuen Rituale.", "sz": "Finsternis", "k": "HARD"},
+  {"t": "SOFT · Imbolc", "start": "2027-02-01", "end": "2027-02-02", "all": true, "d": "Imbolc · Reinigung, Neubeginn. Licht kehrt zurück.", "sz": "Imbolc", "k": "SOFT"},
+  {"t": "HARD · Finsternis · Sonne", "start": "2027-02-06", "end": "2027-02-07", "all": true, "d": "Ringförmige Sonnenfinsternis, Maximum 16:59 MEZ (in Zürich nicht sichtbar). Finsternis: beobachten, nicht laden. Nur Schutz und Rückkehr · Anker.", "sz": "Finsternis", "k": "HARD"},
+  {"t": "ECHO · Merkur rückläufig", "start": "2027-02-09", "end": "2027-03-04", "all": true, "d": "Merkur rückläufig 9.2. (18:36 MEZ) – 3.3.2027 (13:32 MEZ). Überprüfen, nachlesen, nichts Neues starten.", "sz": "Merkur rückläufig", "k": "ECHO"},
+  {"t": "HARD · Finsternis · Mond", "start": "2027-02-21", "end": "2027-02-22", "all": true, "d": "Halbschatten-Mondfinsternis 20.2. 22:12 – 21.2. 02:13 MEZ, Maximum 21.2. 00:13 MEZ (in Zürich sichtbar). Finsternis: beobachten, nicht laden. Nur Schutz und Rückkehr · Anker.", "sz": "Finsternis", "k": "HARD"}
  ]
 }
