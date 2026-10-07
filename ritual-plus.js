@@ -155,17 +155,3 @@ if(_openLog){
     });
   };
 }
-paintBuch=async function(){
-  const page=$("#page"); if(!page)return;
-  page.innerHTML="<p class='sub'>Buch lädt …</p>";
-  if(!BOOKTEXT){
-    try{
-      const parts=await Promise.all([0,1,2,3,4].map(n=>fetch("pdfpart"+n+".txt",{cache:"reload"}).then(r=>{if(!r.ok)throw new Error(n);return r.text()})));
-      BOOKTEXT=parts.join("\n\n");
-    }catch(e){
-      page.innerHTML="<p class='sub'>Buchdateien kommen. Neu laden.</p>";
-      return;
-    }
-  }
-  page.innerHTML="<div class='words pdfbook'>"+esc(BOOKTEXT)+"</div>";
-};

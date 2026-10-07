@@ -1,6 +1,5 @@
 const KEY="rr25_ritual_v1";
 const NOTEKEY="rr25_notiz_v1";
-let BOOKTEXT="";
 /* Ritual-Daten kommen aus rituals-v2.js (füllt R beim Laden). */
 const R=[];
 const $=(s,r=document)=>r.querySelector(s);
@@ -21,27 +20,8 @@ function renderList(){const order=["Alltag","Schutz","Energie","Liebe","Trennung
 function paintPlan(){const d=load(),sel=$("#plR");if(sel&&sel.options.length!==R.length){sel.innerHTML="";R.forEach(r=>{const o=document.createElement("option");o.value=r.id;o.textContent=r.t;sel.appendChild(o)})}$("#plList").innerHTML=d.planned.length?d.planned.map(x=>`<div class="entry"><b>${esc(x.titel)}</b><div class="meta">${esc(x.wer||"")}</div><button class="btn primary" data-go="${x.pid}">Setzen</button></div>`).join(""):"<p class='sub'>Nichts geplant.</p>";$$("#plList [data-go]").forEach(b=>b.onclick=()=>{const x=load().planned.find(p=>p.pid===b.dataset.go);if(x){fromPlan=x.pid;openR(x.id,x.wer)}})}
 function paintNotes(){const notes=loadNotes();$("#notesOnly").innerHTML=notes.length?notes.map(n=>`<div class="entry"><div class="meta">${esc(n.t)}</div><p>${esc(n.note)}</p></div>`).join(""):"<p class='sub'>Keine Notiz.</p>"}
 function paintLog(){const rows=load().log||[];$("#entries").innerHTML=rows.length?rows.map(e=>`<div class="entry"><b>${esc(e.titel)}</b><div class="meta">${esc(e.t)} ${esc(e.wer||"")}</div></div>`).join(""):"<p class='sub'>Noch leer.</p>"}
-async function paintBuch(){
-  const page=$("#page"); if(!page) return;
-  page.innerHTML="<p class='sub'>Buch lädt …</p>";
-  if(!BOOKTEXT){
-    try{
-      const parts=await Promise.all([0,1,2,3,4].map(n=>fetch("pdfpart"+n+".txt",{cache:"reload"}).then(r=>{if(!r.ok)throw new Error(n);return r.text()})));
-      BOOKTEXT=parts.join("\n\n");
-    }catch(e){
-      page.innerHTML="<p class='sub'>Buchdateien kommen. Neu laden.</p>";
-      return;
-    }
-  }
-  page.innerHTML="";
-  const pre=document.createElement("div");
-  pre.style.whiteSpace="pre-wrap";
-  pre.style.fontFamily="Georgia,serif";
-  pre.style.lineHeight="1.65";
-  pre.style.fontSize="1.02rem";
-  pre.textContent=BOOKTEXT;
-  page.appendChild(pre);
-}
+/* Buch: nur noch ein Knopf zur privaten Fassung in Google Drive (ritual-buch.js). Kein Buchtext in der App. */
+function paintBuch(){}
 document.addEventListener("click",e=>{const n=e.target.closest("nav button");if(n)show(n.dataset.v)});
 $("#plAdd").onclick=()=>{const r=R.find(x=>x.id===$("#plR").value);if(!r)return;const d=load();d.planned.unshift({pid:uid(),id:r.id,titel:r.t,wer:($("#plW").value||"").trim(),t:now()});save(d);paintPlan()};
 $("#noteAdd").onclick=()=>{const tx=($("#noteT").value||"").trim();if(!tx)return;const n=loadNotes();n.unshift({id:uid(),t:now(),note:tx});saveNotes(n);$("#noteT").value="";paintNotes()};
