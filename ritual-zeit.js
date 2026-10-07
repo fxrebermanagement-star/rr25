@@ -137,6 +137,17 @@
           });
         });
       })
+      .then(function(d){
+        /* weitere Teile (Build 32: Mär–Dez 2027), Reihenfolge egal; fehlt ein Teil, bleibt der Rest */
+        var parts=d&&Array.isArray(d.more2)?d.more2:[];
+        if(!parts.length) return d;
+        return Promise.all(parts.map(function(p){
+          return fetch(String(p)+"?v="+bust,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).catch(function(){ return null; });
+        })).then(function(ms){
+          ms.forEach(function(m){ if(m&&m.events) d.events=(d.events||[]).concat(m.events); });
+          return d;
+        });
+      })
       .then(function(d){ setData(d); st="ok"; })
       .catch(function(){ setData({events:[]}); st="fail"; })
       .then(function(){ var w=waiters; waiters=[]; w.forEach(function(f){ try{ f(); }catch(e){} }); return DATA; });
