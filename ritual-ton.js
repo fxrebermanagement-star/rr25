@@ -38,7 +38,7 @@
   var FEST=/Samhain|Imbolc|Yule|Wintersonnenwende|Sonnenwende|Tagundnacht|Ostara|Beltane|Litha|Lammas|Mabon/;
   function seasonNow(now){
     var Z=K.seasons?K.seasons(now):[], s=K.state(now), best=null;
-    Z.forEach(function(z){ var r=z.rank; if(!best||r>best.r) best={r:r,txt:z.sz==="Finsternis"&&!z.band?z.t.split("·").slice(1).join("·").trim():z.sz,tone:z.k.toLowerCase()}; });
+    Z.forEach(function(z){ var r=z.rank; if(!best||r>best.r) best={r:r,txt:z.sz==="Finsternis"&&!z.band?z.t.split("·").slice(1).join("·").trim():z.sz,tone:z.k.toLowerCase(),e:z.band?z.e:0}; });
     if(best) return best;
     var f=(s.items||[]).filter(function(x){ return x.all&&FEST.test(x.t); })[0];
     if(f){ var m=f.t.match(FEST); return {txt:m?m[0]:f.t,tone:f.k.toLowerCase()}; }
@@ -51,6 +51,11 @@
     var z=seasonNow(Date.now()), sp=c.querySelector("span");
     if(!z){ if(!c.hidden) c.hidden=true; return; }
     var txt=z.txt.trim();
+    if(z.e){ /* Restdauer der Saison: «noch 38 Tage» / «noch 1 Tag» / «letzter Tag» */
+      var t0=new Date(), d0=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()).getTime();
+      var left=Math.round((z.e-d0)/86400000)-1;
+      if(left>=0) txt+=" · "+(left===0?"letzter Tag":"noch "+left+(left===1?" Tag":" Tage"));
+    }
     if(c.getAttribute("data-tone")!==z.tone) c.setAttribute("data-tone",z.tone);
     if(sp&&sp.textContent!==txt) sp.textContent=txt;
     c.setAttribute("aria-label","Saison: "+txt+". Kalender öffnen");
@@ -116,6 +121,53 @@
     });
   }
   if(K) K.onReady(tick);
+
+  /* ---------- Anker-Hinweis an Hard-Tagen (Build 32) ----------
+     Hard-Tag/-Phase oder Tag mit Hard-Feintakt: ab Sonnenuntergang sanfte Karte auf Heute/Rituale,
+     pro Tag wegklickbar (localStorage rr25_ankerhint_JJJJ-MM-TT). Mit eingeschalteter Erinnerung zusätzlich
+     um 21:30 eine Meldung (nur solange die App offen/aktiv ist). Ändert Ton, Tor und Gate nicht. */
+  function ymdK(ms){ var d=new Date(ms); return d.getFullYear()+"-"+two(d.getMonth()+1)+"-"+two(d.getDate()); }
+  function hardToday(now){
+    var s=K.state(now);
+    return !!(s.hardDay||(s.hard&&s.hard.length));
+  }
+  function hintOff(now){ try{ return localStorage.getItem("rr25_ankerhint_"+ymdK(now))==="1"; }catch(e){ return false; } }
+  function paintHint(){
+    if(!K) return;
+    var now=Date.now(), box=document.getElementById("ankerHintCard"), row=document.getElementById("toneRow");
+    var show1=false;
+    try{ show1=hardToday(now)&&now>=K.sun(now).set&&!hintOff(now); }catch(e){}
+    if(!show1){ if(box) box.remove(); return; }
+    if(box||!row) return;
+    box=document.createElement("article"); box.id="ankerHintCard"; box.className="card ankerHintCard";
+    box.innerHTML='<p>Heute Hard gearbeitet? <a href="#anker">Rückkehr · Anker</a> nicht vergessen</p><button type="button" aria-label="Hinweis für heute ausblenden">×</button>';
+    box.querySelector("a").onclick=function(ev){ ev.preventDefault(); openAnker(); };
+    box.querySelector("button").onclick=function(){ try{ localStorage.setItem("rr25_ankerhint_"+ymdK(Date.now()),"1"); }catch(e){} box.remove(); };
+    row.parentNode.insertBefore(box,row.nextSibling);
+  }
+  (function(){
+    var st=document.createElement("style");
+    st.textContent=".ankerHintCard{display:flex;align-items:center;gap:.6rem;margin:.6rem 0;padding:.6rem .8rem;border:1px solid rgba(255,84,112,.35);background:rgba(40,10,30,.55);border-radius:14px}"+
+      ".ankerHintCard p{flex:1;margin:0;font-size:.8rem;color:#e6dcff}.ankerHintCard a{color:#cdb6ff;text-decoration:none;border-bottom:1px dotted rgba(205,182,255,.6)}"+
+      ".ankerHintCard button{flex:none;width:1.8rem;height:1.8rem;min-height:0;padding:0;border-radius:999px;border:1px solid rgba(155,140,255,.35);background:transparent;color:#cbb8ff;font-size:1rem;line-height:1}";
+    document.head.appendChild(st);
+  })();
+  function tickAnker(){
+    if(!K||!window.RR25_OPT.get("notify")||!("Notification" in window)||Notification.permission!=="granted") return;
+    var now=Date.now(), d=new Date(now), t=new Date(d.getFullYear(),d.getMonth(),d.getDate(),21,30).getTime();
+    if(now<t||now>=t+15*MIN||!hardToday(now)||hintOff(now)) return;
+    var id="ah"+ymdK(now); if(fired(id)) return; mark(id);
+    var title="Heute Hard gearbeitet?", opt={body:"Rückkehr · Anker nicht vergessen",tag:"rr25-anker-"+ymdK(now),icon:"icon.svg",data:{url:APP+"#anker"}};
+    if(navigator.serviceWorker&&navigator.serviceWorker.getRegistration){
+      navigator.serviceWorker.getRegistration().then(function(reg){
+        if(reg&&reg.showNotification) return reg.showNotification(title,opt);
+        try{ new Notification(title,opt); }catch(e){}
+      }).catch(function(){});
+    } else { try{ new Notification(title,opt); }catch(e){} }
+  }
+  var _pc2=paintChip; paintChip=function(){ _pc2(); try{ paintHint(); }catch(e){} };
+  var _tk=tick; tick=function(){ _tk(); try{ tickAnker(); }catch(e){} };
+  if(K) K.onReady(function(){ paintChip(); tick(); });
 
   /* ---------- Schalter in «Mehr» ---------- */
   var on=document.getElementById("optNotify"), pl=document.getElementById("optPlanet"), msg=document.getElementById("optMsg");
