@@ -32,7 +32,7 @@
     if(!(en>s)) en=all?addDays(s,1):s+50*MIN;
     var t=String(e.t||"");
     return {t:t,k:kindOf(t),s:s,e:en,all:all,band:all&&Math.round((en-s)/DAY)>1,src:src||"kal",
-      moon:/Vollmond/.test(t)?"voll":(/Neumond/.test(t)?"neu":""),anker:/Anker/.test(t),start:e.start,end:e.end};
+      moon:/Vollmond/.test(t)?"voll":(/Neumond/.test(t)?"neu":""),anker:/Anker/.test(t),d:e.d?String(e.d):"",start:e.start,end:e.end};
   }
 
   /* ---------- Sonne (NOAA, Refraktion −0,833°), Ergebnis in ms ---------- */
@@ -150,13 +150,18 @@
     });
     var single=r.singles.filter(function(x){ return x.k==="ECHO"||x.k==="STILL"; })[0]||null;
     var soft=r.singles.filter(function(x){ return x.k==="SOFT"; })[0]||null;
-    var band=r.bands.sort(function(a,b){ return b.s-a.s; })[0]||null;
+    var band=r.bands.filter(function(x){ return x.k!=="HARD"; }).sort(function(a,b){ return b.s-a.s; })[0]||null;
     var kind, src;
     if(single){ kind=single.k; src="tag"; }
     else if(band){ kind=band.k; src="band"; }
     else if(r.marker){ kind=r.marker.moon==="voll"?"ECHO":"SOFT"; src="mondtag"; }
     else if(soft){ kind="SOFT"; src="tag"; }
     else { kind=moonKind(d0+12*3600000); src="mond"; }
+    /* Hard-Tag/-Phase (ganztägig, z. B. Mars/Saturn, Vollmond-Phase): zeigt Hard über dem Ton des Tages.
+       Der Grundton (base) bleibt für Tor/Wetter massgeblich: Hard-Arbeit weiter nur im offenen Feintakt, mit Gate und Rückkehr · Anker. */
+    var hd=r.items.filter(function(x){ return x.all&&x.k==="HARD"; }).sort(function(a,b){ return (a.band-b.band)||(b.s-a.s); })[0]||null;
+    r.base=kind; r.baseSrc=src; r.hardDay=hd;
+    if(hd){ kind="HARD"; src=hd.band?"hardphase":"hardtag"; }
     r.kind=kind; r.src=src; r.band=band; r.single=single||soft; r.day=d0;
     return r;
   }
@@ -165,7 +170,7 @@
     var L=list(t), p=dayParts(t,L), open=null;
     L.forEach(function(x){ if(!x.all&&x.s<=t&&t<x.e&&(!open||RANK[x.k]>RANK[open.k])) open=x; });
     var timed=p.items.filter(function(x){ return !x.all; });
-    return {t:t,kind:open?open.k:p.kind,src:open?"fenster":p.src,open:open,dayKind:p.kind,daySrc:p.src,band:p.band,single:p.single,marker:p.marker,
+    return {t:t,kind:open?open.k:p.base,src:open?"fenster":p.baseSrc,open:open,dayKind:p.kind,daySrc:p.src,hardDay:p.hardDay,band:p.band,single:p.single,marker:p.marker,
       items:p.items,hard:timed.filter(function(x){ return x.k==="HARD"; }),anker:timed.filter(function(x){ return x.anker; })[0]||null,
       covered:!!COV&&t>=COV.from&&t<COV.to,calc:!COV||t>=COV.to||t<COV.from};
   }
