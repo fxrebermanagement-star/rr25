@@ -12,8 +12,6 @@
     "#buchOpen{display:block;width:100%;min-height:3.3rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#ff7ad9,#b98cff 55%,#7ec8ff);box-shadow:0 0 22px rgba(201,155,255,.45),0 0 0 1px rgba(232,160,255,.55);cursor:pointer}",
     "#buchOpen:active,#urbuchOpen:active{transform:scale(.98)}",
     "#urbuchOpen{display:block;width:100%;min-height:3.3rem;margin-top:.9rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#b98cff,#ff7ad9 55%,#ffb3ec);box-shadow:0 0 22px rgba(201,155,255,.45),0 0 0 1px rgba(232,160,255,.55);cursor:pointer}",
-    "#mehrSheet .msGrid>.msItem:last-child:nth-child(odd){grid-column:1/-1}",
-    "#msUrbuch .ic{background:linear-gradient(160deg,#4a2266,#1a1026)!important;color:#e7b8ff!important;box-shadow:0 0 14px rgba(201,155,255,.35)}",
     "#buchGo small{font-size:.74rem;color:#c4b4e0;letter-spacing:.04em}"
   ].join("");
   document.head.appendChild(css);
@@ -24,8 +22,6 @@
     document.getElementById("buchOpen").onclick=function(){ go(OPEN); };
     document.getElementById("urbuchOpen").onclick=function(){ go(URBUCH); };
   };
-  var ub=document.getElementById("msUrbuch");
-  if(ub) ub.addEventListener("click",function(){ go(URBUCH); });
   if(typeof show==="function" && !show._buchneu){
     var sh=show;
     show=function(id){
