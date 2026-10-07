@@ -147,7 +147,7 @@
         ["Wesenheit · Filter","Sprich:\nNur klare, stimmige Präsenz. Was drängt, bleibt draussen.\nWer bereit und geeignet ist, möge sich zeigen."],
         ["Wesenheit · Auftrag","Sprich:\nDein Auftrag ist: [Auftrag]. Nur in diesem Rahmen.\nOhne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist."]);
       var k2=idx(/^Rückkehr$/);
-      out.splice(k2,0,["Entlassen","Sprich:\nDer Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.\nDu bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt."]);
+      out.splice(k2,0,["Wesenheit · Entlassen","Sprich:\nDer Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.\nDu bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt."]);
     }
     var kk=idx(/^Rückkehr$/);
     if(kk>=0 && r.id!=="schlaf") out[kk][1]+="\n\n"+ANKER;
@@ -162,7 +162,7 @@
   function frame(opt){
     var r=cur.r, el=run();
     el.setAttribute("data-tone", r.tone||"soft");
-    var sub=h(r.t)+(cur.lvl?" · "+LV[cur.lvl]:"")+(opt.n?" · "+opt.n:"");
+    var sub=h(r.t)+(cur.lvl?" · "+LV[cur.lvl]:"")+(cur.wesen&&!r.wesenSelf?" · Mit Wesenheit":"")+(opt.n?" · "+opt.n:"");
     var abortBtn=(opt.noAbort||r.id==="abbr")?"":'<div class="row"><button type="button" class="btn abortBtn" id="abortR">Abbruch</button></div>';
     el.innerHTML='<div class="hero"><p class="sub">'+sub+'</p><p class="tonetag">'+(TONE_NAME[r.tone]||"")+'</p><h2>'+opt.title+'</h2></div>'+
       (opt.body||"")+
@@ -242,13 +242,14 @@
     });
   }
   function wesenQ(){
-    var body='<p class="words">Standard: ohne Wesenheit.</p>'+
-      '<button type="button" class="card wq" data-w="0"><b>Ohne Wesenheit</b><small>Der eigene Faden trägt.</small></button>'+
-      '<button type="button" class="card wq" data-w="1"><b>Mit Wesenheit</b><small>Nur wenn der Faden nicht reicht. Hartes Ende. Danach zurück.</small></button>';
+    var pk=cur.wesenPick, on0=pk===0, on1=pk===1;
+    var body='<p class="words wqInfo">Eine fremde Präsenz trägt einen klar begrenzten Auftrag und wird danach entlassen. Standard: ohne.</p>'+
+      '<button type="button" class="card wq'+(on0?' sel':'')+'" data-w="0" aria-pressed="'+on0+'"><b>Ohne Wesenheit</b><small>Der eigene Faden trägt.</small></button>'+
+      '<button type="button" class="card wq'+(on1?' sel':'')+'" data-w="1" aria-pressed="'+on1+'"><b>Mit Wesenheit</b><small>Nur wenn der Faden nicht reicht. Hartes Ende. Danach zurück.</small><small class="wqPlus">+3 Schritte: Filter, Auftrag, Entlassen · dazu ein Feld für den Auftrag</small></button>';
     frame({title:"Wesenheit?",body:body,prev:"Zurück",noAbort:true});
     document.getElementById("prev").onclick=function(){ if(cur.r.haerte) haerte(); else tor(); };
     [].slice.call(document.querySelectorAll("#run .wq")).forEach(function(b){
-      b.onclick=function(){ cur.wesen=b.getAttribute("data-w")==="1"; startSteps(); };
+      b.onclick=function(){ cur.wesen=b.getAttribute("data-w")==="1"; cur.wesenPick=cur.wesen?1:0; startSteps(); };
     });
   }
   function startSteps(){ build(); cur.i=0; cur.started=true; step(); }
@@ -282,6 +283,10 @@
     if(cur.i===0 && n.length){
       inputs=n.map(function(k){
         var ph=k+((r.needOpt&&k==="Name")?" (optional)":"");
+        if(k==="Auftrag" && (cur.wesen||r.wesenSelf)){
+          var aq="Was genau soll die Wesenheit tun? Ein Satz.";
+          return '<label class="absLab wAuf">Auftrag<input class="nm" data-n="Auftrag" placeholder="'+aq+'" aria-label="'+aq+'" value="'+h(cur.mem.Auftrag||"")+'" autocomplete="off" maxlength="200"></label>';
+        }
         return '<input class="nm" data-n="'+h(k)+'" placeholder="'+h(ph)+'" value="'+h(cur.mem[k]||"")+'" autocomplete="off" autocapitalize="words">';
       }).join("");
     }
@@ -491,6 +496,11 @@
     "#run .wk{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:650}",
     ".wk-soft{color:#5fe0a0}.wk-hard{color:#ff5470}.wk-echo{color:#c99bff}.wk-still{color:#b8b3c6}",
     "#run .lv,#run .wq{display:block}",
+    "#run .card.wq[data-w='0']{border-left:3px solid #5fe0a0}#run .card.wq[data-w='1']{border-left:3px solid #ff5470}",
+    "#run .card.wq.sel{border-color:rgba(232,160,255,.85);box-shadow:0 0 0 1px rgba(232,160,255,.55),0 0 18px rgba(201,155,255,.28)}#run .card.wq.sel[data-w='0']{border-left-color:#5fe0a0}#run .card.wq.sel[data-w='1']{border-left-color:#ff5470}",
+    "#run .wq .wqPlus{display:block;margin-top:.35rem;color:#ff8aa0;font-size:.74rem}",
+    "#run .wqInfo{font-size:.92rem}#run .card.wq~.v3push{margin-top:1.2rem!important}",
+    "#run .wAuf{display:block}",
     "#run .card.lv[data-lv=weich]{border-left:3px solid #5fe0a0}#run .card.lv[data-lv=mittel]{border-left:3px solid #ffb86b}#run .card.lv[data-lv=nagel]{border-left:3px solid #ff5470}",
     ".z369v2{display:grid;gap:.4rem;margin:.6rem 0}",
     ".z369v2 .zrow{display:grid;grid-template-columns:2.4rem 1fr auto;grid-template-rows:auto auto;column-gap:.5rem;align-items:center;text-align:left;border:1px solid rgba(232,160,255,.25);background:rgba(28,12,44,.8);color:#f6f0ff;border-radius:.95rem;padding:.6rem .7rem;font:inherit}",

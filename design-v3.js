@@ -181,7 +181,7 @@
   function phaseOfName(n){
     n=String(n||"").trim();
     if(/^(369|3 · 6 · 9)$/.test(n)) return 2;
-    if(/^(So sei es|Entlassen|Siegel|Salz)$/.test(n)) return 3;
+    if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz)$/.test(n)) return 3;
     if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo)$/.test(n)) return 4;
     if(/^(Absicht|Versetzen|Anker|Zurück aus|Wesenheit ·)/.test(n)) return 1;
     if(PRE.test(n)) return 0;
@@ -210,7 +210,7 @@
         p=Math.max(1,q<0?1:q);
       }
     }
-    return {p:p,has369:has369,title:title,r:r,step:stepMode};
+    return {p:p,has369:has369,title:title,r:r,step:stepMode,wes:/ · Mit Wesenheit/.test(sub)};
   }
   var sigSrc="";
   function sigil(){
@@ -249,6 +249,7 @@
     s.innerHTML='<div class="v3seg">'+PH.map(function(n,i){
       var cls=i<p?"done":i===p?"now":"";
       if(i===2 && !ph.has369 && ph.r) cls+=" skip";
+      if(ph.wes && (i===1||i===3)) cls+=" wes";
       return '<span class="'+cls+'"><i></i><em>'+n+'</em></span>';
     }).join("")+'</div>';
     var hero=run.querySelector(".hero");
@@ -406,6 +407,8 @@
     "#run .v3seg .now em{color:#fff;font-weight:650}",
     "#run .v3seg .skip i{background:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 4px,transparent 4px 8px)}",
     "#run .v3seg .skip em{opacity:.5}",
+    "#run .v3seg .wes em::after{content:' ✦';color:#ff5470}",
+    "#run .v3seg .wes i{outline:1px solid rgba(255,84,112,.55);outline-offset:1px}",
     "#run.v3run .hero .sub{margin-bottom:.1rem!important}",
     "#run.v3run .hero h2{font-size:1.5rem!important;margin:.35rem 0 .7rem}",
     "#run.v3run .v3push{margin-top:auto!important;padding-top:1.2rem}",
