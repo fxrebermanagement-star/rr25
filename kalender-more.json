@@ -1,748 +1,150 @@
 {
  "events": [
-  {
-   "t": "HARD · Scharf · 08:09 Aufgang",
-   "start": "2026-12-19T08:09:00+01:00",
-   "end": "2026-12-19T08:59:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:22 Mittag",
-   "start": "2026-12-19T12:22:00+01:00",
-   "end": "2026-12-19T13:12:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 16:36 Untergang",
-   "start": "2026-12-19T16:36:00+01:00",
-   "end": "2026-12-19T17:26:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2026-12-19T22:30:00+01:00",
-   "end": "2026-12-19T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2026-12-20",
-   "end": "2026-12-21",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 4. Advent",
-   "start": "2026-12-20",
-   "end": "2026-12-21",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 08:09 Aufgang",
-   "start": "2026-12-20T08:09:00+01:00",
-   "end": "2026-12-20T08:59:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 12:23 Mittag",
-   "start": "2026-12-20T12:23:00+01:00",
-   "end": "2026-12-20T13:13:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 16:36 Untergang",
-   "start": "2026-12-20T16:36:00+01:00",
-   "end": "2026-12-20T17:26:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2026-12-20T22:30:00+01:00",
-   "end": "2026-12-20T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · Wintersonnenwende",
-   "start": "2026-12-21",
-   "end": "2026-12-22",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Heiliger Abend",
-   "start": "2026-12-24",
-   "end": "2026-12-25",
-   "all": true
-  },
-  {
-   "t": "ECHO · Mond · Vollmond · 02:28",
-   "start": "2026-12-24T02:28:00+01:00",
-   "end": "2026-12-24T03:28:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 08:11 Aufgang",
-   "start": "2026-12-24T08:11:00+01:00",
-   "end": "2026-12-24T09:01:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 12:25 Mittag",
-   "start": "2026-12-24T12:25:00+01:00",
-   "end": "2026-12-24T13:15:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · 16:38 Untergang",
-   "start": "2026-12-24T16:38:00+01:00",
-   "end": "2026-12-24T17:28:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · 22:30 Nacht · dichter",
-   "start": "2026-12-24T22:30:00+01:00",
-   "end": "2026-12-24T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · Weihnachten",
-   "start": "2026-12-25",
-   "end": "2026-12-26",
-   "all": true
-  },
-  {
-   "t": "STILL · Abnehmend · reinigen",
-   "start": "2026-12-25",
-   "end": "2027-01-07",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Weihnachten · 22:30 Nacht",
-   "start": "2026-12-25T22:30:00+01:00",
-   "end": "2026-12-25T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 08:13 Aufgang",
-   "start": "2026-12-29T08:13:00+01:00",
-   "end": "2026-12-29T09:03:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:27 Mittag",
-   "start": "2026-12-29T12:27:00+01:00",
-   "end": "2026-12-29T13:17:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 16:42 Untergang",
-   "start": "2026-12-29T16:42:00+01:00",
-   "end": "2026-12-29T17:32:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2026-12-29T22:30:00+01:00",
-   "end": "2026-12-29T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2026-12-30",
-   "end": "2026-12-31",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Silvester",
-   "start": "2026-12-31",
-   "end": "2027-01-01",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Neujahr",
-   "start": "2027-01-01",
-   "end": "2027-01-02",
-   "all": true
-  },
-  {
-   "t": "HARD · Scharf · 08:12 Aufgang",
-   "start": "2027-01-05T08:12:00+01:00",
-   "end": "2027-01-05T09:02:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:31 Mittag",
-   "start": "2027-01-05T12:31:00+01:00",
-   "end": "2027-01-05T13:21:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 16:49 Untergang",
-   "start": "2027-01-05T16:49:00+01:00",
-   "end": "2027-01-05T17:39:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-05T22:30:00+01:00",
-   "end": "2027-01-05T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-06",
-   "end": "2027-01-07",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Dreikönig",
-   "start": "2027-01-06",
-   "end": "2027-01-07",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 08:12 Aufgang",
-   "start": "2027-01-07T08:12:00+01:00",
-   "end": "2027-01-07T09:02:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 12:31 Mittag",
-   "start": "2027-01-07T12:31:00+01:00",
-   "end": "2027-01-07T13:21:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 16:51 Untergang",
-   "start": "2027-01-07T16:51:00+01:00",
-   "end": "2027-01-07T17:41:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · Mond · Neumond · 21:25",
-   "start": "2027-01-07T21:25:00+01:00",
-   "end": "2027-01-07T22:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2027-01-07T22:30:00+01:00",
-   "end": "2027-01-07T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Wetter · Segen",
-   "start": "2027-01-08",
-   "end": "2027-01-22",
-   "all": true
-  },
-  {
-   "t": "SOFT · Venus · Liebe · 22:30",
-   "start": "2027-01-08T22:30:00+01:00",
-   "end": "2027-01-08T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 08:11 Aufgang",
-   "start": "2027-01-09T08:11:00+01:00",
-   "end": "2027-01-09T09:01:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:32 Mittag",
-   "start": "2027-01-09T12:32:00+01:00",
-   "end": "2027-01-09T13:22:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 16:54 Untergang",
-   "start": "2027-01-09T16:54:00+01:00",
-   "end": "2027-01-09T17:44:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-09T22:30:00+01:00",
-   "end": "2027-01-09T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-10",
-   "end": "2027-01-11",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2027-01-10T22:30:00+01:00",
-   "end": "2027-01-10T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 08:10 Aufgang",
-   "start": "2027-01-12T08:10:00+01:00",
-   "end": "2027-01-12T09:00:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:34 Mittag",
-   "start": "2027-01-12T12:34:00+01:00",
-   "end": "2027-01-12T13:24:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 16:57 Untergang",
-   "start": "2027-01-12T16:57:00+01:00",
-   "end": "2027-01-12T17:47:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-12T22:30:00+01:00",
-   "end": "2027-01-12T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-13",
-   "end": "2027-01-14",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 21:35 Viertel",
-   "start": "2027-01-15T21:35:00+01:00",
-   "end": "2027-01-15T22:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Venus · Liebe · 22:30",
-   "start": "2027-01-15T22:30:00+01:00",
-   "end": "2027-01-15T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 08:08 Aufgang",
-   "start": "2027-01-16T08:08:00+01:00",
-   "end": "2027-01-16T08:58:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:35 Mittag",
-   "start": "2027-01-16T12:35:00+01:00",
-   "end": "2027-01-16T13:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:03 Untergang",
-   "start": "2027-01-16T17:03:00+01:00",
-   "end": "2027-01-16T17:53:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-16T22:30:00+01:00",
-   "end": "2027-01-16T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-17",
-   "end": "2027-01-18",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2027-01-17T22:30:00+01:00",
-   "end": "2027-01-17T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 08:05 Aufgang",
-   "start": "2027-01-19T08:05:00+01:00",
-   "end": "2027-01-19T08:55:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:36 Mittag",
-   "start": "2027-01-19T12:36:00+01:00",
-   "end": "2027-01-19T13:26:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:07 Untergang",
-   "start": "2027-01-19T17:07:00+01:00",
-   "end": "2027-01-19T17:57:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-19T22:30:00+01:00",
-   "end": "2027-01-19T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-20",
-   "end": "2027-01-21",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 08:03 Aufgang",
-   "start": "2027-01-22T08:03:00+01:00",
-   "end": "2027-01-22T08:53:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 12:37 Mittag",
-   "start": "2027-01-22T12:37:00+01:00",
-   "end": "2027-01-22T13:27:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Mond · Vollmond · 13:17",
-   "start": "2027-01-22T13:17:00+01:00",
-   "end": "2027-01-22T14:17:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · 17:11 Untergang",
-   "start": "2027-01-22T17:11:00+01:00",
-   "end": "2027-01-22T18:01:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · 22:30 Nacht · dichter",
-   "start": "2027-01-22T22:30:00+01:00",
-   "end": "2027-01-22T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "STILL · Abnehmend · reinigen",
-   "start": "2027-01-23",
-   "end": "2027-02-06",
-   "all": true
-  },
-  {
-   "t": "HARD · Scharf · 07:59 Aufgang",
-   "start": "2027-01-26T07:59:00+01:00",
-   "end": "2027-01-26T08:49:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:38 Mittag",
-   "start": "2027-01-26T12:38:00+01:00",
-   "end": "2027-01-26T13:28:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:17 Untergang",
-   "start": "2027-01-26T17:17:00+01:00",
-   "end": "2027-01-26T18:07:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-26T22:30:00+01:00",
-   "end": "2027-01-26T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-27",
-   "end": "2027-01-28",
-   "all": true
-  },
-  {
-   "t": "HARD · Scharf · 07:54 Aufgang",
-   "start": "2027-01-30T07:54:00+01:00",
-   "end": "2027-01-30T08:44:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:39 Mittag",
-   "start": "2027-01-30T12:39:00+01:00",
-   "end": "2027-01-30T13:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:23 Untergang",
-   "start": "2027-01-30T17:23:00+01:00",
-   "end": "2027-01-30T18:13:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-01-30T22:30:00+01:00",
-   "end": "2027-01-30T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-01-31",
-   "end": "2027-02-01",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Lichtmess",
-   "start": "2027-02-02",
-   "end": "2027-02-03",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 07:45 Aufgang",
-   "start": "2027-02-06T07:45:00+01:00",
-   "end": "2027-02-06T08:35:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 12:39 Mittag",
-   "start": "2027-02-06T12:39:00+01:00",
-   "end": "2027-02-06T13:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · Mond · Neumond · 16:56",
-   "start": "2027-02-06T16:56:00+01:00",
-   "end": "2027-02-06T17:56:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 17:34 Untergang",
-   "start": "2027-02-06T17:34:00+01:00",
-   "end": "2027-02-06T18:24:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2027-02-06T22:30:00+01:00",
-   "end": "2027-02-06T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Wetter · Segen",
-   "start": "2027-02-07",
-   "end": "2027-02-21",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2027-02-07T22:30:00+01:00",
-   "end": "2027-02-07T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 07:41 Aufgang",
-   "start": "2027-02-09T07:41:00+01:00",
-   "end": "2027-02-09T08:31:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:39 Mittag",
-   "start": "2027-02-09T12:39:00+01:00",
-   "end": "2027-02-09T13:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:39 Untergang",
-   "start": "2027-02-09T17:39:00+01:00",
-   "end": "2027-02-09T18:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-02-09T22:30:00+01:00",
-   "end": "2027-02-09T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-02-10",
-   "end": "2027-02-11",
-   "all": true
-  },
-  {
-   "t": "SOFT · Venus · Liebe · 22:30",
-   "start": "2027-02-12T22:30:00+01:00",
-   "end": "2027-02-12T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 07:34 Aufgang",
-   "start": "2027-02-13T07:34:00+01:00",
-   "end": "2027-02-13T08:24:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:40 Mittag",
-   "start": "2027-02-13T12:40:00+01:00",
-   "end": "2027-02-13T13:30:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:45 Untergang",
-   "start": "2027-02-13T17:45:00+01:00",
-   "end": "2027-02-13T18:35:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-02-13T22:30:00+01:00",
-   "end": "2027-02-13T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-02-14",
-   "end": "2027-02-15",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · Valentinstag",
-   "start": "2027-02-14",
-   "end": "2027-02-15",
-   "all": true
-  },
-  {
-   "t": "SOFT · Segen · 08:59 Viertel",
-   "start": "2027-02-14T08:59:00+01:00",
-   "end": "2027-02-14T09:49:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 22:30 Nacht · innen",
-   "start": "2027-02-14T22:30:00+01:00",
-   "end": "2027-02-14T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 07:29 Aufgang",
-   "start": "2027-02-16T07:29:00+01:00",
-   "end": "2027-02-16T08:19:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:39 Mittag",
-   "start": "2027-02-16T12:39:00+01:00",
-   "end": "2027-02-16T13:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 17:50 Untergang",
-   "start": "2027-02-16T17:50:00+01:00",
-   "end": "2027-02-16T18:40:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-02-16T22:30:00+01:00",
-   "end": "2027-02-16T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-02-17",
-   "end": "2027-02-18",
-   "all": true
-  },
-  {
-   "t": "SOFT · Venus · Liebe · 22:30",
-   "start": "2027-02-19T22:30:00+01:00",
-   "end": "2027-02-19T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Mond · Vollmond · 00:24",
-   "start": "2027-02-21T00:24:00+01:00",
-   "end": "2027-02-21T01:24:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 07:21 Aufgang",
-   "start": "2027-02-21T07:21:00+01:00",
-   "end": "2027-02-21T08:11:00+01:00",
-   "all": false
-  },
-  {
-   "t": "SOFT · Segen · 12:39 Mittag",
-   "start": "2027-02-21T12:39:00+01:00",
-   "end": "2027-02-21T13:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · 17:58 Untergang",
-   "start": "2027-02-21T17:58:00+01:00",
-   "end": "2027-02-21T18:48:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · 22:30 Nacht · dichter",
-   "start": "2027-02-21T22:30:00+01:00",
-   "end": "2027-02-21T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "STILL · Abnehmend · reinigen",
-   "start": "2027-02-22",
-   "end": "2027-03-01",
-   "all": true
-  },
-  {
-   "t": "HARD · Scharf · 07:17 Aufgang",
-   "start": "2027-02-23T07:17:00+01:00",
-   "end": "2027-02-23T08:07:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:39 Mittag",
-   "start": "2027-02-23T12:39:00+01:00",
-   "end": "2027-02-23T13:29:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 18:01 Untergang",
-   "start": "2027-02-23T18:01:00+01:00",
-   "end": "2027-02-23T18:51:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-02-23T22:30:00+01:00",
-   "end": "2027-02-23T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-02-24",
-   "end": "2027-02-25",
-   "all": true
-  },
-  {
-   "t": "HARD · Scharf · 07:10 Aufgang",
-   "start": "2027-02-27T07:10:00+01:00",
-   "end": "2027-02-27T08:00:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 12:38 Mittag",
-   "start": "2027-02-27T12:38:00+01:00",
-   "end": "2027-02-27T13:28:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 18:07 Untergang",
-   "start": "2027-02-27T18:07:00+01:00",
-   "end": "2027-02-27T18:57:00+01:00",
-   "all": false
-  },
-  {
-   "t": "HARD · Scharf · 22:30 Nacht · Anker",
-   "start": "2027-02-27T22:30:00+01:00",
-   "end": "2027-02-27T23:25:00+01:00",
-   "all": false
-  },
-  {
-   "t": "ECHO · Nachlauf",
-   "start": "2027-02-28",
-   "end": "2027-03-01",
-   "all": true
-  }
+  {"t": "HARD · Tag · Saturn", "start": "2026-12-19", "end": "2026-12-20", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:09 Aufgang", "start": "2026-12-19T08:09:00+01:00", "end": "2026-12-19T08:59:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:22 Mittag", "start": "2026-12-19T12:22:00+01:00", "end": "2026-12-19T13:12:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 16:36 Untergang", "start": "2026-12-19T16:36:00+01:00", "end": "2026-12-19T17:26:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2026-12-19T22:30:00+01:00", "end": "2026-12-19T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2026-12-20", "end": "2026-12-21", "all": true},
+  {"t": "SOFT · Segen · 4. Advent", "start": "2026-12-20", "end": "2026-12-21", "all": true},
+  {"t": "SOFT · Segen · 08:09 Aufgang", "start": "2026-12-20T08:09:00+01:00", "end": "2026-12-20T08:59:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 12:23 Mittag", "start": "2026-12-20T12:23:00+01:00", "end": "2026-12-20T13:13:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 16:36 Untergang", "start": "2026-12-20T16:36:00+01:00", "end": "2026-12-20T17:26:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2026-12-20T22:30:00+01:00", "end": "2026-12-20T23:25:00+01:00", "all": false},
+  {"t": "SOFT · Segen · Wintersonnenwende", "start": "2026-12-21", "end": "2026-12-22", "all": true},
+  {"t": "HARD · Tag · Mars", "start": "2026-12-22", "end": "2026-12-23", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Phase · Vollmond", "start": "2026-12-23", "end": "2026-12-26", "all": true, "d": "Hard-Phase rund um den Vollmond: Ladung am stärksten. Jeden Abend Rückkehr · Anker."},
+  {"t": "SOFT · Segen · Heiliger Abend", "start": "2026-12-24", "end": "2026-12-25", "all": true},
+  {"t": "ECHO · Mond · Vollmond · 02:28", "start": "2026-12-24T02:28:00+01:00", "end": "2026-12-24T03:28:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 08:11 Aufgang", "start": "2026-12-24T08:11:00+01:00", "end": "2026-12-24T09:01:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 12:25 Mittag", "start": "2026-12-24T12:25:00+01:00", "end": "2026-12-24T13:15:00+01:00", "all": false},
+  {"t": "ECHO · 16:38 Untergang", "start": "2026-12-24T16:38:00+01:00", "end": "2026-12-24T17:28:00+01:00", "all": false},
+  {"t": "ECHO · 22:30 Nacht · dichter", "start": "2026-12-24T22:30:00+01:00", "end": "2026-12-24T23:25:00+01:00", "all": false},
+  {"t": "SOFT · Segen · Weihnachten", "start": "2026-12-25", "end": "2026-12-26", "all": true},
+  {"t": "STILL · Abnehmend · reinigen", "start": "2026-12-25", "end": "2027-01-07", "all": true},
+  {"t": "SOFT · Segen · Weihnachten · 22:30 Nacht", "start": "2026-12-25T22:30:00+01:00", "end": "2026-12-25T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Saturn", "start": "2026-12-26", "end": "2026-12-27", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Tag · Mars", "start": "2026-12-29", "end": "2026-12-30", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:13 Aufgang", "start": "2026-12-29T08:13:00+01:00", "end": "2026-12-29T09:03:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:27 Mittag", "start": "2026-12-29T12:27:00+01:00", "end": "2026-12-29T13:17:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 16:42 Untergang", "start": "2026-12-29T16:42:00+01:00", "end": "2026-12-29T17:32:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2026-12-29T22:30:00+01:00", "end": "2026-12-29T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2026-12-30", "end": "2026-12-31", "all": true},
+  {"t": "SOFT · Segen · Silvester", "start": "2026-12-31", "end": "2027-01-01", "all": true},
+  {"t": "SOFT · Segen · Neujahr", "start": "2027-01-01", "end": "2027-01-02", "all": true},
+  {"t": "HARD · Tag · Saturn", "start": "2027-01-02", "end": "2027-01-03", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Tag · Mars", "start": "2027-01-05", "end": "2027-01-06", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:12 Aufgang", "start": "2027-01-05T08:12:00+01:00", "end": "2027-01-05T09:02:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:31 Mittag", "start": "2027-01-05T12:31:00+01:00", "end": "2027-01-05T13:21:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 16:49 Untergang", "start": "2027-01-05T16:49:00+01:00", "end": "2027-01-05T17:39:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-05T22:30:00+01:00", "end": "2027-01-05T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-06", "end": "2027-01-07", "all": true},
+  {"t": "SOFT · Segen · Dreikönig", "start": "2027-01-06", "end": "2027-01-07", "all": true},
+  {"t": "SOFT · Segen · 08:12 Aufgang", "start": "2027-01-07T08:12:00+01:00", "end": "2027-01-07T09:02:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 12:31 Mittag", "start": "2027-01-07T12:31:00+01:00", "end": "2027-01-07T13:21:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 16:51 Untergang", "start": "2027-01-07T16:51:00+01:00", "end": "2027-01-07T17:41:00+01:00", "all": false},
+  {"t": "SOFT · Segen · Mond · Neumond · 21:25", "start": "2027-01-07T21:25:00+01:00", "end": "2027-01-07T22:25:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2027-01-07T22:30:00+01:00", "end": "2027-01-07T23:25:00+01:00", "all": false},
+  {"t": "SOFT · Wetter · Segen", "start": "2027-01-08", "end": "2027-01-22", "all": true},
+  {"t": "SOFT · Venus · Liebe · 22:30", "start": "2027-01-08T22:30:00+01:00", "end": "2027-01-08T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Saturn", "start": "2027-01-09", "end": "2027-01-10", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:11 Aufgang", "start": "2027-01-09T08:11:00+01:00", "end": "2027-01-09T09:01:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:32 Mittag", "start": "2027-01-09T12:32:00+01:00", "end": "2027-01-09T13:22:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 16:54 Untergang", "start": "2027-01-09T16:54:00+01:00", "end": "2027-01-09T17:44:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-09T22:30:00+01:00", "end": "2027-01-09T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-10", "end": "2027-01-11", "all": true},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2027-01-10T22:30:00+01:00", "end": "2027-01-10T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Mars", "start": "2027-01-12", "end": "2027-01-13", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:10 Aufgang", "start": "2027-01-12T08:10:00+01:00", "end": "2027-01-12T09:00:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:34 Mittag", "start": "2027-01-12T12:34:00+01:00", "end": "2027-01-12T13:24:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 16:57 Untergang", "start": "2027-01-12T16:57:00+01:00", "end": "2027-01-12T17:47:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-12T22:30:00+01:00", "end": "2027-01-12T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-13", "end": "2027-01-14", "all": true},
+  {"t": "SOFT · Segen · 21:35 Viertel", "start": "2027-01-15T21:35:00+01:00", "end": "2027-01-15T22:25:00+01:00", "all": false},
+  {"t": "SOFT · Venus · Liebe · 22:30", "start": "2027-01-15T22:30:00+01:00", "end": "2027-01-15T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Saturn", "start": "2027-01-16", "end": "2027-01-17", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:08 Aufgang", "start": "2027-01-16T08:08:00+01:00", "end": "2027-01-16T08:58:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:35 Mittag", "start": "2027-01-16T12:35:00+01:00", "end": "2027-01-16T13:25:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:03 Untergang", "start": "2027-01-16T17:03:00+01:00", "end": "2027-01-16T17:53:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-16T22:30:00+01:00", "end": "2027-01-16T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-17", "end": "2027-01-18", "all": true},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2027-01-17T22:30:00+01:00", "end": "2027-01-17T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Mars", "start": "2027-01-19", "end": "2027-01-20", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 08:05 Aufgang", "start": "2027-01-19T08:05:00+01:00", "end": "2027-01-19T08:55:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:36 Mittag", "start": "2027-01-19T12:36:00+01:00", "end": "2027-01-19T13:26:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:07 Untergang", "start": "2027-01-19T17:07:00+01:00", "end": "2027-01-19T17:57:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-19T22:30:00+01:00", "end": "2027-01-19T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-20", "end": "2027-01-21", "all": true},
+  {"t": "HARD · Phase · Vollmond", "start": "2027-01-21", "end": "2027-01-24", "all": true, "d": "Hard-Phase rund um den Vollmond: Ladung am stärksten. Jeden Abend Rückkehr · Anker."},
+  {"t": "SOFT · Segen · 08:03 Aufgang", "start": "2027-01-22T08:03:00+01:00", "end": "2027-01-22T08:53:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 12:37 Mittag", "start": "2027-01-22T12:37:00+01:00", "end": "2027-01-22T13:27:00+01:00", "all": false},
+  {"t": "ECHO · Mond · Vollmond · 13:17", "start": "2027-01-22T13:17:00+01:00", "end": "2027-01-22T14:17:00+01:00", "all": false},
+  {"t": "ECHO · 17:11 Untergang", "start": "2027-01-22T17:11:00+01:00", "end": "2027-01-22T18:01:00+01:00", "all": false},
+  {"t": "ECHO · 22:30 Nacht · dichter", "start": "2027-01-22T22:30:00+01:00", "end": "2027-01-22T23:25:00+01:00", "all": false},
+  {"t": "STILL · Abnehmend · reinigen", "start": "2027-01-23", "end": "2027-02-06", "all": true},
+  {"t": "HARD · Tag · Mars", "start": "2027-01-26", "end": "2027-01-27", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:59 Aufgang", "start": "2027-01-26T07:59:00+01:00", "end": "2027-01-26T08:49:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:38 Mittag", "start": "2027-01-26T12:38:00+01:00", "end": "2027-01-26T13:28:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:17 Untergang", "start": "2027-01-26T17:17:00+01:00", "end": "2027-01-26T18:07:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-26T22:30:00+01:00", "end": "2027-01-26T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-27", "end": "2027-01-28", "all": true},
+  {"t": "HARD · Tag · Saturn", "start": "2027-01-30", "end": "2027-01-31", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:54 Aufgang", "start": "2027-01-30T07:54:00+01:00", "end": "2027-01-30T08:44:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:39 Mittag", "start": "2027-01-30T12:39:00+01:00", "end": "2027-01-30T13:29:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:23 Untergang", "start": "2027-01-30T17:23:00+01:00", "end": "2027-01-30T18:13:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-01-30T22:30:00+01:00", "end": "2027-01-30T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-01-31", "end": "2027-02-01", "all": true},
+  {"t": "SOFT · Segen · Lichtmess", "start": "2027-02-02", "end": "2027-02-03", "all": true},
+  {"t": "HARD · Tag · Mars", "start": "2027-02-02", "end": "2027-02-03", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Tag · Saturn", "start": "2027-02-06", "end": "2027-02-07", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "SOFT · Segen · 07:45 Aufgang", "start": "2027-02-06T07:45:00+01:00", "end": "2027-02-06T08:35:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 12:39 Mittag", "start": "2027-02-06T12:39:00+01:00", "end": "2027-02-06T13:29:00+01:00", "all": false},
+  {"t": "SOFT · Segen · Mond · Neumond · 16:56", "start": "2027-02-06T16:56:00+01:00", "end": "2027-02-06T17:56:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 17:34 Untergang", "start": "2027-02-06T17:34:00+01:00", "end": "2027-02-06T18:24:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2027-02-06T22:30:00+01:00", "end": "2027-02-06T23:25:00+01:00", "all": false},
+  {"t": "SOFT · Wetter · Segen", "start": "2027-02-07", "end": "2027-02-21", "all": true},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2027-02-07T22:30:00+01:00", "end": "2027-02-07T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Mars", "start": "2027-02-09", "end": "2027-02-10", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:41 Aufgang", "start": "2027-02-09T07:41:00+01:00", "end": "2027-02-09T08:31:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:39 Mittag", "start": "2027-02-09T12:39:00+01:00", "end": "2027-02-09T13:29:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:39 Untergang", "start": "2027-02-09T17:39:00+01:00", "end": "2027-02-09T18:29:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-09T22:30:00+01:00", "end": "2027-02-09T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-02-10", "end": "2027-02-11", "all": true},
+  {"t": "SOFT · Venus · Liebe · 22:30", "start": "2027-02-12T22:30:00+01:00", "end": "2027-02-12T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Saturn", "start": "2027-02-13", "end": "2027-02-14", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:34 Aufgang", "start": "2027-02-13T07:34:00+01:00", "end": "2027-02-13T08:24:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:40 Mittag", "start": "2027-02-13T12:40:00+01:00", "end": "2027-02-13T13:30:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:45 Untergang", "start": "2027-02-13T17:45:00+01:00", "end": "2027-02-13T18:35:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-13T22:30:00+01:00", "end": "2027-02-13T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-02-14", "end": "2027-02-15", "all": true},
+  {"t": "SOFT · Segen · Valentinstag", "start": "2027-02-14", "end": "2027-02-15", "all": true},
+  {"t": "SOFT · Segen · 08:59 Viertel", "start": "2027-02-14T08:59:00+01:00", "end": "2027-02-14T09:49:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 22:30 Nacht · innen", "start": "2027-02-14T22:30:00+01:00", "end": "2027-02-14T23:25:00+01:00", "all": false},
+  {"t": "HARD · Tag · Mars", "start": "2027-02-16", "end": "2027-02-17", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:29 Aufgang", "start": "2027-02-16T07:29:00+01:00", "end": "2027-02-16T08:19:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:39 Mittag", "start": "2027-02-16T12:39:00+01:00", "end": "2027-02-16T13:29:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 17:50 Untergang", "start": "2027-02-16T17:50:00+01:00", "end": "2027-02-16T18:40:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-16T22:30:00+01:00", "end": "2027-02-16T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-02-17", "end": "2027-02-18", "all": true},
+  {"t": "SOFT · Venus · Liebe · 22:30", "start": "2027-02-19T22:30:00+01:00", "end": "2027-02-19T23:25:00+01:00", "all": false},
+  {"t": "HARD · Phase · Vollmond", "start": "2027-02-20", "end": "2027-02-23", "all": true, "d": "Hard-Phase rund um den Vollmond: Ladung am stärksten. Jeden Abend Rückkehr · Anker."},
+  {"t": "ECHO · Mond · Vollmond · 00:24", "start": "2027-02-21T00:24:00+01:00", "end": "2027-02-21T01:24:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 07:21 Aufgang", "start": "2027-02-21T07:21:00+01:00", "end": "2027-02-21T08:11:00+01:00", "all": false},
+  {"t": "SOFT · Segen · 12:39 Mittag", "start": "2027-02-21T12:39:00+01:00", "end": "2027-02-21T13:29:00+01:00", "all": false},
+  {"t": "ECHO · 17:58 Untergang", "start": "2027-02-21T17:58:00+01:00", "end": "2027-02-21T18:48:00+01:00", "all": false},
+  {"t": "ECHO · 22:30 Nacht · dichter", "start": "2027-02-21T22:30:00+01:00", "end": "2027-02-21T23:25:00+01:00", "all": false},
+  {"t": "STILL · Abnehmend · reinigen", "start": "2027-02-22", "end": "2027-03-01", "all": true},
+  {"t": "HARD · Tag · Mars", "start": "2027-02-23", "end": "2027-02-24", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:17 Aufgang", "start": "2027-02-23T07:17:00+01:00", "end": "2027-02-23T08:07:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:39 Mittag", "start": "2027-02-23T12:39:00+01:00", "end": "2027-02-23T13:29:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 18:01 Untergang", "start": "2027-02-23T18:01:00+01:00", "end": "2027-02-23T18:51:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-23T22:30:00+01:00", "end": "2027-02-23T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-02-24", "end": "2027-02-25", "all": true},
+  {"t": "HARD · Tag · Saturn", "start": "2027-02-27", "end": "2027-02-28", "all": true, "d": "Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker."},
+  {"t": "HARD · Scharf · 07:10 Aufgang", "start": "2027-02-27T07:10:00+01:00", "end": "2027-02-27T08:00:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 12:38 Mittag", "start": "2027-02-27T12:38:00+01:00", "end": "2027-02-27T13:28:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 18:07 Untergang", "start": "2027-02-27T18:07:00+01:00", "end": "2027-02-27T18:57:00+01:00", "all": false},
+  {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-27T22:30:00+01:00", "end": "2027-02-27T23:25:00+01:00", "all": false},
+  {"t": "ECHO · Nachlauf", "start": "2027-02-28", "end": "2027-03-01", "all": true}
  ]
 }
