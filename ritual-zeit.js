@@ -9,8 +9,11 @@
    5. ganztägiger Soft-Tageseintrag (Segen, Feiertag)  -> SOFT
    6. keine Daten: Mondregel wie Google (Neumond Soft, Tag nach Vollmond bis vor Neumond Still, sonst Soft, Vollmond Echo)
    Nie aus künftigen Terminen. Hard gibt es nur, solange ein Feintakt offen ist.
-   Nach dem Ende der Datei rechnet die App Bänder, Mondtage und Sonnen-Fenster selbst (ohne Hard, «gerechnet»),
-   nie zusätzlich zu Datei-Terminen. Sonnenzeiten: NOAA-Formel mit Refraktion, Ort Bern.
+   Nach dem Ende der Datei rechnet die App Bänder, Mondtage und Sonnen-Fenster selbst («gerechnet»), nie zusätzlich
+   zu Datei-Terminen. Seit Build 35 nach denselben Regeln wie die Datei: Hard-Phase Vollmond (Vortag bis Folgetag),
+   Hard-Tage Mars (Di) und Saturn (Sa) ausser in der Vollmond-Phase, mit vier Scharf-Fenstern (Aufgang, Mittag,
+   Untergang abgerundet, je 50 Min.; 22:30–23:25 Anker) und Echo-Nachlauf am Folgetag; Sonntag 22:30 Segen innen.
+   Rückläufe und Finsternisse rechnet die App nicht (nur aus der Datei). Sonnenzeiten: NOAA-Formel mit Refraktion, Ort Bern.
    Saisons (Einträge mit Feld "sz", z. B. Merkur rückläufig, Rauhnächte, Finsternis): nur Anzeige (Kalender, Chip).
    Sie stehen NICHT in list() und ändern Ton, Tor und Gate nie. */
 (function(){
@@ -69,13 +72,24 @@
   }
   function floorMin(ms){ return Math.floor(ms/MIN)*MIN; }
 
-  /* ---------- Ersatzrechnung ohne Datei-Daten (wie Google aufgebaut, ohne Hard) ---------- */
-  function mk(t,s,e,all){ return {t:t,k:kindOf(t),s:s,e:e,all:all,band:all&&Math.round((e-s)/DAY)>1,src:"calc",moon:/Vollmond/.test(t)?"voll":(/Neumond/.test(t)?"neu":""),anker:false}; }
+  /* ---------- Ersatzrechnung ohne Datei-Daten (wie Google aufgebaut, Regeln wie die Datei) ---------- */
+  function mk(t,s,e,all,d){ return {t:t,k:kindOf(t),s:s,e:e,all:all,band:all&&Math.round((e-s)/DAY)>1,src:"calc",moon:/Vollmond/.test(t)?"voll":(/Neumond/.test(t)?"neu":""),anker:/Anker/.test(t),d:d||""}; }
+  function at(d0,h,m){ var n=new Date(d0); n.setHours(h,m,0,0); return n.getTime(); }
+  var HD_D="Harter Planetentag. Nach Hard-Arbeit am Abend Rückkehr · Anker.";
+  var PH_D="Hard-Phase rund um den Vollmond: Ladung am stärksten. Jeden Abend Rückkehr · Anker.";
   function calc(from,to){
     var M=window.RR25_MOND, out=[]; if(!M||!(to>from)) return out;
-    var ph=M.events(from-40*DAY,to+40*DAY).filter(function(x){ return x.q===0||x.q===2; });
+    var all=M.events(from-40*DAY,to+40*DAY), ph=all.filter(function(x){ return x.q===0||x.q===2; });
+    var phase={}, moonDay={}, wax={}, quart={};
+    all.forEach(function(x){ if(x.q===1) quart[day0(x.t)]=x.t; });
     for(var i=0;i<ph.length;i++){
       var a=ph[i], b=ph[i+1], da=day0(a.t);
+      moonDay[da]=1;
+      if(a.q===2){
+        var p0=addDays(da,-1), p1=addDays(da,2);
+        for(var q=p0;q<p1;q=addDays(q,1)) phase[q]=1;
+        if(p1>from&&p0<to) out.push(mk("HARD · Phase · Vollmond", p0, p1, true, PH_D));
+      }
       if(da>=from && da<to){
         var S=sun(da), voll=a.q===2, t2=tstr(a.t);
         out.push(mk(voll?"ECHO · Mond · Vollmond · "+t2:"SOFT · Segen · Mond · Neumond · "+t2, floorMin(a.t), floorMin(a.t)+60*MIN, false));
@@ -83,12 +97,30 @@
           var s=floorMin(w[1]), echo=voll&&j===2;
           out.push(mk((echo?"ECHO · ":"SOFT · Segen · ")+tstr(s)+" "+w[0], s, s+50*MIN, false));
         });
-        var n=new Date(da); n.setHours(22,30,0,0);
-        out.push(mk(voll?"ECHO · 22:30 Nacht · dichter":"SOFT · Segen · 22:30 Nacht · innen", n.getTime(), n.getTime()+55*MIN, false));
+        var n=at(da,22,30);
+        out.push(mk(voll?"ECHO · 22:30 Nacht · dichter":"SOFT · Segen · 22:30 Nacht · innen", n, n+55*MIN, false));
       }
       if(b){
         var s=Math.max(addDays(da,1),from), e=Math.min(day0(b.t),to);
         if(e>s) out.push(mk(a.q===2?"STILL · Abnehmend · reinigen":"SOFT · Wetter · Segen", s, e, true));
+        if(a.q===0) for(var w0=addDays(da,1);w0<day0(b.t);w0=addDays(w0,1)) wax[w0]=1;
+      }
+    }
+    for(var d=day0(from); d<to; d=addDays(d,1)){
+      var wd=new Date(d).getDay();
+      if((wd===2||wd===6)&&!phase[d]){
+        var S2=sun(d);
+        out.push(mk("HARD · Tag · "+(wd===2?"Mars":"Saturn"), d, addDays(d,1), true, HD_D));
+        if(!moonDay[d]){ /* am Mondtag gilt der Mondtag (wie in der Datei) */
+          [["Aufgang",S2.rise],["Mittag",S2.noon],["Untergang",S2.set]].forEach(function(w){
+            var s=floorMin(w[1]); out.push(mk("HARD · Scharf · "+tstr(s)+" "+w[0], s, s+50*MIN, false));
+          });
+          var a2=at(d,22,30); out.push(mk("HARD · Scharf · 22:30 Nacht · Anker", a2, a2+55*MIN, false));
+          out.push(mk("ECHO · Nachlauf", addDays(d,1), addDays(d,2), true));
+        }
+      } else if(!phase[d]&&!moonDay[d]&&(quart[d]||(wd===0&&wax[d]))){
+        if(quart[d]){ var qs=floorMin(quart[d]); out.push(mk("SOFT · Segen · "+tstr(qs)+" Viertel", qs, qs+50*MIN, false)); }
+        var a3=at(d,22,30); out.push(mk("SOFT · Segen · 22:30 Nacht · innen", a3, a3+55*MIN, false));
       }
     }
     return out;
@@ -246,6 +278,6 @@
   window.RR25_KAL={seasons:seasons,load:load,onReady:onReady,state:state,next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },dayPartsIn:dayParts,
     planetDay:planetDay,planetAt:planetAt,venusNext:venusNext,
     sun:sun,moonNext:moonNext,coverage:function(){ return COV; },status:function(){ return st; },data:function(){ return DATA; },
-    kindOf:kindOf,ORT:ORT,RANK:RANK};
+    kindOf:kindOf,ORT:ORT,RANK:RANK,calc:calc};
   load();
 })();

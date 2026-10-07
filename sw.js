@@ -1,4 +1,4 @@
-var CACHE="rr25-v34";
+var CACHE="rr25-v35";
 self.addEventListener("install", function(e){
   self.skipWaiting();
 });
