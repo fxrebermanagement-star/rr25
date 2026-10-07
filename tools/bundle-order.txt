@@ -38,6 +38,7 @@ ritual-fein.js
 ritual-check.js
 ritual-ui-v2.js
 ritual-v3.js
+design-v3.js
 ritual-chronik-grau.js
 ritual-ton.js
 ritual-saison.js
