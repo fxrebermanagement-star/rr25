@@ -10,12 +10,12 @@
    6. keine Daten: Mondregel wie Google (Neumond Soft, Tag nach Vollmond bis vor Neumond Still, sonst Soft, Vollmond Echo)
    Nie aus künftigen Terminen. Hard gibt es nur, solange ein Feintakt offen ist.
    Nach dem Ende der Datei rechnet die App Bänder, Mondtage und Sonnen-Fenster selbst (ohne Hard, «gerechnet»),
-   nie zusätzlich zu Datei-Terminen. Sonnenzeiten: NOAA-Formel mit Refraktion, Ort Zürich.
+   nie zusätzlich zu Datei-Terminen. Sonnenzeiten: NOAA-Formel mit Refraktion, Ort Bern.
    Saisons (Einträge mit Feld "sz", z. B. Merkur rückläufig, Rauhnächte, Finsternis): nur Anzeige (Kalender, Chip).
    Sie stehen NICHT in list() und ändern Ton, Tor und Gate nie. */
 (function(){
   if(window.RR25_KAL) return;
-  var ORT="Zürich", LAT=47.3769, LON=8.5417, DAY=86400000, MIN=60000;
+  var ORT="Bern", LAT=46.948, LON=7.447, DAY=86400000, MIN=60000;
   var RANK={HARD:4,ECHO:3,STILL:2,SOFT:1};
   var SZRANK={"Finsternis":5,"Rauhnächte":4,"Merkur rückläufig":3,"Venus rückläufig":3,"Mars rückläufig":3};
   var DATA=null, FILE=[], SEAS=[], COV=null, st="load", waiters=[];
@@ -205,7 +205,7 @@
   /* ---------- Planetenstunden (nur Info, ändert nie den Ton) ----------
      Chaldäische Reihenfolge Saturn, Jupiter, Mars, Sonne, Venus, Merkur, Mond. Tag = Sonnenaufgang bis -untergang in 12 gleiche
      Stunden, Nacht = Untergang bis nächster Aufgang in 12. Die erste Tagesstunde gehört dem Tagesherrscher (So Sonne … Sa Saturn).
-     Vor Sonnenaufgang gilt noch die Nacht des Vortags. Zeiten aus sun() (NOAA, Zürich). */
+     Vor Sonnenaufgang gilt noch die Nacht des Vortags. Zeiten aus sun() (NOAA, Bern). */
   var CHAL=["Saturn","Jupiter","Mars","Sonne","Venus","Merkur","Mond"], RULER=[3,6,2,5,1,4,0];
   function planetDay(ms){
     var d0=day0(ms), S=sun(d0+12*3600000), N=sun(addDays(d0,1)+12*3600000), wd=new Date(d0).getDay(), out=[];
