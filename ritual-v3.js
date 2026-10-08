@@ -327,22 +327,69 @@
     try{ download(raw,fname("json")); ok(); }catch(e){ paintBak("Sichern ging nicht."); if(cb) cb(false); }
   }
   window.RR25_V3={pack:pack,packAll:packAll,fotosAll:fotosAll,sichern:sichern,sichern2:sichern2,schedule:schedule,paintEcho:paintEcho,paintWin:paintWin,winLine:function(id){ return winLine(rit(id)); },kindNow:kindNow,dueList:dueList};
+  /* Wochen-Sicherung (Build 45): EINE Erinnerung auf der Startseite, unter der Ton-Zeile (nie über der Zeichen-Kachel).
+     Fällig, wenn die letzte Sicherung älter als 7 Tage ist oder nie war. «später» schiebt 2 Tage auf.
+     «Jetzt sichern» nutzt denselben Ablauf wie «Sichern» in «Mehr» (RR25_SICHERN, Datei-Download). */
+  var SNOOZE="rr25_sicherung_spaeter", WEEK=7*DAY;
+  function del(k){ try{ localStorage.removeItem(k); }catch(e){} }
+  function bakDue(){
+    var t=lastBak();
+    if(t && Date.now()-t<WEEK) return false;
+    var z=parseInt(get(SNOOZE)||"0",10)||0;
+    return !(z>Date.now());
+  }
+  function bakAnchor(){
+    var home=document.getElementById("home"); if(!home) return null;
+    var a=document.getElementById("ankerHintCard");
+    if(!a||a.parentNode!==home) a=document.getElementById("toneRow");
+    if(!a||a.parentNode!==home) a=document.getElementById("kasten");
+    return a&&a.parentNode===home?a:null;
+  }
+  function bakPlace(){
+    var el=document.getElementById("bakCard"), a=bakAnchor();
+    if(el && a && el.previousElementSibling!==a) a.parentNode.insertBefore(el, a.nextSibling);
+  }
+  var bakTimer=0;
   function paintBak(msg){
-    var box=homeBox(); if(!box) return;
+    var a=bakAnchor(); if(!a) return;
     var el=document.getElementById("bakCard");
-    var t=lastBak(), days=t?Math.floor((Date.now()-t)/DAY):null;
-    var stale=bakStale();
-    if(!stale && !msg){ if(el) el.remove(); return; }
-    if(!el){ el=document.createElement("div"); el.id="bakCard"; el.className="card"; box.appendChild(el); }
-    if(!stale){
-      el.innerHTML='<p class="bkMsg">'+h(msg)+'</p>';
-      setTimeout(function(){ var x=document.getElementById("bakCard"); if(x && !bakStale()) x.remove(); },3500);
+    var good=msg && /^(Gesichert|Danke)/.test(msg);
+    if(!msg && !bakDue()){ if(el && !el.classList.contains("bkDone")) el.remove(); return; }
+    if(!el){ el=document.createElement("div"); el.id="bakCard"; el.className="card"; }
+    bakWatch();
+    if(el.parentNode!==a.parentNode || el.previousElementSibling!==a) a.parentNode.insertBefore(el, a.nextSibling);
+    clearTimeout(bakTimer);
+    if(good){
+      el.classList.add("bkDone");
+      el.innerHTML='<p class="bkThanks">Danke. Deine Sicherung ist gespeichert.</p>';
+      bakTimer=setTimeout(function(){ var x=document.getElementById("bakCard"); if(x) x.remove(); },2600);
       return;
     }
-    el.innerHTML='<div class="bkRow"><div><b>'+(t?'Letzte Sicherung: vor '+days+' Tagen':'Noch keine Sicherung')+'</b>'+
-      '<small>'+(msg?h(msg):'Eine Datei mit Chronik, Notizen, Zeichen und allen Fotos.')+'</small></div>'+
-      '<button type="button" class="btn primary" id="bakGoV3">Sichern</button></div>';
-    document.getElementById("bakGoV3").onclick=function(){ sichern(); };
+    el.classList.remove("bkDone");
+    var t=lastBak(), days=t?Math.floor((Date.now()-t)/DAY):null;
+    var sub=msg?h(msg):(t?'Letzte Sicherung vor '+days+(days===1?' Tag':' Tagen'):'Noch keine Sicherung')+' · eine Datei mit allem, auch den Fotos.';
+    el.innerHTML='<p class="bkTag">Sicherung</p><b class="bkHead">Zeit für deine Wochen-Sicherung</b><small class="bkSub">'+sub+'</small>'+
+      '<div class="bkBtns"><button type="button" class="btn primary" id="bakGoV3">Jetzt sichern</button><button type="button" class="bkLater" id="bakLater">später</button></div>';
+    document.getElementById("bakGoV3").onclick=function(){ bakNow(); };
+    document.getElementById("bakLater").onclick=function(){ set(SNOOZE,String(Date.now()+2*DAY)); var x=document.getElementById("bakCard"); if(x) x.remove(); };
+  }
+  function bakNow(){
+    var S=window.RR25_SICHERN;
+    if(!(S && S.pack && S.fileName)){ sichern(); return; }
+    var b=document.getElementById("bakGoV3"); if(b){ b.disabled=true; b.textContent="…"; }
+    S.pack().then(function(p){
+      download(JSON.stringify(p), S.fileName());
+      var t=String(Date.now()); set(SKEY,t); set("rr25_bak_at",t); del(SNOOZE);
+      var sh=document.getElementById("sxHint"); if(sh){ sh.textContent="Letzte Sicherung heute"; sh.className="sxHint"; }
+      paintBak("Gesichert.");
+    }).catch(function(){ paintBak("Sichern ging nicht. Nochmal?"); });
+  }
+  var bakObs=null;
+  function bakWatch(){
+    var home=document.getElementById("home");
+    if(bakObs || !home || !window.MutationObserver) return;
+    bakObs=new MutationObserver(bakPlace);
+    bakObs.observe(home,{childList:true});
   }
 
   /* ================= Einhängen ================= */
@@ -358,10 +405,15 @@
     "#echoCard .ecRow{margin-top:.35rem}",
     "#echoCard .ecRow .btn{font-weight:550}",
     "#echoCard .ecLater{display:block;margin:.45rem auto 0;background:none;border:0;color:#8e7aa8;font:inherit;font-size:.74rem;text-decoration:underline;padding:.3rem .8rem}","#echoCard .ecRead{width:100%;margin:.35rem 0 0;min-height:2.1rem;font-size:.78rem;border-color:rgba(126,200,255,.35)}",".echoDue a{color:#7ec8ff;text-decoration:none;border-bottom:1px dotted rgba(126,200,255,.55)}",
-    "#echoCard .ecThanks,#bakCard .bkMsg{margin:.1rem 0;font-family:Georgia,serif;color:#9ee8e0}",
-    "#bakCard .bkRow{display:flex;gap:.6rem;align-items:center}",
-    "#bakCard .bkRow>div{flex:1}",
-    "#bakCard .btn{flex:none;padding:.5rem 1.1rem}",
+    "#echoCard .ecThanks{margin:.1rem 0;font-family:Georgia,serif;color:#9ee8e0}",
+    "#home>#bakCard{margin:.55rem 0 .6rem;padding:.75rem .9rem .7rem;border-radius:1.1rem;border:1px solid rgba(232,160,255,.38);background:linear-gradient(160deg,rgba(58,24,88,.78),rgba(18,9,32,.92));box-shadow:0 0 18px rgba(201,155,255,.16)}",
+    "#bakCard .bkTag{margin:0 0 .15rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#ff9ae4}",
+    "#bakCard .bkHead{display:block;font-family:Georgia,serif;font-weight:500;font-size:1.02rem;color:#f6f0ff}",
+    "#bakCard .bkSub{display:block;margin:.2rem 0 0;font-size:.74rem;color:#c4b4e0;line-height:1.4}",
+    "#bakCard .bkBtns{display:flex;align-items:center;gap:.6rem;margin-top:.6rem}",
+    "#bakCard .bkBtns .btn{flex:1;min-height:2.5rem}",
+    "#bakCard .bkLater{flex:none;background:none;border:0;color:#8e7aa8;font:inherit;font-size:.78rem;text-decoration:underline;padding:.5rem .7rem;cursor:pointer}",
+    "#bakCard .bkThanks{margin:.1rem 0;font-family:Georgia,serif;color:#9ee8e0;text-align:center}",
     "#run #nextWin{margin:-.3rem 0 .6rem;padding:.5rem .75rem;border-radius:.9rem;background:rgba(20,10,34,.55);border:1px dashed rgba(126,200,255,.22);font-size:.84rem;line-height:1.45;color:#e6dcf7}",
     "#run #nextWin b{color:#fff;font-weight:600}",
     ".echoMark{margin:.3rem 0 0;font-size:.74rem;color:#c4b4e0;line-height:1.4}",
@@ -382,7 +434,7 @@
     show=function(id){
       if(id==="after"){ try{ schedule(); }catch(e){} }
       var r=sh.apply(this,arguments);
-      if(id==="home"){ paintEcho(); paintBak(); }
+      if(id==="home"){ paintEcho(); paintBak(); setTimeout(bakPlace,30); }
       if(id==="log"||id==="notiz"){ setTimeout(markRows,60); }
       return r;
     };
