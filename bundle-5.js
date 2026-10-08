@@ -1001,7 +1001,7 @@ try{
   }
   window.RR25_V3={pack:pack,packAll:packAll,fotosAll:fotosAll,sichern:sichern,sichern2:sichern2,schedule:schedule,paintEcho:paintEcho,paintWin:paintWin,winLine:function(id){ return winLine(rit(id)); },kindNow:kindNow,dueList:dueList};
   /* Wochen-Sicherung (Build 45): EINE Erinnerung auf der Startseite, unter der Ton-Zeile (nie über der Zeichen-Kachel).
-     Fällig, wenn die letzte Sicherung älter als 7 Tage ist oder nie war. «später» schiebt 2 Tage auf.
+     Fällig, wenn die letzte Sicherung älter als 7 Tage ist oder nie war. «später» schiebt 2 Tage auf.
      «Jetzt sichern» nutzt denselben Ablauf wie «Sichern» in «Mehr» (RR25_SICHERN, Datei-Download). */
   var SNOOZE="rr25_sicherung_spaeter", WEEK=7*DAY;
   function del(k){ try{ localStorage.removeItem(k); }catch(e){} }
