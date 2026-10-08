@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 46 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 47 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -885,9 +885,9 @@ try{
       });
     }
     Promise.all([
-      one("resonanzen-a.json?v=22"),
-      one("resonanzen-b.json?v=22"),
-      one("resonanzen-c.json?v=22"),
+      one("resonanzen-a.json?v=47"),
+      one("resonanzen-b.json?v=47"),
+      one("resonanzen-c.json?v=47"),
       one("resonanzen-ico-a.json?v=22"),
       one("resonanzen-ico-b.json?v=22"),
       one("resonanzen-ico-c.json?v=22")

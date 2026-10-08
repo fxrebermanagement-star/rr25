@@ -105,9 +105,9 @@
       });
     }
     Promise.all([
-      one("resonanzen-a.json?v=22"),
-      one("resonanzen-b.json?v=22"),
-      one("resonanzen-c.json?v=22"),
+      one("resonanzen-a.json?v=47"),
+      one("resonanzen-b.json?v=47"),
+      one("resonanzen-c.json?v=47"),
       one("resonanzen-ico-a.json?v=22"),
       one("resonanzen-ico-b.json?v=22"),
       one("resonanzen-ico-c.json?v=22")

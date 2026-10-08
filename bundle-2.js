@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 46 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 47 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -550,18 +550,18 @@ try{
   var DECK=[
     {"id":"s01","k":"soft","t":"Morgendank","z":"☼","x":"Bevor das Telefon dran ist: drei Dinge nennen, für die du dankbar bist. Laut, nicht im Kopf. So beginnt der Tag bei dir."},
     {"id":"s02","k":"soft","t":"Wasserglas","z":"◡","x":"Ein Glas Wasser mit beiden Händen halten und einen guten Satz hineinsprechen. Dann langsam trinken. Was du trinkst, trägst du."},
-    {"id":"s03","k":"soft","t":"Schwelle","z":"⊓","x":"Beim Heimkommen einen Moment an der Tür stehen bleiben. Der Tag draußen bleibt draußen. Erst dann die Schuhe aus."},
+    {"id":"s03","k":"soft","t":"Schwelle","z":"⊓","x":"Beim Heimkommen einen Moment an der Tür stehen bleiben. Der Tag draussen bleibt draussen. Erst dann die Schuhe aus."},
     {"id":"s04","k":"soft","t":"Venus","z":"♀\uFE0E","x":"Zeig heute, was du magst: ein Wort, ein Blick, eine kleine Aufmerksamkeit. Venus wirkt über Wärme, nie über Druck.","m":["zu","voll"]},
     {"id":"s05","k":"soft","t":"Stiller Segen","z":"✥","x":"Einem Menschen still Gutes wünschen, ohne es ihm zu sagen. Ein Satz genügt. Dann weitergehen und nicht zurückschauen."},
-    {"id":"s06","k":"soft","t":"Schutzmantel","z":"⛨","x":"Spür, wie sich dein Feld eine Armlänge um dich schließt. Was nicht zu dir gehört, gleitet ab. Einmal am Morgen reicht."},
-    {"id":"s07","k":"soft","t":"Salz an der Tür","z":"⊡","x":"Eine Prise Salz auf die Schwelle. So weiß das Haus, wo es anfängt. Am nächsten Morgen wegwischen.","m":["ab"]},
+    {"id":"s06","k":"soft","t":"Schutzmantel","z":"⛨","x":"Spür, wie sich dein Feld eine Armlänge um dich schliesst. Was nicht zu dir gehört, gleitet ab. Einmal am Morgen reicht."},
+    {"id":"s07","k":"soft","t":"Salz an der Tür","z":"⊡","x":"Eine Prise Salz auf die Schwelle. So weiss das Haus, wo es anfängt. Am nächsten Morgen wegwischen.","m":["ab"]},
     {"id":"s08","k":"soft","t":"Kerze","z":"✧","x":"Eine Kerze anzünden und nichts wollen. Nur schauen, bis der Atem ruhig wird. Auch das Auspusten ist ein Abschluss."},
     {"id":"s09","k":"soft","t":"Erster Bissen","z":"◒","x":"Den ersten Bissen heute bewusst nehmen und kurz danken, auch den Händen, die es gemacht haben. Fülle beginnt am Tisch."},
     {"id":"s10","k":"soft","t":"Geld ordnen","z":"⊚","x":"Das Portemonnaie aufräumen, die Scheine ordnen, einmal zählen. Ohne Sorge, nur wissen. Was geachtet wird, bleibt gern.","m":["zu"]},
     {"id":"s11","k":"soft","t":"Offene Hand","z":"☌","x":"Heute etwas geben, das nichts kostet: Zeit, ein Lob, den Vortritt. Eine Hand, die gibt, bleibt offen für das, was kommt."},
-    {"id":"s12","k":"soft","t":"Barfuß","z":"▽","x":"Fünf Minuten barfuß stehen, auf Holz, Wiese oder Stein. Spüren, wo das Gewicht liegt. Erdung ist Fußsohle, kein Bild."},
+    {"id":"s12","k":"soft","t":"Barfuss","z":"▽","x":"Fünf Minuten barfuss stehen, auf Holz, Wiese oder Stein. Spüren, wo das Gewicht liegt. Erdung ist Fusssohle, kein Bild."},
     {"id":"s13","k":"soft","t":"Vier Atemzüge","z":"○","x":"Vier Takte ein, vier halten, vier aus. Das dreimal. Erst danach antworten oder entscheiden."},
-    {"id":"s14","k":"soft","t":"Eine Schublade","z":"▦","x":"Eine Schublade, eine Ecke, ein Tisch: nur eins davon aufräumen, aber ganz. Wo Ordnung ist, fließt es leichter."},
+    {"id":"s14","k":"soft","t":"Eine Schublade","z":"▦","x":"Eine Schublade, eine Ecke, ein Tisch: nur eins davon aufräumen, aber ganz. Wo Ordnung ist, fliesst es leichter."},
     {"id":"s15","k":"soft","t":"Schlafsegen","z":"☾","x":"Vor dem Einschlafen: Danke für heute. Was war, darf ruhen. Leg den Tag ab, bevor du das Licht löschst."},
     {"id":"s16","k":"soft","t":"Körper fragen","z":"☤","x":"Frag den Körper, was er braucht, und nimm die erste Antwort: trinken, gehen, ruhen. Der Arzt bleibt dabei."},
     {"id":"s17","k":"soft","t":"Freier Stuhl","z":"❀","x":"Liebe lädt man ein, man holt sie nicht. Mach Platz: ein freier Abend, ein offenes Ohr. Wer kommt, kommt freiwillig.","m":["neu","zu"]},
@@ -576,7 +576,7 @@ try{
     {"id":"s26","k":"soft","t":"Gute Fahrt","z":"⇝","x":"Vor dem Losfahren die Hand kurz aufs Lenkrad legen: Ich komme gut an. Dann fahren und nicht mehr daran denken."},
     {"id":"s27","k":"soft","t":"Haussegen","z":"⌂","x":"Geh durch jedes Zimmer und sag dort: Hier wohnt Frieden. Zuletzt an der Wohnungstür. Das Haus hört mit."},
     {"id":"s28","k":"soft","t":"Ein Lied","z":"♪","x":"Ein Lied, das dich aufrichtet, ganz hören. Nichts nebenher tun. Klang ist auch Arbeit, nur leichter."},
-    {"id":"s29","k":"soft","t":"Zeigerpflanze","z":"✿","x":"Eine Pflanze gießen und ihr sagen, was bei dir wachsen soll. Nur diese eine. Sie wird dein Zeiger.","m":["zu"]},
+    {"id":"s29","k":"soft","t":"Zeigerpflanze","z":"✿","x":"Eine Pflanze giessen und ihr sagen, was bei dir wachsen soll. Nur diese eine. Sie wird dein Zeiger.","m":["zu"]},
     {"id":"s30","k":"soft","t":"Warme Hände","z":"❂","x":"Reib die Hände warm und leg sie dorthin, wo es zieht oder schmerzt. Eine Minute, ruhig atmen. Wärme ist die älteste Heilung."},
     {"id":"s31","k":"soft","t":"Bei dir bleiben","z":"⊕","x":"Zieht dich jemand in seine Geschichte, tritt innerlich einen Schritt zurück. Zuhören ja, mittragen nein."},
     {"id":"s32","k":"soft","t":"Nur zur Freude","z":"✶","x":"Tu heute eine Sache nur, weil sie dir Freude macht. Ohne Nutzen, ohne Plan. Freude hält das Feld weit."},
@@ -586,14 +586,14 @@ try{
     {"id":"s36","k":"soft","t":"Ernte aufschreiben","z":"❁","x":"Was hat sich seit dem letzten Vollmond gefügt? Schreib es auf, auch das Kleine. Ernte, die man nicht zählt, vergisst man.","m":["voll"]},
     {"id":"s37","k":"soft","t":"Samen im Dunkeln","z":"✱","x":"Ein neuer Wunsch, ein Satz, auf Papier. In eine Schublade legen und nicht täglich nachsehen. Samen keimen im Dunkeln.","m":["neu"]},
     {"id":"s38","k":"soft","t":"Weglassen","z":"◐","x":"Eine Gewohnheit, die dich Kraft kostet, heute einfach weglassen. Nur heute. Der abnehmende Mond nimmt sie gern mit.","m":["ab"]},
-    {"id":"s39","k":"soft","t":"Kreis ziehen","z":"◎","x":"Mit dem Finger einen Kreis um dich zeichnen, im Uhrzeigersinn. Drinnen bist du, draußen der Lärm. Fünf Sekunden genügen."},
+    {"id":"s39","k":"soft","t":"Kreis ziehen","z":"◎","x":"Mit dem Finger einen Kreis um dich zeichnen, im Uhrzeigersinn. Drinnen bist du, draussen der Lärm. Fünf Sekunden genügen."},
     {"id":"s40","k":"soft","t":"Gute Ahnen","z":"☥","x":"Denk an einen Menschen aus deiner Linie, der es gut mit dir meinte. Sag Danke. Seine Kraft darf helfen, seine Last bleibt bei ihm."},
-    {"id":"s41","k":"soft","t":"Draußen gehen","z":"⚘","x":"Geh ein Stück ohne Ziel und schau, was blüht, was fällt, was ruht. Die Natur zeigt dir, welche Zeit gerade ist."},
+    {"id":"s41","k":"soft","t":"Draussen gehen","z":"⚘","x":"Geh ein Stück ohne Ziel und schau, was blüht, was fällt, was ruht. Die Natur zeigt dir, welche Zeit gerade ist."},
     {"id":"s42","k":"soft","t":"Kleines Geschenk","z":"❖","x":"Bring heute jemandem eine Kleinigkeit mit: Kaffee, eine Blume, Schokolade. Venus liebt das Unerwartete.","m":["zu"]},
-    {"id":"s43","k":"soft","t":"Aufrecht","z":"⇑","x":"Steh einen Moment ganz aufrecht, Scheitel zum Himmel, Füße in den Boden. So sieht Vertrauen von außen aus. Innen folgt es nach."},
-    {"id":"s44","k":"soft","t":"Abenddank","z":"☆","x":"Am Abend einen Menschen nennen, der dir heute gutgetan hat. Vielleicht weiß er es nicht. Du darfst es ihm morgen sagen."},
-    {"id":"s45","k":"soft","t":"Geld segnen","z":"✤","x":"Beim Bezahlen still sagen: Geh gut und komm vermehrt zurück. Geld fließt lieber, wo es nicht festgehalten wird.","m":["zu"]},
-    {"id":"s46","k":"soft","t":"Salzbad","z":"≋","x":"Abends eine Handvoll Salz ins Badewasser oder ins Fußbad. Was fremd war, fließt ab. Danach ein Glas frisches Wasser.","m":["ab"]},
+    {"id":"s43","k":"soft","t":"Aufrecht","z":"⇑","x":"Steh einen Moment ganz aufrecht, Scheitel zum Himmel, Füsse in den Boden. So sieht Vertrauen von aussen aus. Innen folgt es nach."},
+    {"id":"s44","k":"soft","t":"Abenddank","z":"☆","x":"Am Abend einen Menschen nennen, der dir heute gutgetan hat. Vielleicht weiss er es nicht. Du darfst es ihm morgen sagen."},
+    {"id":"s45","k":"soft","t":"Geld segnen","z":"✤","x":"Beim Bezahlen still sagen: Geh gut und komm vermehrt zurück. Geld fliesst lieber, wo es nicht festgehalten wird.","m":["zu"]},
+    {"id":"s46","k":"soft","t":"Salzbad","z":"≋","x":"Abends eine Handvoll Salz ins Badewasser oder ins Fussbad. Was fremd war, fliesst ab. Danach ein Glas frisches Wasser.","m":["ab"]},
     {"id":"s47","k":"soft","t":"Freundlicher Blick","z":"❃","x":"Schau heute jemandem freundlich in die Augen, einen Moment länger als sonst. Ohne Absicht. Wärme spricht sich herum."},
     {"id":"s48","k":"soft","t":"Teepause","z":"∪","x":"Einen Tee kochen und ihn ohne Telefon trinken. Die Wärme in den Händen spüren. Kleine Pausen sind auch Schutz."},
     {"id":"s49","k":"soft","t":"Früh schlafen","z":"☽","x":"Heute eine halbe Stunde früher ins Bett. Der Körper arbeitet nachts für dich. Ausgeschlafen trägst du alles leichter.","m":["ab"]},
@@ -621,7 +621,7 @@ try{
     {"id":"f17","k":"feld","t":"Der Schritt danach","z":"➶","x":"Nach dem Ritual einen kleinen Schritt im Alltag tun, der zum Satz passt. Das Feld öffnet die Tür, gehen musst du selbst."},
     {"id":"f18","k":"feld","t":"Ofen zu","z":"▯","x":"Was du gesetzt hast, braucht Zeit wie Brot im Ofen. Wer dauernd die Tür öffnet, lässt die Hitze hinaus."},
     {"id":"f19","k":"feld","t":"Neumond setzen","z":"●","x":"Neumond ist Aussaat. Absicht klar, Satz kurz, dann 3·6·9. Was jetzt gesetzt wird, wächst mit dem Licht.","m":["neu"]},
-    {"id":"f20","k":"feld","t":"Vollmond ernten","z":"❍","x":"Vollmond ist Ernte, nicht Aussaat. Danken, zählen, abschließen. Neues wartet auf den nächsten Neumond.","m":["voll"]},
+    {"id":"f20","k":"feld","t":"Vollmond ernten","z":"❍","x":"Vollmond ist Ernte, nicht Aussaat. Danken, zählen, abschliessen. Neues wartet auf den nächsten Neumond.","m":["voll"]},
     {"id":"e01","k":"echo","t":"Tag drei","z":"Ⅲ","x":"Am dritten Tag nur schauen: ein Anruf, ein Gefühl, ein Zufall? Aufschreiben, nicht deuten. Deuten kommt später."},
     {"id":"e02","k":"echo","t":"Tag neun","z":"Ⅸ","x":"Am neunten Tag die ehrliche Bilanz: wirkt, teilweise oder offen. Auch »offen« ist eine Antwort, mit der du arbeiten kannst."},
     {"id":"e03","k":"echo","t":"Eigene Augen","z":"◍","x":"Glaub nicht, was man dir erzählt, glaub, was du siehst. Notier heute ein Zeichen, das du selbst bemerkt hast."},
@@ -631,15 +631,15 @@ try{
     {"id":"e07","k":"echo","t":"Dazwischen","z":"∷","x":"Echo prüft man, man ruft es nicht herbei. Nur an Tag 3 und 9 hinschauen. Dazwischen einfach leben."},
     {"id":"e08","k":"echo","t":"Ein Satz ins Heft","z":"✎","x":"Schreib heute in einem Satz auf, wie es dir geht. In drei Wochen liest du nach und siehst, was sich wirklich verändert hat."},
     {"id":"e09","k":"echo","t":"Seitenweg","z":"↳","x":"Manchmal antwortet das Feld an anderer Stelle, als du gefragt hast. Schau auch daneben. Auch das ist Echo."},
-    {"id":"e10","k":"echo","t":"Kreis schließen","z":"↻","x":"Hat etwas gewirkt, dann einmal bewusst und laut danken. Dank schließt den Kreis und macht den nächsten leichter.","m":["voll"]},
+    {"id":"e10","k":"echo","t":"Kreis schliessen","z":"↻","x":"Hat etwas gewirkt, dann einmal bewusst und laut danken. Dank schliesst den Kreis und macht den nächsten leichter.","m":["voll"]},
     {"id":"e11","k":"echo","t":"Vorher, nachher","z":"⇄","x":"Bevor du etwas setzt, schreib auf, wie es jetzt ist. Nur so erkennst du später, was sich bewegt hat."},
     {"id":"e12","k":"echo","t":"Muster erkennen","z":"※","x":"Wirkt es bei dir eher bei Neumond oder Vollmond, morgens oder abends? Die Chronik zeigt es dir nach ein paar Wochen."},
     {"id":"h01","k":"hard","t":"Feldgesetz","z":"⚖\uFE0E","x":"Jede harte Arbeit hat einen Preis, auch für dich. Frag vorher: gerecht, nötig, trage ich die Folgen? Drei Ja, sonst weich."},
-    {"id":"h02","k":"hard","t":"Mit Maß","z":"⊞","x":"Hart heißt nicht maßlos. Ein klarer Satz, eine Frist, ein Ende. Was ohne Maß gesetzt wird, kehrt ohne Maß zurück."},
+    {"id":"h02","k":"hard","t":"Mit Mass","z":"⊞","x":"Hart heisst nicht masslos. Ein klarer Satz, eine Frist, ein Ende. Was ohne Mass gesetzt wird, kehrt ohne Mass zurück."},
     {"id":"h03","k":"hard","t":"Sauber schneiden","z":"⚔\uFE0E","x":"Vor dem Trennen genau benennen, was geht und was bleibt. Unscharf geschnitten wächst es wieder zusammen.","m":["ab"]},
     {"id":"h04","k":"hard","t":"Nicht im Zorn","z":"ϟ","x":"Wut ist Treibstoff, aber kein Steuer. Hartes nie am Tag des Streits. Eine Nacht schlafen, dann entscheiden."},
     {"id":"h05","k":"hard","t":"Zurück nach Hard","z":"↺","x":"Nach harter Arbeit: Salzwasser über die Hände, Name, Datum, etwas essen. Zurückkommen ist Pflicht, nicht Kür."},
-    {"id":"h06","k":"hard","t":"Erst das eigene Feld","z":"△","x":"Bevor du nach außen wirkst, schließ dein eigenes Feld. Wer offen wirkt, wird offen getroffen."},
+    {"id":"h06","k":"hard","t":"Erst das eigene Feld","z":"△","x":"Bevor du nach aussen wirkst, schliess dein eigenes Feld. Wer offen wirkt, wird offen getroffen."},
     {"id":"h07","k":"hard","t":"Frist setzen","z":"⊠","x":"Harte Arbeit braucht ein Ablaufdatum, etwa bis zum nächsten Vollmond. Dann endet sie. Ohne Frist hängt sie an dir.","m":["voll"]},
     {"id":"h08","k":"hard","t":"Der Mond nimmt","z":"◑","x":"Abnehmender Mond trägt das Wegnehmen: Bänder lösen, Schaden stoppen. Gemessen, mit Gate und Rückkehr.","m":["ab"]},
     {"id":"h09","k":"hard","t":"Freier Wille","z":"☿","x":"Nichts über den freien Willen eines Menschen hinweg. Was nur mit Zwang hält, bricht und kommt zurück."},
@@ -647,7 +647,7 @@ try{
     {"id":"h11","k":"hard","t":"Gast mit Auftrag","z":"✵","x":"Eine Wesenheit bekommt Auftrag, Frist und Abschied. Danken und entlassen. Kein Gast bleibt über Nacht."},
     {"id":"h12","k":"hard","t":"Kurz und klar","z":"↯","x":"Hartes wirkt am besten kurz: hinein, setzen, heraus. Nicht darin verweilen und nicht nachsehen, ob es trifft."},
     {"id":"h13","k":"hard","t":"Wall statt Pfeil","z":"▥","x":"Läuft Schaden, zuerst stoppen, nicht strafen. Ein Wall, kein Pfeil. Meist reicht das schon."},
-    {"id":"h14","k":"hard","t":"Keine Rache","z":"≠","x":"Ausgleich heißt: Was genommen wurde, kehrt zurück. Wie es den anderen trifft, ist nicht deine Sache."}
+    {"id":"h14","k":"hard","t":"Keine Rache","z":"≠","x":"Ausgleich heisst: Was genommen wurde, kehrt zurück. Wie es den anderen trifft, ist nicht deine Sache."}
   ];
   var KIND={soft:"Soft",feld:"Feld",echo:"Echo",hard:"Hard"};
   var N=DECK.length, DAY=86400000;
@@ -720,7 +720,7 @@ try{
     out.innerHTML=html(c,"Heute");
     fit(out);
   }
-  /* Sehr schmale Bildschirme oder große Systemschrift: Text in der Kachel etwas kleiner, nie abgeschnitten */
+  /* Sehr schmale Bildschirme oder grosse Systemschrift: Text in der Kachel etwas kleiner, nie abgeschnitten */
   function fit(out){
     var kc=out.querySelector(".kcard"), sm=kc&&kc.querySelector("small"); if(!sm) return;
     sm.style.fontSize="";
