@@ -2,7 +2,7 @@
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=45;
+  var BUILD=46;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -13,14 +13,15 @@
     }catch(e){}
   }
   if(window.caches){
+    /* Nur Zwischenspeicher alter Stände löschen. Den Offline-Vorrat dieses Stands ("rr25-v"+BUILD, legt sw.js an) behalten. */
     caches.keys().then(function(keys){
-      keys.forEach(function(k){ caches.delete(k); });
+      keys.forEach(function(k){ if(k!=="rr25-v"+BUILD) caches.delete(k); });
     });
   }
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=45").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=46").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
