@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 47 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 48 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{

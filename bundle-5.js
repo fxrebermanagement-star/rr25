@@ -1,4 +1,4 @@
-/* rr25 · Paket 5/7 · Build 47 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 5/7 · Build 48 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-plan.js, ritual-hold.js, ritual-cam.js, ritual-sigil-save.js, ritual-more.js, ritual-fein.js, ritual-check.js, ritual-ui-v2.js, ritual-v3.js */
 /* ==== ritual-plan.js ==== */
 try{
@@ -680,7 +680,7 @@ try{
   var DAY=86400000;
   var EKEY="rr25_echo_v1", SKEY="rr25_sicherung_at";
   var DN=["So","Mo","Di","Mi","Do","Fr","Sa"];
-  var NO_ECHO={dank:1,kreis:1,weg:1,schlaf:1,abbr:1,anker:1,echo:1};
+  var NO_ECHO={dank:1,dankfeld:1,kreis:1,weg:1,schlaf:1,abbr:1,anker:1,echo:1};
   var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
   var ANS={wirkt:"wirkt",teilweise:"teilweise",offen:"noch offen"};
 

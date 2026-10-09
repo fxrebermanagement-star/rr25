@@ -1,4 +1,4 @@
-var CACHE="rr25-v47";
+var CACHE="rr25-v48";
 /* Offline-Vorrat: alles, was die App zum Starten braucht. Online bleibt es wie bisher: jede Datei frisch aus dem Netz.
    Der Vorrat ist nur der Ersatz, wenn kein Netz da ist. Liste anpassen, wenn index.html andere Dateien lädt. */
 var VORRAT=[
