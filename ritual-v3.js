@@ -8,7 +8,7 @@
   var EKEY="rr25_echo_v1", SKEY="rr25_sicherung_at";
   var DN=["So","Mo","Di","Mi","Do","Fr","Sa"];
   var NO_ECHO={dank:1,dankfeld:1,kreis:1,weg:1,schlaf:1,abbr:1,anker:1,echo:1};
-  var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
+  var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp",weg:"kreis"};
   var ANS={wirkt:"wirkt",teilweise:"teilweise",offen:"noch offen"};
 
   function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }

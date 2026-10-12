@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 50 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 51 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -20,8 +20,8 @@ try{
 
   R.forEach(function(r){ r.tag=r.cat; if(!r.steps) r.steps=r.flow; });
   function byId(id){
-    var map={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
-    id=map[id]||id;
+    var map={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp",weg:"kreis"};
+    id=map[id]||(window.RR_ALT_ID||{})[id]||id;
     for(var i=0;i<R.length;i++) if(R[i].id===id) return R[i];
     return null;
   }
@@ -218,9 +218,26 @@ try{
       cur.gate=true; tor();
     };
   }
+  /* Build 51: passende Zeit des Rituals (Planetentag, Mond). Nur Hinweis, sperrt nichts. */
+  var TAGK=["So","Mo","Di","Mi","Do","Fr","Sa"], PLAN=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
+  var MONDN={zu:"zunehmender Mond",ab:"abnehmender Mond",neu:"Neumond",voll:"Vollmond"};
+  function zeitHtml(r){
+    var z=r&&r.zeit; if(!z) return "";
+    var parts=[], ok=[], d=new Date().getDay();
+    if(z.tag&&z.tag.length){ parts.push(z.tag.map(function(i){ return TAGK[i]+" · "+PLAN[i]; }).join(" oder ")); ok.push(z.tag.indexOf(d)>=0); }
+    if(z.mond){
+      parts.push(MONDN[z.mond]);
+      var m=window.RR25_MOND?window.RR25_MOND.day():null, k=m?m.key:"";
+      ok.push(m?(z.mond==="zu"?(k==="zu"||k==="neu"):z.mond==="ab"?(k==="ab"||k==="voll"):k===z.mond):false);
+    }
+    var all=ok.every(Boolean), some=ok.some(Boolean);
+    var now="Heute "+TAGK[d]+" · "+PLAN[d]+(window.RR25_MOND?", "+window.RR25_MOND.day().name:"");
+    var say=all?"Heute passt die Zeit.":some?"Heute passt es zum Teil.":"Heute nicht die passende Zeit. Nur ein Hinweis.";
+    return '<div class="zeitTor'+(all?' ok':'')+'"><b>Zeit</b> '+h(parts.join(" · "))+'<br><span class="meta">'+h(now)+'. '+h(say)+(r.hard?' Das Hard-Fenster geht vor.':'')+'</span></div>';
+  }
   function tor(){
     loadKal();
-    var body=ctxHtml()+'<div class="wetter" id="wetter">'+wetterHtml(cur.r)+'</div>'+
+    var body=ctxHtml()+'<div class="wetter" id="wetter">'+wetterHtml(cur.r)+'</div>'+zeitHtml(cur.r)+
       '<p class="words">Zwei Atemzüge. Dann hinhören:\nZieht es · Steht es · Ist es still?</p>'+
       '<div class="row tor3"><button type="button" class="btn ghost" id="tStill">Still</button><button type="button" class="btn ghost" id="tZieht">Zieht</button><button type="button" class="btn primary" id="tSteht">Steht</button></div>';
     frame({title:"Tor",body:body,prev:cur.r.hard?"Zurück":"Liste",noAbort:true});
@@ -268,7 +285,7 @@ try{
       if(m) rows.push({n:{Drei:3,Sechs:6,Neun:9}[m[1]],t:m[2]});
       else if(!/^Kurz:$/.test(l)) rest.push(l);
     });
-    var lab={3:"stehen",6:"tragen",9:"siegeln"};
+    var lab={3:"stehen",6:"tragen",9:"Beobachter · Siegel"};
     var head=rest.join("\n").replace(/\n+$/,"");
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
       return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+x.n+'×</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
@@ -303,7 +320,7 @@ try{
       body=(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+counter(fillT(raw));
     }
     else if(/^So sei es$/.test(st[0])){ body=sealHtml()+(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+'<p class="words">'+h(fillT(raw))+'</p>'; nextTxt="So sei es"; }
-    else if(/^Rückkehr$/.test(st[0])){ body='<p class="words">'+h(fillT(raw))+'</p><label class="gchk rk"><input type="checkbox" id="rkOk"><span>Ich bin zurück. Ganz bei mir.</span></label>'; }
+    else if(/^Rückkehr$/.test(st[0])){ body='<p class="words">'+h(fillT(raw))+'</p>'+(r.noRk?'':'<label class="gchk rk"><input type="checkbox" id="rkOk"><span>Ich bin zurück. Ganz bei mir.</span></label>'); }
     else if(/^Ein Satz$/.test(st[0])){
       body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
         '<label class="absLab">Ein Satz<input class="nm" id="echoSatz" data-n="Echo" placeholder="Was sich gezeigt hat" value="'+h(cur.mem.Echo||'')+'" autocomplete="off" maxlength="200"></label>';
@@ -342,7 +359,7 @@ try{
         var miss=needs().filter(function(k){ return !(r.needOpt&&k==="Name") && !cur.mem[k]; });
         if(miss.length){ msg(miss.map(function(k){ return NEED_LAB[k]||k; }).join(", ")+" fehlt."); return; }
       }
-      if(/^Rückkehr$/.test(st[0])){
+      if(/^Rückkehr$/.test(st[0]) && !r.noRk){
         var ok=document.getElementById("rkOk");
         if(!ok||!ok.checked){ msg("Erst zurückkehren."); return; }
         cur.back=true;
@@ -363,6 +380,12 @@ try{
   }
   function echo(){
     var w=wetter();
+    /* Build 51: Dank ans Feld schliesst mit einem Satz für die Chronik, ohne Echo */
+    if(cur.r.chronikSatz){
+      frame({title:"Ein Satz für die Chronik",body:'<p class="words">Was nimmst du mit? Ein Satz genügt.</p><textarea id="echoT" placeholder="Ein Satz für die Chronik (optional)"></textarea>',next:"In die Chronik",noAbort:true});
+      document.getElementById("next").onclick=function(){ finish(((document.getElementById("echoT")||{}).value||"").trim(),false); };
+      return;
+    }
     if(cur.r.anker||cur.r.neutral){
       frame({title:"Status kurz",body:'<p class="words">Ein Satz: Wie bin ich jetzt da?\nDann Buch zu. Heute nichts mehr.</p><input id="echoT" class="nm" placeholder="Status · ein Satz für die Chronik" autocomplete="off" maxlength="160">',next:"In die Chronik",noAbort:true});
       document.getElementById("next").onclick=function(){ finish(((document.getElementById("echoT")||{}).value||"").trim(),false); };
@@ -501,6 +524,8 @@ try{
     "#run .abortBtn{flex:none;margin:0 auto;background:transparent;border:1px solid rgba(154,150,168,.45);color:#b8b3c6;font-weight:500;padding:.4rem 1.2rem;min-height:2rem}",
     "#run .wetter{margin:.3rem 0 .6rem;padding:.6rem .75rem;border-radius:.9rem;background:rgba(20,10,34,.7);border:1px solid rgba(126,200,255,.18);font-size:.86rem;line-height:1.5}",
     "#run .wk{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;font-weight:650}",
+    "#run .zeitTor{margin:-.25rem 0 .6rem;padding:.5rem .75rem;border-radius:.9rem;background:rgba(20,10,34,.6);border:1px dashed rgba(201,155,255,.3);font-size:.84rem;line-height:1.45;color:#e6dcf7}",
+    "#run .zeitTor b{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:#c9a8ff;margin-right:.35rem}#run .zeitTor.ok{border-color:rgba(95,224,160,.45)}#run .zeitTor.ok b{color:#7dffb0}",
     ".wk-soft{color:#5fe0a0}.wk-hard{color:#ff5470}.wk-echo{color:#c99bff}.wk-still{color:#b8b3c6}",
     "#run .lv,#run .wq{display:block}",
     "#run .card.wq[data-w='0']{border-left:3px solid #5fe0a0}#run .card.wq[data-w='1']{border-left:3px solid #ff5470}",

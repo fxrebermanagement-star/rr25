@@ -31,7 +31,7 @@
   /* Ton eines Chronik-Eintrags über Ritual-ID/Typ (rituals-v2.js), nicht über Textsuche.
      Reihenfolge: rid aus dem Echo-Rückblick -> Titel = Ritualname (ohne « · Härte» / « · abgebrochen»)
      -> ältere Ritualnamen -> Tagesziel/Sigille/Gabe sind neutral (nur unter «Alle»; Grau zeigt nur Tagesziel und Sigille). */
-  var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp"};
+  var ALIAS={liebezw:"liebe2",fremd:"wesen",fil:"wesen",finst:"vollmond",schaden:"stopp",weg:"kreis"};
   var OLD={"Trennung — selbst":"soft","Trennung zweier anderer":"hard","Nur wenn nötig — Wesenheit":"hard","Liebesritual":"soft","Anziehung und Kontakt":"soft","Finsternis":"feld","Ahnenkontakt":"feld","Fremde Wesenheit":"hard","Filterübung":"feld","Feld zu":"soft"};
   function rlist(){ try{ return R; }catch(e){ return []; } }
   function rById(id){ id=ALIAS[id]||id; var L=rlist(); for(var i=0;i<L.length;i++) if(L[i].id===id) return L[i]; return null; }
@@ -52,7 +52,7 @@
     if(!r){
       var base=t.replace(/ · abgebrochen$/,""), best=null;
       rlist().forEach(function(x){ if(x&&x.t&&(base===x.t||base.indexOf(x.t+" · ")===0)&&(!best||x.t.length>best.t.length)) best=x; });
-      r=best;
+      r=best||(function(T){ return (function(){ var A=window.RR_ALT_TITEL||{}, L=window.RR_RITUALS||[]; for(var k in A){ if(T===k||T.indexOf(k+" · ")===0){ for(var q=0;q<L.length;q++) if(L[q].id===A[k]) return L[q]; } } return null; })(); })(base);
     }
     if(r) return rTone(r);
     var base2=t.replace(/ · .*$/,"");
