@@ -1,5 +1,5 @@
-/* rr25 · Paket 7/7 · Build 48 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js */
+/* rr25 · Paket 7/7 · Build 49 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -432,6 +432,218 @@ try{
   if(K) K.onReady(function(){ schedule(); tick(); });
   setInterval(tick,30000);
   window.RR25_ERINNERN={ics:ics,upcoming:upcoming,triggers:TRIG};
+})();
+
+}catch(e){setTimeout(function(){throw e;});}
+/* ==== ritual-mondhinweis.js ==== */
+try{
+/* ritual-mondhinweis.js — Build 49: Mondphasen-Hinweis auf der Startseite.
+   Am Vortag eines Neumonds oder Vollmonds und am Tag selbst eine kleine Karte unter der Ton-Zeile.
+   Zeitpunkte: RR25_MOND (ritual-mondphase.js, Gerätezeit = Bern/Europe/Zurich). Hard-Phase: RR25_KAL (ritual-zeit.js).
+   Keine neuen Schlüssel im Speicher. */
+(function(){
+  if(window.__rr25mh) return; window.__rr25mh=1;
+  var DAY=86400000;
+  function two(n){ return String(n).padStart(2,"0"); }
+  function hm(ms){ var d=new Date(ms); return two(d.getHours())+":"+two(d.getMinutes()); }
+  function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function day0(ms){ var d=new Date(ms); return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(); }
+  function hardPhaseToday(now){
+    try{ var K=window.RR25_KAL, s=K&&K.state(now), hd=s&&s.hardDay; return !!(hd&&/Vollmond/.test(String(hd.t||""))); }catch(e){ return false; }
+  }
+  /* Was gilt heute? null = keine Karte */
+  function info(now){
+    var M=window.RR25_MOND; if(!M) return null;
+    var today=M.day(now), tom=M.day(day0(now)+DAY+12*3600000);
+    if(today.key==="voll") return {k:"voll",head:"Heute Vollmond · Hard-Phase",sub:"Vollmond um "+hm(today.at)+". Ladung am stärksten. Ernten und danken, nicht nachsetzen. Abends Rückkehr · Anker."};
+    if(today.key==="neu") return {k:"neu",head:"Heute Neumond · Neubeginn",sub:"Neumond um "+hm(today.at)+". Eine Absicht neu setzen. Klein anfangen."};
+    if(tom.key==="voll") return {k:"voll",head:"Morgen Vollmond · Hard-Phase "+(hardPhaseToday(now)?"läuft":"beginnt"),sub:"Vollmond morgen um "+hm(tom.at)+"."+(hardPhaseToday(now)?" Die Hard-Phase hat heute begonnen. Abends Rückkehr · Anker.":" Ab morgen Hard-Phase. Heute vorbereiten.")};
+    if(tom.key==="neu") return {k:"neu",head:"Morgen Neumond · Neubeginn",sub:"Neumond morgen um "+hm(tom.at)+". Heute abgeben und leeren, morgen neu setzen."};
+    return null;
+  }
+  function anchor(){
+    var home=document.getElementById("home"); if(!home) return null;
+    var a=document.getElementById("bakCard");
+    if(!a||a.parentNode!==home) a=document.getElementById("ankerHintCard");
+    if(!a||a.parentNode!==home) a=document.getElementById("toneRow");
+    return a&&a.parentNode===home?a:null;
+  }
+  function paint(){
+    var el=document.getElementById("mondHint"), x=info(Date.now()), a=anchor();
+    if(!x||!a){ if(el) el.remove(); return; }
+    if(!el){ el=document.createElement("div"); el.id="mondHint"; el.className="card"; }
+    var html='<p class="mhTag">Mondphase</p><b class="mhHead">'+h(x.head)+'</b><small class="mhSub">'+h(x.sub)+'</small>';
+    if(el.getAttribute("data-k")!==x.k) el.setAttribute("data-k",x.k);
+    if(el.innerHTML!==html) el.innerHTML=html;
+    if(el.previousElementSibling!==a) a.parentNode.insertBefore(el,a.nextSibling);
+  }
+  var css=document.createElement("style");
+  css.textContent=[
+    "#home>#mondHint{margin:.55rem 0 .6rem;padding:.65rem .9rem .6rem;border-radius:1.1rem;border:1px solid rgba(232,160,255,.32);background:linear-gradient(160deg,rgba(48,20,78,.75),rgba(16,8,30,.92));box-shadow:0 0 16px rgba(201,155,255,.14)}",
+    "#mondHint[data-k=voll]{border-color:rgba(255,84,112,.45);box-shadow:0 0 16px rgba(255,84,112,.14)}",
+    "#mondHint .mhTag{margin:0 0 .12rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#c9a8ff}",
+    "#mondHint[data-k=voll] .mhTag{color:#ff8aa0}",
+    "#mondHint .mhHead{display:block;font-family:Georgia,serif;font-weight:500;font-size:1rem;color:#f6f0ff}",
+    "#mondHint .mhSub{display:block;margin:.18rem 0 0;font-size:.74rem;color:#c4b4e0;line-height:1.4}"
+  ].join("");
+  document.head.appendChild(css);
+  if(typeof show==="function"&&!show._mh){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="home") setTimeout(paint,60); return r; }; show._mh=1; }
+  var home=document.getElementById("home");
+  if(home&&window.MutationObserver){ var mo=new MutationObserver(function(){ clearTimeout(mo.t); mo.t=setTimeout(paint,80); }); mo.observe(home,{childList:true}); }
+  setInterval(paint,60000);
+  paint(); setTimeout(paint,1200);
+  window.RR25_MONDHINWEIS={info:info,paint:paint};
+})();
+
+}catch(e){setTimeout(function(){throw e;});}
+/* ==== ritual-zaehler.js ==== */
+try{
+/* ritual-zaehler.js — Build 49: «Zähler» in der Chronik. Wie oft wurde welches Ritual gemacht?
+   Liest nur die bestehende Chronik (load().log bzw. rr25_ritual_v1). Abgebrochene Einträge zählen nicht.
+   Zuordnung über den Titel (Ritualname am Anfang, längster Treffer), Härte-Stufe im Titel wird ignoriert.
+   Einträge ohne Ritual (Tagesziel, Sigille, Gabe, Notizen) zählen nicht. Keine neuen Schlüssel im Speicher. */
+(function(){
+  if(window.__rr25rz) return; window.__rr25rz=1;
+  var OPEN=false;
+  function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function rows(){ try{ return (typeof load==="function"?load().log:JSON.parse(localStorage.getItem("rr25_ritual_v1")||"{}").log)||[]; }catch(e){ return []; } }
+  function rlist(){ try{ return (typeof R!=="undefined"&&R)||window.RR_RITUALS||[]; }catch(e){ return window.RR_RITUALS||[]; } }
+  function ritOf(titel){
+    var t=String(titel||"").trim(), best=null;
+    rlist().forEach(function(r){ if(r&&r.t&&(t===r.t||t.indexOf(r.t+" · ")===0)&&(!best||r.t.length>best.t.length)) best=r; });
+    return best;
+  }
+  function counts(){
+    var m={}, list=[];
+    rows().forEach(function(e){
+      if(!e||e.kind==="gabe") return;
+      var t=String(e.titel||"");
+      if(/ · abgebrochen$/.test(t)) return;
+      var r=ritOf(t); if(!r) return;
+      if(!m[r.id]){ m[r.id]={id:r.id,t:r.t,tone:r.hard?"hard":(r.tone||"soft"),n:0}; list.push(m[r.id]); }
+      m[r.id].n++;
+    });
+    return list.sort(function(a,b){ return b.n-a.n||a.t.localeCompare(b.t,"de"); });
+  }
+  function panel(){
+    var L=counts(), sum=L.reduce(function(s,x){ return s+x.n; },0);
+    if(!L.length) return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">Noch kein Ritual in der Chronik.</p>';
+    return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">'+sum+(sum===1?" Ritual":" Rituale")+' · '+L.length+(L.length===1?" Art":" Arten")+'</p>'+
+      '<ol class="zlList">'+L.map(function(x){ return '<li class="zlRow tone-'+h(x.tone)+'"><span>'+h(x.t)+'</span><b>'+x.n+'×</b></li>'; }).join("")+'</ol>';
+  }
+  function paintPanel(){
+    var p=document.getElementById("zlPanel"); if(!p) return;
+    p.hidden=!OPEN; if(!OPEN) return;
+    var html=panel(); if(p.innerHTML!==html) p.innerHTML=html;
+  }
+  function mount(){
+    var sec=document.getElementById("log"), ent=document.getElementById("entries"), bar=document.getElementById("rbBar");
+    if(!sec||!ent) return;
+    if(!document.getElementById("zlBtn")){
+      if(!bar){ bar=document.createElement("div"); bar.id="rbBar"; sec.insertBefore(bar,ent); }
+      var b=document.createElement("button"); b.type="button"; b.className="btn ghost"; b.id="zlBtn"; b.textContent="Zähler";
+      bar.insertBefore(b,bar.firstChild);
+      var p=document.createElement("div"); p.id="zlPanel"; p.className="card"; p.hidden=true;
+      sec.insertBefore(p,ent);
+      b.onclick=function(){ OPEN=!OPEN; b.classList.toggle("on",OPEN); b.textContent=OPEN?"Zähler zu":"Zähler"; paintPanel(); };
+    }
+    paintPanel();
+  }
+  var css=document.createElement("style");
+  css.textContent=[
+    "#rbBar{gap:.45rem}",
+    "#zlBtn{min-height:2.1rem!important;padding:.35rem 1rem!important;font-size:.76rem!important;border-radius:999px!important;border:1px solid rgba(232,160,255,.35)!important;background:rgba(160,90,255,.1)!important;color:#f1dcff!important}",
+    "#zlBtn.on{box-shadow:0 0 14px rgba(200,120,255,.35)}",
+    "#zlPanel{margin:0 0 .8rem;padding:.7rem .8rem .6rem;background:linear-gradient(180deg,rgba(40,18,62,.78),rgba(14,8,24,.92))!important;border:1px solid rgba(232,160,255,.22)!important;border-radius:1.1rem!important}",
+    "#zlPanel[hidden]{display:none!important}",
+    ".zlH{margin:0 0 .15rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#ff9ae4}",
+    ".zlSay{margin:0 0 .35rem;font-size:.76rem;color:#e6d4ff}",
+    ".zlList{list-style:none;margin:0;padding:0}",
+    ".zlRow{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;padding:.22rem 0 .22rem .55rem;border-left:2px solid #2ecc71;margin:.12rem 0;font-size:.78rem;color:#e6dcff;line-height:1.3}",
+    ".zlRow span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zlRow b{flex:none;font-weight:600;color:#f1dcff;font-variant-numeric:tabular-nums}",
+    ".zlRow.tone-hard{border-left-color:#ff5470}.zlRow.tone-grenze{border-left-color:#ffb86b}.zlRow.tone-feld{border-left-color:#b98cff}.zlRow.tone-neutral{border-left-color:#9a96a8}"
+  ].join("");
+  document.head.appendChild(css);
+  if(typeof paintLog==="function"&&!paintLog._rz){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paintPanel,90); return r; }; paintLog._rz=1; }
+  if(typeof show==="function"&&!show._rz){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,200); return r; }; show._rz=1; }
+  mount();
+  window.RR25_ZAEHLER={counts:counts};
+})();
+
+}catch(e){setTimeout(function(){throw e;});}
+/* ==== ritual-danksatz.js ==== */
+try{
+/* ritual-danksatz.js — Build 49: «Dank-Satz des Tages» am Ende von «Dank ans Feld» (dankfeld).
+   30 kurze Sätze, pro Kalendertag fest (gleicher Tag = gleicher Satz), zum Mitnehmen und Kopieren.
+   Erscheint auf dem Schluss-Bildschirm (#after) nur nach dankfeld. Keine neuen Schlüssel im Speicher. */
+(function(){
+  if(window.__rr25ds) return; window.__rr25ds=1;
+  var S=[
+    "Danke für das, was heute schon getragen hat.",
+    "Ich danke für den Boden unter meinen Füssen.",
+    "Danke, dass ich nicht alles allein halten muss.",
+    "Ich danke für jedes Zeichen, das ich gesehen habe.",
+    "Danke für die kleinen Wege, die sich geöffnet haben.",
+    "Ich danke für Atem, Licht und einen klaren Moment.",
+    "Danke für die Menschen, die mir guttun.",
+    "Ich danke für das, was still gewachsen ist.",
+    "Danke für Schutz, auch wo ich ihn nicht bemerkt habe.",
+    "Ich danke dem Feld. Es hat gehört.",
+    "Danke für die Kraft, die zurückgekommen ist.",
+    "Ich danke für Wärme im Haus und Ruhe im Herzen.",
+    "Danke für das Geld, das fliesst, und für das, was reicht.",
+    "Ich danke für die Liebe, die schon da ist.",
+    "Danke für den Mut, heute einen Schritt zu gehen.",
+    "Ich danke für das, was sich gefügt hat.",
+    "Danke für Gesundheit in jedem Atemzug.",
+    "Ich danke für Grenzen, die gehalten haben.",
+    "Danke für das Lachen zwischendurch.",
+    "Ich danke für Wasser, Brot und einen sicheren Ort.",
+    "Danke für jede Antwort, auch für die leisen.",
+    "Ich danke für das, was ich loslassen durfte.",
+    "Danke für Geduld mit mir selbst.",
+    "Ich danke für den Mond, der mitgeht.",
+    "Danke für das Glück, das ich heute bemerke.",
+    "Ich danke für Klarheit, wo vorher Nebel war.",
+    "Danke für das, was kommt. Ich bin bereit.",
+    "Ich danke für meine Hände und was sie heute geben.",
+    "Danke für die Stille, in der alles ankommt.",
+    "Ich habe es gesehen. Danke, Feld."
+  ];
+  function dayNo(d){ d=d||new Date(); return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000); }
+  function satz(d){ var n=dayNo(d); return S[((n*7)%S.length+S.length)%S.length]; }
+  function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+  function copy(txt,btn){
+    function ok(){ btn.textContent="Kopiert"; btn.classList.add("on"); setTimeout(function(){ btn.textContent="Kopieren"; btn.classList.remove("on"); },1800); }
+    function alt(){
+      try{ var ta=document.createElement("textarea"); ta.value=txt; ta.setAttribute("readonly",""); ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); ok(); }
+      catch(e){ btn.textContent="Bitte markieren"; }
+    }
+    try{ if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(txt).then(ok,alt); return; } }catch(e){}
+    alt();
+  }
+  function paint(){
+    var af=document.getElementById("after"), old=document.getElementById("dsCard");
+    if(old) old.remove();
+    if(!af||window._rid!=="dankfeld") return;
+    var t=satz(), el=document.createElement("div");
+    el.id="dsCard"; el.className="card";
+    el.innerHTML='<p class="dsTag">Dank-Satz des Tages · zum Mitnehmen</p><p class="dsTxt" id="dsTxt">«'+h(t)+'»</p><button type="button" class="btn ghost" id="dsCopy">Kopieren</button>';
+    var go=document.getElementById("afterGo"), row=go&&go.closest(".row");
+    if(row&&row.parentNode===af) af.insertBefore(el,row); else af.appendChild(el);
+    el.querySelector("#dsCopy").onclick=function(){ copy(t,this); };
+  }
+  var css=document.createElement("style");
+  css.textContent=[
+    "#after>#dsCard{margin:.4rem 0 1rem;padding:.85rem 1rem .8rem;text-align:center;border-radius:1.1rem;border:1px solid rgba(46,204,113,.4);background:linear-gradient(160deg,rgba(40,20,70,.8),rgba(14,8,26,.94));box-shadow:0 0 18px rgba(95,224,160,.14)}",
+    "#dsCard .dsTag{margin:0 0 .35rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#7dffb0}",
+    "#dsCard .dsTxt{margin:0 0 .6rem;font-family:Georgia,serif;font-size:1.12rem;line-height:1.45;color:#f6f0ff;-webkit-user-select:text;user-select:text}",
+    "#dsCopy{min-height:2.1rem!important;padding:.35rem 1.1rem!important;font-size:.78rem!important;border-radius:999px!important;border:1px solid rgba(232,160,255,.35)!important;background:rgba(160,90,255,.1)!important;color:#f1dcff!important}",
+    "#dsCopy.on{border-color:rgba(46,204,113,.6)!important;color:#7dffb0!important}"
+  ].join("");
+  document.head.appendChild(css);
+  if(typeof show==="function"&&!show._ds){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="after") paint(); else { var o=document.getElementById("dsCard"); if(o) o.remove(); } return r; }; show._ds=1; }
+  window.RR25_DANKSATZ={satz:satz,alle:S};
 })();
 
 }catch(e){setTimeout(function(){throw e;});}

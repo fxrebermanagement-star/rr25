@@ -1,4 +1,4 @@
-/* rr25 · Paket 4/7 · Build 48 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 4/7 · Build 49 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-fotos.js, ritual-gpic.js, ritual-kalender.js, ritual-start.js, ritual-buch.js, ritual-navlove.js, ritual-final.js, ritual-gabe-fix.js */
 /* ==== ritual-fotos.js ==== */
 try{
@@ -539,8 +539,10 @@ try{
     ".kmR{display:flex;gap:.35rem;align-items:center}.kmYear{height:2rem;padding:0 .7rem;border-radius:999px;border:1px solid rgba(155,140,255,.35);background:rgba(155,140,255,.08);color:#cbb8ff;font-size:.7rem;letter-spacing:.06em}",
     ".kmGhost{visibility:hidden;border:0;background:none}",
     ".kyGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}",
+    /* Build 49: Jahr-Abstand. Monatskacheln oben bündig (Knopf zentrierte sonst senkrecht), Saison-Rauten ohne Titel-Abstand */
+    ".kyM{display:flex;flex-direction:column;justify-content:flex-start;align-items:stretch}",
     ".kyM{border:1px solid rgba(155,140,255,.18);background:rgba(255,255,255,.02);border-radius:10px;padding:.3rem .3rem .35rem;color:#e6dcff;text-align:left}",
-    ".kyM.calc{border-style:dashed;opacity:.8}.kyM b{display:block;font:500 .66rem system-ui,sans-serif;letter-spacing:.06em;margin:0 0 .2rem .1rem;color:#d9c8ff}",
+    ".kyM.calc{border-style:dashed;opacity:.8}.kyM>b{display:block;font:500 .66rem system-ui,sans-serif;letter-spacing:.06em;margin:0 0 .2rem .1rem;color:#d9c8ff}",
     ".kyG{display:grid;grid-template-columns:repeat(7,1fr);gap:1.5px}",
     ".kyD,.kyE{display:block;height:7px;border-radius:1.5px}.kyD{background:rgba(255,255,255,.06);box-sizing:border-box}",
     ".kyD.soft{background:rgba(46,204,113,.55)}.kyD.still{background:rgba(154,150,166,.5)}.kyD.echo{background:rgba(179,107,255,.65)}",
