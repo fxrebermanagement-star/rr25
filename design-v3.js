@@ -111,6 +111,7 @@
   function ritOf(titel){
     var t=String(titel||""), best=null;
     rituals().forEach(function(r){ if(r && r.t && t.indexOf(r.t)===0 && (!best || r.t.length>best.t.length)) best=r; });
+    if(!best) best=(function(T){ return (function(){ var A=window.RR_ALT_TITEL||{}, L=window.RR_RITUALS||[]; for(var k in A){ if(T===k||T.indexOf(k+" · ")===0){ for(var q=0;q<L.length;q++) if(L[q].id===A[k]) return L[q]; } } return null; })(); })(t);
     return best;
   }
   function toneOf(e){
@@ -177,12 +178,12 @@
 
   /* =============== 3 · Ritual-Schritte =============== */
   var PH=["Tor","Absicht","3·6·9","So sei es","Rückkehr"];
-  var PRE=/^(Vorbereitung|Standort|Rahmen|Mitte|Position|Prüfen|Schutz|Filter|Ankommen|Feld|Grenze)$/;
+  var PRE=/^(Vorbereitung|Standort|Rahmen|Mitte|Position|Prüfen|Schutz|Filter|Ankommen|Feld|Grenze|Bannen|Spiegel)$/;
   function phaseOfName(n){
     n=String(n||"").trim();
     if(/^(369|3 · 6 · 9)$/.test(n)) return 2;
-    if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz)$/.test(n)) return 3;
-    if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo)$/.test(n)) return 4;
+    if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz|Gabe · Preis)$/.test(n)) return 3;
+    if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo|Reinigen)$/.test(n)) return 4;
     if(/^(Absicht|Versetzen|Anker|Zurück aus|Wesenheit ·)/.test(n)) return 1;
     if(PRE.test(n)) return 0;
     return -1;
@@ -200,12 +201,13 @@
     var stepMode=/\d+\/\d+/.test(sub);
     var names=r&&r.flow?r.flow.map(function(x){ return x[0]; }):[];
     var has369=names.indexOf("369")>=0;
-    var p;
+    var p, seq=null;
+    if(has369){ seq=[]; var lst=0; names.forEach(function(nm){ var x=phaseOfName(nm); if(x<0) x=Math.max(1,lst); x=Math.max(x,lst); seq.push(x); lst=x; }); }
     if(!stepMode){
-      if(/^(Status|Echo)$/.test(title)) p=5; else p=0;
+      if(/^(Status|Echo|Ein Satz für die Chronik)$/.test(title)) p=5; else p=0;
     } else {
       /* Phasen laufen nur vorwärts: ein spätes «Grenze» oder «Feld» fällt nicht auf «Tor» zurück */
-      var seq=[], last=0;
+      seq=[]; var last=0;
       names.forEach(function(nm){ var x=phaseOfName(nm); if(x<0) x=Math.max(1,last); x=Math.max(x,last); seq.push(x); last=x; });
       var i=names.indexOf(title);
       if(i>=0) p=seq[i];
@@ -218,7 +220,19 @@
         }
       }
     }
-    return {p:p,has369:has369,title:title,r:r,step:stepMode,wes:/ · Mit Wesenheit/.test(sub)};
+        /* Build 51: Leiste aus den echten Schritten. Mit 3·6·9: nur vorhandene Phasen. Ohne: ein Segment je Schritt. */
+    var segs, cur;
+    if(has369){
+      var pres={0:1}; (seq||[]).forEach(function(x){ pres[x]=1; });
+      if(!stepMode && p===5) pres={0:1,1:1,2:1,3:1,4:1};
+      segs=[]; var idx=[];
+      PH.forEach(function(n,k){ if(pres[k]){ segs.push(k===0&&!(r&&r.zeit)?"Beginn":n); idx.push(k); } });
+      cur=0; idx.forEach(function(k,j){ if(k<=p) cur=j; }); if(p===5) cur=segs.length;
+    } else if(names.length){
+      segs=names.slice(); var ti=names.indexOf(title);
+      cur=!stepMode?(p===5?segs.length:-1):(ti>=0?ti:segs.length-1);
+    } else { segs=PH.slice(); cur=p; }
+    return {p:p,has369:has369,title:title,r:r,step:stepMode,wes:/ · Mit Wesenheit/.test(sub),segs:segs,cur:cur};
   }
   var sigSrc="";
   function sigil(){
@@ -253,11 +267,10 @@
     if(run.querySelector(".v3step")){ fit(run); return; }
     var ph=phaseNow(run);
     var s=document.createElement("div"); s.className="v3step";
-    var p=ph.p;
-    s.innerHTML='<div class="v3seg">'+PH.map(function(n,i){
+    var p=ph.cur;
+    s.innerHTML='<div class="v3seg" style="grid-template-columns:repeat('+ph.segs.length+',1fr)">'+ph.segs.map(function(n,i){
       var cls=i<p?"done":i===p?"now":"";
-      if(i===2 && !ph.has369 && ph.r) cls+=" skip";
-      if(ph.wes && (i===1||i===3)) cls+=" wes";
+      if(ph.wes && /^(Absicht|So sei es)$/.test(n)) cls+=" wes";
       return '<span class="'+cls+'"><i></i><em>'+n+'</em></span>';
     }).join("")+'</div>';
     /* Anker, Echo lesen, Abbruch: kein Fünf-Phasen-Ritual, darum keine Schrittleiste */
