@@ -62,9 +62,9 @@
     if(!el) return;
     var z=zLoad();
     el.innerHTML=
-      '<button type="button" data-z="n3">3 ❤️<span>'+z.n3+'/3</span></button>'+
-      '<button type="button" data-z="n6">6 🙏<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" data-z="n9">9 👁<span>'+z.n9+'/9</span></button>';
+      '<button type="button" data-z="n3">❤️ Ich<span>'+z.n3+'/3</span></button>'+
+      '<button type="button" data-z="n6">🙏 Spiel<span>'+z.n6+'/6</span></button>'+
+      '<button type="button" data-z="n9">👁 Quelle<span>'+z.n9+'/9</span></button>';
   }
   function zTap(key){
     var max={n3:3,n6:6,n9:9};
