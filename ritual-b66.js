@@ -2,7 +2,7 @@
    1) Mondfarbe: kaum sichtbarer Farbhauch hinter dem Inhalt je Mondphase (Vollmond etwas heller, Neumond tiefer).
    2) «Aus dem Feld»: ein kurzer Satz pro Tag auf Heute (nach Berner Datum, immer derselbe am selben Tag).
    3) Jahresrad: Ansicht im Kalender mit dem nächsten Fest und den Tagen bis dahin (Berner Datum).
-   4) Serien-Zeichen: leises «N Tage in Folge», nur solange eine Serie besteht; Zählregel RR25_ZAEHLREGEL.isRitual.
+   4) (Serien-Zeichen in Build 67 entfernt)
    5) Mini-Skizzen: kleine Neon-Zeichen auf den Ritual-Karten und im Kopf des Rituals.
    Die Zeichen-Kachel wird nicht berührt. Texte und Zeichnungen sind neu und gehören nur zu dieser App. */
 (function(){
@@ -113,7 +113,7 @@
     var z=document.getElementById("feldZeile");
     if(!z){
       z=document.createElement("div"); z.id="feldZeile";
-      z.innerHTML='<p id="feldSpruch"><small>Aus dem Feld</small><span></span></p><p id="serieZ" hidden><i></i><span></span></p>';
+      z.innerHTML='<p id="feldSpruch"><small>Aus dem Feld</small><span></span></p>';
     }
     var ms=document.getElementById("mondSag"), kast=document.getElementById("kasten");
     var anchor=ms||kast;
@@ -125,26 +125,6 @@
     var z=zeile(); if(!z) return;
     var s=z.querySelector("#feldSpruch span"), t=spruch();
     if(s.textContent!==t) s.textContent=t;
-  }
-
-  /* ---------- 4) Serien-Zeichen ---------- */
-  function rows(){ try{ return (typeof load==="function"?load().log:JSON.parse(localStorage.getItem("rr25_ritual_v1")||"{}").log)||[]; }catch(e){ return []; } }
-  function dayOf(e){
-    var s=String(e&&e.t||""), m=s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
-    if(m) return dn(+m[3],+m[2],+m[1]);
-    var p=Date.parse(s); if(isNaN(p)) return null; var b=bern(p); return dn(b.y,b.m,b.d);
-  }
-  function streak(){
-    var Z=window.RR25_ZAEHLREGEL; if(!Z||!Z.isRitual) return 0;
-    var set={}; rows().forEach(function(e){ try{ if(Z.isRitual(e)){ var d=dayOf(e); if(d!=null) set[d]=1; } }catch(x){} });
-    var n=todayN(), c=set[n]?n:(set[n-1]?n-1:null); if(c==null) return 0;
-    var k=0; while(set[c-k]) k++;
-    return k;
-  }
-  function paintSerie(){
-    var z=zeile(); if(!z) return;
-    var el=z.querySelector("#serieZ"), k=streak();
-    if(k>=2){ el.querySelector("span").textContent=k+" Tage in Folge"; el.hidden=false; } else el.hidden=true;
   }
 
   /* ---------- 3) Jahresrad ---------- */
@@ -225,12 +205,9 @@
   var css=document.createElement("style");
   css.textContent=[
     "#mondTon{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none}",
-    "#feldZeile{margin:.1rem 0 .45rem}",
-    "#feldSpruch{margin:0;font-family:Georgia,serif;font-size:.86rem;line-height:1.4;font-style:italic;color:var(--dim)}",
-    "#feldSpruch small{display:block;font-family:system-ui,sans-serif;font-style:normal;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ueberschrift);margin:0 0 .1rem}",
-    "#serieZ{display:flex;align-items:center;gap:.4rem;margin:.3rem 0 0;font-size:.68rem;letter-spacing:.05em;color:var(--ueberschrift)}",
-    "#serieZ[hidden]{display:none!important}",
-    "#serieZ i{width:.42rem;height:.42rem;border-radius:50%;background:var(--akzent);box-shadow:0 0 8px 2px var(--glow)}",
+    "#feldZeile{margin:-.45rem 0 -.2rem;position:relative}",
+    "#feldSpruch{margin:0;font-family:Georgia,serif;font-size:.78rem;line-height:1.3;font-style:italic;color:var(--dim)}",
+    "#feldSpruch small{display:inline;font-family:system-ui,sans-serif;font-style:normal;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift);margin:0 .45rem 0 0;vertical-align:.08em}",
     "#jrBtn{min-height:2.1rem!important;padding:.35rem 1rem!important;font-size:.76rem!important;border-radius:999px!important;border:1px solid rgba(200,120,255,.35)!important;background:rgba(160,90,255,.1)!important;color:var(--zahl)!important}",
     "#jrBtn.on{box-shadow:0 0 14px var(--glow)}",
     "#jrPanel{margin:0 0 .8rem;padding:.7rem .8rem .8rem;text-align:center}",
@@ -255,10 +232,9 @@
   document.head.appendChild(css);
 
   /* ---------- Verdrahtung ---------- */
-  function all(){ try{ moonTint(); paintSpruch(); paintSerie(); mountRad(); decorate(); }catch(e){} }
+  function all(){ try{ moonTint(); paintSpruch(); mountRad(); decorate(); }catch(e){} }
   if(typeof show==="function"&&!show._b66){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); setTimeout(all,120); return r; }; show._b66=1; }
-  if(typeof paintLog==="function"&&!paintLog._b66){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paintSerie,120); return r; }; paintLog._b66=1; }
-  document.addEventListener("click",function(){ setTimeout(function(){ paintSerie(); decorate(); },400); },true);
+  document.addEventListener("click",function(){ setTimeout(function(){ decorate(); },400); },true);
   document.addEventListener("visibilitychange",function(){ if(!document.hidden) all(); });
   [["list"],["run"],["home"]].forEach(function(a){
     var el=document.getElementById(a[0]);
@@ -266,5 +242,5 @@
   });
   setInterval(function(){ if(!document.hidden) all(); },30*60*1000);
   all(); setTimeout(all,500); setTimeout(all,2000);
-  window.RR25_B66={spruch:spruch,streak:streak,nextFest:nextFest,bern:bern};
+  window.RR25_B66={spruch:spruch,nextFest:nextFest,bern:bern};
 })();
