@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 56 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 57 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -285,10 +285,10 @@ try{
       if(m) rows.push({n:{Drei:3,Sechs:6,Neun:9}[m[1]],t:m[2]});
       else if(!/^Kurz:$/.test(l)) rest.push(l);
     });
-    var lab={3:"❤️ Ich",6:"🙏 Spiel",9:"👁 Quelle"};
+    var lab={3:"Ich",6:"Spiel",9:"Quelle"}, sym={3:"❤️",6:"🙏",9:"👁"};
     var head=rest.join("\n").replace(/\n+$/,"");
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
-      return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+x.n+'×</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
+      return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+sym[x.n]+'</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
     }).join("")+'</div>';
   }
   function sealHtml(){
