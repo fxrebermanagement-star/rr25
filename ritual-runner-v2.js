@@ -119,7 +119,7 @@
         var a2=idx(/^Absicht$/);
         out.splice(a2+1,0,
           ["Versetzen","Tu:\nName laut.\n\nSprich:\nIch bin [Name]. Nur für diesen einen Satz.\nVon innen setze ich die Bahn."],
-          ["Zurück aus [Name]","Sprich sofort:\nIch bin nicht mehr [Name].\nIch bin wieder ich. Der Beobachter hält."]);
+          ["Zurück aus [Name]","Sprich sofort:\nIch bin nicht mehr [Name].\nIch bin wieder ich. Die Quelle hält."]);
       }
       if(lv!=="weich"){
         var z=idx(/^369$/);
@@ -281,7 +281,7 @@
       if(m) rows.push({n:{Drei:3,Sechs:6,Neun:9}[m[1]],t:m[2]});
       else if(!/^Kurz:$/.test(l)) rest.push(l);
     });
-    var lab={3:"stehen",6:"tragen",9:"Beobachter · Siegel"};
+    var lab={3:"Ich ❤️",6:"Spiel 🙏",9:"Quelle 👁"};
     var head=rest.join("\n").replace(/\n+$/,"");
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
       return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+x.n+'×</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';

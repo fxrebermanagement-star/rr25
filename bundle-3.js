@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 51 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 52 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -510,9 +510,9 @@ try{
     if(!el) return;
     var z=zLoad();
     el.innerHTML=
-      '<button type="button" data-z="n3">3 <span>'+z.n3+'/3</span></button>'+
-      '<button type="button" data-z="n6">6 <span>'+z.n6+'/6</span></button>'+
-      '<button type="button" data-z="n9">9 <span>'+z.n9+'/9</span></button>';
+      '<button type="button" data-z="n3">3 ❤️<span>'+z.n3+'/3</span></button>'+
+      '<button type="button" data-z="n6">6 🙏<span>'+z.n6+'/6</span></button>'+
+      '<button type="button" data-z="n9">9 👁<span>'+z.n9+'/9</span></button>';
   }
   function zTap(key){
     var max={n3:3,n6:6,n9:9};
@@ -690,9 +690,9 @@ try{
     if(!el) return;
     var z=loadZ();
     el.innerHTML=
-      '<button type="button" class="zbtn" data-z="n3">3<span>'+z.n3+'/3</span></button>'+
-      '<button type="button" class="zbtn" data-z="n6">6<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" class="zbtn" data-z="n9">9<span>'+z.n9+'/9</span></button>';
+      '<button type="button" class="zbtn" data-z="n3">3 ❤️<span>'+z.n3+'/3</span></button>'+
+      '<button type="button" class="zbtn" data-z="n6">6 🙏<span>'+z.n6+'/6</span></button>'+
+      '<button type="button" class="zbtn" data-z="n9">9 👁<span>'+z.n9+'/9</span></button>';
     var msg=document.getElementById("zahlMsg");
     if(!msg){
       msg=document.createElement("p");
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=51;
+  var BUILD=52;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=51").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=52").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }

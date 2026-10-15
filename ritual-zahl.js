@@ -22,9 +22,9 @@
     if(!el) return;
     var z=loadZ();
     el.innerHTML=
-      '<button type="button" class="zbtn" data-z="n3">3<span>'+z.n3+'/3</span></button>'+
-      '<button type="button" class="zbtn" data-z="n6">6<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" class="zbtn" data-z="n9">9<span>'+z.n9+'/9</span></button>';
+      '<button type="button" class="zbtn" data-z="n3">3 ❤️<span>'+z.n3+'/3</span></button>'+
+      '<button type="button" class="zbtn" data-z="n6">6 🙏<span>'+z.n6+'/6</span></button>'+
+      '<button type="button" class="zbtn" data-z="n9">9 👁<span>'+z.n9+'/9</span></button>';
     var msg=document.getElementById("zahlMsg");
     if(!msg){
       msg=document.createElement("p");
