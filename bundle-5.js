@@ -1,4 +1,4 @@
-/* rr25 · Paket 5/7 · Build 61 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 5/7 · Build 62 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-plan.js, ritual-hold.js, ritual-cam.js, ritual-sigil-save.js, ritual-more.js, ritual-fein.js, ritual-check.js, ritual-ui-v2.js, ritual-v3.js */
 /* ==== ritual-plan.js ==== */
 try{
@@ -654,16 +654,18 @@ try{
       box.appendChild(el);
     }
     el.hidden=!empty();
+    if(pressOn) pressEl();
   }
-  /* Antippen der Kachel: kurz «Ich · Spiel · Quelle» */
-  var pressT=0;
+  /* Antippen der Kachel: «Ich · Spiel · Quelle» bleibt stehen, bis erneut getippt wird (Build 62, kein Timer) */
+  var pressOn=false;
+  function pressEl(){
+    var box=document.getElementById("sigilBox"); if(!box) return null;
+    var pr=document.getElementById("sigPress");
+    if(!pr){ pr=document.createElement("div"); pr.id="sigPress"; pr.setAttribute("aria-live","polite"); pr.textContent="Ich · Spiel · Quelle"; box.appendChild(pr); }
+    pr.classList.toggle("on",pressOn); return pr;
+  }
   document.addEventListener("click",function(e){
-    var box=document.getElementById("sigilBox");
-    if(box && e.target && e.target.closest && e.target.closest("#sigilBox")){
-      var pr=document.getElementById("sigPress");
-      if(!pr){ pr=document.createElement("div"); pr.id="sigPress"; pr.setAttribute("aria-live","polite"); pr.textContent="Ich · Spiel · Quelle"; box.appendChild(pr); }
-      pr.classList.add("on"); clearTimeout(pressT); pressT=setTimeout(function(){ pr.classList.remove("on"); },2400);
-    }
+    if(e.target && e.target.closest && e.target.closest("#sigilBox")){ pressOn=!pressOn; pressEl(); }
   });
   document.addEventListener("click",function(e){
     if(e.target && e.target.closest && e.target.closest("#sigilGo,#sigilSave,[data-go=sigilGo]")) setTimeout(paint,120);
