@@ -16,6 +16,7 @@
     "#sigHint b{letter-spacing:.12em}",
     "#sigPress{position:absolute;left:50%;bottom:.7rem;transform:translateX(-50%);padding:.35rem .8rem;border-radius:99px;background:rgba(20,10,34,.82);border:1px solid rgba(201,155,255,.5);color:#f1e6ff;font-size:.8rem;letter-spacing:.06em;white-space:nowrap;pointer-events:none;box-shadow:0 0 14px rgba(160,100,255,.45);opacity:0;transition:opacity .2s}",
     "#sigPress.on{opacity:1}",
+    "html .logLeer{margin:.9rem 0;padding:.95rem 1rem;text-align:center;font-family:Georgia,serif;font-size:1rem;line-height:1.5;color:#d8c8f2;background:linear-gradient(185deg,rgba(70,24,90,.45),rgba(12,8,28,.8));border:1px dashed rgba(201,155,255,.38);border-radius:1.15rem;box-shadow:inset 0 0 18px rgba(160,100,255,.1)}",
     /* Build 59: Tippflächen mindestens ca. 32 px hoch */
     "html #cats .chip{min-height:2.25rem!important}",
     "html #toneChip,html #seasonChip{min-height:2.05rem!important;display:inline-flex;align-items:center}",

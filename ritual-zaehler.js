@@ -14,6 +14,13 @@
     if(!best) best=(function(T){ return (function(){ var A=window.RR_ALT_TITEL||{}, L=window.RR_RITUALS||[]; for(var k in A){ if(T===k||T.indexOf(k+" · ")===0){ for(var q=0;q<L.length;q++) if(L[q].id===A[k]) return L[q]; } } return null; })(); })(t);
     return best;
   }
+  /* Build 60: gleiche Zählregel wie der Rückblick: Rituale ohne Gabe-Einträge, ohne Abbrüche, nur bekannte Rituale */
+  function isRitual(e){
+    if(!e||e.kind==="gabe") return false;
+    var t=String(e.titel||""); if(/ · abgebrochen$/.test(t)) return false;
+    return !!ritOf(t);
+  }
+  window.RR25_ZAEHLREGEL={isRitual:isRitual};
   function counts(){
     var m={}, list=[];
     rows().forEach(function(e){
@@ -29,7 +36,7 @@
   function panel(){
     var L=counts(), sum=L.reduce(function(s,x){ return s+x.n; },0);
     if(!L.length) return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">Noch kein Ritual in der Chronik.</p>';
-    return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">'+sum+(sum===1?" Ritual":" Rituale")+' · '+L.length+(L.length===1?" Art":" Arten")+'</p>'+
+    return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">'+sum+(sum===1?" Ritual":" Rituale")+' gesamt · '+L.length+(L.length===1?" Art":" Arten")+'</p>'+
       '<ol class="zlList">'+L.map(function(x){ return '<li class="zlRow tone-'+h(x.tone)+'"><span>'+h(x.t)+'</span><b>'+x.n+'×</b></li>'; }).join("")+'</ol>';
   }
   function paintPanel(){
