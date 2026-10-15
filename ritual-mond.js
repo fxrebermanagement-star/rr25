@@ -38,7 +38,7 @@
   var css=document.createElement("style");
   css.textContent=[
     "#mondSag{margin:.15rem 0 .4rem;font-family:Georgia,serif;font-size:.95rem;line-height:1.4;color:#ead8ff}",
-    "#mondSag span{display:inline-block;margin-right:.45rem;letter-spacing:.16em;text-transform:uppercase;font-size:.62rem;font-family:system-ui,sans-serif;color:#ff7ad9;vertical-align:middle}"
+    "#mondSag span{display:inline-block;margin-right:.45rem;letter-spacing:.16em;text-transform:uppercase;font-size:.62rem;font-family:system-ui,sans-serif;color:#ff4fe0;vertical-align:middle}"
   ].join("");
   document.head.appendChild(css);
   paint();

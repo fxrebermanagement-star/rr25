@@ -28,7 +28,7 @@
   var el=document.getElementById("moonSym");
   if(el&&window.MutationObserver) new MutationObserver(function(){ if(busy) return; if(!el.querySelector(".mbSvg")){ lastKey=""; paint(); } }).observe(el,{childList:true,characterData:true,subtree:true});
   var css=document.createElement("style");
-  css.textContent="#moonSym .mbSvg{display:block;width:2rem;height:2rem;margin:.02rem auto .03rem;filter:drop-shadow(0 0 6px rgba(201,155,255,.45)) drop-shadow(0 0 2px rgba(255,255,255,.25))}";
+  css.textContent="#moonSym .mbSvg{display:block;width:2rem;height:2rem;margin:.02rem auto .03rem;filter:drop-shadow(0 0 6px rgba(170,100,255,.45)) drop-shadow(0 0 2px rgba(255,255,255,.25))}";
   document.head.appendChild(css);
   paint(); setTimeout(paint,400); setInterval(paint,10*60*1000);
   window.RR25_MONDBILD={svg:svg,paint:paint};
