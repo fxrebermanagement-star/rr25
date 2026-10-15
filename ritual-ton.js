@@ -73,7 +73,7 @@
       "html #seasonChip i{flex:none;width:.5rem;height:.5rem;border-radius:1px;transform:rotate(45deg);background:#9a96a6}"+
       "html #seasonChip[data-tone=soft]{border-color:rgba(46,204,113,.55)}html #seasonChip[data-tone=soft] i{background:#2ecc71}"+
       "html #seasonChip[data-tone=hard]{border-color:rgba(255,84,112,.6)}html #seasonChip[data-tone=hard] i{background:#ff5470}"+
-      "html #seasonChip[data-tone=echo]{border-color:rgba(179,107,255,.6)}html #seasonChip[data-tone=echo] i{background:#b36bff}"+
+      "html #seasonChip[data-tone=echo]{border-color:rgba(179,107,255,.6)}html #seasonChip[data-tone=echo] i{background:#9a4dff}"+
       "html #seasonChip[data-tone=still]{border-color:rgba(154,150,166,.55)}"+
       "html #seasonChip[data-tone=grenze]{border-color:rgba(255,159,67,.6)}html #seasonChip[data-tone=grenze] i{background:#ff9f43}";
     document.head.appendChild(st);
