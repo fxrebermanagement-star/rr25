@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 55 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 56 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -715,16 +715,25 @@ try{
   }
 
   /* Ziehen und Legen: keine Doppelten in einer Legung, nie die Heute-Karte, kürzlich Gezogenes wird ausgelassen */
-  var recent=[];
+  /* Verlauf bleibt im Gerät (rr25_karten_recent_v1, Karten-IDs): auch nach Neuladen kommen die letzten 30 Karten nicht wieder,
+     solange der Stapel (100 Karten) es zulässt. Heute- und Gestern-Karte sind ausgeschlossen. */
+  var RKEY="rr25_karten_recent_v1", KEEP=30;
+  function loadRecent(){ try{ var a=JSON.parse(localStorage.getItem(RKEY)||"[]"); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
+  function saveRecent(a){ try{ localStorage.setItem(RKEY,JSON.stringify(a.slice(-KEEP))); }catch(e){} }
+  function byId(id){ for(var i=0;i<DECK.length;i++) if(DECK[i].id===id) return DECK[i]; return null; }
   function draw(n){
-    var mk=moonKey(Date.now()), t=todayCard(), got=[];
-    var avoid=recent.slice(-Math.floor(N/2));
+    var now=Date.now(), mk=moonKey(now), t=todayCard(now), y=todayCard(now-DAY), got=[];
+    var hist=loadRecent();
+    /* Heute- und Gestern-Karte zählen als gesehen */
+    var seen=[t.id,y.id];
     for(var j=0;j<n;j++){
-      var pool=DECK.filter(function(c){ return c!==t && got.indexOf(c)<0 && avoid.indexOf(c)<0; });
-      if(!pool.length) pool=DECK.filter(function(c){ return c!==t && got.indexOf(c)<0; });
+      var base=DECK.filter(function(c){ return c.id!==t.id && got.indexOf(c)<0; });
+      var pool=base.filter(function(c){ return hist.indexOf(c.id)<0 && seen.indexOf(c.id)<0; });
+      if(!pool.length) pool=base.filter(function(c){ return hist.slice(-Math.floor(N/4)).indexOf(c.id)<0; });
+      if(!pool.length) pool=base;
       got.push(wpick(pool,mk,Math.random));
     }
-    recent=recent.concat(got).slice(-N);
+    saveRecent(hist.concat(got.map(function(c){ return c.id; })));
     return got;
   }
 
