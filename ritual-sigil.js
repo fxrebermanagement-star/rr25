@@ -20,7 +20,7 @@
   function draw(letters){
     var c=canvas(); if(!c) return;
     var ctx=c.getContext("2d"), w=c.width, h=c.height, m=Math.min(w,h);
-    ctx.fillStyle="#08040e"; ctx.fillRect(0,0,w,h);
+    ctx.clearRect(0,0,w,h);
     var n=(letters||"").length;
     if(!n) return;
     ctx.save();

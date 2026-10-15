@@ -159,7 +159,7 @@
     var t=((document.getElementById("sigilT")||{}).value||"").trim();
     if(!c||typeof load!=="function") return;
     var img="";
-    try{ img=c.toDataURL("image/jpeg",0.72); }catch(e){}
+    try{ var o=document.createElement("canvas"); o.width=c.width; o.height=c.height; var x=o.getContext("2d"); x.fillStyle="#08040e"; x.fillRect(0,0,o.width,o.height); x.drawImage(c,0,0); img=o.toDataURL("image/jpeg",0.72); }catch(e){}
     if(!img||img.length<80) return;
     var id=typeof uid==="function"?uid():String(Date.now());
     var d=load();
