@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 60 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 61 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -499,7 +499,7 @@ try{
 }catch(e){setTimeout(function(){throw e;});}
 /* ==== ritual-zaehler.js ==== */
 try{
-/* ritual-zaehler.js — Build 49: «Zähler» in der Chronik. Wie oft wurde welches Ritual gemacht?
+/* ritual-zaehler.js — Build 49 (61: nur gewählter Monat + Gesamt): «Zähler» in der Chronik. Wie oft wurde welches Ritual gemacht?
    Liest nur die bestehende Chronik (load().log bzw. rr25_ritual_v1). Abgebrochene Einträge zählen nicht.
    Zuordnung über den Titel (Ritualname am Anfang, längster Treffer), Härte-Stufe im Titel wird ignoriert.
    Einträge ohne Ritual (Tagesziel, Sigille, Gabe, Notizen) zählen nicht. Keine neuen Schlüssel im Speicher. */
@@ -522,22 +522,36 @@ try{
     return !!ritOf(t);
   }
   window.RR25_ZAEHLREGEL={isRitual:isRitual};
-  function counts(){
-    var m={}, list=[];
+  var MN=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  function when(e){
+    var s=String(e&&e.t||""), m=s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})(?:,?\s*(\d{1,2}):(\d{2}))?/);
+    if(m) return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||12),+(m[5]||0)).getTime();
+    var p=Date.parse(s); return isNaN(p)?null:p;
+  }
+  /* Build 61: Monat der Chronik-Monatsnavigation (Rückblick-Karte, z. B. «Oktober 2026»); sonst aktueller Monat */
+  function curMon(){
+    var el=document.querySelector("#rbPanel .rbHead b"), m=el&&String(el.textContent).match(/^\s*(\S+)\s+(\d{4})\s*$/);
+    if(m){ var i=MN.indexOf(m[1]); if(i>=0) return {y:+m[2],m:i}; }
+    var n=new Date(); return {y:n.getFullYear(),m:n.getMonth()};
+  }
+  function counts(mon){
+    var m={}, list=[], total=0;
     rows().forEach(function(e){
-      if(!e||e.kind==="gabe") return;
-      var t=String(e.titel||"");
-      if(/ · abgebrochen$/.test(t)) return;
-      var r=ritOf(t); if(!r) return;
+      if(!isRitual(e)) return;
+      total++;
+      if(mon){ var ms=when(e); if(ms==null) return; var d=new Date(ms); if(d.getFullYear()!==mon.y||d.getMonth()!==mon.m) return; }
+      var r=ritOf(String(e.titel||"")); if(!r) return;
       if(!m[r.id]){ m[r.id]={id:r.id,t:r.t,tone:r.hard?"hard":(r.tone||"soft"),n:0}; list.push(m[r.id]); }
       m[r.id].n++;
     });
-    return list.sort(function(a,b){ return b.n-a.n||a.t.localeCompare(b.t,"de"); });
+    list.sort(function(a,b){ return b.n-a.n||a.t.localeCompare(b.t,"de"); });
+    list.total=total; return list;
   }
   function panel(){
-    var L=counts(), sum=L.reduce(function(s,x){ return s+x.n; },0);
-    if(!L.length) return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">Noch kein Ritual in der Chronik.</p>';
-    return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">'+sum+(sum===1?" Ritual":" Rituale")+' gesamt · '+L.length+(L.length===1?" Art":" Arten")+'</p>'+
+    var mon=curMon(), L=counts(mon), all=L.total, sum=L.reduce(function(s,x){ return s+x.n; },0), lab=MN[mon.m]+" "+mon.y;
+    var tot='<p class="zlTot">Gesamt seit Beginn: '+all+'</p>';
+    if(!L.length) return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">Kein Ritual im '+h(lab)+'.</p>'+tot;
+    return '<p class="zlH">Ritual-Zähler</p><p class="zlSay">'+sum+(sum===1?" Ritual":" Rituale")+' im '+h(lab)+' · '+L.length+(L.length===1?" Art":" Arten")+'</p>'+tot+
       '<ol class="zlList">'+L.map(function(x){ return '<li class="zlRow tone-'+h(x.tone)+'"><span>'+h(x.t)+'</span><b>'+x.n+'×</b></li>'; }).join("")+'</ol>';
   }
   function paintPanel(){
@@ -567,6 +581,7 @@ try{
     "#zlPanel[hidden]{display:none!important}",
     ".zlH{margin:0 0 .15rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#ff9ae4}",
     ".zlSay{margin:0 0 .35rem;font-size:.76rem;color:#e6d4ff}",
+    ".zlTot{margin:0 0 .4rem;font-size:.62rem;color:#a98fc9;letter-spacing:.04em}",
     ".zlList{list-style:none;margin:0;padding:0}",
     ".zlRow{display:flex;align-items:baseline;justify-content:space-between;gap:.6rem;padding:.22rem 0 .22rem .55rem;border-left:2px solid #2ecc71;margin:.12rem 0;font-size:.78rem;color:#e6dcff;line-height:1.3}",
     ".zlRow span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.zlRow b{flex:none;font-weight:600;color:#f1dcff;font-variant-numeric:tabular-nums}",
@@ -575,6 +590,8 @@ try{
   document.head.appendChild(css);
   if(typeof paintLog==="function"&&!paintLog._rz){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paintPanel,90); return r; }; paintLog._rz=1; }
   if(typeof show==="function"&&!show._rz){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,200); return r; }; show._rz=1; }
+  /* Monatswechsel in der Rückblick-Navigation und Öffnen/Schliessen des Rückblicks: Zähler neu zeichnen */
+  document.addEventListener("click",function(ev){ if(ev.target.closest&&ev.target.closest(".rbNav,#rbBtn")) setTimeout(paintPanel,30); },false);
   mount();
   window.RR25_ZAEHLER={counts:counts};
 })();
