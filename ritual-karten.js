@@ -242,7 +242,7 @@
     ".kcard{display:block;background:linear-gradient(185deg,rgba(70,24,90,.62),rgba(12,8,28,.92));border:1px solid rgba(255,122,217,.2);border-radius:1.15rem;padding:.9rem .85rem 1rem;margin:.48rem 0;text-align:center}",
     ".kcard .group{display:block;margin:0 0 .2rem}",
     ".kcard b{display:block;font-family:Georgia,serif;font-size:1.18rem;margin:.1rem 0 .35rem}",
-    ".kcard small{display:block;color:#c4b4e0;line-height:1.4;font-size:.8rem}",
+    ".kcard small{display:block;color:#b4c6f2;line-height:1.4;font-size:.8rem}",
     ".kz{font-size:2.15rem;line-height:1;margin:.12rem 0 .32rem;color:#ff9ad8;text-shadow:0 0 14px rgba(255,122,217,.55),0 0 24px rgba(126,240,230,.25)}",
     "#kOut .kcard{height:100%;margin:0;padding:.5rem .42rem;display:flex;flex-direction:column;align-items:center;justify-content:center}",
     "#kOut .kcard b{font-size:1.02rem}",
