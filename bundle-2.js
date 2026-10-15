@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 51 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 52 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -123,7 +123,7 @@ try{
         var a2=idx(/^Absicht$/);
         out.splice(a2+1,0,
           ["Versetzen","Tu:\nName laut.\n\nSprich:\nIch bin [Name]. Nur für diesen einen Satz.\nVon innen setze ich die Bahn."],
-          ["Zurück aus [Name]","Sprich sofort:\nIch bin nicht mehr [Name].\nIch bin wieder ich. Der Beobachter hält."]);
+          ["Zurück aus [Name]","Sprich sofort:\nIch bin nicht mehr [Name].\nIch bin wieder ich. Die Quelle hält."]);
       }
       if(lv!=="weich"){
         var z=idx(/^369$/);
@@ -285,7 +285,7 @@ try{
       if(m) rows.push({n:{Drei:3,Sechs:6,Neun:9}[m[1]],t:m[2]});
       else if(!/^Kurz:$/.test(l)) rest.push(l);
     });
-    var lab={3:"stehen",6:"tragen",9:"Beobachter · Siegel"};
+    var lab={3:"Ich ❤️",6:"Spiel 🙏",9:"Quelle 👁"};
     var head=rest.join("\n").replace(/\n+$/,"");
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
       return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+x.n+'×</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
@@ -629,10 +629,10 @@ try{
     {"id":"s54","k":"soft","t":"Schöner Tisch","z":"❧","x":"Deck heute den Tisch schön, auch wenn du allein isst. Eine Kerze, ein richtiger Teller. Du bist es wert.","m":["zu","voll"]},
     {"id":"f01","k":"feld","t":"Ein Satz","z":"✦","x":"Deine Absicht: ein Satz, in der Gegenwart, ohne »nicht«. Wenn du ihn nicht in einem Atemzug sagen kannst, ist er zu lang."},
     {"id":"f02","k":"feld","t":"Enter","z":"▷","x":"Enter ist der Moment, in dem du aufhörst zu planen und setzt. Ein Atemzug, ein innerer Klick. Ab da gilt es."},
-    {"id":"f03","k":"feld","t":"Drei stehen","z":"∴","x":"Die ersten drei stellen den Satz auf. Langsam sprechen, jedes Wort mit Gewicht. Wer hier hetzt, baut auf Sand."},
-    {"id":"f04","k":"feld","t":"Sechs tragen","z":"☷","x":"Die sechs tragen den Satz durch dich hindurch. Nicht mehr nachdenken, nur sprechen. Der Körper lernt mit."},
-    {"id":"f05","k":"feld","t":"Neun siegeln","z":"⁂","x":"Mit der neunten Wiederholung ist der Satz aus deinen Händen. Kein zehntes Mal. Das Siegel hält von selbst."},
-    {"id":"f06","k":"feld","t":"Der Beobachter","z":"◉","x":"Die Neun ist der, der zuschaut. Du sprichst, und ein Teil von dir sieht ruhig zu. Dieser Teil setzt nie nach."},
+    {"id":"f03","k":"feld","t":"Ich ❤️ · Drei","z":"∴","x":"Die ersten drei stellen den Satz auf. Langsam sprechen, jedes Wort mit Gewicht. Wer hier hetzt, baut auf Sand."},
+    {"id":"f04","k":"feld","t":"Spiel 🙏 · Sechs","z":"☷","x":"Die sechs tragen den Satz durch dich hindurch. Nicht mehr nachdenken, nur sprechen. Der Körper lernt mit."},
+    {"id":"f05","k":"feld","t":"Quelle 👁 · Neun","z":"⁂","x":"Mit der neunten Wiederholung ist der Satz aus deinen Händen. Kein zehntes Mal. Das Siegel hält von selbst."},
+    {"id":"f06","k":"feld","t":"Quelle 👁","z":"◉","x":"Die Neun ist die Quelle, die zuschaut. Du sprichst, und ein Teil von dir sieht ruhig zu. Dieser Teil setzt nie nach."},
     {"id":"f07","k":"feld","t":"So sei es","z":"⊙","x":"Drei Worte, danach nichts mehr. Kein Nachsatz, kein Vielleicht. Das Feld braucht einen klaren Schluss."},
     {"id":"f08","k":"feld","t":"Es ist so","z":"≡","x":"Nicht »es wird«, sondern »es ist«. Wer in der Zukunft spricht, hält den Wunsch auf Abstand."},
     {"id":"f09","k":"feld","t":"Rückkehr","z":"↩\uFE0E","x":"Die Rückkehr ist der Riegel: Energie zurück zu dir, Hände waschen, etwas essen. Ohne sie bleibt eine Tür offen."},
