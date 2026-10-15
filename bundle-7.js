@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 62 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 63 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -675,7 +675,7 @@ try{
 }catch(e){setTimeout(function(){throw e;});}
 /* ==== ritual-sterne.js ==== */
 try{
-/* ritual-sterne.js — Build 50: Sternenhimmel und Tageston-Schimmer.
+/* ritual-sterne.js — Build 50 (63: Sternschnuppen, Abschnitt 3): Sternenhimmel und Tageston-Schimmer.
    Zwei Ebenen, damit kein Inhalt anders gezeichnet wird (die Zeichen-Kachel #sigilBox bleibt pixelgleich):
    1) #sternFeld: ruhiges Bild hinter dem Inhalt (div mit Hintergrundbild, kein eigener Grafik-Layer):
       schwache Sterne und der Tageston (Hard-Tag = Hauch Rot, Soft-Tag = Hauch Pink, Regel aus RR25_KAL).
@@ -801,16 +801,49 @@ try{
   if(window.RR25_KAL&&window.RR25_KAL.onReady) try{ window.RR25_KAL.onReady(function(){ if(setTone()) paintFeld(true); }); }catch(e){}
   setTimeout(function(){ if(setTone()) paintFeld(true); },1500);
 
+  /* ---------- 3) Build 63: gelegentliche Sternschnuppen ----------
+     Ein kurzer Strich in Neon-Violett oder Gold alle 15 bis 40 s, ca. 1 s lang, an zufälliger Stelle und mit zufälligem Winkel.
+     Reine CSS-Animation (Web Animations, nur transform und opacity), kein Dauer-Loop: dazwischen läuft nichts ausser einem Timer.
+     Liegt hinter dem Inhalt (wie #sternFeld), klickt nicht mit, kein Ton. Bei «Bewegung reduzieren» und bei verborgener Seite aus. */
+  var sch=document.createElement("div"); sch.id="sternSchnuppe"; sch.setAttribute("aria-hidden","true");
+  app.insertBefore(sch,rest.nextSibling);
+  var schT=0;
+  function schNext(){ clearTimeout(schT); schT=setTimeout(schGo,15000+Math.random()*25000); }
+  function schGo(){
+    schNext();
+    if(!on||still()||document.hidden||!sch.animate) return;
+    var w=window.innerWidth, h=window.innerHeight, len=110+Math.random()*90;
+    var ang=(20+Math.random()*50)*(Math.random()<.5?1:-1)*Math.PI/180; /* Richtung: nach unten, links oder rechts */
+    var dir=ang>0?1:-1, dx=Math.cos(Math.abs(ang))*dir, dy=Math.sin(Math.abs(ang));
+    var gold=Math.random()<.4, x0=w*(.1+Math.random()*.8), y0=h*(.05+Math.random()*.5), dist=len*2.2;
+    var el=document.createElement("i"); el.className="sch"+(gold?" au":"");
+    el.style.cssText="left:"+x0+"px;top:"+y0+"px;width:"+len+"px";
+    var rot=Math.atan2(dy,dx)*180/Math.PI;
+    sch.appendChild(el);
+    var a=el.animate([
+      {transform:"translate(0,0) rotate("+rot+"deg)",opacity:0},
+      {transform:"translate("+dx*dist*.15+"px,"+dy*dist*.15+"px) rotate("+rot+"deg)",opacity:1,offset:.15},
+      {transform:"translate("+dx*dist+"px,"+dy*dist+"px) rotate("+rot+"deg)",opacity:0}
+    ],{duration:900+Math.random()*300,easing:"ease-out"});
+    a.onfinish=a.oncancel=function(){ if(el.parentNode) el.parentNode.removeChild(el); };
+  }
+  schNext();
+  document.addEventListener("visibilitychange",function(){ if(document.hidden) clearTimeout(schT); else schNext(); });
+
   var css=document.createElement("style");
   css.textContent=".app{isolation:isolate}"+
     "#sternFeld,#sternRest{position:absolute;left:0;top:0;width:100%;z-index:-1;pointer-events:none;background-repeat:no-repeat}"+
     "#sternRest{background-repeat:repeat-y}"+
+    "#sternSchnuppe{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;overflow:hidden}"+
+    "#sternSchnuppe .sch{position:absolute;height:2px;border-radius:2px;transform-origin:100% 50%;margin-left:0;opacity:0;pointer-events:none;background:linear-gradient(90deg,rgba(190,120,255,0),rgba(200,140,255,.55) 60%,#f3e2ff);box-shadow:0 0 8px 1px rgba(190,120,255,.6);will-change:transform,opacity}"+
+    "#sternSchnuppe .sch.au{background:linear-gradient(90deg,rgba(255,200,100,0),rgba(255,210,120,.55) 60%,#fff3d0);box-shadow:0 0 8px 1px rgba(255,200,100,.6)}"+
+    "@media (prefers-reduced-motion:reduce){#sternSchnuppe{display:none}}"+
     "#sternFunkeln{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:2147483000;pointer-events:none;display:block}";
   document.head.appendChild(css);
   window.RR25_STERNE={
     tone:function(){ return tone; },
-    off:function(){ on=false; if(raf) cancelAnimationFrame(raf); raf=0; drawTw(0); feld.style.display="none"; rest.style.display="none"; cv.style.display="none"; },
-    on:function(){ on=true; feld.style.display=""; rest.style.display=""; cv.style.display=""; paintFeld(true); now(); kick(); }
+    off:function(){ on=false; sch.style.display="none"; if(raf) cancelAnimationFrame(raf); raf=0; drawTw(0); feld.style.display="none"; rest.style.display="none"; cv.style.display="none"; },
+    on:function(){ on=true; sch.style.display=""; feld.style.display=""; rest.style.display=""; cv.style.display=""; paintFeld(true); now(); kick(); }
   };
 })();
 
