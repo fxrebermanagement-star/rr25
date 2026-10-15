@@ -1,4 +1,4 @@
-/* rr25 · Paket 1/7 · Build 52 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 1/7 · Build 53 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: doll.js, ritual-core.js, ritual-mondphase.js, ritual-zeit.js, rituals-v2.js */
 /* ==== doll.js ==== */
 try{
@@ -691,7 +691,7 @@ try{
   ]},
   {id:'dankfeld',tone:'soft',t:'Dank ans Feld',s:'Nur danken. Keine Bitte, keine neue Ladung. Etwa 9 Minuten.',cat:'Feld',hard:false,skipTiming:true,noStatus:true,chronikSatz:true,flow:[
     ['Ankommen','Tu:|Eine Kerze an. Drei ruhige Atemzüge.'],
-    ['Erinnern','Tu:|Drei Dinge, die zuletzt gewirkt haben: eins für die 3, eins für die 6, eins für die 9.||Sprich:|Leise aussprechen.'],
+    ['Erinnern','Tu:|Drei Dinge, die zuletzt gewirkt haben: eins für Ich ❤️, eins für Spiel 🙏, eins für Quelle 👁.||Sprich:|Leise aussprechen.'],
     ['Danken','Tu:|Hände aufs Herz, dann öffnen.||Sprich:|Feld, ich danke dir. Ich habe es gesehen.'],
     ['Gabe','Tu:|Etwas Kleines geben: ein Schluck Wasser, eine Prise Salz oder Stille.'],
     ['Schliessen','Sprich:|So sei es.||Tu:|Kerze aus. Ein Satz in die Chronik.']
