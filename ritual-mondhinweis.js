@@ -40,12 +40,12 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "#home>#mondHint{margin:.55rem 0 .6rem;padding:.65rem .9rem .6rem;border-radius:1.1rem;border:1px solid rgba(232,160,255,.32);background:linear-gradient(160deg,rgba(48,20,78,.75),rgba(16,8,30,.92));box-shadow:0 0 16px rgba(201,155,255,.14)}",
+    "#home>#mondHint{margin:.55rem 0 .6rem;padding:.65rem .9rem .6rem;border-radius:1.1rem;border:1px solid rgba(200,120,255,.32);background:linear-gradient(160deg,rgba(48,20,78,.75),rgba(16,8,30,.92));box-shadow:0 0 16px rgba(170,100,255,.14)}",
     "#mondHint[data-k=voll]{border-color:rgba(255,84,112,.45);box-shadow:0 0 16px rgba(255,84,112,.14)}",
     "#mondHint .mhTag{margin:0 0 .12rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#c9a8ff}",
     "#mondHint[data-k=voll] .mhTag{color:#ff8aa0}",
-    "#mondHint .mhHead{display:block;font-family:Georgia,serif;font-weight:500;font-size:1rem;color:#f6f0ff}",
-    "#mondHint .mhSub{display:block;margin:.18rem 0 0;font-size:.74rem;color:#c4b4e0;line-height:1.4}"
+    "#mondHint .mhHead{display:block;font-family:Georgia,serif;font-weight:500;font-size:1rem;color:#eaf2ff}",
+    "#mondHint .mhSub{display:block;margin:.18rem 0 0;font-size:.74rem;color:#b4c6f2;line-height:1.4}"
   ].join("");
   document.head.appendChild(css);
   if(typeof show==="function"&&!show._mh){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="home") setTimeout(paint,60); return r; }; show._mh=1; }

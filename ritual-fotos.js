@@ -5,7 +5,7 @@
     "#entries .logrow,#gabeList .logrow{display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:start;padding:.9rem 0;border-top:1px solid rgba(126,200,255,.16)}",
     "#entries .logrow b,#gabeList .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
     "#entries .logrow .meta,#gabeList .logrow .meta{margin-top:.2rem}",
-    "#entries .logact,#gabeList .logact{margin-top:.4rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem}",
+    "#entries .logact,#gabeList .logact{margin-top:.4rem;border:0;background:none;color:#ff4fe0;padding:0;font:inherit;font-size:.78rem}",
     "#entries .logpic img,#gabeList .logpic img,#logShots img,#gShots img,#opferPrev img,#afterShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
     "#entries .logpic img.sig,#logShots img.sig{object-fit:contain}",
     "#entries .shots,#gShots,#opferPrev,#afterShots,#logShots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}",

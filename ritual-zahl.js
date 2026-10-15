@@ -52,8 +52,8 @@
   var css=document.createElement("style");
   css.textContent=[
     "#zahlBox{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem;margin:1.1rem 0 .4rem}",
-    "#zahl .zbtn{border:1px solid rgba(255,122,217,.22);background:rgba(28,14,48,.55);color:#f6f0ff;border-radius:1.15rem;padding:1.15rem .2rem .95rem;font:inherit}",
-    "#zahl .zbtn span{display:block;margin-top:.35rem;font-size:.72rem;color:#c4b4e0}",
+    "#zahl .zbtn{border:1px solid rgba(255,122,217,.22);background:rgba(28,14,48,.55);color:#eaf2ff;border-radius:1.15rem;padding:1.15rem .2rem .95rem;font:inherit}",
+    "#zahl .zbtn span{display:block;margin-top:.35rem;font-size:.72rem;color:#b4c6f2}",
     "#zahlMsg{text-align:center;min-height:1.2rem}"
   ].join("");
   document.head.appendChild(css);

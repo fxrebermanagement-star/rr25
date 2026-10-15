@@ -1,4 +1,4 @@
-/* rr25 · Paket 4/7 · Build 64 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 4/7 · Build 65 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-fotos.js, ritual-gpic.js, ritual-kalender.js, ritual-start.js, ritual-buch.js, ritual-navlove.js, ritual-final.js, ritual-gabe-fix.js */
 /* ==== ritual-fotos.js ==== */
 try{
@@ -9,7 +9,7 @@ try{
     "#entries .logrow,#gabeList .logrow{display:grid;grid-template-columns:1fr auto;gap:.7rem;align-items:start;padding:.9rem 0;border-top:1px solid rgba(126,200,255,.16)}",
     "#entries .logrow b,#gabeList .logrow b{font-family:Georgia,serif;font-weight:500;font-size:1.02rem}",
     "#entries .logrow .meta,#gabeList .logrow .meta{margin-top:.2rem}",
-    "#entries .logact,#gabeList .logact{margin-top:.4rem;border:0;background:none;color:#ff7ad9;padding:0;font:inherit;font-size:.78rem}",
+    "#entries .logact,#gabeList .logact{margin-top:.4rem;border:0;background:none;color:#ff4fe0;padding:0;font:inherit;font-size:.78rem}",
     "#entries .logpic img,#gabeList .logpic img,#logShots img,#gShots img,#opferPrev img,#afterShots img{width:4.8rem;height:4.8rem;object-fit:cover;border-radius:.85rem;border:1px solid rgba(126,200,255,.22);background:#0a0612;display:block}",
     "#entries .logpic img.sig,#logShots img.sig{object-fit:contain}",
     "#entries .shots,#gShots,#opferPrev,#afterShots,#logShots{display:flex!important;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}",
@@ -489,23 +489,23 @@ try{
   var css=document.createElement("style");
   css.textContent=[
     ".kalcard{border-left:5px solid transparent;padding-left:.72rem}",
-    ".kalcard p{margin:.35rem 0 0;color:#c4b4e0;font-size:.78rem;line-height:1.45}",
+    ".kalcard p{margin:.35rem 0 0;color:#b4c6f2;font-size:.78rem;line-height:1.45}",
     ".kalcard.soft{border-color:#2ecc71;background:rgba(46,204,113,.14)}",
     ".kalcard.soft b{color:#7dffb0}",
     ".kalcard.hard{border-color:#e74c3c;background:rgba(231,76,60,.16)}",
     ".kalcard.hard b{color:#ff8a7a}",
-    ".kalcard.echo{border-color:#b36bff;background:rgba(179,107,255,.14)}",
+    ".kalcard.echo{border-color:#9a4dff;background:rgba(179,107,255,.14)}",
     ".kalcard.echo b{color:#dcb8ff}",
     ".kalcard.still{border-color:#9a96a6;background:rgba(154,150,166,.12)}",
     ".kalcard.still b{color:#dcd8e4}",
     ".kalcard.kallive{box-shadow:0 0 0 1px rgba(255,122,217,.35),0 0 18px rgba(255,84,112,.12)}",
-    ".kalOn{color:#ff7ad9;font-weight:650}",
+    ".kalOn{color:#ff4fe0;font-weight:650}",
     ".kaltoday{margin-bottom:.6rem}",
     ".kaltoday b{font-size:1.05rem}",
     ".kaltoday .kalNow{font-size:.8rem;color:#ffd0e8}",
     ".kaltoday .kalOn{display:inline-block;margin-right:.3rem;padding:0 .4rem;border-radius:999px;background:rgba(255,122,217,.18);letter-spacing:.08em;text-transform:uppercase;font-size:.62rem;vertical-align:1px}",
     ".kalBand .kb,.kmLeg .kl{display:inline-block;width:.7rem;height:.28rem;border-radius:2px;margin-right:.35rem;vertical-align:middle}",
-    ".kb.soft,.kl.soft{background:#2ecc71}.kb.still,.kl.still{background:#9a96a6}.kb.echo,.kl.echo{background:#b36bff}.kb.hard{background:#e74c3c}",
+    ".kb.soft,.kl.soft{background:#2ecc71}.kb.still,.kl.still{background:#9a96a6}.kb.echo,.kl.echo{background:#9a4dff}.kb.hard{background:#e74c3c}",
     ".kalNext .kalEm{color:#ffb3a8;font-weight:600}.kalNext span{color:#a996cf}",
     ".kalHint{color:#e7c9ff!important}",
     ".kalMoon{color:#cdbfe8!important}",
@@ -518,17 +518,17 @@ try{
     ".kmDay{position:relative;height:2.4rem;min-width:0;border:0;border-bottom:3px solid transparent;border-radius:8px;background:rgba(255,255,255,.03);color:#e6dcff;font:500 .8rem system-ui,sans-serif;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}",
     ".kmDay.soft{border-bottom-color:#2ecc71;background:rgba(46,204,113,.10)}",
     ".kmDay.still{border-bottom-color:#9a96a6;background:rgba(154,150,166,.10)}",
-    ".kmDay.echo{border-bottom-color:#b36bff;background:rgba(179,107,255,.14)}",
+    ".kmDay.echo{border-bottom-color:#9a4dff;background:rgba(179,107,255,.14)}",
     ".kmDay.hard{border-bottom-color:#e74c3c;background:rgba(231,76,60,.14)}",
     ".kmDay.calc{border-bottom-style:dashed}",
     ".kmDay.out{opacity:.32}",
-    ".kmDay.today{box-shadow:inset 0 0 0 1.5px #ff7ad9}",
+    ".kmDay.today{box-shadow:inset 0 0 0 1.5px #ff4fe0}",
     ".kmDay.sel{box-shadow:inset 0 0 0 2px #cbb8ff;background:rgba(155,140,255,.22)}",
-    ".kmDay.today.sel{box-shadow:inset 0 0 0 2px #ff7ad9;background:rgba(155,140,255,.22)}",
+    ".kmDay.today.sel{box-shadow:inset 0 0 0 2px #ff4fe0;background:rgba(155,140,255,.22)}",
     ".kmMoon{position:absolute;top:1px;right:3px;font-size:.55rem;line-height:1;color:#fff1c2}",
     ".kmDots{display:flex;gap:2px;height:5px}",
     ".kmDots i,.kmLeg i.dh,.kmLeg i.de{display:inline-block;width:5px;height:5px;border-radius:50%}",
-    "i.dh{background:#ff5470}i.de{background:#c77dff}i.dc{box-sizing:border-box;border:1.2px solid #ff7ad9}",
+    "i.dh{background:#ff5470}i.de{background:#c77dff}i.dc{box-sizing:border-box;border:1.2px solid #ff4fe0}",
     ".kmLeg{margin:.45rem .1rem 0;font-size:.62rem;color:#a996cf;line-height:1.6;display:flex;flex-wrap:wrap;column-gap:.55rem;row-gap:0}.kmLeg .kmLi{white-space:nowrap}.kmLeg .kmLi>i:first-child{margin-left:0}",
     ".kmLeg i.dh,.kmLeg i.de{margin:0 .2rem 0 .35rem}",
     ".kalCov{margin:.8rem .1rem .2rem;font-size:.7rem;color:#8f80b8}",
@@ -548,13 +548,13 @@ try{
     ".kyD.soft{background:rgba(46,204,113,.55)}.kyD.still{background:rgba(154,150,166,.5)}.kyD.echo{background:rgba(179,107,255,.65)}",
     ".kyD.calc{background:transparent!important;border:1px dashed rgba(200,190,230,.45)}.kyD.calc.soft{border-color:rgba(46,204,113,.7)}.kyD.calc.still{border-color:rgba(154,150,166,.7)}.kyD.calc.echo{border-color:rgba(179,107,255,.8)}",
     ".kyD.hard{background:rgba(231,76,60,.6)}.kyD.calc.hard{border-color:rgba(231,76,60,.8)}.kl.hard{background:#e74c3c}.kalcard p.kalD{color:#ffb3a8}.kalHd{color:#ff8a7a;font-weight:600}",
-    ".kyD.hd{box-shadow:inset 0 -2px 0 #ff5470}.kyD.today{outline:1.5px solid #ff7ad9;outline-offset:0}",
+    ".kyD.hd{box-shadow:inset 0 -2px 0 #ff5470}.kyD.today{outline:1.5px solid #ff4fe0;outline-offset:0}",
     ".kalCov.warn{color:#ffb86b}",
     ".kalcard.grenze{border-color:#ff9f43;background:rgba(255,159,67,.13)}.kalcard.grenze b{color:#ffc58a}",
     ".kalcard.saison{border-left-style:double}.kalcard.saison.soft p.kalD{color:#9dffc4}.kalcard.saison.echo p.kalD{color:#dcb8ff}.kalcard.saison.still p.kalD{color:#dcd8e4}.kalcard.saison.grenze p.kalD{color:#ffc58a}",
     ".kalSz{font-weight:600}.kalSz.hard{color:#ff8a7a}.kalSz.soft{color:#7dffb0}.kalSz.echo{color:#dcb8ff}.kalSz.still{color:#dcd8e4}.kalSz.grenze{color:#ffc58a}",
     "i.ds{display:inline-block;width:5px;height:5px;box-sizing:border-box;border-radius:1px;transform:rotate(45deg);background:#ff5470}.kmLeg i.ds{margin:0 .25rem 0 .35rem}",
-    "i.ds.soft{background:#2ecc71}i.ds.echo{background:#b36bff}i.ds.still{background:#c9c5d4}i.ds.grenze{background:#ff9f43}"
+    "i.ds.soft{background:#2ecc71}i.ds.echo{background:#9a4dff}i.ds.still{background:#c9c5d4}i.ds.grenze{background:#ff9f43}"
   ].join("");
   document.head.appendChild(css);
   if(typeof show==="function" && !show._kal){
@@ -663,10 +663,10 @@ try{
     "#buch .hero h2{margin-bottom:.4rem}",
     "#page.book{background:none!important;border:0!important;box-shadow:none!important;padding:.4rem 0 0!important}",
     "#buchGo{display:flex;flex-direction:column;align-items:center;gap:.55rem;margin:1.2rem 0 0}",
-    "#buchOpen{display:block;width:100%;min-height:3.3rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#ff7ad9,#b98cff 55%,#7ec8ff);box-shadow:0 0 22px rgba(201,155,255,.45),0 0 0 1px rgba(232,160,255,.55);cursor:pointer}",
+    "#buchOpen{display:block;width:100%;min-height:3.3rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#ff4fe0,#a66bff 55%,#9fd0ff);box-shadow:0 0 22px rgba(170,100,255,.45),0 0 0 1px rgba(200,120,255,.55);cursor:pointer}",
     "#buchOpen:active,#urbuchOpen:active{transform:scale(.98)}",
-    "#urbuchOpen{display:block;width:100%;min-height:3.3rem;margin-top:.9rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#b98cff,#ff7ad9 55%,#ffb3ec);box-shadow:0 0 22px rgba(201,155,255,.45),0 0 0 1px rgba(232,160,255,.55);cursor:pointer}",
-    "#buchGo small{font-size:.74rem;color:#c4b4e0;letter-spacing:.04em}"
+    "#urbuchOpen{display:block;width:100%;min-height:3.3rem;margin-top:.9rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#a66bff,#ff4fe0 55%,#ffb3ec);box-shadow:0 0 22px rgba(170,100,255,.45),0 0 0 1px rgba(200,120,255,.55);cursor:pointer}",
+    "#buchGo small{font-size:.74rem;color:#b4c6f2;letter-spacing:.04em}"
   ].join("");
   document.head.appendChild(css);
   paintBuch=function(){
@@ -715,7 +715,7 @@ try{
     "nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}",
     "nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}",
     "nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}",
-    "nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#ff9ae4}",
+    "nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#d6a6ff}",
     "nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}",
     "nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}",
     "nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}",
@@ -745,8 +745,8 @@ try{
 (function(){
   var css=document.createElement("style");
   css.textContent=[
-    "html,body{background:#070510;overscroll-behavior:none}",
-    ".app{background:radial-gradient(110% 70% at 50% -12%,rgba(255,122,217,.16),transparent 46%),radial-gradient(80% 40% at 100% 0,rgba(126,200,255,.08),transparent 40%),#070510}",
+    "html,body{background:#080320;overscroll-behavior:none}",
+    ".app{background:radial-gradient(110% 70% at 50% -12%,rgba(255,122,217,.16),transparent 46%),radial-gradient(80% 40% at 100% 0,rgba(126,200,255,.08),transparent 40%),#080320}",
     "header{padding:calc(.28rem + env(safe-area-inset-top)) .75rem .28rem!important;background:rgba(7,5,16,.9)!important;border-bottom:1px solid rgba(255,122,217,.12)}",
     "#headRow{min-height:50px}",
     ".doll{width:50px;height:50px;border-radius:16px;border-color:rgba(255,122,217,.5);box-shadow:0 0 18px rgba(255,122,217,.2)}",

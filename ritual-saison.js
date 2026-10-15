@@ -15,7 +15,7 @@
   }
   var st=document.createElement("style");
   st.textContent=".kyD{position:relative}.kyD b.kyS{position:absolute;right:-1px;top:-2px;width:4px;height:4px;display:block;box-sizing:border-box;border-radius:1px;transform:rotate(45deg);background:#ff5470}"+
-    ".kyD b.kyS.soft{background:#2ecc71}.kyD b.kyS.echo{background:#b36bff}.kyD b.kyS.still{background:#c9c5d4}.kyD b.kyS.grenze{background:#ff9f43}";
+    ".kyD b.kyS.soft{background:#2ecc71}.kyD b.kyS.echo{background:#9a4dff}.kyD b.kyS.still{background:#c9c5d4}.kyD b.kyS.grenze{background:#ff9f43}";
   document.head.appendChild(st);
   var box=document.getElementById("kalList"); if(!box) return;
   function run(){ try{ deco(box); }catch(e){} }

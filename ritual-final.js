@@ -1,8 +1,8 @@
 (function(){
   var css=document.createElement("style");
   css.textContent=[
-    "html,body{background:#070510;overscroll-behavior:none}",
-    ".app{background:radial-gradient(110% 70% at 50% -12%,rgba(255,122,217,.16),transparent 46%),radial-gradient(80% 40% at 100% 0,rgba(126,200,255,.08),transparent 40%),#070510}",
+    "html,body{background:#080320;overscroll-behavior:none}",
+    ".app{background:radial-gradient(110% 70% at 50% -12%,rgba(255,122,217,.16),transparent 46%),radial-gradient(80% 40% at 100% 0,rgba(126,200,255,.08),transparent 40%),#080320}",
     "header{padding:calc(.28rem + env(safe-area-inset-top)) .75rem .28rem!important;background:rgba(7,5,16,.9)!important;border-bottom:1px solid rgba(255,122,217,.12)}",
     "#headRow{min-height:50px}",
     ".doll{width:50px;height:50px;border-radius:16px;border-color:rgba(255,122,217,.5);box-shadow:0 0 18px rgba(255,122,217,.2)}",

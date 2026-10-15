@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 64 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 65 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -361,7 +361,7 @@ try{
   }
   var s=document.createElement("style");
   s.textContent=[
-    "nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(232,160,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}",
+    "nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(200,120,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}",
     "nav .navR{display:grid;gap:.18rem}",
     "nav .navR:first-child{grid-template-columns:repeat(4,1fr)}",
     "nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 8%}",
@@ -434,7 +434,7 @@ try{
   var s=document.createElement("style");
   s.textContent=[
     "#kleidBtn{display:none!important}",
-    "html[data-kleid=neon] #cats .chip.on{background:linear-gradient(165deg,#ff7ad9,#7ef0e6)!important;color:#14081c!important}"
+    "html[data-kleid=neon] #cats .chip.on{background:linear-gradient(165deg,#ff4fe0,#7ef0e6)!important;color:#14081c!important}"
   ].join("");
   document.head.appendChild(s);
   setTimeout(function(){
@@ -627,13 +627,13 @@ try{
   var css=document.createElement("style");
   css.textContent=[
     "#sunWrap{cursor:pointer}",
-    "#festHint{display:none;margin:.35rem 0 .55rem;padding:.7rem .8rem;border:1px solid rgba(232,160,255,.22);border-radius:.9rem;background:rgba(56,24,86,.45)}",
+    "#festHint{display:none;margin:.35rem 0 .55rem;padding:.7rem .8rem;border:1px solid rgba(200,120,255,.22);border-radius:.9rem;background:rgba(56,24,86,.45)}",
     "#festHint.on{display:block}",
     "#festHint b{display:block;font-family:Georgia,serif;font-size:1rem}",
     "#festHint small{display:block;color:#c4a4d6;margin:.12rem 0 .35rem}",
     "#festHint p{margin:0;font-family:Georgia,serif;line-height:1.5}",
     "#run #z369{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.7rem 0 .2rem}",
-    "#run #z369 button{border:1px solid rgba(232,160,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
+    "#run #z369 button{border:1px solid rgba(200,120,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
     "#run #z369 button span{display:block;font-size:.68rem;color:#c4a4d6;margin-top:.08rem}",
     "#home #z369{display:none!important}"
   ].join("");
@@ -720,8 +720,8 @@ try{
   var css=document.createElement("style");
   css.textContent=[
     "#zahlBox{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.45rem;margin:1.1rem 0 .4rem}",
-    "#zahl .zbtn{border:1px solid rgba(255,122,217,.22);background:rgba(28,14,48,.55);color:#f6f0ff;border-radius:1.15rem;padding:1.15rem .2rem .95rem;font:inherit}",
-    "#zahl .zbtn span{display:block;margin-top:.35rem;font-size:.72rem;color:#c4b4e0}",
+    "#zahl .zbtn{border:1px solid rgba(255,122,217,.22);background:rgba(28,14,48,.55);color:#eaf2ff;border-radius:1.15rem;padding:1.15rem .2rem .95rem;font:inherit}",
+    "#zahl .zbtn span{display:block;margin-top:.35rem;font-size:.72rem;color:#b4c6f2}",
     "#zahlMsg{text-align:center;min-height:1.2rem}"
   ].join("");
   document.head.appendChild(css);
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=64;
+  var BUILD=65;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=64").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=65").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
@@ -1078,9 +1078,9 @@ try{
 (function(){
   var s=document.createElement("style");
   s.textContent=[
-    "html,body{background:#070510;-webkit-tap-highlight-color:transparent}",
+    "html,body{background:#080320;-webkit-tap-highlight-color:transparent}",
     "body{-webkit-font-smoothing:antialiased}",
-    ".app{background:radial-gradient(120% 80% at 50% -8%,rgba(255,122,217,.13),transparent 50%),radial-gradient(90% 50% at 100% 0,rgba(126,200,255,.08),transparent 42%),#070510}",
+    ".app{background:radial-gradient(120% 80% at 50% -8%,rgba(255,122,217,.13),transparent 50%),radial-gradient(90% 50% at 100% 0,rgba(126,200,255,.08),transparent 42%),#080320}",
     "header{background:rgba(7,5,16,.86)!important;border-bottom:1px solid rgba(255,122,217,.14)}",
     ".brand{letter-spacing:.34em;color:#ff8adf;text-shadow:0 0 18px rgba(255,122,217,.35)}",
     ".doll{box-shadow:0 0 16px rgba(255,122,217,.22)}",
@@ -1096,15 +1096,15 @@ try{
     "#cats{gap:.4rem;margin:.62rem 0 .5rem}",
     ".chip{padding:.48rem .86rem;min-height:2.15rem;letter-spacing:.02em;transition:transform .12s ease,background .15s ease}",
     ".chip:active{transform:scale(.97)}",
-    "#cats .chip.on{background:linear-gradient(165deg,#ff7ad9,#7ef0e6)!important;color:#14081c!important;box-shadow:0 0 16px rgba(255,122,217,.28)}",
+    "#cats .chip.on{background:linear-gradient(165deg,#ff4fe0,#7ef0e6)!important;color:#14081c!important;box-shadow:0 0 16px rgba(255,122,217,.28)}",
     ".card{border-radius:1.2rem;padding:.82rem .88rem;transition:transform .12s ease,border-color .15s ease}",
     "#list .card:active{transform:scale(.99)}",
     "#list .card{border-color:rgba(255,122,217,.16)}",
-    ".group{letter-spacing:.2em;color:#ff9ae4;margin:1.05rem 0 .28rem}",
+    ".group{letter-spacing:.2em;color:#d6a6ff;margin:1.05rem 0 .28rem}",
     "#run .words{font-size:1.16rem;line-height:1.72}",
-    "#run .sub{display:block!important;text-align:left;letter-spacing:.12em;text-transform:uppercase;font-size:.68rem;color:#c4b4e0;margin:0 0 .25rem}",
+    "#run .sub{display:block!important;text-align:left;letter-spacing:.12em;text-transform:uppercase;font-size:.68rem;color:#b4c6f2;margin:0 0 .25rem}",
     "#run .pbar{display:block!important;height:3px;border-radius:99px;background:rgba(255,255,255,.08);margin:.1rem 0 .5rem;overflow:hidden}",
-    "#run .pbar:after{content:\"\";display:block;height:100%;width:var(--p,8%);background:linear-gradient(90deg,#ff7ad9,#7ef0e6)}",
+    "#run .pbar:after{content:\"\";display:block;height:100%;width:var(--p,8%);background:linear-gradient(90deg,#ff4fe0,#7ef0e6)}",
     ".kcard{background:linear-gradient(185deg,rgba(70,24,90,.7),rgba(12,8,28,.94));border:1px solid rgba(255,122,217,.22);border-radius:1.2rem;padding:1rem .95rem;margin:.5rem 0;text-align:center}",
     ".kcard b,.kcard small,.kcard .group{display:block}",
     "#sigilT{text-transform:uppercase}",
@@ -1195,7 +1195,7 @@ try{
   var css=document.createElement("style");
   css.textContent=[
     "#mondSag{margin:.15rem 0 .4rem;font-family:Georgia,serif;font-size:.95rem;line-height:1.4;color:#ead8ff}",
-    "#mondSag span{display:inline-block;margin-right:.45rem;letter-spacing:.16em;text-transform:uppercase;font-size:.62rem;font-family:system-ui,sans-serif;color:#ff7ad9;vertical-align:middle}"
+    "#mondSag span{display:inline-block;margin-right:.45rem;letter-spacing:.16em;text-transform:uppercase;font-size:.62rem;font-family:system-ui,sans-serif;color:#ff4fe0;vertical-align:middle}"
   ].join("");
   document.head.appendChild(css);
   paint();
@@ -1217,8 +1217,8 @@ try{
 (function(){
   var KEY="rr25_skizze";
   var ZKEY="rr25_tagesziel_v1";
-  var A='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="g3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#d4b8ee" stroke-width="2.4" filter="url(#g3)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#7ef0e6" stroke-width="2.6" filter="url(#g3)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#ff7ad9" stroke-width="2.4" filter="url(#g3)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="88" text-anchor="middle" font-size="22" fill="#f6eefe" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="88" text-anchor="middle" font-size="22" fill="#e8fff8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="88" text-anchor="middle" font-size="20" fill="#ffe6f6" font-family="Georgia,serif">Quelle</text><text class="sose" x="180" y="176" text-anchor="middle" font-size="19" font-style="italic" letter-spacing="5" fill="#cbb6ee" fill-opacity=".78" font-family="Georgia,serif">So sei es</text></svg>';
-  var B='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="gE" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#7ec8a0" stroke-width="2.4" filter="url(#gE)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#c0aad8" stroke-width="2.4" filter="url(#gE)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#e8c070" stroke-width="2.4" filter="url(#gE)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="84" text-anchor="middle" font-size="15" fill="#d8f0e4" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="84" text-anchor="middle" font-size="15" fill="#eee4f8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="84" text-anchor="middle" font-size="15" fill="#f8e8c0" font-family="Georgia,serif">Quelle</text><text class="sose" x="180" y="176" text-anchor="middle" font-size="19" font-style="italic" letter-spacing="5" fill="#cbb6ee" fill-opacity=".78" font-family="Georgia,serif">So sei es</text></svg>';
+  var A='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="g3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0526" stroke="#d4b8ee" stroke-width="2.4" filter="url(#g3)"/><circle cx="180" cy="78" r="42" fill="#0b0526" stroke="#7ef0e6" stroke-width="2.6" filter="url(#g3)"/><circle cx="292" cy="78" r="42" fill="#0b0526" stroke="#ff4fe0" stroke-width="2.4" filter="url(#g3)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="88" text-anchor="middle" font-size="22" fill="#f6eefe" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="88" text-anchor="middle" font-size="22" fill="#e8fff8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="88" text-anchor="middle" font-size="20" fill="#ffe6f6" font-family="Georgia,serif">Quelle</text><text class="sose" x="180" y="176" text-anchor="middle" font-size="19" font-style="italic" letter-spacing="5" fill="#cbb6ee" fill-opacity=".78" font-family="Georgia,serif">So sei es</text></svg>';
+  var B='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="gE" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0526" stroke="#7ec8a0" stroke-width="2.4" filter="url(#gE)"/><circle cx="180" cy="78" r="42" fill="#0b0526" stroke="#c0aad8" stroke-width="2.4" filter="url(#gE)"/><circle cx="292" cy="78" r="42" fill="#0b0526" stroke="#e8c070" stroke-width="2.4" filter="url(#gE)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="84" text-anchor="middle" font-size="15" fill="#d8f0e4" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="84" text-anchor="middle" font-size="15" fill="#eee4f8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="84" text-anchor="middle" font-size="15" fill="#f8e8c0" font-family="Georgia,serif">Quelle</text><text class="sose" x="180" y="176" text-anchor="middle" font-size="19" font-style="italic" letter-spacing="5" fill="#cbb6ee" fill-opacity=".78" font-family="Georgia,serif">So sei es</text></svg>';
   function today(){
     var n=new Date();
     return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
@@ -1308,9 +1308,9 @@ try{
   css.textContent=[
     "#skizze{display:block;margin:.35rem auto .55rem;width:100%;max-width:26rem;cursor:pointer}",
     "#skizze svg{display:block;width:100%;height:13.2rem}",
-    "#skizze .skZiel,#skizze .skForm{cursor:default;background:rgba(48,18,72,.7);border:1px solid rgba(126,200,255,.2);border-radius:1.15rem;padding:.62rem .8rem;margin:.05rem 0 0}",
-    "#skizze .skZiel small,#skizze .skForm small{display:block;letter-spacing:.14em;text-transform:uppercase;font-size:.58rem;color:#ff7ad9;margin:0 0 .2rem}",
-    "#skizze .skZiel b{display:block;font-family:Georgia,serif;font-weight:500;font-size:1.02rem;color:#f6f0ff}",
+    "#skizze .skZiel,#skizze .skForm{cursor:default;background:rgba(48,18,72,.7);border:1px solid rgba(150,170,255,.28);border-radius:1.15rem;padding:.62rem .8rem;margin:.05rem 0 0}",
+    "#skizze .skZiel small,#skizze .skForm small{display:block;letter-spacing:.14em;text-transform:uppercase;font-size:.58rem;color:#ff4fe0;margin:0 0 .2rem}",
+    "#skizze .skZiel b{display:block;font-family:Georgia,serif;font-weight:500;font-size:1.02rem;color:#eaf2ff}",
     "#skizze .skForm input{text-align:left;margin:.1rem 0 .35rem}",
     "#home:has(#cats .chip.on) #skizze{display:none!important}",
     "#skizze{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;touch-action:manipulation}",

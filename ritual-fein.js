@@ -130,7 +130,7 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    ".kHintLine{margin:.08rem 0 .22rem;text-align:center;color:#7ec8ff;letter-spacing:.12em;font-size:.62rem;text-transform:uppercase;min-height:.7rem}",
+    ".kHintLine{margin:.08rem 0 .22rem;text-align:center;color:#9fd0ff;letter-spacing:.12em;font-size:.62rem;text-transform:uppercase;min-height:.7rem}",
     "#logFilt{display:flex;gap:.35rem;margin:.15rem 0 .55rem;flex-wrap:wrap}",
     "#logFilt .log-soft{border-color:#2ecc71;color:#7dffb0}",
     "#logFilt .log-soft.on{background:rgba(46,204,113,.25);color:#b6ffd4}",
