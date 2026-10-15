@@ -1,4 +1,4 @@
-/* rr25 · Paket 4/7 · Build 59 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 4/7 · Build 60 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-fotos.js, ritual-gpic.js, ritual-kalender.js, ritual-start.js, ritual-buch.js, ritual-navlove.js, ritual-final.js, ritual-gabe-fix.js */
 /* ==== ritual-fotos.js ==== */
 try{
@@ -86,7 +86,7 @@ try{
       });
     }
     if(!rows.length){
-      box.innerHTML=q?"<p class='meta'>Nichts gefunden.</p>":"<p class='meta'>Noch leer.</p>";
+      box.innerHTML=q?"<p class='meta'>Nichts gefunden.</p>":"<p class='logLeer'>Noch nichts abgelegt. Dein erstes Ritual erscheint hier.</p>";
       return;
     }
     box.innerHTML=rows.map(function(e){
