@@ -1,4 +1,4 @@
-/* rr25 · Paket 1/7 · Build 59 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 1/7 · Build 60 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: doll.js, ritual-core.js, ritual-mondphase.js, ritual-zeit.js, rituals-v2.js */
 /* ==== doll.js ==== */
 try{
@@ -721,7 +721,13 @@ try{
   /* Build 51: alte IDs und Chronik-Titel bleiben lesbar */
   window.RR_ALT_ID={weg:'kreis'};
   window.RR_ALT_TITEL={'Schutz unterwegs':'kreis','Täglicher Schutzkreis':'kreis'};
-  window.RR_CATS=CATS;
+
+  /* Build 60: Anzeigename für alte Chronik-Titel (nur Anzeige, gespeicherte Daten bleiben): «Schutz unterwegs · Nagelhart» -> «Schutzkreis · kurz · Nagelhart» */
+  window.RR_ANZEIGE=function(t){
+    t=String(t==null?"":t); var A=window.RR_ALT_TITEL||{}, L=window.RR_RITUALS||[];
+    for(var k in A){ if(t===k||t.indexOf(k+" · ")===0){ for(var q=0;q<L.length;q++) if(L[q].id===A[k]) return L[q].t+t.slice(k.length); } }
+    return t;
+  };  window.RR_CATS=CATS;
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
