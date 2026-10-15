@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 59 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 60 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -161,7 +161,7 @@ try{
       var main=row.firstElementChild; if(!main) return;
       var b=$("b",main), meta=$(".meta",main), note=$("p",main), act=$(".logact",main);
       var top=document.createElement("div"); top.className="v3top";
-      if(b){ main.insertBefore(top,b); top.appendChild(b); }
+      if(b){ if(window.RR_ANZEIGE) b.textContent=window.RR_ANZEIGE(e.titel); main.insertBefore(top,b); top.appendChild(b); }
       var bd=badge(em[e.id]);
       if(bd) top.insertAdjacentHTML("beforeend",bd);
       if(meta){
