@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 70 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 71 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -910,7 +910,7 @@ try{
 /* ritual-b66.js — Build 66: fünf stille Ergänzungen. Alles nur Anzeige, nichts davon schreibt in den Speicher.
    1) Mondfarbe: kaum sichtbarer Farbhauch hinter dem Inhalt je Mondphase (Vollmond etwas heller, Neumond tiefer).
    2) «Aus dem Feld»: ein kurzer Satz pro Tag auf Heute (nach Berner Datum, immer derselbe am selben Tag).
-   3) Jahresrad (Build 68-70): ruhiges Rad mit Soft/Hard-Band, Mondmarkern und Finsternissen im Kalender mit Festkarten, Mondphase in der Mitte, Berner Datum.
+   3) Jahresrad (Build 68-71): ruhiges Rad mit Soft/Hard-Band, Mondmarkern und Finsternissen im Kalender mit Festkarten, Mondphase in der Mitte, Berner Datum.
    4) (Serien-Zeichen in Build 67 entfernt)
    5) Mini-Skizzen: kleine Neon-Zeichen auf den Ritual-Karten und im Kopf des Rituals.
    Die Zeichen-Kachel wird nicht berührt. Texte und Zeichnungen sind neu und gehören nur zu dieser App. */
@@ -1136,7 +1136,7 @@ try{
     iv.forEach(function(v){ var l=out.saison[out.saison.length-1]; if(l&&v.s<=l.e){ l.e=Math.max(l.e,v.e); } else out.saison.push({s:v.s,e:v.e}); });
     var cov=null; try{ cov=K&&K.coverage&&K.coverage(); }catch(x){}
     if(cov&&cov.from>Date.UTC(y,0,1)){ var cd=bern(cov.from); out.left.push("Rückläufigkeiten (Venus, Merkur, Mars) vor dem "+cd.d+"."+cd.m+"."+cd.y+", die Kalenderdaten beginnen später"); }
-    if(cov&&cov.to<Date.UTC(y+1,0,1)){ var ce=bern(cov.to-1); out.left.push("Rückläufigkeiten nach dem "+ce.d+"."+ce.m+"."+ce.y+", die Kalenderdaten enden früher"); }
+    if(cov&&cov.to<Date.UTC(y+1,0,1)-864e5){ var ce=bern(cov.to-1); out.left.push("Rückläufigkeiten nach dem "+ce.d+"."+ce.m+"."+ce.y+", die Kalenderdaten enden früher"); }
     if(!FINS_TAB[y]&&!out.eclipses.length) out.left.push("Finsternisse "+y+" (weder in den Kalenderdaten noch in der Tabelle)");
     return out;
   }
@@ -1147,16 +1147,17 @@ try{
     function ang(doy){ return doy/len*360; }
     function xy(a,r){ var q=a*Math.PI/180; return [C+r*Math.sin(q),C-r*Math.cos(q)]; }
     function arc(a0,a1,r){ var p0=xy(a0,r), p1=xy(a1,r); return "M"+p0[0].toFixed(1)+","+p0[1].toFixed(1)+" A"+r+","+r+" 0 "+((a1-a0)>180?1:0)+" 1 "+p1[0].toFixed(1)+","+p1[1].toFixed(1); }
-    box.innerHTML='<p class="jrH">Jahresrad '+y+'</p><div class="jrStage"></div>'+
+    box.setAttribute("data-y",y);
+    box.innerHTML='<p class="jrH">Jahresrad '+y+'</p><div class="jrStage"></div><div class="jrCard"></div>'+
       '<div class="jrLeg">'+
         '<div><b>Ton</b><span><i class="d" style="background:#5fe0a0"></i>Soft</span><span><i class="d" style="background:#ff5470"></i>Hard</span><span><i class="d" style="background:#b98cff"></i>Echo</span><span><i class="d" style="background:#ffb86b"></i>Grenze</span></div>'+
         '<div><b>Mond</b><span><i class="d mv"></i>Vollmond</span><span><i class="d mn"></i>Neumond</span></div>'+
-        '<div><b>Zeiten</b><span><i class="l"></i>Rückläufig</span><span><i class="r"></i>Finsternis</span><span><i class="s"></i>Finsternis-Saison</span></div>'+
-      '</div><div class="jrCard"></div><p class="jrNote"></p>';
+        '<div><b>Zeiten</b><span><i class="l"></i>Rückläufig</span><span><i class="r"></i>Finsternis</span><span><i class="s"></i>Finsternis-Saison</span><span><i class="h"></i>Heute</span></div>'+
+      '</div><p class="jrNote"></p>';
     var stage=box.querySelector(".jrStage"), card=box.querySelector(".jrCard"), note=box.querySelector(".jrNote");
     note.textContent="Soft ist hier alles ausserhalb der Hard-Zeiten. Hard: je 3 Tage um den Vollmond sowie Finsternisse, Venus rückläufig und die Finsternis-Saison laut Kalender. Dienstag (Mars) und Samstag (Saturn) als Einzeltage sind nicht eingezeichnet. "+
       (YD.tabUsed?"Finsternisdaten 2026 ergänzt nach NASA (grösste Phase, Berner Zeit). ":"")+(YD.left.length?"Fehlt: "+YD.left.join("; ")+". ":"")+"Festdaten ungefähr. Berner Zeit.";
-    var svg=el("svg",{viewBox:"0 0 "+W+" "+W,"class":"jrSvg","aria-hidden":"true"},stage);
+    var svg=el("svg",{viewBox:"0 24 "+W+" 368","class":"jrSvg","aria-hidden":"true"},stage);
     var defs=el("defs",{},svg);
     var g=el("filter",{id:"jrGlow",x:"-60%",y:"-60%",width:"220%",height:"220%"},defs); el("feGaussianBlur",{stdDeviation:"2.2",result:"b"},g);
     var mg=el("feMerge",{},g); el("feMergeNode",{"in":"b"},mg); el("feMergeNode",{"in":"SourceGraphic"},mg);
@@ -1227,7 +1228,7 @@ try{
     /* heute */
     var tone="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&TONF[S.kind]) tone=S.kind; }catch(e){}
     var tf=TONF[tone], ta=ang(t-y0), tm=el("g",{"class":"jrToday"},rot);
-    var tp=xy(0,R); el("circle",{cx:tp[0],cy:tp[1],r:"6","class":"jrPulse",fill:tf.c},tm); el("circle",{cx:tp[0],cy:tp[1],r:"3","class":"jrHeute",stroke:tf.c},tm);
+    var tp=xy(0,R); el("circle",{cx:tp[0],cy:tp[1],r:"7","class":"jrPulse",fill:tf.c},tm); el("circle",{cx:tp[0],cy:tp[1],r:"3.8","class":"jrHeute",stroke:tf.c},tm);
     el("path",{d:"M"+C+","+(C-LR-24)+" l-5,-8 h10z","class":"jrPtr"},svg);
     var M=null; try{ M=window.RR25_MOND&&window.RR25_MOND.day(Date.now()); }catch(e){}
     var mgrp=el("g",{transform:"translate("+C+","+C+")","class":"jrMoon"},svg);
@@ -1296,6 +1297,9 @@ try{
     svg.addEventListener("click",function(ev){
       if(moved){ moved=false; return; }
       var t=ev.target; if(!t||!t.getAttribute) return;
+      var onArc=t.getAttribute("data-x")!=null&&t.getAttribute("class")!=="jrHit", lim=onArc?15:24, bd=lim+1, bn=null;
+      [].forEach.call(svg.querySelectorAll(".jrHit"),function(n){ var r=n.getBoundingClientRect(), d=Math.hypot(ev.clientX-(r.left+r.width/2),ev.clientY-(r.top+r.height/2)); if(d<bd){ bd=d; bn=n; } });
+      if(bn&&bd<=lim) t=bn;
       if(t.getAttribute("data-i")!=null) pick(+t.getAttribute("data-i"),true);
       else if(t.getAttribute("data-x")!=null) showInfo(infos[+t.getAttribute("data-x")],true);
     });
@@ -1363,42 +1367,42 @@ try{
     "#jrBtn.on{box-shadow:0 0 14px var(--glow)}",
     "#jrPanel{margin:0 0 .8rem;padding:.8rem .7rem .9rem;overflow:hidden}",
     "#jrPanel[hidden]{display:none!important}",
-    ".jrH{margin:0 0 .2rem;text-align:center;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ueberschrift)}",
+    ".jrH{margin:0 0 .2rem;text-align:center;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ueberschrift)}",
     ".jrSvg{display:block;width:100%;max-width:27rem;margin:0 auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;cursor:grab}",
-    ".jrBase{fill:none;stroke:rgba(200,160,255,.16);stroke-width:1}",
+    ".jrBase{fill:none;stroke:rgba(200,160,255,.22);stroke-width:1}",
     ".jrTick{stroke:rgba(200,160,255,.45);stroke-width:1}",
-    ".jrMon{font-size:8.5px;fill:var(--dim);opacity:.75;letter-spacing:.04em}",
+    ".jrMon{font-size:10px;fill:var(--dim);opacity:.95;letter-spacing:.04em}",
     ".jrArc{fill:none;stroke-width:2.6;stroke-linecap:round;opacity:.7}",
     ".jrSoft{fill:none;stroke:#5fe0a0;stroke-width:5;opacity:.22;cursor:pointer}",
     ".jrHardArc{fill:none;stroke:#ff5470;stroke-width:5;stroke-linecap:butt;opacity:.9}",
     ".jrHit2{fill:none;stroke:transparent;stroke-width:13;cursor:pointer}",
     ".jrLane{fill:none;stroke-width:3;stroke-linecap:round;opacity:.8}",
-    ".jrSais{fill:none;stroke:#ff5470;stroke-width:4;stroke-linecap:round;opacity:.3}",
+    ".jrSais{fill:none;stroke:#ff5470;stroke-width:4;stroke-linecap:round;opacity:.42}",
     ".jrEcl{fill:#ff5470}",
     ".jrMv{fill:#fff3d8}.jrMn{fill:#0a0426;stroke:#cdb6ff;stroke-width:1.2}",
     ".jrNode{stroke:rgba(255,255,255,.5);stroke-width:1}",
     ".jrHalo{opacity:.14}.jrHalo.on{opacity:.34;animation:jrBeat 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}",
     ".jrHit{fill:transparent;cursor:pointer}",
-    ".jrLab{font-size:10.5px;fill:var(--dim);pointer-events:none}.jrLab.on{fill:var(--zahl);font-weight:600}",
+    ".jrLab{font-size:11.5px;fill:var(--dim);pointer-events:none}.jrLab.on{fill:var(--zahl);font-weight:600}",
     ".jrHeute{fill:#fff;stroke-width:1.5}.jrPulse{opacity:.5;animation:jrBeat 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}",
     ".jrPtr{fill:var(--ueberschrift)}",
-    ".jrMoonBg{fill:rgba(40,20,80,.7);stroke:rgba(200,160,255,.3);stroke-width:1}.jrMoonLit{fill:#f1e8ff}.jrMoonT{font-size:8.5px;fill:var(--dim);letter-spacing:.05em}.jrToneT{font-size:9px;letter-spacing:.05em;font-weight:600}",
+    ".jrMoonBg{fill:rgba(40,20,80,.7);stroke:rgba(200,160,255,.3);stroke-width:1}.jrMoonLit{fill:#f1e8ff}.jrMoonT{font-size:10px;fill:var(--dim);letter-spacing:.05em}.jrToneT{font-size:10.5px;letter-spacing:.05em;font-weight:600}",
     "@keyframes jrBeat{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.5);opacity:.12}}",
     "@media (prefers-reduced-motion:reduce){.jrHalo.on,.jrPulse{animation:none!important}}",
-    ".jrLeg{display:grid;gap:.25rem;margin:.35rem .2rem .1rem;font-size:.66rem;color:var(--dim)}",
-    ".jrLeg div{display:flex;flex-wrap:wrap;align-items:center;gap:.15rem .8rem}",
-    ".jrLeg b{flex:0 0 3.4rem;font-weight:500;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ueberschrift)}",
+    ".jrLeg{display:grid;gap:.3rem;margin:.7rem .2rem .1rem;font-size:.72rem;color:var(--dim)}",
+    ".jrLeg div{display:flex;flex-wrap:wrap;align-items:center;gap:.2rem .7rem}",
+    ".jrLeg b{flex:0 0 3.4rem;font-weight:500;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ueberschrift)}",
     ".jrLeg span{display:inline-flex;align-items:center;gap:.35rem}.jrLeg i{display:inline-block;flex:none}",
     ".jrLeg i.d{width:.55rem;height:.55rem;border-radius:50%}.jrLeg i.mv{background:#fff3d8}.jrLeg i.mn{background:#0a0426;border:1.2px solid #cdb6ff}",
-    ".jrLeg i.l{width:.9rem;height:3px;border-radius:2px;background:#ff5470}.jrLeg i.r{width:.5rem;height:.5rem;background:#ff5470;transform:rotate(45deg)}.jrLeg i.s{width:.9rem;height:4px;border-radius:2px;background:rgba(255,84,112,.35)}",
-    ".jrCard{margin:.6rem .1rem 0;padding:.7rem .85rem .75rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--jc,var(--ueberschrift));border-radius:.9rem;background:rgba(20,8,48,.5);text-align:left}",
+    ".jrLeg i.l{width:.9rem;height:3px;border-radius:2px;background:#ff5470}.jrLeg i.r{width:.5rem;height:.5rem;background:#ff5470;transform:rotate(45deg)}.jrLeg i.h{width:.55rem;height:.55rem;border-radius:50%;background:#fff;border:1.5px solid #5fe0a0;box-sizing:border-box}.jrLeg i.s{width:.9rem;height:4px;border-radius:2px;background:rgba(255,84,112,.5)}",
+    ".jrCard{margin:.5rem .1rem 0;min-height:6.2rem;padding:.7rem .85rem .75rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--jc,var(--ueberschrift));border-radius:.9rem;background:rgba(20,8,48,.5);text-align:left}",
     ".jrHd{display:flex;align-items:center;justify-content:space-between;gap:.6rem}",
     ".jrName{font-family:Georgia,serif;font-weight:400;font-size:1.1rem;color:var(--zahl)}",
-    ".jrSea{flex:none;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;padding:.12rem .5rem;border-radius:999px;border:1px solid var(--jc,var(--ueberschrift));color:var(--zahl)}",
-    ".jrWhen{display:block;font-size:.72rem;color:var(--ueberschrift);margin:.15rem 0 .4rem}",
-    ".jrT{margin:0;font-size:.8rem;line-height:1.45;color:var(--dim)}",
+    ".jrSea{flex:none;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;padding:.12rem .5rem;border-radius:999px;border:1px solid var(--jc,var(--ueberschrift));color:var(--zahl)}",
+    ".jrWhen{display:block;font-size:.78rem;color:var(--ueberschrift);margin:.15rem 0 .4rem}",
+    ".jrT{margin:0;font-size:.85rem;line-height:1.45;color:var(--dim)}",
     ".jrF{margin:.5rem 0 0;padding-top:.45rem;border-top:1px solid rgba(200,160,255,.15);font-family:Georgia,serif;font-style:italic;font-size:.84rem;line-height:1.35;color:var(--zahl)}.jrF small{display:block;font-family:system-ui,sans-serif;font-style:normal;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift);margin-bottom:.1rem}",
-    ".jrNote{margin:.6rem .1rem 0;font-size:.6rem;line-height:1.45;color:var(--dim);opacity:.8;text-align:left}",
+    ".jrNote{margin:.7rem .1rem 0;font-size:.68rem;line-height:1.5;color:var(--dim);opacity:.9;text-align:left}",
     ".rIc{width:1.35rem;height:1.35rem;flex:none;fill:none;stroke:var(--ueberschrift);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px var(--glow))}",
     "#list .rcard.hasIc,#pinDank.hasIc{padding-left:2.9rem!important}",
     "#list .rcard>.rIc,#pinDank>.rIc{position:absolute!important;left:.85rem;top:50%;transform:translateY(-50%)}",
@@ -1409,7 +1413,11 @@ try{
   document.head.appendChild(css);
 
   /* ---------- Verdrahtung ---------- */
-  function all(){ try{ moonTint(); paintSpruch(); mountRad(); decorate(); }catch(e){} }
+  function yearCheck(){
+    var p=document.getElementById("jrPanel");
+    if(p&&!p.hidden&&p.getAttribute("data-y")&&+p.getAttribute("data-y")!==bern().y){ if(JR){ JR.stop(); JR=null; } buildRad(p); }
+  }
+  function all(){ try{ moonTint(); paintSpruch(); mountRad(); decorate(); yearCheck(); }catch(e){} }
   if(typeof show==="function"&&!show._b66){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); setTimeout(all,120); return r; }; show._b66=1; }
   document.addEventListener("click",function(){ setTimeout(function(){ decorate(); },400); },true);
   document.addEventListener("visibilitychange",function(){ if(!document.hidden) all(); });
