@@ -314,5 +314,11 @@
   /* Build 51: alte IDs und Chronik-Titel bleiben lesbar */
   window.RR_ALT_ID={weg:'kreis'};
   window.RR_ALT_TITEL={'Schutz unterwegs':'kreis','Täglicher Schutzkreis':'kreis'};
-  window.RR_CATS=CATS;
+
+  /* Build 60: Anzeigename für alte Chronik-Titel (nur Anzeige, gespeicherte Daten bleiben): «Schutz unterwegs · Nagelhart» -> «Schutzkreis · kurz · Nagelhart» */
+  window.RR_ANZEIGE=function(t){
+    t=String(t==null?"":t); var A=window.RR_ALT_TITEL||{}, L=window.RR_RITUALS||[];
+    for(var k in A){ if(t===k||t.indexOf(k+" · ")===0){ for(var q=0;q<L.length;q++) if(L[q].id===A[k]) return L[q].t+t.slice(k.length); } }
+    return t;
+  };  window.RR_CATS=CATS;
 })();

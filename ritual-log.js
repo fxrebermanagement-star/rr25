@@ -27,7 +27,7 @@ function openLog(id){
   box.innerHTML=
     '<div class="card">'+
     '<p class="sub">'+esc(e.t)+'</p>'+
-    '<h2 style="font-family:Georgia,serif;font-weight:500;margin:.2rem 0">'+esc(e.titel)+'</h2>'+
+    '<h2 style="font-family:Georgia,serif;font-weight:500;margin:.2rem 0">'+esc(window.RR_ANZEIGE?window.RR_ANZEIGE(e.titel):e.titel)+'</h2>'+
     '<p class="sub">'+wesenTxt(e)+'</p>'+
     '<input id="logWer" placeholder="Name / Person X" value="'+escAttr(e.wer||"")+'">'+
     '<textarea id="logNote" placeholder="Kommentar">'+esc(e.note||"")+'</textarea>'+
@@ -55,10 +55,10 @@ function paintLog(){
   var rows=load().log||[];
   var box=document.getElementById("entries");
   if(!box) return;
-  if(!rows.length){ box.innerHTML="<p class='sub'>Noch leer.</p>"; return; }
+  if(!rows.length){ box.innerHTML="<p class='logLeer'>Noch nichts abgelegt. Dein erstes Ritual erscheint hier.</p>"; return; }
   box.innerHTML=rows.map(function(e){
     return '<div class="entry" data-eid="'+e.id+'">'+
-      '<b>'+esc(e.titel)+'</b>'+
+      '<b>'+esc(window.RR_ANZEIGE?window.RR_ANZEIGE(e.titel):e.titel)+'</b>'+
       '<div class="meta">'+esc(e.t)+'</div>'+
       '<div class="meta">'+esc(e.wer||"ohne Namen")+' \u00b7 '+wesenTxt(e)+'</div>'+
       (e.note?'<p style="margin:.35rem 0 0">'+esc(e.note)+'</p>':'')+

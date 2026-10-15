@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 59 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 60 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -107,7 +107,7 @@ function openLog(id){
   box.innerHTML=
     '<div class="card">'+
     '<p class="sub">'+esc(e.t)+'</p>'+
-    '<h2 style="font-family:Georgia,serif;font-weight:500;margin:.2rem 0">'+esc(e.titel)+'</h2>'+
+    '<h2 style="font-family:Georgia,serif;font-weight:500;margin:.2rem 0">'+esc(window.RR_ANZEIGE?window.RR_ANZEIGE(e.titel):e.titel)+'</h2>'+
     '<p class="sub">'+wesenTxt(e)+'</p>'+
     '<input id="logWer" placeholder="Name / Person X" value="'+escAttr(e.wer||"")+'">'+
     '<textarea id="logNote" placeholder="Kommentar">'+esc(e.note||"")+'</textarea>'+
@@ -135,10 +135,10 @@ function paintLog(){
   var rows=load().log||[];
   var box=document.getElementById("entries");
   if(!box) return;
-  if(!rows.length){ box.innerHTML="<p class='sub'>Noch leer.</p>"; return; }
+  if(!rows.length){ box.innerHTML="<p class='logLeer'>Noch nichts abgelegt. Dein erstes Ritual erscheint hier.</p>"; return; }
   box.innerHTML=rows.map(function(e){
     return '<div class="entry" data-eid="'+e.id+'">'+
-      '<b>'+esc(e.titel)+'</b>'+
+      '<b>'+esc(window.RR_ANZEIGE?window.RR_ANZEIGE(e.titel):e.titel)+'</b>'+
       '<div class="meta">'+esc(e.t)+'</div>'+
       '<div class="meta">'+esc(e.wer||"ohne Namen")+' \u00b7 '+wesenTxt(e)+'</div>'+
       (e.note?'<p style="margin:.35rem 0 0">'+esc(e.note)+'</p>':'')+
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=59;
+  var BUILD=60;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=59").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=60").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
@@ -1217,8 +1217,8 @@ try{
 (function(){
   var KEY="rr25_skizze";
   var ZKEY="rr25_tagesziel_v1";
-  var A='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="g3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#d4b8ee" stroke-width="2.4" filter="url(#g3)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#7ef0e6" stroke-width="2.6" filter="url(#g3)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#ff7ad9" stroke-width="2.4" filter="url(#g3)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="88" text-anchor="middle" font-size="22" fill="#f6eefe" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="88" text-anchor="middle" font-size="22" fill="#e8fff8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="88" text-anchor="middle" font-size="20" fill="#ffe6f6" font-family="Georgia,serif">Quelle</text><path d="M268 168 C 180 204, 180 204, 92 168" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/><polyline points="102,176 92,168 104,163" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/></svg>';
-  var B='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="gE" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#7ec8a0" stroke-width="2.4" filter="url(#gE)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#c0aad8" stroke-width="2.4" filter="url(#gE)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#e8c070" stroke-width="2.4" filter="url(#gE)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="84" text-anchor="middle" font-size="15" fill="#d8f0e4" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="84" text-anchor="middle" font-size="15" fill="#eee4f8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="84" text-anchor="middle" font-size="15" fill="#f8e8c0" font-family="Georgia,serif">Quelle</text><path d="M268 168 C 180 204, 180 204, 92 168" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/><polyline points="102,176 92,168 104,163" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/></svg>';
+  var A='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="g3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#d4b8ee" stroke-width="2.4" filter="url(#g3)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#7ef0e6" stroke-width="2.6" filter="url(#g3)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#ff7ad9" stroke-width="2.4" filter="url(#g3)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="88" text-anchor="middle" font-size="22" fill="#f6eefe" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="88" text-anchor="middle" font-size="22" fill="#e8fff8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="88" text-anchor="middle" font-size="20" fill="#ffe6f6" font-family="Georgia,serif">Quelle</text><text class="sose" x="180" y="176" text-anchor="middle" font-size="19" font-style="italic" letter-spacing="5" fill="#cbb6ee" fill-opacity=".78" font-family="Georgia,serif">So sei es</text></svg>';
+  var B='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="gE" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#7ec8a0" stroke-width="2.4" filter="url(#gE)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#c0aad8" stroke-width="2.4" filter="url(#gE)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#e8c070" stroke-width="2.4" filter="url(#gE)"/><text class="sy" x="68" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">❤️</text><text class="wd" x="68" y="84" text-anchor="middle" font-size="15" fill="#d8f0e4" font-family="Georgia,serif">Ich</text><text class="sy" x="180" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">🙏</text><text class="wd" x="180" y="84" text-anchor="middle" font-size="15" fill="#eee4f8" font-family="Georgia,serif">Spiel</text><text class="sy" x="292" y="92" text-anchor="middle" font-size="38" font-family="Apple Color Emoji,Noto Color Emoji,Segoe UI Emoji,sans-serif">👁</text><text class="wd" x="292" y="84" text-anchor="middle" font-size="15" fill="#f8e8c0" font-family="Georgia,serif">Quelle</text><text class="sose" x="180" y="176" text-anchor="middle" font-size="19" font-style="italic" letter-spacing="5" fill="#cbb6ee" fill-opacity=".78" font-family="Georgia,serif">So sei es</text></svg>';
   function today(){
     var n=new Date();
     return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
