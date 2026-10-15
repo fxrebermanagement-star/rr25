@@ -1,7 +1,7 @@
 /* Buch: kein Buchtext mehr in der App und im Repo. Knöpfe öffnen die privaten PDFs in Google Drive
-   (nur für den Besitzer sichtbar, wenn er angemeldet ist): «Mein Buch» und «Urbuch». Nur Links, nie Inhalte. */
+   (nur für den Besitzer sichtbar, wenn er angemeldet ist): «Ich · Spiel · Quelle · Mein Grimoire» (Entwurf 3, ersetzt das alte Taschenbuch) und «Urbuch». Nur Links, nie Inhalte. */
 (function(){
-  var OPEN="https://drive.google.com/file/d/1XMRksJwMBi4YyM0tpEfsa0-4BI9Z0Ass/view";
+  var OPEN="https://drive.google.com/file/d/1uHTr7oeDPbao8HCfc2cMrQxgT1X_kosD/view";
   var URBUCH="https://drive.google.com/file/d/1kDvCofm93JQVi1PJ4YR2iOdADWzt9Mhw/view?usp=drivesdk";
   function go(u){ window.open(u,"_blank","noopener"); }
   var css=document.createElement("style");
@@ -18,7 +18,7 @@
   paintBuch=function(){
     var page=document.getElementById("page");
     if(!page) return;
-    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Mein Buch öffnen</button><small>Privat · öffnet in Google Drive</small><button type="button" id="urbuchOpen">Urbuch öffnen</button><small>Privat · öffnet in Google Drive</small></div>';
+    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Ich · Spiel · Quelle · Mein Grimoire</button><small>privat, öffnet in deinem Drive</small><button type="button" id="urbuchOpen">Urbuch öffnen</button><small>Privat · öffnet in Google Drive</small></div>';
     document.getElementById("buchOpen").onclick=function(){ go(OPEN); };
     document.getElementById("urbuchOpen").onclick=function(){ go(URBUCH); };
   };
