@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 61 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 62 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=61;
+  var BUILD=62;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=61").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=62").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
@@ -1259,6 +1259,9 @@ try{
       draw(el, true);
     };
   }
+  /* Build 62: Worte-Zustand bleibt bis zum nächsten Antippen (kein Timer) und überlebt jedes Neuzeichnen */
+  var WORDS=false;
+  function applyWords(el){ var q=el&&el.querySelector("svg"); if(q) q.classList.toggle("w",WORDS); }
   function draw(el, force){
     if(!el) return;
     var z=locked();
@@ -1270,6 +1273,7 @@ try{
       el.innerHTML=svg+'<div class="skForm"><small>Tagesziel</small><input id="skZielT" maxlength="180" placeholder="Ein Satz für heute" autocomplete="off"><button type="button" class="btn primary" id="skZielGo">Setzen</button></div>';
       bindForm(el);
     }
+    applyWords(el);
   }
   function mount(){
     var home=document.getElementById("home");
@@ -1280,15 +1284,12 @@ try{
       el=document.createElement("div");
       el.id="skizze";
       if(list) home.insertBefore(el, list); else home.appendChild(el);
-      /* Build 58: Antippen zeigt kurz die Worte Ich / Spiel / Quelle statt der Symbole, nach 3 s oder beim nächsten Tippen zurück */
-      var wt=0;
+      /* Build 62: Antippen wechselt zwischen Symbolen und den Worten Ich / Spiel / Quelle; die Worte bleiben, bis erneut getippt wird */
       el.addEventListener("click", function(ev){
         if(ev.target.closest && (ev.target.closest(".skZiel")||ev.target.closest(".skForm"))) return;
         ev.stopPropagation(); ev.preventDefault();
-        var s=el.querySelector("svg"); if(!s) return;
-        clearTimeout(wt);
-        var on=s.classList.toggle("w");
-        if(on) wt=setTimeout(function(){ var q=el.querySelector("svg"); if(q) q.classList.remove("w"); },3000);
+        if(!el.querySelector("svg")) return;
+        WORDS=!WORDS; applyWords(el);
       });
       draw(el,true);
     }
@@ -1301,6 +1302,7 @@ try{
     if(!el.querySelector("svg")) draw(el,true);
     else if(locked() && el.querySelector("#skZielT")) draw(el,true);
     else if(!locked() && el.querySelector(".skZiel")) draw(el,true);
+    applyWords(el);
   }
   var css=document.createElement("style");
   css.textContent=[
