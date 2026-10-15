@@ -9,10 +9,10 @@
     "#buch .hero h2{margin-bottom:.4rem}",
     "#page.book{background:none!important;border:0!important;box-shadow:none!important;padding:.4rem 0 0!important}",
     "#buchGo{display:flex;flex-direction:column;align-items:center;gap:.55rem;margin:1.2rem 0 0}",
-    "#buchOpen{display:block;width:100%;min-height:3.3rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#ff7ad9,#b98cff 55%,#7ec8ff);box-shadow:0 0 22px rgba(201,155,255,.45),0 0 0 1px rgba(232,160,255,.55);cursor:pointer}",
+    "#buchOpen{display:block;width:100%;min-height:3.3rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#ff4fe0,#a66bff 55%,#9fd0ff);box-shadow:0 0 22px rgba(170,100,255,.45),0 0 0 1px rgba(200,120,255,.55);cursor:pointer}",
     "#buchOpen:active,#urbuchOpen:active{transform:scale(.98)}",
-    "#urbuchOpen{display:block;width:100%;min-height:3.3rem;margin-top:.9rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#b98cff,#ff7ad9 55%,#ffb3ec);box-shadow:0 0 22px rgba(201,155,255,.45),0 0 0 1px rgba(232,160,255,.55);cursor:pointer}",
-    "#buchGo small{font-size:.74rem;color:#c4b4e0;letter-spacing:.04em}"
+    "#urbuchOpen{display:block;width:100%;min-height:3.3rem;margin-top:.9rem;border:0;border-radius:999px;font:inherit;font-size:1rem;font-weight:650;letter-spacing:.02em;color:#14081c;background:linear-gradient(165deg,#a66bff,#ff4fe0 55%,#ffb3ec);box-shadow:0 0 22px rgba(170,100,255,.45),0 0 0 1px rgba(200,120,255,.55);cursor:pointer}",
+    "#buchGo small{font-size:.74rem;color:#b4c6f2;letter-spacing:.04em}"
   ].join("");
   document.head.appendChild(css);
   paintBuch=function(){

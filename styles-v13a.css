@@ -1,14 +1,14 @@
-:root{--bg:#090614;--elev:rgba(48,18,72,.7);--line:rgba(126,200,255,.2);--ink:#f6f0ff;--dim:#c4b4e0;--pink:#ff7ad9}
-*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#090614;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+:root{--bg:#0a0426;--elev:rgba(48,18,72,.7);--line:rgba(150,170,255,.28);--ink:#eaf2ff;--dim:#b4c6f2;--pink:#ff4fe0;--akzent:#ff4fe0;--ueberschrift:#d6a6ff;--zahl:#e4ecff;--glow:rgba(170,100,255,.45)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100dvh;background:#0a0426;color:var(--ink);font:15px/1.45 system-ui,sans-serif}
 .app{max-width:28rem;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column}
 header{padding:calc(.38rem + env(safe-area-inset-top)) .8rem .42rem;position:sticky;top:0;background:rgba(10,6,20,.8);backdrop-filter:blur(14px);z-index:5}
 #headRow{position:relative;min-height:54px}
 #moonWrap{position:absolute;left:0;top:0;text-align:center;width:4.4rem}
 #sunWrap{position:absolute;right:0;top:0;text-align:center;width:4.6rem}
 #moonSym,#sunSym{display:block;font-size:2.05rem;line-height:1}
-#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.6rem;color:#c4b4e0;line-height:1.25}
+#moonTxt,#sunTxt{display:block;margin-top:.22rem;font-size:.6rem;color:#b4c6f2;line-height:1.25}
 .doll{width:54px;height:54px;object-fit:cover;border-radius:17px;margin:0 auto;display:block;border:1px solid rgba(255,122,217,.55)}
-.brand{font-family:Georgia,serif;letter-spacing:.32em;font-size:.7rem;color:#ff7ad9;text-align:center;margin:.14rem 0 0}
+.brand{font-family:Georgia,serif;letter-spacing:.32em;font-size:.7rem;color:var(--akzent);text-align:center;margin:.14rem 0 0}
 .sub{display:none}
 nav{display:flex;flex-direction:column;gap:.16rem;padding:.32rem .2rem calc(.36rem + env(safe-area-inset-bottom));background:rgba(8,4,18,.75);border:1px solid var(--line)}
 nav .navR{display:grid;gap:.16rem}
@@ -31,10 +31,10 @@ input,textarea,select{width:100%;background:#140a22;border:1px solid var(--line)
 textarea{min-height:5.2rem}
 .row{display:flex;gap:.35rem;margin-top:.7rem}
 .btn{flex:1;border:0;border-radius:999px;padding:.62rem .4rem;font:inherit;font-size:.78rem;font-weight:650;min-height:2.4rem}
-.primary{background:linear-gradient(135deg,#ff7ad9,#7ec8ff);color:#14081c}
+.primary{background:linear-gradient(135deg,var(--akzent),#9fd0ff);color:#14081c}
 .ghost{background:var(--elev);color:var(--ink)}
 .chip{border:1px solid var(--line);background:var(--elev);color:var(--dim);border-radius:999px;padding:.42rem .72rem;font:inherit;font-size:.76rem;min-height:2.05rem}
-.chip.on{color:#14081c;background:linear-gradient(165deg,#ff7ad9,#7ef0e6);border-color:transparent}
+.chip.on{color:#14081c;background:linear-gradient(165deg,var(--akzent),#7ef0e6);border-color:transparent}
 .group{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--pink);margin:1.1rem 0 .3rem}
 .check{display:none}
 .msg{color:var(--pink);font-style:italic}
@@ -53,7 +53,7 @@ textarea{min-height:5.2rem}
 
 /* Untere Leiste ab dem ersten Bild fertig: dieselben Regeln wie ritual-nav, ritual-polish, ritual-navlove, ritual-more und design-v3,
    in gleicher Reihenfolge, mit «html» davor, damit spätere Zwischenstände der Skripte die Leiste nicht mehr umbauen. */
-html nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(232,160,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}
+html nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(200,120,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}
 html nav .navR{display:grid;gap:.18rem}
 html nav .navR:first-child{grid-template-columns:repeat(4,1fr)}
 html nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 8%}
@@ -72,7 +72,7 @@ html nav .navR{gap:.28rem!important}
 html nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}
 html nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}
 html nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
-html nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#ff9ae4}
+html nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:var(--ueberschrift)}
 html nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}
 html nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}
 html nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}
