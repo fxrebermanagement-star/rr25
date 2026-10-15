@@ -157,7 +157,7 @@
       var main=row.firstElementChild; if(!main) return;
       var b=$("b",main), meta=$(".meta",main), note=$("p",main), act=$(".logact",main);
       var top=document.createElement("div"); top.className="v3top";
-      if(b){ main.insertBefore(top,b); top.appendChild(b); }
+      if(b){ if(window.RR_ANZEIGE) b.textContent=window.RR_ANZEIGE(e.titel); main.insertBefore(top,b); top.appendChild(b); }
       var bd=badge(em[e.id]);
       if(bd) top.insertAdjacentHTML("beforeend",bd);
       if(meta){

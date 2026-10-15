@@ -27,10 +27,10 @@
   }
   function daytime(ms){ var hr=new Date(ms).getHours(); return hr>=5&&hr<11?"Morgen":hr<17&&hr>=11?"Tag":hr>=17&&hr<22?"Abend":"Nacht"; }
   function stats(y,m){
-    var T=tags(), S={n:0,ton:{soft:0,grenze:0,hard:0,feld:0,grau:0},mond:{Neumond:0,Zunehmend:0,Vollmond:0,Abnehmend:0},zeit:{Morgen:0,Tag:0,Abend:0,Nacht:0},Wirkung:0,Echo:0,echoAnt:0};
+    var T=tags(), S={n:0,rit:0,ziel:0,ton:{soft:0,grenze:0,hard:0,feld:0,grau:0},mond:{Neumond:0,Zunehmend:0,Vollmond:0,Abnehmend:0},zeit:{Morgen:0,Tag:0,Abend:0,Nacht:0},Wirkung:0,Echo:0,echoAnt:0};
     rows().forEach(function(e){
       var ms=when(e); if(ms==null) return; var d=new Date(ms); if(d.getFullYear()!==y||d.getMonth()!==m) return;
-      S.n++; S.ton[tone(e)]=(S.ton[tone(e)]||0)+1;
+      S.n++; if(String(e.titel||'')==='Tagesziel') S.ziel++; else if(window.RR25_ZAEHLREGEL&&window.RR25_ZAEHLREGEL.isRitual(e)) S.rit++; S.ton[tone(e)]=(S.ton[tone(e)]||0)+1;
       var mo=moon(ms); if(mo) S.mond[mo]++;
       S.zeit[daytime(ms)]++;
       (T[String(e.id)]||[]).forEach(function(t){ if(t in S) S[t]++; });
@@ -49,7 +49,8 @@
     if(!S.n) return "In diesem Monat noch nichts in der Chronik.";
     var best=Object.keys(S.ton).sort(function(a,b){ return S.ton[b]-S.ton[a]; })[0];
     var LAB={soft:"Soft",grenze:"Grenze",hard:"Hard",feld:"Feld",grau:"Grau"};
-    return S.n+(S.n===1?" Eintrag":" Einträge")+". Am meisten "+LAB[best]+(S.Wirkung?", "+S.Wirkung+"× Wirkung gespürt":"")+".";
+    var rest=S.n-S.rit-S.ziel;
+    return S.n+(S.n===1?" Eintrag":" Einträge")+": "+S.rit+(S.rit===1?" Ritual":" Rituale")+", "+S.ziel+(S.ziel===1?" Tagesziel":" Tagesziele")+(rest>0?", "+rest+" weitere":"")+". Am meisten "+LAB[best]+(S.Wirkung?", "+S.Wirkung+"× Wirkung gespürt":"")+".";
   }
   function panel(){
     var now=new Date(); if(!MON) MON={y:now.getFullYear(),m:now.getMonth()};
@@ -58,7 +59,7 @@
     var fut=MON.y>now.getFullYear()||(MON.y===now.getFullYear()&&MON.m>=now.getMonth());
     return '<div class="rbHead"><button type="button" class="rbNav" data-d="-1" aria-label="Monat zurück">‹</button><b>'+MN[MON.m]+' '+MON.y+'</b><button type="button" class="rbNav" data-d="1" aria-label="Monat vor"'+(fut?' disabled':'')+'>›</button></div>'+
       '<p class="rbSay">'+h(sentence(S))+'</p>'+
-      '<p class="rbH">Ton</p>'+bars(S.ton,true,LAB)+
+      '<p class="rbH">Ton · alle Einträge</p>'+bars(S.ton,true,LAB)+
       '<p class="rbH">Mondphase</p>'+bars(S.mond)+
       '<p class="rbH">Tageszeit</p>'+bars(S.zeit)+
       '<p class="rbH">Merker</p><div class="rbPills"><span class="rbP on">Wirkung <b>'+S.Wirkung+'</b></span><span class="rbP on">Echo <b>'+S.Echo+'</b></span><span class="rbP">Echo-Tage beantwortet <b>'+S.echoAnt+'</b></span></div>'+

@@ -82,7 +82,7 @@
       });
     }
     if(!rows.length){
-      box.innerHTML=q?"<p class='meta'>Nichts gefunden.</p>":"<p class='meta'>Noch leer.</p>";
+      box.innerHTML=q?"<p class='meta'>Nichts gefunden.</p>":"<p class='logLeer'>Noch nichts abgelegt. Dein erstes Ritual erscheint hier.</p>";
       return;
     }
     box.innerHTML=rows.map(function(e){
