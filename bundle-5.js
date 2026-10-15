@@ -1,4 +1,4 @@
-/* rr25 · Paket 5/7 · Build 53 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 5/7 · Build 54 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-plan.js, ritual-hold.js, ritual-cam.js, ritual-sigil-save.js, ritual-more.js, ritual-fein.js, ritual-check.js, ritual-ui-v2.js, ritual-v3.js */
 /* ==== ritual-plan.js ==== */
 try{
@@ -612,6 +612,9 @@ try{
     "#sigHint{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;text-align:center;padding:.8rem;pointer-events:none;color:#9ee8e0;font-size:.74rem;line-height:1.35}",
     "#sigHint b{font-size:1.6rem;font-weight:400;color:#7ef0e6;text-shadow:0 0 12px rgba(126,240,230,.55)}",
     "#sigHint[hidden]{display:none}",
+    "#sigHint b{letter-spacing:.12em}",
+    "#sigPress{position:absolute;left:50%;bottom:.7rem;transform:translateX(-50%);padding:.35rem .8rem;border-radius:99px;background:rgba(20,10,34,.82);border:1px solid rgba(201,155,255,.5);color:#f1e6ff;font-size:.8rem;letter-spacing:.06em;white-space:nowrap;pointer-events:none;box-shadow:0 0 14px rgba(160,100,255,.45);opacity:0;transition:opacity .2s}",
+    "#sigPress.on{opacity:1}",
     ".bakBar .btn{min-height:2rem;font-size:.72rem;font-weight:500}"
   ].join("");
   document.head.appendChild(css);
@@ -625,11 +628,21 @@ try{
     var el=document.getElementById("sigHint");
     if(!el){
       el=document.createElement("div"); el.id="sigHint";
-      el.innerHTML="<b>✽</b><span>Absicht eintippen,<br>dann «Zeichen».</span>";
+      el.innerHTML="<b>❤️ 🙏 👁</b><span>Absicht eintippen,<br>dann «Zeichen».</span>";
       box.appendChild(el);
     }
     el.hidden=!empty();
   }
+  /* Antippen der Kachel: kurz «Ich · Spiel · Quelle» */
+  var pressT=0;
+  document.addEventListener("click",function(e){
+    var box=document.getElementById("sigilBox");
+    if(box && e.target && e.target.closest && e.target.closest("#sigilBox")){
+      var pr=document.getElementById("sigPress");
+      if(!pr){ pr=document.createElement("div"); pr.id="sigPress"; pr.setAttribute("aria-live","polite"); pr.textContent="Ich · Spiel · Quelle"; box.appendChild(pr); }
+      pr.classList.add("on"); clearTimeout(pressT); pressT=setTimeout(function(){ pr.classList.remove("on"); },2400);
+    }
+  });
   document.addEventListener("click",function(e){
     if(e.target && e.target.closest && e.target.closest("#sigilGo,#sigilSave,[data-go=sigilGo]")) setTimeout(paint,120);
   });
