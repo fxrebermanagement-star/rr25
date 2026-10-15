@@ -1,7 +1,7 @@
 /* ritual-b66.js — Build 66: fünf stille Ergänzungen. Alles nur Anzeige, nichts davon schreibt in den Speicher.
    1) Mondfarbe: kaum sichtbarer Farbhauch hinter dem Inhalt je Mondphase (Vollmond etwas heller, Neumond tiefer).
    2) «Aus dem Feld»: ein kurzer Satz pro Tag auf Heute (nach Berner Datum, immer derselbe am selben Tag).
-   3) Jahresrad (Build 68/69): lebendiges Rad mit Soft/Hard-Band und Mondmarkern im Kalender mit Festkarten, Mondphase in der Mitte, Berner Datum.
+   3) Jahresrad (Build 68-70): ruhiges Rad mit Soft/Hard-Band, Mondmarkern und Finsternissen im Kalender mit Festkarten, Mondphase in der Mitte, Berner Datum.
    4) (Serien-Zeichen in Build 67 entfernt)
    5) Mini-Skizzen: kleine Neon-Zeichen auf den Ritual-Karten und im Kopf des Rituals.
    Die Zeichen-Kachel wird nicht berührt. Texte und Zeichnungen sind neu und gehören nur zu dieser App. */
@@ -158,7 +158,7 @@
     var o=wax?1:0, t=wax?(k>0?0:1):(k>0?1:0);
     return "M0,"+(-r)+" A"+r+","+r+" 0 0 "+o+" 0,"+r+" A"+rx.toFixed(2)+","+r+" 0 0 "+t+" 0,"+(-r)+"Z";
   }
-  /* Build 69: Soft/Hard-Band, Mondmarker und Zeiträume aus den vorhandenen Kalenderdaten (RR25_KAL, RR25_MOND) */
+  /* Build 69/70: Soft/Hard-Band, Mondmarker, Zeiträume und Finsternisse aus den vorhandenen Kalenderdaten (RR25_KAL, RR25_MOND) */
   var TONF={HARD:{c:"#ff5470",n:"Hard"},GRENZE:{c:"#ffb86b",n:"Grenze"},ECHO:{c:"#b98cff",n:"Echo"},STILL:{c:"#9a96a8",n:"Still"},SOFT:{c:"#5fe0a0",n:"Soft"}};
   var GRUND={
     "Venus rückläufig":"Venus läuft scheinbar rückwärts. Im Kalender als Hard-Zeitraum geführt.",
@@ -167,14 +167,21 @@
     "Rauhnächte":"Die Zeit zwischen den Jahren. Im Kalender als Still-Zeitraum geführt.",
     "Finsternis":"Sonnen- oder Mondfinsternis. Im Kalender als Hard-Tag geführt."
   };
-  function dstr(n){ var d=new Date(n*86400000); return WT2[d.getUTCDay()]+" "+d.getUTCDate()+"."+(d.getUTCMonth()+1)+"."; }
+  /* Finsternisse 2026 (NASA Five Millennium Catalog, grösste Phase in UT; hier in Berner Zeit angezeigt). Nur als Ergänzung, falls die Kalenderdaten das Jahr nicht abdecken. */
+  var FINS_TAB={2026:[
+    {t:Date.UTC(2026,1,17,12,12),art:"Ringförmige Sonnenfinsternis",sonne:1,sicht:"In Europa nicht sichtbar (Antarktis, Südspitze Südamerikas, südliches Afrika)."},
+    {t:Date.UTC(2026,2,3,11,34),art:"Totale Mondfinsternis",sonne:0,sicht:"In Europa nicht sichtbar (Amerikas, Asien, Pazifik)."},
+    {t:Date.UTC(2026,7,12,17,46),art:"Totale Sonnenfinsternis",sonne:1,sicht:"Total in Island und Spanien, in weiten Teilen Europas teilweise sichtbar."},
+    {t:Date.UTC(2026,7,28,4,13),art:"Teilweise Mondfinsternis",sonne:0,sicht:""}
+  ]};
   var WT2=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  function dstr(n){ var d=new Date(n*86400000); return WT2[d.getUTCDay()]+" "+d.getUTCDate()+"."+(d.getUTCMonth()+1)+"."; }
   function zeitBern(ms){
     try{ return new Intl.DateTimeFormat("de-CH",{timeZone:"Europe/Zurich",hour:"2-digit",minute:"2-digit"}).format(new Date(ms)); }catch(e){ var d=new Date(ms); return d.getHours()+":"+String(d.getMinutes()).padStart(2,"0"); }
   }
   function dayFromStr(s){ var p=String(s).slice(0,10).split("-"); return dn(+p[0],+p[1],+p[2]); }
   function yearData(y,y0,len){
-    var out={moons:[],hard:[],lanes:[],eclipses:[],left:[]}, M=window.RR25_MOND, K=window.RR25_KAL;
+    var out={moons:[],hard:[],lanes:[],eclipses:[],saison:[],left:[],tabUsed:false}, M=window.RR25_MOND, K=window.RR25_KAL;
     if(M&&M.events){
       var a=Date.UTC(y,0,1)-2*86400000, b=Date.UTC(y+1,0,1)+2*86400000;
       M.events(a,b).forEach(function(e){
@@ -196,103 +203,138 @@
       lanesEnd[lane]=le;
       out.lanes.push({s:ls,e:le,rs:s,re:en,k:k,lane:lane,sz:e.sz,t:e.t});
     });
+    /* Finsternisse: erst Kalenderdaten, dann die Tabelle für fehlende */
     ev.filter(function(e){ return /Finsternis/.test(e.t)&&/HARD/.test(e.t)&&String(e.start).length<=10; }).forEach(function(e){
       var s=dayFromStr(e.start); if(s<y0||s>=y0+len) return;
-      out.eclipses.push({d:s,t:e.t});
+      var sonne=/Sonne/.test(e.t);
+      out.eclipses.push({d:s,sonne:sonne,art:sonne?"Sonnenfinsternis":"Mondfinsternis",src:"kal"});
     });
+    (FINS_TAB[y]||[]).forEach(function(f){
+      var bd=bern(f.t), dd=dn(bd.y,bd.m,bd.d), dup=out.eclipses.some(function(x){ return Math.abs(x.d-dd)<=1&&x.sonne===!!f.sonne; });
+      if(dup) return; out.tabUsed=true;
+      out.eclipses.push({d:dd,t:f.t,sonne:!!f.sonne,art:f.art,sicht:f.sicht,src:"tab"});
+    });
+    out.eclipses.sort(function(p,q){ return p.d-q.d; });
+    /* Finsternis-Saison: Datei-Bänder, sonst etwa 2 Wochen vor und nach jeder Finsternis, überlappende zusammengefasst */
+    var fileSeas=[];
+    ev.filter(function(e){ return /^FINSTERNIS/i.test(e.t); }).forEach(function(e){ var s=dayFromStr(e.start), en=e.end?dayFromStr(e.end):s+1; if(en>y0&&s<y0+len) fileSeas.push({s:s,e:en}); });
+    var iv=fileSeas.slice();
+    out.eclipses.forEach(function(x){
+      if(fileSeas.some(function(f){ return x.d>=f.s&&x.d<f.e; })) return;
+      iv.push({s:x.d-14,e:x.d+15});
+    });
+    iv.sort(function(p,q){ return p.s-q.s; });
+    iv.forEach(function(v){ var l=out.saison[out.saison.length-1]; if(l&&v.s<=l.e){ l.e=Math.max(l.e,v.e); } else out.saison.push({s:v.s,e:v.e}); });
     var cov=null; try{ cov=K&&K.coverage&&K.coverage(); }catch(x){}
-    if(cov&&cov.from>Date.UTC(y,0,1)+0) { var cd=bern(cov.from); out.left.push("Rückläufigkeiten und Finsternisse vor dem "+cd.d+"."+cd.m+"."+cd.y+" (nicht in den Kalenderdaten)"); }
-    if(cov&&cov.to<Date.UTC(y+1,0,1)) { var ce=bern(cov.to-1); out.left.push("Rückläufigkeiten und Finsternisse nach dem "+ce.d+"."+ce.m+"."+ce.y+" (nicht in den Kalenderdaten)"); }
+    if(cov&&cov.from>Date.UTC(y,0,1)){ var cd=bern(cov.from); out.left.push("Rückläufigkeiten (Venus, Merkur, Mars) vor dem "+cd.d+"."+cd.m+"."+cd.y+", die Kalenderdaten beginnen später"); }
+    if(cov&&cov.to<Date.UTC(y+1,0,1)){ var ce=bern(cov.to-1); out.left.push("Rückläufigkeiten nach dem "+ce.d+"."+ce.m+"."+ce.y+", die Kalenderdaten enden früher"); }
+    if(!FINS_TAB[y]&&!out.eclipses.length) out.left.push("Finsternisse "+y+" (weder in den Kalenderdaten noch in der Tabelle)");
     return out;
   }
+  var MON3=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
   function buildRad(box){
-    var b=bern(), y=b.y, t=dn(b.y,b.m,b.d), y0=dn(y,1,1), len=dn(y+1,1,1)-y0, nx=nextFest(), W=430, C=215, R=108, LR=148;
+    var b=bern(), y=b.y, t=dn(b.y,b.m,b.d), y0=dn(y,1,1), len=dn(y+1,1,1)-y0, nx=nextFest(), W=440, C=220, R=130, LR=152;
     var YD=yearData(y,y0,len);
     function ang(doy){ return doy/len*360; }
     function xy(a,r){ var q=a*Math.PI/180; return [C+r*Math.sin(q),C-r*Math.cos(q)]; }
     function arc(a0,a1,r){ var p0=xy(a0,r), p1=xy(a1,r); return "M"+p0[0].toFixed(1)+","+p0[1].toFixed(1)+" A"+r+","+r+" 0 "+((a1-a0)>180?1:0)+" 1 "+p1[0].toFixed(1)+","+p1[1].toFixed(1); }
-    box.innerHTML='<p class="jrH">Jahresrad</p><div class="jrStage"></div>'+
-      '<div class="jrLeg"><span><i style="background:#5fe0a0"></i>Soft grün</span><span><i style="background:#ff5470"></i>Hard rot</span><span><i class="mv"></i>Vollmond</span><span><i class="mn"></i>Neumond</span></div>'+
-      '<div class="jrCard"></div><p class="jrNote"></p>';
+    box.innerHTML='<p class="jrH">Jahresrad '+y+'</p><div class="jrStage"></div>'+
+      '<div class="jrLeg">'+
+        '<div><b>Ton</b><span><i class="d" style="background:#5fe0a0"></i>Soft</span><span><i class="d" style="background:#ff5470"></i>Hard</span><span><i class="d" style="background:#b98cff"></i>Echo</span><span><i class="d" style="background:#ffb86b"></i>Grenze</span></div>'+
+        '<div><b>Mond</b><span><i class="d mv"></i>Vollmond</span><span><i class="d mn"></i>Neumond</span></div>'+
+        '<div><b>Zeiten</b><span><i class="l"></i>Rückläufig</span><span><i class="r"></i>Finsternis</span><span><i class="s"></i>Finsternis-Saison</span></div>'+
+      '</div><div class="jrCard"></div><p class="jrNote"></p>';
     var stage=box.querySelector(".jrStage"), card=box.querySelector(".jrCard"), note=box.querySelector(".jrNote");
-    note.textContent="Soft ist hier alles ausserhalb der Hard-Zeiten. Hard: je 3 Tage um den Vollmond, Rückläufigkeiten und Finsternisse aus den Kalenderdaten. Dienstag (Mars) und Samstag (Saturn) als Einzeltage sind nicht eingezeichnet."+(YD.left.length?" Weggelassen: "+YD.left.join("; ")+".":"")+" Daten der Feste ungefähr. Berner Zeit.";
+    note.textContent="Soft ist hier alles ausserhalb der Hard-Zeiten. Hard: je 3 Tage um den Vollmond sowie Finsternisse, Venus rückläufig und die Finsternis-Saison laut Kalender. Dienstag (Mars) und Samstag (Saturn) als Einzeltage sind nicht eingezeichnet. "+
+      (YD.tabUsed?"Finsternisdaten 2026 ergänzt nach NASA (grösste Phase, Berner Zeit). ":"")+(YD.left.length?"Fehlt: "+YD.left.join("; ")+". ":"")+"Festdaten ungefähr. Berner Zeit.";
     var svg=el("svg",{viewBox:"0 0 "+W+" "+W,"class":"jrSvg","aria-hidden":"true"},stage);
     var defs=el("defs",{},svg);
-    var g=el("filter",{id:"jrGlow",x:"-60%",y:"-60%",width:"220%",height:"220%"},defs); el("feGaussianBlur",{stdDeviation:"3.2",result:"b"},g);
+    var g=el("filter",{id:"jrGlow",x:"-60%",y:"-60%",width:"220%",height:"220%"},defs); el("feGaussianBlur",{stdDeviation:"2.2",result:"b"},g);
     var mg=el("feMerge",{},g); el("feMergeNode",{"in":"b"},mg); el("feMergeNode",{"in":"SourceGraphic"},mg);
-    var sp=el("g",{"class":"jrSpark"},svg), seed=7, rn=function(){ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; };
-    for(var i=0;i<16;i++){ var c=el("circle",{cx:(8+rn()*(W-16)).toFixed(1),cy:(8+rn()*(W-16)).toFixed(1),r:(0.5+rn()*1.1).toFixed(2),"class":"jrTw"},sp); c.style.animationDelay=(rn()*4).toFixed(2)+"s"; c.style.animationDuration=(2.4+rn()*3).toFixed(2)+"s"; }
-    var shoot=el("line",{x1:"0",y1:"0",x2:"-46",y2:"-18","class":"jrShoot",opacity:"0"},svg);
     var rot=el("g",{"class":"jrRot"},svg);
     var infos=[];
     function info(o){ infos.push(o); return infos.length-1; }
-    /* Saisonring */
-    var seas=[["Samhain","Imbolc","#7d6bff"],["Imbolc","Beltane","#d98cff"],["Beltane","Lughnasadh","#ffd27a"],["Lughnasadh","Samhain","#ff9ec0"]];
+    /* Ringe: gleichmässige Abstände (130 Feste, 116 Mond, 90 Soft/Hard, 78/71/64 Zeiträume, 54 Finsternis) */
+    [130,90,54].forEach(function(r){ el("circle",{cx:C,cy:C,r:r,"class":"jrBase"},rot); });
+    /* Monate: feine Teilstriche auf dem Festring, Namen auf r=104 */
+    var mon=[];
+    for(var m=1;m<=12;m++){
+      var s0=dn(y,m,1)-y0, s1=dn(y,m+1,1)-y0, a0=ang(s0), a1=ang(s1), p=xy(a0,R-3), q=xy(a0,R+3);
+      el("line",{x1:p[0].toFixed(1),y1:p[1].toFixed(1),x2:q[0].toFixed(1),y2:q[1].toFixed(1),"class":"jrTick"},rot);
+      var tx=el("text",{"class":"jrMon","text-anchor":"middle"},svg); tx.textContent=MON3[m-1];
+      mon.push({a:(a0+a1)/2,tx:tx});
+    }
+    var seas=[["Samhain","Imbolc","#7d6bff"],["Imbolc","Beltane","#c590ff"],["Beltane","Lughnasadh","#e8c46a"],["Lughnasadh","Samhain","#e89ab4"]];
     function fa(n){ for(var i=0;i<FEST.length;i++) if(FEST[i].n===n){ var f=FEST[i]; return ang(dn(y,f.m,f.d)-y0); } }
     seas.forEach(function(s){
       var a0=fa(s[0]), a1=fa(s[1]); if(a1<=a0) a1+=360;
-      el("path",{d:arc(a0+1.5,a1-1.5,R),"class":"jrArc",stroke:s[2]},rot);
+      el("path",{d:arc(a0+1.2,a1-1.2,R),"class":"jrArc",stroke:s[2]},rot);
     });
-    /* Soft/Hard-Band innen (r=92): Soft durchgehend, Hard-Phasen um jeden Vollmond darüber */
-    var soft=el("circle",{cx:C,cy:C,r:92,"class":"jrSoft"},rot);
-    var softId=info({title:"Soft",when:"übriges Jahr",tag:"Soft",c:TONF.SOFT.c,text:"Ausserhalb der eingezeichneten Hard-Zeiten ist Soft. Weiche Arbeit trägt."});
-    soft.setAttribute("data-x",softId);
+    /* Soft/Hard */
+    var soft=el("circle",{cx:C,cy:C,r:90,"class":"jrSoft","data-x":info({title:"Soft",when:"übriges Jahr",tag:"Soft",c:TONF.SOFT.c,text:"Ausserhalb der eingezeichneten Hard-Zeiten ist Soft. Weiche Arbeit trägt."})},rot);
     YD.hard.forEach(function(h){
-      var a0=ang(h.s-y0), a1=ang(h.e-y0);
-      var p=el("path",{d:arc(a0,a1,92),"class":"jrHardArc"},rot);
+      var a0=ang(h.s-y0), a1=ang(h.e-y0), d=arc(a0,a1,90);
       var id=info({title:"Hard-Phase",when:dstr(h.s)+" bis "+dstr(h.e-1)+" · 3 Tage",tag:"Hard",c:TONF.HARD.c,
         text:"Rund um den Vollmond ("+dstr(h.d)+" um "+zeitBern(h.full)+" Uhr, Berner Zeit): Ladung am stärksten. Jeden Abend Rückkehr · Anker."});
-      p.setAttribute("data-x",id);
-      var hp=el("path",{d:arc(a0,a1,92),"class":"jrHit2","data-x":id},rot);
+      el("path",{d:d,"class":"jrHardArc"},rot); el("path",{d:d,"class":"jrHit2","data-x":id},rot);
     });
-    /* Zeiträume (rückläufig, Rauhnächte) auf eigenen Spuren */
+    /* Zeiträume */
     YD.lanes.forEach(function(l){
-      var r=80-6*l.lane, f=TONF[l.k]||TONF.SOFT, a0=ang(l.s-y0), a1=ang(l.e-y0); if(a1-a0<1.2) a1=a0+1.2;
+      var r=78-7*l.lane, f=TONF[l.k]||TONF.SOFT, a0=ang(l.s-y0), a1=ang(l.e-y0); if(a1-a0<1.2) a1=a0+1.2;
       var id=info({title:l.sz,when:dstr(l.rs)+" bis "+dstr(l.re-1),tag:f.n,c:f.c,text:GRUND[l.sz]});
       el("path",{d:arc(a0,a1,r),"class":"jrLane",stroke:f.c},rot);
       el("path",{d:arc(a0,a1,r),"class":"jrHit2","data-x":id},rot);
     });
-    YD.eclipses.forEach(function(e){
-      var p=xy(ang(e.d-y0),70), id=info({title:/Sonne/.test(e.t)?"Sonnenfinsternis":"Mondfinsternis",when:dstr(e.d),tag:"Hard",c:TONF.HARD.c,text:GRUND.Finsternis});
-      el("path",{d:"M"+p[0].toFixed(1)+","+(p[1]-5).toFixed(1)+" l4.5,5 l-4.5,5 l-4.5,-5z","class":"jrEcl"},rot);
-      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"9","class":"jrHit","data-x":id},rot);
+    /* Finsternis-Saison und Finsternisse (r=54) */
+    YD.saison.forEach(function(v){
+      var s=Math.max(v.s,y0), e=Math.min(v.e,y0+len), a0=ang(s-y0), a1=ang(e-y0);
+      var id=info({title:"Finsternis-Saison",when:dstr(s)+(s!==v.s?" (Fortsetzung)":"")+" bis "+dstr(e-1),tag:"Hard",c:TONF.HARD.c,text:"Etwa zwei Wochen vor und nach einer Finsternis. Mit Hard-Tönung: die Ladung ist höher."});
+      el("path",{d:arc(a0,a1,54),"class":"jrSais"},rot); el("path",{d:arc(a0,a1,54),"class":"jrHit2","data-x":id},rot);
     });
-    /* Mondmarker ausserhalb des Rings (r=122) */
+    YD.eclipses.forEach(function(e){
+      var p=xy(ang(e.d-y0),54);
+      var when=dstr(e.d)+(e.t?" um "+zeitBern(e.t)+" Uhr (Berner Zeit, grösste Phase)":"");
+      var id=info({title:e.art,when:when,tag:"Hard",c:TONF.HARD.c,text:(e.sicht?e.sicht+" ":"")+(e.src==="tab"?"Nach der Kalenderregel ein Hard-Tag (Eintrag aus Astronomiedaten ergänzt). ":"Im Kalender als Hard-Tag geführt. ")+"Dazu gehört die Finsternis-Saison von etwa zwei Wochen davor und danach."});
+      el("path",{d:"M"+p[0].toFixed(1)+","+(p[1]-6).toFixed(1)+" l5,6 l-5,6 l-5,-6z","class":"jrEcl",filter:"url(#jrGlow)"},rot);
+      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"12","class":"jrHit","data-x":id},rot);
+    });
+    /* Mondmarker (r=116) */
     YD.moons.forEach(function(m){
-      var p=xy(ang(m.d-y0),122), full=m.q===2;
+      var p=xy(ang(m.d-y0),116), full=m.q===2;
       var id=info({title:full?"Vollmond":"Neumond",when:dstr(m.d)+" um "+zeitBern(m.t)+" Uhr (Berner Zeit)",tag:full?"Hard":"Soft",c:full?TONF.HARD.c:TONF.SOFT.c,
         text:full?"Um den Vollmond gilt eine Hard-Phase von 3 Tagen: der Tag davor, der Vollmondtag und der Tag danach.":"Neumond ist Aussaat. Neu setzen, still halten."});
-      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:full?"4.6":"4","class":full?"jrMv":"jrMn"},rot);
-      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"9","class":"jrHit","data-x":id},rot);
+      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:full?"3.6":"3.2","class":full?"jrMv":"jrMn"},rot);
+      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"10","class":"jrHit","data-x":id},rot);
     });
     var nodes=[];
     FEST.forEach(function(f,i){
       var a=ang(dn(y,f.m,f.d)-y0), p=xy(a,R);
-      var ring=el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"11","class":"jrHalo",fill:f.c},rot);
-      var n=el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"6","class":"jrNode",fill:f.c,filter:"url(#jrGlow)"},rot);
-      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"15","class":"jrHit","data-i":i},rot);
+      var ring=el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"9","class":"jrHalo",fill:f.c},rot);
+      var n=el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"4.6","class":"jrNode",fill:f.c},rot);
+      el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"14","class":"jrHit","data-i":i},rot);
       var lab=el("text",{"class":"jrLab","text-anchor":"middle"},svg); lab.textContent=f.n;
       nodes.push({a:a,halo:ring,node:n,lab:lab});
     });
-    /* heute: Ton bestimmt die Farbe */
+    /* heute */
     var tone="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&TONF[S.kind]) tone=S.kind; }catch(e){}
     var tf=TONF[tone], ta=ang(t-y0), tm=el("g",{"class":"jrToday"},rot);
-    var tp=xy(0,R); var pu=el("circle",{cx:tp[0],cy:tp[1],r:"4","class":"jrPulse",fill:tf.c},tm); el("circle",{cx:tp[0],cy:tp[1],r:"3","class":"jrHeute"},tm);
-    el("path",{d:"M"+C+","+(C-LR-26)+" l-6,-10 h12z","class":"jrPtr"},svg);
+    var tp=xy(0,R); el("circle",{cx:tp[0],cy:tp[1],r:"6","class":"jrPulse",fill:tf.c},tm); el("circle",{cx:tp[0],cy:tp[1],r:"3","class":"jrHeute",stroke:tf.c},tm);
+    el("path",{d:"M"+C+","+(C-LR-24)+" l-5,-8 h10z","class":"jrPtr"},svg);
     var M=null; try{ M=window.RR25_MOND&&window.RR25_MOND.day(Date.now()); }catch(e){}
     var mgrp=el("g",{transform:"translate("+C+","+C+")","class":"jrMoon"},svg);
-    el("circle",{r:"26","class":"jrMoonBg"},mgrp);
-    if(M) el("path",{d:moonPath(M.p,23),"class":"jrMoonLit"},mgrp);
-    var mt=el("text",{x:C,y:C+44,"text-anchor":"middle","class":"jrMoonT"},svg); mt.textContent=M?M.name:"";
-    var tt=el("text",{x:C,y:C+57,"text-anchor":"middle","class":"jrToneT"},svg); tt.textContent="heute "+tf.n; tt.setAttribute("fill",tf.c);
+    el("circle",{r:"22","class":"jrMoonBg"},mgrp);
+    if(M) el("path",{d:moonPath(M.p,19.5),"class":"jrMoonLit"},mgrp);
+    var mt=el("text",{x:C,y:C+37,"text-anchor":"middle","class":"jrMoonT"},svg); mt.textContent=M?M.name:"";
+    var tt=el("text",{x:C,y:C+47,"text-anchor":"middle","class":"jrToneT"},svg); tt.textContent="heute "+tf.n; tt.setAttribute("fill",tf.c);
     var st={rot:0,mark:0,sel:-1,raf:0,anim:null};
     function norm(a){ a%=360; if(a<0) a+=360; return a; }
     function apply(){
       rot.setAttribute("transform","rotate("+st.rot.toFixed(2)+" "+C+" "+C+")");
       tm.setAttribute("transform","rotate("+st.mark.toFixed(2)+" "+C+" "+C+")");
-      nodes.forEach(function(n,i){
-        var aa=n.a+st.rot, q=xy(aa,LR-12), sn=Math.sin(aa*Math.PI/180); n.lab.setAttribute("text-anchor",sn>0.35?"start":(sn<-0.35?"end":"middle")); n.lab.setAttribute("x",(q[0]+(sn>0.35?10:(sn<-0.35?-10:0))).toFixed(1)); n.lab.setAttribute("y",(q[1]+(Math.abs(sn)<=0.35?(Math.cos(aa*Math.PI/180)>0?-2:12):3.5)).toFixed(1));
+      nodes.forEach(function(n){
+        var aa=n.a+st.rot, q=xy(aa,LR-8), sn=Math.sin(aa*Math.PI/180), cs=Math.cos(aa*Math.PI/180); n.lab.setAttribute("text-anchor",sn>0.35?"start":(sn<-0.35?"end":"middle")); n.lab.setAttribute("x",(q[0]+(sn>0.35?8:(sn<-0.35?-8:0))).toFixed(1)); n.lab.setAttribute("y",(q[1]+(Math.abs(sn)<=0.35?(cs>0?-3:12):4)).toFixed(1));
       });
+      mon.forEach(function(m){ var q=xy(m.a+st.rot,103); m.tx.setAttribute("x",q[0].toFixed(1)); m.tx.setAttribute("y",(q[1]+3).toFixed(1)); });
     }
     function nearest(){
       var best=0,bd=999; nodes.forEach(function(n,i){ var d=Math.abs(((norm(n.a+st.rot)+180)%360)-180); if(d<bd){ bd=d; best=i; } }); return best;
@@ -302,19 +344,21 @@
       return {tage:d,y:yy};
     }
     function buzzNow(){ try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){} }
+    function cardHtml(name,when,tag,text,extra){
+      return '<div class="jrHd"><b class="jrName">'+h(name)+'</b><span class="jrSea">'+h(tag)+'</span></div><span class="jrWhen">'+h(when)+'</span><p class="jrT">'+h(text)+'</p>'+(extra||"");
+    }
     function showInfo(o,buzz){
       st.sel=-1; nodes.forEach(function(n){ n.halo.setAttribute("class","jrHalo"); n.lab.setAttribute("class","jrLab"); });
-      card.style.borderColor=o.c; card.style.setProperty("--jc",o.c);
-      card.innerHTML='<b class="jrName">'+h(o.title)+'</b><span class="jrWhen">'+h(o.when)+'</span><span class="jrSea">'+h(o.tag)+'</span><p class="jrT">'+h(o.text)+'</p>';
+      card.style.setProperty("--jc",o.c);
+      card.innerHTML=cardHtml(o.title,o.when,o.tag,o.text);
       if(buzz) buzzNow();
     }
     function show(i,buzz){
       st.sel=i; var f=FEST[i], dd=days(i), dt=new Date(Date.UTC(dd.y,f.m-1,f.d));
       nodes.forEach(function(n,k){ n.halo.setAttribute("class","jrHalo"+(k===i?" on":"")); n.lab.setAttribute("class","jrLab"+(k===i?" on":"")); });
       var say=dd.tage===0?"heute":(dd.tage===1?"morgen":"in "+dd.tage+" Tagen");
-      card.style.borderColor=f.c; card.style.setProperty("--jc",f.c);
-      card.innerHTML='<b class="jrName">'+h(f.n)+'</b><span class="jrWhen">'+WTAG[dt.getUTCDay()]+', '+f.d+'. '+MONAT[f.m-1]+' '+dd.y+' · '+say+'</span>'+
-        '<span class="jrSea">'+h(f.z)+'</span><p class="jrT">'+h(f.t)+'</p><p class="jrF"><small>Aus dem Feld</small>'+h(f.f)+'</p>';
+      card.style.setProperty("--jc",f.c);
+      card.innerHTML=cardHtml(f.n,WTAG[dt.getUTCDay()]+", "+f.d+". "+MONAT[f.m-1]+" "+dd.y+" · "+say,f.z,f.t,'<p class="jrF"><small>Aus dem Feld</small>'+h(f.f)+'</p>');
       if(buzz) buzzNow();
     }
     function ease(x){ return 1-Math.pow(1-x,3); }
@@ -349,16 +393,7 @@
     var ni=0; FEST.forEach(function(f,i){ if(nx&&nx.f===f) ni=i; });
     st.rot=-nodes[ni].a-70; st.mark=0; apply(); show(ni,false);
     go(-nodes[ni].a,ta,1400);
-    var timer=0;
-    function schnuppe(){
-      timer=setTimeout(schnuppe,5000+Math.random()*5000);
-      if(still()||document.hidden||!shoot.animate||!document.body.contains(svg)) return;
-      var x=40+Math.random()*320, yy=20+Math.random()*90;
-      shoot.setAttribute("transform","translate("+x.toFixed(0)+","+yy.toFixed(0)+")");
-      shoot.animate([{opacity:0,transform:"translate("+x.toFixed(0)+"px,"+yy.toFixed(0)+"px)"},{opacity:.95,offset:.2},{opacity:0,transform:"translate("+(x+70).toFixed(0)+"px,"+(yy+28).toFixed(0)+"px)"}],{duration:900,easing:"ease-out"});
-    }
-    if(!still()) timer=setTimeout(schnuppe,2500);
-    JR={stop:function(){ cancelAnimationFrame(st.raf); clearTimeout(timer); }};
+    JR={stop:function(){ cancelAnimationFrame(st.raf); }};
   }
   function mountRad(){
     var sec=document.getElementById("kal"), row=sec&&sec.querySelector(".row"); if(!sec||!row) return;
@@ -417,40 +452,44 @@
     "#feldSpruch small{display:inline;font-family:system-ui,sans-serif;font-style:normal;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift);margin:0 .45rem 0 0;vertical-align:.08em}",
     "#jrBtn{min-height:2.1rem!important;padding:.35rem 1rem!important;font-size:.76rem!important;border-radius:999px!important;border:1px solid rgba(200,120,255,.35)!important;background:rgba(160,90,255,.1)!important;color:var(--zahl)!important}",
     "#jrBtn.on{box-shadow:0 0 14px var(--glow)}",
-    "#jrPanel{margin:0 0 .8rem;padding:.7rem .7rem .8rem;text-align:center;overflow:hidden}",
+    "#jrPanel{margin:0 0 .8rem;padding:.8rem .7rem .9rem;overflow:hidden}",
     "#jrPanel[hidden]{display:none!important}",
-    ".jrH{margin:0;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ueberschrift)}",
-    ".jrSvg{display:block;width:100%;max-width:26rem;margin:0 auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;cursor:grab}",
-    ".jrArc{fill:none;stroke-width:5;stroke-linecap:round;opacity:.78}",
-    ".jrNode{stroke:rgba(255,255,255,.55);stroke-width:1}",
-    ".jrHalo{opacity:.16}.jrHalo.on{opacity:.38;animation:jrBeat 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}",
+    ".jrH{margin:0 0 .2rem;text-align:center;font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ueberschrift)}",
+    ".jrSvg{display:block;width:100%;max-width:27rem;margin:0 auto;touch-action:pan-y;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;cursor:grab}",
+    ".jrBase{fill:none;stroke:rgba(200,160,255,.16);stroke-width:1}",
+    ".jrTick{stroke:rgba(200,160,255,.45);stroke-width:1}",
+    ".jrMon{font-size:8.5px;fill:var(--dim);opacity:.75;letter-spacing:.04em}",
+    ".jrArc{fill:none;stroke-width:2.6;stroke-linecap:round;opacity:.7}",
+    ".jrSoft{fill:none;stroke:#5fe0a0;stroke-width:5;opacity:.22;cursor:pointer}",
+    ".jrHardArc{fill:none;stroke:#ff5470;stroke-width:5;stroke-linecap:butt;opacity:.9}",
+    ".jrHit2{fill:none;stroke:transparent;stroke-width:13;cursor:pointer}",
+    ".jrLane{fill:none;stroke-width:3;stroke-linecap:round;opacity:.8}",
+    ".jrSais{fill:none;stroke:#ff5470;stroke-width:4;stroke-linecap:round;opacity:.3}",
+    ".jrEcl{fill:#ff5470}",
+    ".jrMv{fill:#fff3d8}.jrMn{fill:#0a0426;stroke:#cdb6ff;stroke-width:1.2}",
+    ".jrNode{stroke:rgba(255,255,255,.5);stroke-width:1}",
+    ".jrHalo{opacity:.14}.jrHalo.on{opacity:.34;animation:jrBeat 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}",
     ".jrHit{fill:transparent;cursor:pointer}",
-    ".jrLab{font-size:12px;fill:var(--dim);pointer-events:none}.jrLab.on{fill:var(--zahl);font-weight:600}",
-    ".jrHeute{fill:#fff}.jrPulse{fill:var(--akzent);opacity:.7;animation:jrBeat 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}",
-    ".jrPtr{fill:var(--akzent);filter:drop-shadow(0 0 4px var(--akzent))}",
-    ".jrMoonBg{fill:rgba(40,20,80,.8);stroke:rgba(200,120,255,.4);stroke-width:1}.jrMoonLit{fill:#f1e8ff;filter:drop-shadow(0 0 5px var(--glow))}.jrMoonT{font-size:9px;fill:var(--dim);letter-spacing:.06em}",
-    ".jrTw{fill:#fff;opacity:.15;animation:jrTw 3s ease-in-out infinite}",
-    ".jrShoot{stroke:var(--zahl);stroke-width:1.4;stroke-linecap:round}",
-    "@keyframes jrBeat{0%,100%{transform:scale(1);opacity:.45}50%{transform:scale(1.7);opacity:.12}}",
-    "@keyframes jrTw{0%,100%{opacity:.12}50%{opacity:.85}}",
-    "@media (prefers-reduced-motion:reduce){.jrHalo.on,.jrPulse,.jrTw{animation:none!important}}",
-    ".jrSoft{fill:none;stroke:#5fe0a0;stroke-width:5;opacity:.38;cursor:pointer}",
-    ".jrHardArc{fill:none;stroke:#ff5470;stroke-width:7;stroke-linecap:butt;filter:drop-shadow(0 0 3px rgba(255,84,112,.8))}",
-    ".jrHit2{fill:none;stroke:transparent;stroke-width:14;cursor:pointer}",
-    ".jrLane{fill:none;stroke-width:3.5;stroke-linecap:round;opacity:.85}",
-    ".jrEcl{fill:#ff5470;filter:drop-shadow(0 0 3px #ff5470)}",
-    ".jrMv{fill:#fff3d8;filter:drop-shadow(0 0 4px rgba(255,243,216,.9))}.jrMn{fill:#0a0426;stroke:#cdb6ff;stroke-width:1.3}",
-    ".jrToneT{font-size:9.5px;letter-spacing:.06em;font-weight:600}",
-    ".jrLeg{display:flex;flex-wrap:wrap;justify-content:center;gap:.2rem .8rem;margin:.1rem 0 .2rem;font-size:.64rem;color:var(--dim)}",
-    ".jrLeg span{display:inline-flex;align-items:center;gap:.3rem}.jrLeg i{width:.55rem;height:.55rem;border-radius:50%;display:inline-block}",
-    ".jrLeg i.mv{background:#fff3d8;box-shadow:0 0 6px rgba(255,243,216,.8)}.jrLeg i.mn{background:#0a0426;border:1.3px solid #cdb6ff}",
-    ".jrCard{margin:.3rem .1rem 0;padding:.6rem .8rem .65rem;border:1px solid var(--jc,rgba(200,120,255,.4));border-radius:1rem;background:rgba(20,8,48,.55);box-shadow:0 0 14px -4px var(--jc,var(--glow));text-align:left}",
-    ".jrName{display:block;font-family:Georgia,serif;font-weight:400;font-size:1.15rem;color:var(--zahl)}",
-    ".jrWhen{display:block;font-size:.72rem;color:var(--ueberschrift);margin:.05rem 0 .3rem}",
-    ".jrSea{display:inline-block;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;padding:.1rem .5rem;border-radius:999px;border:1px solid var(--jc);color:var(--zahl);margin-bottom:.35rem}",
-    ".jrT{margin:0 0 .3rem;font-size:.8rem;line-height:1.4;color:var(--dim)}",
-    ".jrF{margin:0;font-family:Georgia,serif;font-style:italic;font-size:.84rem;line-height:1.35;color:var(--zahl)}.jrF small{display:block;font-family:system-ui,sans-serif;font-style:normal;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift)}",
-    ".jrNote{margin:.5rem 0 0;font-size:.6rem;color:var(--dim);opacity:.8}",
+    ".jrLab{font-size:10.5px;fill:var(--dim);pointer-events:none}.jrLab.on{fill:var(--zahl);font-weight:600}",
+    ".jrHeute{fill:#fff;stroke-width:1.5}.jrPulse{opacity:.5;animation:jrBeat 2.2s ease-in-out infinite;transform-box:fill-box;transform-origin:center}",
+    ".jrPtr{fill:var(--ueberschrift)}",
+    ".jrMoonBg{fill:rgba(40,20,80,.7);stroke:rgba(200,160,255,.3);stroke-width:1}.jrMoonLit{fill:#f1e8ff}.jrMoonT{font-size:8.5px;fill:var(--dim);letter-spacing:.05em}.jrToneT{font-size:9px;letter-spacing:.05em;font-weight:600}",
+    "@keyframes jrBeat{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(1.5);opacity:.12}}",
+    "@media (prefers-reduced-motion:reduce){.jrHalo.on,.jrPulse{animation:none!important}}",
+    ".jrLeg{display:grid;gap:.25rem;margin:.35rem .2rem .1rem;font-size:.66rem;color:var(--dim)}",
+    ".jrLeg div{display:flex;flex-wrap:wrap;align-items:center;gap:.15rem .8rem}",
+    ".jrLeg b{flex:0 0 3.4rem;font-weight:500;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ueberschrift)}",
+    ".jrLeg span{display:inline-flex;align-items:center;gap:.35rem}.jrLeg i{display:inline-block;flex:none}",
+    ".jrLeg i.d{width:.55rem;height:.55rem;border-radius:50%}.jrLeg i.mv{background:#fff3d8}.jrLeg i.mn{background:#0a0426;border:1.2px solid #cdb6ff}",
+    ".jrLeg i.l{width:.9rem;height:3px;border-radius:2px;background:#ff5470}.jrLeg i.r{width:.5rem;height:.5rem;background:#ff5470;transform:rotate(45deg)}.jrLeg i.s{width:.9rem;height:4px;border-radius:2px;background:rgba(255,84,112,.35)}",
+    ".jrCard{margin:.6rem .1rem 0;padding:.7rem .85rem .75rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--jc,var(--ueberschrift));border-radius:.9rem;background:rgba(20,8,48,.5);text-align:left}",
+    ".jrHd{display:flex;align-items:center;justify-content:space-between;gap:.6rem}",
+    ".jrName{font-family:Georgia,serif;font-weight:400;font-size:1.1rem;color:var(--zahl)}",
+    ".jrSea{flex:none;font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;padding:.12rem .5rem;border-radius:999px;border:1px solid var(--jc,var(--ueberschrift));color:var(--zahl)}",
+    ".jrWhen{display:block;font-size:.72rem;color:var(--ueberschrift);margin:.15rem 0 .4rem}",
+    ".jrT{margin:0;font-size:.8rem;line-height:1.45;color:var(--dim)}",
+    ".jrF{margin:.5rem 0 0;padding-top:.45rem;border-top:1px solid rgba(200,160,255,.15);font-family:Georgia,serif;font-style:italic;font-size:.84rem;line-height:1.35;color:var(--zahl)}.jrF small{display:block;font-family:system-ui,sans-serif;font-style:normal;font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift);margin-bottom:.1rem}",
+    ".jrNote{margin:.6rem .1rem 0;font-size:.6rem;line-height:1.45;color:var(--dim);opacity:.8;text-align:left}",
     ".rIc{width:1.35rem;height:1.35rem;flex:none;fill:none;stroke:var(--ueberschrift);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px var(--glow))}",
     "#list .rcard.hasIc,#pinDank.hasIc{padding-left:2.9rem!important}",
     "#list .rcard>.rIc,#pinDank>.rIc{position:absolute!important;left:.85rem;top:50%;transform:translateY(-50%)}",
