@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 54 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 55 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -24,7 +24,7 @@ try{
   function draw(letters){
     var c=canvas(); if(!c) return;
     var ctx=c.getContext("2d"), w=c.width, h=c.height, m=Math.min(w,h);
-    ctx.fillStyle="#08040e"; ctx.fillRect(0,0,w,h);
+    ctx.clearRect(0,0,w,h);
     var n=(letters||"").length;
     if(!n) return;
     ctx.save();
@@ -607,7 +607,7 @@ try{
     var t=((document.getElementById("sigilT")||{}).value||"").trim();
     if(!c||typeof load!=="function") return;
     var img="";
-    try{ img=c.toDataURL("image/jpeg",0.72); }catch(e){}
+    try{ var o=document.createElement("canvas"); o.width=c.width; o.height=c.height; var x=o.getContext("2d"); x.fillStyle="#08040e"; x.fillRect(0,0,o.width,o.height); x.drawImage(c,0,0); img=o.toDataURL("image/jpeg",0.72); }catch(e){}
     if(!img||img.length<80) return;
     var id=typeof uid==="function"?uid():String(Date.now());
     var d=load();
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=54;
+  var BUILD=55;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=54").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=55").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }

@@ -1,4 +1,4 @@
-/* rr25 · Paket 5/7 · Build 54 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 5/7 · Build 55 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-plan.js, ritual-hold.js, ritual-cam.js, ritual-sigil-save.js, ritual-more.js, ritual-fein.js, ritual-check.js, ritual-ui-v2.js, ritual-v3.js */
 /* ==== ritual-plan.js ==== */
 try{
@@ -608,7 +608,8 @@ try{
 (function(){
   var css=document.createElement("style");
   css.textContent=[
-    "#sigilBox{position:relative}",
+    "#sigilBox{position:relative;background:radial-gradient(circle at 50% 42%,rgba(120,60,190,.38),rgba(36,16,66,.9) 62%),linear-gradient(160deg,#2a1248,#150a2a)!important;border:1px solid rgba(201,155,255,.34)!important;box-shadow:inset 0 0 22px rgba(160,100,255,.18),0 0 14px rgba(160,100,255,.14)!important}",
+    "#sigilC{background:transparent!important;display:block}",
     "#sigHint{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;text-align:center;padding:.8rem;pointer-events:none;color:#9ee8e0;font-size:.74rem;line-height:1.35}",
     "#sigHint b{font-size:1.6rem;font-weight:400;color:#7ef0e6;text-shadow:0 0 12px rgba(126,240,230,.55)}",
     "#sigHint[hidden]{display:none}",
