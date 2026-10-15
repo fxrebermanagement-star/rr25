@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 52 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 53 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -256,7 +256,7 @@ try{
   function afterTor(){ if(cur.r.haerte) haerte(); else if(cur.r.hard && !cur.r.wesenSelf) wesenQ(); else startSteps(); }
   function haerte(){
     var body='<p class="words">Wie viel Dosis trägt die Sache?</p>'+
-      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht mit freiem Willen. Leise 3 · 6 · 9. Einfaches So sei es.</small></button>'+
+      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht mit freiem Willen. Leise Ich · Spiel · Quelle. Einfaches So sei es.</small></button>'+
       '<button type="button" class="card lv" data-lv="mittel"><b>Mittel</b><small>Mit Anker auf Papier. Voller Siegelsatz.</small></button>'+
       '<button type="button" class="card lv" data-lv="nagel"><b>Nagelhart</b><small>Anker, Satz ohne Hintertür, Siegel mit Salz, Rückkehr in drei Schritten, Frist.'+(cur.r.ichHart?" Kurz hinein, sofort zurück.":"")+'</small></button>';
     frame({title:"Härte",body:body,prev:"Tor",noAbort:true});
@@ -285,7 +285,7 @@ try{
       if(m) rows.push({n:{Drei:3,Sechs:6,Neun:9}[m[1]],t:m[2]});
       else if(!/^Kurz:$/.test(l)) rest.push(l);
     });
-    var lab={3:"Ich ❤️",6:"Spiel 🙏",9:"Quelle 👁"};
+    var lab={3:"❤️ Ich",6:"🙏 Spiel",9:"👁 Quelle"};
     var head=rest.join("\n").replace(/\n+$/,"");
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
       return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+x.n+'×</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
@@ -316,7 +316,7 @@ try{
     }
     var body, title=t, nextTxt=last?"Weiter":"Weiter";
     if(/^369$/.test(st[0])){
-      title="3 · 6 · 9";
+      title="Ich · Spiel · Quelle";
       body=(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+counter(fillT(raw));
     }
     else if(/^So sei es$/.test(st[0])){ body=sealHtml()+(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+'<p class="words">'+h(fillT(raw))+'</p>'; nextTxt="So sei es"; }
@@ -629,10 +629,10 @@ try{
     {"id":"s54","k":"soft","t":"Schöner Tisch","z":"❧","x":"Deck heute den Tisch schön, auch wenn du allein isst. Eine Kerze, ein richtiger Teller. Du bist es wert.","m":["zu","voll"]},
     {"id":"f01","k":"feld","t":"Ein Satz","z":"✦","x":"Deine Absicht: ein Satz, in der Gegenwart, ohne »nicht«. Wenn du ihn nicht in einem Atemzug sagen kannst, ist er zu lang."},
     {"id":"f02","k":"feld","t":"Enter","z":"▷","x":"Enter ist der Moment, in dem du aufhörst zu planen und setzt. Ein Atemzug, ein innerer Klick. Ab da gilt es."},
-    {"id":"f03","k":"feld","t":"Ich ❤️ · Drei","z":"∴","x":"Die ersten drei stellen den Satz auf. Langsam sprechen, jedes Wort mit Gewicht. Wer hier hetzt, baut auf Sand."},
-    {"id":"f04","k":"feld","t":"Spiel 🙏 · Sechs","z":"☷","x":"Die sechs tragen den Satz durch dich hindurch. Nicht mehr nachdenken, nur sprechen. Der Körper lernt mit."},
-    {"id":"f05","k":"feld","t":"Quelle 👁 · Neun","z":"⁂","x":"Mit der neunten Wiederholung ist der Satz aus deinen Händen. Kein zehntes Mal. Das Siegel hält von selbst."},
-    {"id":"f06","k":"feld","t":"Quelle 👁","z":"◉","x":"Die Neun ist die Quelle, die zuschaut. Du sprichst, und ein Teil von dir sieht ruhig zu. Dieser Teil setzt nie nach."},
+    {"id":"f03","k":"feld","t":"Ich ❤️","z":"∴","x":"Die ersten drei stellen den Satz auf. Langsam sprechen, jedes Wort mit Gewicht. Wer hier hetzt, baut auf Sand."},
+    {"id":"f04","k":"feld","t":"Spiel 🙏","z":"☷","x":"Die sechs tragen den Satz durch dich hindurch. Nicht mehr nachdenken, nur sprechen. Der Körper lernt mit."},
+    {"id":"f05","k":"feld","t":"Quelle 👁 · Siegel","z":"⁂","x":"Mit der neunten Wiederholung ist der Satz aus deinen Händen. Kein zehntes Mal. Das Siegel hält von selbst."},
+    {"id":"f06","k":"feld","t":"Quelle sieht","z":"◉","x":"Die Neun ist die Quelle, die zuschaut. Du sprichst, und ein Teil von dir sieht ruhig zu. Dieser Teil setzt nie nach."},
     {"id":"f07","k":"feld","t":"So sei es","z":"⊙","x":"Drei Worte, danach nichts mehr. Kein Nachsatz, kein Vielleicht. Das Feld braucht einen klaren Schluss."},
     {"id":"f08","k":"feld","t":"Es ist so","z":"≡","x":"Nicht »es wird«, sondern »es ist«. Wer in der Zukunft spricht, hält den Wunsch auf Abstand."},
     {"id":"f09","k":"feld","t":"Rückkehr","z":"↩\uFE0E","x":"Die Rückkehr ist der Riegel: Energie zurück zu dir, Hände waschen, etwas essen. Ohne sie bleibt eine Tür offen."},
@@ -645,7 +645,7 @@ try{
     {"id":"f16","k":"feld","t":"Der Spieler","z":"♙","x":"Du bist der Spieler, nicht die Figur. Wird es eng, tritt heraus und schau aufs Brett. Von oben ist der nächste Zug klar."},
     {"id":"f17","k":"feld","t":"Der Schritt danach","z":"➶","x":"Nach dem Ritual einen kleinen Schritt im Alltag tun, der zum Satz passt. Das Feld öffnet die Tür, gehen musst du selbst."},
     {"id":"f18","k":"feld","t":"Ofen zu","z":"▯","x":"Was du gesetzt hast, braucht Zeit wie Brot im Ofen. Wer dauernd die Tür öffnet, lässt die Hitze hinaus."},
-    {"id":"f19","k":"feld","t":"Neumond setzen","z":"●","x":"Neumond ist Aussaat. Absicht klar, Satz kurz, dann 3·6·9. Was jetzt gesetzt wird, wächst mit dem Licht.","m":["neu"]},
+    {"id":"f19","k":"feld","t":"Neumond setzen","z":"●","x":"Neumond ist Aussaat. Absicht klar, Satz kurz, dann Ich · Spiel · Quelle. Was jetzt gesetzt wird, wächst mit dem Licht.","m":["neu"]},
     {"id":"f20","k":"feld","t":"Vollmond ernten","z":"❍","x":"Vollmond ist Ernte, nicht Aussaat. Danken, zählen, abschliessen. Neues wartet auf den nächsten Neumond.","m":["voll"]},
     {"id":"e01","k":"echo","t":"Tag drei","z":"Ⅲ","x":"Am dritten Tag nur schauen: ein Anruf, ein Gefühl, ein Zufall? Aufschreiben, nicht deuten. Deuten kommt später."},
     {"id":"e02","k":"echo","t":"Tag neun","z":"Ⅸ","x":"Am neunten Tag die ehrliche Bilanz: wirkt, teilweise oder offen. Auch »offen« ist eine Antwort, mit der du arbeiten kannst."},

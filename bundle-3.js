@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 52 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 53 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -510,9 +510,9 @@ try{
     if(!el) return;
     var z=zLoad();
     el.innerHTML=
-      '<button type="button" data-z="n3">3 ❤️<span>'+z.n3+'/3</span></button>'+
-      '<button type="button" data-z="n6">6 🙏<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" data-z="n9">9 👁<span>'+z.n9+'/9</span></button>';
+      '<button type="button" data-z="n3">❤️ Ich<span>'+z.n3+'/3</span></button>'+
+      '<button type="button" data-z="n6">🙏 Spiel<span>'+z.n6+'/6</span></button>'+
+      '<button type="button" data-z="n9">👁 Quelle<span>'+z.n9+'/9</span></button>';
   }
   function zTap(key){
     var max={n3:3,n6:6,n9:9};
@@ -690,9 +690,9 @@ try{
     if(!el) return;
     var z=loadZ();
     el.innerHTML=
-      '<button type="button" class="zbtn" data-z="n3">3 ❤️<span>'+z.n3+'/3</span></button>'+
-      '<button type="button" class="zbtn" data-z="n6">6 🙏<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" class="zbtn" data-z="n9">9 👁<span>'+z.n9+'/9</span></button>';
+      '<button type="button" class="zbtn" data-z="n3">❤️ Ich<span>'+z.n3+'/3</span></button>'+
+      '<button type="button" class="zbtn" data-z="n6">🙏 Spiel<span>'+z.n6+'/6</span></button>'+
+      '<button type="button" class="zbtn" data-z="n9">👁 Quelle<span>'+z.n9+'/9</span></button>';
     var msg=document.getElementById("zahlMsg");
     if(!msg){
       msg=document.createElement("p");
@@ -760,7 +760,7 @@ try{
     tools.innerHTML=
       '<button type="button" class="tile t1" data-go="kTag"><b>✦</b><span>Karte</span></button>'+
       '<button type="button" class="tile t2" data-go="kDrei"><b>☰</b><span>Drei</span></button>'+
-      '<button type="button" class="tile t3" data-go="zahlGo"><b>369</b><span>Zähler</span></button>'+
+      '<button type="button" class="tile t3" data-go="zahlGo"><b>❤️ 🙏 👁</b><span>Zähler</span></button>'+
       '<button type="button" class="tile t4" data-go="sigilGo"><b>✽</b><span>Zeichen</span></button>';
     if(!document.getElementById("zahlGo")){
       var h=document.createElement("button");
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=52;
+  var BUILD=53;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=52").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=53").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
@@ -1217,8 +1217,8 @@ try{
 (function(){
   var KEY="rr25_skizze";
   var ZKEY="rr25_tagesziel_v1";
-  var A='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="g3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#d4b8ee" stroke-width="2.4" filter="url(#g3)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#7ef0e6" stroke-width="2.6" filter="url(#g3)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#ff7ad9" stroke-width="2.4" filter="url(#g3)"/><text x="68" y="90" text-anchor="middle" font-size="34" fill="#f6eefe" font-family="Georgia,serif">3</text><text x="180" y="90" text-anchor="middle" font-size="34" fill="#e8fff8" font-family="Georgia,serif">6</text><text x="292" y="90" text-anchor="middle" font-size="34" fill="#ffe6f6" font-family="Georgia,serif">9</text><text x="68" y="140" text-anchor="middle" font-size="13" fill="#c8b6dc" font-family="system-ui,sans-serif">stehen</text><text x="180" y="140" text-anchor="middle" font-size="13" fill="#9ee8e0" font-family="system-ui,sans-serif">tragen</text><text x="292" y="140" text-anchor="middle" font-size="13" fill="#f0b4d4" font-family="system-ui,sans-serif">siegeln</text><path d="M268 168 C 180 204, 180 204, 92 168" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/><polyline points="102,176 92,168 104,163" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/></svg>';
-  var B='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="gE" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#7ec8a0" stroke-width="2.4" filter="url(#gE)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#c0aad8" stroke-width="2.4" filter="url(#gE)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#e8c070" stroke-width="2.4" filter="url(#gE)"/><text x="68" y="84" text-anchor="middle" font-size="15" fill="#d8f0e4" font-family="Georgia,serif">Erde</text><text x="180" y="84" text-anchor="middle" font-size="15" fill="#eee4f8" font-family="Georgia,serif">Mensch</text><text x="292" y="84" text-anchor="middle" font-size="13" fill="#f8e8c0" font-family="Georgia,serif">Universum</text><text x="68" y="140" text-anchor="middle" font-size="13" fill="#c8b6dc" font-family="system-ui,sans-serif">stehen</text><text x="180" y="140" text-anchor="middle" font-size="13" fill="#9ee8e0" font-family="system-ui,sans-serif">tragen</text><text x="292" y="140" text-anchor="middle" font-size="13" fill="#c8b080" font-family="system-ui,sans-serif">siegeln</text><path d="M268 168 C 180 204, 180 204, 92 168" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/><polyline points="102,176 92,168 104,163" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/></svg>';
+  var A='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="g3" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#d4b8ee" stroke-width="2.4" filter="url(#g3)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#7ef0e6" stroke-width="2.6" filter="url(#g3)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#ff7ad9" stroke-width="2.4" filter="url(#g3)"/><text x="68" y="90" text-anchor="middle" font-size="34" fill="#f6eefe" font-family="Georgia,serif">❤️</text><text x="180" y="90" text-anchor="middle" font-size="34" fill="#e8fff8" font-family="Georgia,serif">🙏</text><text x="292" y="90" text-anchor="middle" font-size="34" fill="#ffe6f6" font-family="Georgia,serif">👁</text><text x="68" y="140" text-anchor="middle" font-size="13" fill="#c8b6dc" font-family="system-ui,sans-serif">Ich</text><text x="180" y="140" text-anchor="middle" font-size="13" fill="#9ee8e0" font-family="system-ui,sans-serif">Spiel</text><text x="292" y="140" text-anchor="middle" font-size="13" fill="#f0b4d4" font-family="system-ui,sans-serif">Quelle</text><path d="M268 168 C 180 204, 180 204, 92 168" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/><polyline points="102,176 92,168 104,163" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/></svg>';
+  var B='<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><filter id="gE" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><line x1="108" y1="78" x2="148" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><line x1="212" y1="78" x2="252" y2="78" stroke="rgba(180,160,210,.55)" stroke-width="2"/><circle cx="68" cy="78" r="42" fill="#0b0814" stroke="#7ec8a0" stroke-width="2.4" filter="url(#gE)"/><circle cx="180" cy="78" r="42" fill="#0b0814" stroke="#c0aad8" stroke-width="2.4" filter="url(#gE)"/><circle cx="292" cy="78" r="42" fill="#0b0814" stroke="#e8c070" stroke-width="2.4" filter="url(#gE)"/><text x="68" y="84" text-anchor="middle" font-size="15" fill="#d8f0e4" font-family="Georgia,serif">Erde</text><text x="180" y="84" text-anchor="middle" font-size="15" fill="#eee4f8" font-family="Georgia,serif">Mensch</text><text x="292" y="84" text-anchor="middle" font-size="13" fill="#f8e8c0" font-family="Georgia,serif">Universum</text><text x="68" y="140" text-anchor="middle" font-size="13" fill="#c8b6dc" font-family="system-ui,sans-serif">Ich</text><text x="180" y="140" text-anchor="middle" font-size="13" fill="#9ee8e0" font-family="system-ui,sans-serif">Spiel</text><text x="292" y="140" text-anchor="middle" font-size="13" fill="#c8b080" font-family="system-ui,sans-serif">Quelle</text><path d="M268 168 C 180 204, 180 204, 92 168" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/><polyline points="102,176 92,168 104,163" fill="none" stroke="rgba(200,160,190,.7)" stroke-width="1.8"/></svg>';
   function today(){
     var n=new Date();
     return n.getFullYear()+"-"+String(n.getMonth()+1).padStart(2,"0")+"-"+String(n.getDate()).padStart(2,"0");
