@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 56 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 57 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -696,7 +696,7 @@ try{
     }
   }
   function paintFeld(force){
-    var sg=sigDoc(), w=document.documentElement.clientWidth, h=window.innerHeight, t=tone;
+    var sg=null, w=document.documentElement.clientWidth, h=window.innerHeight, t=tone;
     var key=[w,h,t,sg?[Math.round(sg.x),Math.round(sg.y),Math.round(sg.w),Math.round(sg.h)].join(":"):"-"].join("|");
     if(!force&&key===feldKey) return; feldKey=key;
     var d=Math.min(2,window.devicePixelRatio||1), cv=document.createElement("canvas"), c;
@@ -707,7 +707,7 @@ try{
       c.fillStyle=g; c.fillRect(0,0,w,h);
     }
     stars(c,w,h,250125,Math.min(110,Math.round(w*h/4200)),.26);
-    if(sg) c.clearRect(sg.x-4,sg.y-4,sg.w+8,sg.h+8);
+    /* Build 57: keine Lücke mehr um die Zeichen-Kachel; sie ist durchscheinend wie die Heute-Karte */
     feld.style.backgroundImage="url("+cv.toDataURL("image/png")+")";
     feld.style.backgroundSize=w+"px "+h+"px";
     feld.style.height=h+"px";

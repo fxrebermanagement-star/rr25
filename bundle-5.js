@@ -1,4 +1,4 @@
-/* rr25 · Paket 5/7 · Build 56 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 5/7 · Build 57 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-plan.js, ritual-hold.js, ritual-cam.js, ritual-sigil-save.js, ritual-more.js, ritual-fein.js, ritual-check.js, ritual-ui-v2.js, ritual-v3.js */
 /* ==== ritual-plan.js ==== */
 try{
@@ -608,7 +608,13 @@ try{
 (function(){
   var css=document.createElement("style");
   css.textContent=[
-    "#sigilBox{position:relative;background:radial-gradient(circle at 50% 42%,rgba(120,60,190,.38),rgba(36,16,66,.9) 62%),linear-gradient(160deg,#2a1248,#150a2a)!important;border:1px solid rgba(201,155,255,.34)!important;box-shadow:inset 0 0 22px rgba(160,100,255,.18),0 0 14px rgba(160,100,255,.14)!important}",
+    "#sigilBox{position:relative;--tb:rgba(201,155,255,.4);--tg1:rgba(70,24,90,.62);--tg2:rgba(12,8,28,.92);--tgl:rgba(160,100,255,.16);background:linear-gradient(185deg,var(--tg1),var(--tg2))!important;border:1px solid var(--tb)!important;border-radius:1.15rem!important;overflow:hidden!important;box-shadow:inset 0 0 18px var(--tgl),0 0 12px var(--tgl)!important;outline:0!important}",
+    "#sigilBox[data-ktone=soft]{--tb:rgba(46,204,113,.45);--tgl:rgba(46,204,113,.14)}",
+    "#sigilBox[data-ktone=hard]{--tb:rgba(231,76,60,.5);--tgl:rgba(231,76,60,.16)}",
+    "#sigilBox[data-ktone=echo]{--tb:rgba(93,173,226,.5);--tgl:rgba(93,173,226,.14)}",
+    "#sigilBox[data-ktone=feld]{--tb:rgba(176,132,255,.5);--tgl:rgba(176,132,255,.16)}",
+    "html[data-tagton=hard] #sigilBox{--tg1:rgba(100,22,44,.66);--tg2:rgba(24,6,16,.92)}",
+    "html[data-tagton=soft] #sigilBox{--tg1:rgba(78,26,92,.62)}",
     "#sigilC{background:transparent!important;display:block}",
     "#sigHint{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;text-align:center;padding:.8rem;pointer-events:none;color:#9ee8e0;font-size:.74rem;line-height:1.35}",
     "#sigHint b{font-size:1.6rem;font-weight:400;color:#7ef0e6;text-shadow:0 0 12px rgba(126,240,230,.55)}",
@@ -624,7 +630,17 @@ try{
     var d={}; try{ d=JSON.parse(localStorage.getItem("rr25_sigil")||"{}"); }catch(e){}
     return !(d && d.l) && !(t && String(t.value||"").trim());
   }
+  /* Kachel übernimmt Ton der Heute-Karte (Soft/Hard/Echo/Feld); Tageston kommt über html[data-tagton] */
+  function tone(){
+    var box=document.getElementById("sigilBox"), kc=document.querySelector("#kOut .kcard"); if(!box) return;
+    var m=kc&&/ktone-(\w+)/.exec(kc.className), t=m?m[1]:"";
+    if(t) box.setAttribute("data-ktone",t); else box.removeAttribute("data-ktone");
+  }
+  try{
+    var ko=document.getElementById("kOut"); if(ko) new MutationObserver(tone).observe(ko,{childList:true,subtree:true,attributes:true,attributeFilter:["class"]});
+  }catch(e){}
   function paint(){
+    tone();
     var box=document.getElementById("sigilBox"); if(!box) return;
     var el=document.getElementById("sigHint");
     if(!el){
