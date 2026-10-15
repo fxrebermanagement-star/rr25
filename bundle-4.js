@@ -1,4 +1,4 @@
-/* rr25 · Paket 4/7 · Build 63 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 4/7 · Build 64 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-fotos.js, ritual-gpic.js, ritual-kalender.js, ritual-start.js, ritual-buch.js, ritual-navlove.js, ritual-final.js, ritual-gabe-fix.js */
 /* ==== ritual-fotos.js ==== */
 try{
@@ -653,9 +653,9 @@ try{
 /* ==== ritual-buch.js ==== */
 try{
 /* Buch: kein Buchtext mehr in der App und im Repo. Knöpfe öffnen die privaten PDFs in Google Drive
-   (nur für den Besitzer sichtbar, wenn er angemeldet ist): «Mein Buch» und «Urbuch». Nur Links, nie Inhalte. */
+   (nur für den Besitzer sichtbar, wenn er angemeldet ist): «Ich · Spiel · Quelle · Mein Grimoire» (Entwurf 3, ersetzt das alte Taschenbuch) und «Urbuch». Nur Links, nie Inhalte. */
 (function(){
-  var OPEN="https://drive.google.com/file/d/1XMRksJwMBi4YyM0tpEfsa0-4BI9Z0Ass/view";
+  var OPEN="https://drive.google.com/file/d/1uHTr7oeDPbao8HCfc2cMrQxgT1X_kosD/view";
   var URBUCH="https://drive.google.com/file/d/1kDvCofm93JQVi1PJ4YR2iOdADWzt9Mhw/view?usp=drivesdk";
   function go(u){ window.open(u,"_blank","noopener"); }
   var css=document.createElement("style");
@@ -672,7 +672,7 @@ try{
   paintBuch=function(){
     var page=document.getElementById("page");
     if(!page) return;
-    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Mein Buch öffnen</button><small>Privat · öffnet in Google Drive</small><button type="button" id="urbuchOpen">Urbuch öffnen</button><small>Privat · öffnet in Google Drive</small></div>';
+    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Ich · Spiel · Quelle · Mein Grimoire</button><small>privat, öffnet in deinem Drive</small><button type="button" id="urbuchOpen">Urbuch öffnen</button><small>Privat · öffnet in Google Drive</small></div>';
     document.getElementById("buchOpen").onclick=function(){ go(OPEN); };
     document.getElementById("urbuchOpen").onclick=function(){ go(URBUCH); };
   };
