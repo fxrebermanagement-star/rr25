@@ -16,6 +16,10 @@
     "#sigHint b{letter-spacing:.12em}",
     "#sigPress{position:absolute;left:50%;bottom:.7rem;transform:translateX(-50%);padding:.35rem .8rem;border-radius:99px;background:rgba(20,10,34,.82);border:1px solid rgba(201,155,255,.5);color:#f1e6ff;font-size:.8rem;letter-spacing:.06em;white-space:nowrap;pointer-events:none;box-shadow:0 0 14px rgba(160,100,255,.45);opacity:0;transition:opacity .2s}",
     "#sigPress.on{opacity:1}",
+    /* Build 59: Tippflächen mindestens ca. 32 px hoch */
+    "html #cats .chip{min-height:2.25rem!important}",
+    "html #toneChip,html #seasonChip{min-height:2.05rem!important;display:inline-flex;align-items:center}",
+    "html #resonanzen .rzToneF{height:2rem!important;font-size:.7rem!important;padding:0 .7rem!important}",
     ".bakBar .btn{min-height:2rem;font-size:.72rem;font-weight:500}"
   ].join("");
   document.head.appendChild(css);
