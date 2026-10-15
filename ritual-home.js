@@ -15,7 +15,7 @@
     tools.innerHTML=
       '<button type="button" class="tile t1" data-go="kTag"><b>✦</b><span>Karte</span></button>'+
       '<button type="button" class="tile t2" data-go="kDrei"><b>☰</b><span>Drei</span></button>'+
-      '<button type="button" class="tile t3" data-go="zahlGo"><b>369</b><span>Zähler</span></button>'+
+      '<button type="button" class="tile t3" data-go="zahlGo"><b>❤️ 🙏 👁</b><span>Zähler</span></button>'+
       '<button type="button" class="tile t4" data-go="sigilGo"><b>✽</b><span>Zeichen</span></button>';
     if(!document.getElementById("zahlGo")){
       var h=document.createElement("button");

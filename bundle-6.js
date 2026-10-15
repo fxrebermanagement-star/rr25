@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 52 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 53 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -181,11 +181,11 @@ try{
   }
 
   /* =============== 3 · Ritual-Schritte =============== */
-  var PH=["Tor","Absicht","3·6·9","So sei es","Rückkehr"];
+  var PH=["Tor","Absicht","❤️ 🙏 👁","So sei es","Rückkehr"];
   var PRE=/^(Vorbereitung|Standort|Rahmen|Mitte|Position|Prüfen|Schutz|Filter|Ankommen|Feld|Grenze|Bannen|Spiegel)$/;
   function phaseOfName(n){
     n=String(n||"").trim();
-    if(/^(369|3 · 6 · 9)$/.test(n)) return 2;
+    if(/^(369|3 · 6 · 9|Ich · Spiel · Quelle)$/.test(n)) return 2;
     if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz|Gabe · Preis)$/.test(n)) return 3;
     if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo|Reinigen)$/.test(n)) return 4;
     if(/^(Absicht|Versetzen|Anker|Zurück aus|Wesenheit ·)/.test(n)) return 1;

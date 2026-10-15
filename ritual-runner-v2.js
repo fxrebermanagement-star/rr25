@@ -252,7 +252,7 @@
   function afterTor(){ if(cur.r.haerte) haerte(); else if(cur.r.hard && !cur.r.wesenSelf) wesenQ(); else startSteps(); }
   function haerte(){
     var body='<p class="words">Wie viel Dosis trägt die Sache?</p>'+
-      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht mit freiem Willen. Leise 3 · 6 · 9. Einfaches So sei es.</small></button>'+
+      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht mit freiem Willen. Leise Ich · Spiel · Quelle. Einfaches So sei es.</small></button>'+
       '<button type="button" class="card lv" data-lv="mittel"><b>Mittel</b><small>Mit Anker auf Papier. Voller Siegelsatz.</small></button>'+
       '<button type="button" class="card lv" data-lv="nagel"><b>Nagelhart</b><small>Anker, Satz ohne Hintertür, Siegel mit Salz, Rückkehr in drei Schritten, Frist.'+(cur.r.ichHart?" Kurz hinein, sofort zurück.":"")+'</small></button>';
     frame({title:"Härte",body:body,prev:"Tor",noAbort:true});
@@ -281,7 +281,7 @@
       if(m) rows.push({n:{Drei:3,Sechs:6,Neun:9}[m[1]],t:m[2]});
       else if(!/^Kurz:$/.test(l)) rest.push(l);
     });
-    var lab={3:"Ich ❤️",6:"Spiel 🙏",9:"Quelle 👁"};
+    var lab={3:"❤️ Ich",6:"🙏 Spiel",9:"👁 Quelle"};
     var head=rest.join("\n").replace(/\n+$/,"");
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
       return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+x.n+'×</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
@@ -312,7 +312,7 @@
     }
     var body, title=t, nextTxt=last?"Weiter":"Weiter";
     if(/^369$/.test(st[0])){
-      title="3 · 6 · 9";
+      title="Ich · Spiel · Quelle";
       body=(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+counter(fillT(raw));
     }
     else if(/^So sei es$/.test(st[0])){ body=sealHtml()+(cur.mem.Absicht?'<p class="meta absOnce">Absicht: '+h(cur.mem.Absicht)+'</p>':'')+'<p class="words">'+h(fillT(raw))+'</p>'; nextTxt="So sei es"; }
