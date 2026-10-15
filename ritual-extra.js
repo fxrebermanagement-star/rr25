@@ -179,13 +179,13 @@
   var css=document.createElement("style");
   css.textContent=[
     "#sunWrap{cursor:pointer}",
-    "#festHint{display:none;margin:.35rem 0 .55rem;padding:.7rem .8rem;border:1px solid rgba(232,160,255,.22);border-radius:.9rem;background:rgba(56,24,86,.45)}",
+    "#festHint{display:none;margin:.35rem 0 .55rem;padding:.7rem .8rem;border:1px solid rgba(200,120,255,.22);border-radius:.9rem;background:rgba(56,24,86,.45)}",
     "#festHint.on{display:block}",
     "#festHint b{display:block;font-family:Georgia,serif;font-size:1rem}",
     "#festHint small{display:block;color:#c4a4d6;margin:.12rem 0 .35rem}",
     "#festHint p{margin:0;font-family:Georgia,serif;line-height:1.5}",
     "#run #z369{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.35rem;margin:.7rem 0 .2rem}",
-    "#run #z369 button{border:1px solid rgba(232,160,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
+    "#run #z369 button{border:1px solid rgba(200,120,255,.22);background:rgba(56,24,86,.4);color:#f6eaff;border-radius:.85rem;padding:.45rem .2rem;font:inherit}",
     "#run #z369 button span{display:block;font-size:.68rem;color:#c4a4d6;margin-top:.08rem}",
     "#home #z369{display:none!important}"
   ].join("");
