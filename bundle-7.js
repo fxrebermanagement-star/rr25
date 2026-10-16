@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 77 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 78 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -209,7 +209,7 @@ try{
    Beantwortete Echo-Tage (rr25_echo_v1, Tag 3/9) werden nur gelesen. */
 (function(){
   if(window.__rr25rb) return; window.__rr25rb=1;
-  var TK="rr25_tags_v1", TAGS=["Wirkung","Echo"], MON=null, OPEN=false;
+  var TK="rr25_tags_v1", TAGS=["Wirkung","Echo"], MON=null, OPEN=false, MODE="monat";
   var MN=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
   function js(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)||"null"); return v==null?d:v; }catch(e){ return d; } }
   function tags(){ var t=js(TK,{}); return t&&typeof t==="object"&&!Array.isArray(t)?t:{}; }
@@ -256,12 +256,47 @@ try{
     var rest=S.n-S.rit-S.ziel;
     return S.n+(S.n===1?" Eintrag":" Einträge")+": "+S.rit+(S.rit===1?" Ritual":" Rituale")+", "+S.ziel+(S.ziel===1?" Tagesziel":" Tagesziele")+(rest>0?", "+rest+" weitere":"")+". Am meisten "+LAB[best]+(S.Wirkung?", "+S.Wirkung+"× Wirkung gespürt":"")+".";
   }
+  function yearStats(y){
+    var T=tags(), Y={n:0,rit:0,monat:[0,0,0,0,0,0,0,0,0,0,0,0],ton:{soft:0,grenze:0,hard:0,feld:0,grau:0},mond:{Neumond:0,Zunehmend:0,Vollmond:0,Abnehmend:0},Wirkung:0,Echo:0,echoAnt:0,top:{}};
+    rows().forEach(function(e){
+      var ms=when(e); if(ms==null) return; var d=new Date(ms); if(d.getFullYear()!==y) return;
+      Y.n++;
+      var isR=String(e.titel||'')!=='Tagesziel'&&window.RR25_ZAEHLREGEL&&window.RR25_ZAEHLREGEL.isRitual(e);
+      if(isR){ Y.rit++; Y.monat[d.getMonth()]++; var nm=String(e.titel||"").trim(); if(nm) Y.top[nm]=(Y.top[nm]||0)+1; }
+      var tn=tone(e); Y.ton[tn]=(Y.ton[tn]||0)+1;
+      var mo=moon(ms); if(mo) Y.mond[mo]++;
+      (T[String(e.id)]||[]).forEach(function(t){ if(t in Y) Y[t]++; });
+    });
+    try{ (js("rr25_echo_v1",{}).items||[]).forEach(function(it){ ["3","9"].forEach(function(k){ var c=it.checks&&it.checks[k]; if(c&&c.a&&c.due){ var d=new Date(c.due); if(d.getFullYear()===y) Y.echoAnt++; } }); }); }catch(e){}
+    return Y;
+  }
+  function yearPanel(){
+    var now=new Date(); var y=MON.y, Y=yearStats(y), LAB={soft:"Soft",grenze:"Grenze",hard:"Hard",feld:"Feld",grau:"Grau"};
+    var mo={}; MN.forEach(function(n,i){ mo[i]=Y.monat[i]; });
+    var ml={}; MN.forEach(function(n,i){ ml[i]=n.slice(0,3); });
+    var top=Object.keys(Y.top).sort(function(a,b){ return Y.top[b]-Y.top[a]||a.localeCompare(b); }).slice(0,5);
+    var say=Y.n?(Y.rit+(Y.rit===1?" Ritual":" Rituale")+" in "+y+(Y.n>Y.rit?", dazu "+(Y.n-Y.rit)+" weitere Einträge":"")+"."):"In diesem Jahr noch nichts in der Chronik.";
+    var wd=Y.Wirkung+Y.Echo, wp=wd?Math.round(Y.Wirkung/wd*100):50;
+    var fut=y>=now.getFullYear();
+    return '<div class="rbHead"><button type="button" class="rbNav" data-d="-12" aria-label="Jahr zurück">‹</button><b>'+y+'</b><button type="button" class="rbNav" data-d="12" aria-label="Jahr vor"'+(fut?' disabled':'')+'>›</button></div>'+
+      '<p class="rbSay">'+h(say)+'</p>'+
+      '<p class="rbH">Rituale pro Monat</p>'+bars(mo,false,ml)+
+      '<p class="rbH">Ton · Soft und Hard</p>'+bars(Y.ton,true,LAB)+
+      '<p class="rbH">Mondphase</p>'+bars(Y.mond)+
+      '<p class="rbH">Wirkung und Echo</p>'+(wd?'<div class="rbBal" aria-label="Wirkung '+Y.Wirkung+', Echo '+Y.Echo+'"><i style="width:'+wp+'%"></i></div>':'')+
+      '<div class="rbPills"><span class="rbP on">Wirkung <b>'+Y.Wirkung+'</b></span><span class="rbP on">Echo <b>'+Y.Echo+'</b></span><span class="rbP">Echo-Tage beantwortet <b>'+Y.echoAnt+'</b></span></div>'+
+      '<p class="rbH">Meistgenutzte Rituale</p>'+(top.length?'<ol class="rbTop">'+top.map(function(k){ return '<li><span>'+h(k)+'</span><b>'+Y.top[k]+'×</b></li>'; }).join("")+'</ol>':'<p class="rbNote">Noch keine Rituale in diesem Jahr.</p>');
+  }
+  function modeBar(){
+    return '<div class="rbMode" role="tablist"><button type="button" data-mode="monat" class="'+(MODE==="monat"?"on":"")+'">Monat</button><button type="button" data-mode="jahr" class="'+(MODE==="jahr"?"on":"")+'">Jahr</button></div>';
+  }
   function panel(){
     var now=new Date(); if(!MON) MON={y:now.getFullYear(),m:now.getMonth()};
+    if(MODE==='jahr') return modeBar()+yearPanel();
     var S=stats(MON.y,MON.m);
     var LAB={soft:"Soft",grenze:"Grenze",hard:"Hard",feld:"Feld",grau:"Grau"};
     var fut=MON.y>now.getFullYear()||(MON.y===now.getFullYear()&&MON.m>=now.getMonth());
-    return '<div class="rbHead"><button type="button" class="rbNav" data-d="-1" aria-label="Monat zurück">‹</button><b>'+MN[MON.m]+' '+MON.y+'</b><button type="button" class="rbNav" data-d="1" aria-label="Monat vor"'+(fut?' disabled':'')+'>›</button></div>'+
+    return modeBar()+'<div class="rbHead"><button type="button" class="rbNav" data-d="-1" aria-label="Monat zurück">‹</button><b>'+MN[MON.m]+' '+MON.y+'</b><button type="button" class="rbNav" data-d="1" aria-label="Monat vor"'+(fut?' disabled':'')+'>›</button></div>'+
       '<p class="rbSay">'+h(sentence(S))+'</p>'+
       '<p class="rbH">Ton · alle Einträge</p>'+bars(S.ton,true,LAB)+
       '<p class="rbH">Mondphase</p>'+bars(S.mond)+
@@ -272,9 +307,10 @@ try{
   function paintPanel(){
     var p=document.getElementById("rbPanel"); if(!p) return;
     p.hidden=!OPEN; if(!OPEN) return;
-    p.innerHTML=panel();
-    p.querySelectorAll(".rbNav").forEach(function(b){ b.onclick=function(){ var d=+b.getAttribute("data-d"), m=MON.m+d, y=MON.y; if(m<0){ m=11; y--; } if(m>11){ m=0; y++; } MON={y:y,m:m}; paintPanel(); }; });
+    p.innerHTML=panel(); modeHook(p);
+    p.querySelectorAll(".rbNav").forEach(function(b){ b.onclick=function(){ var d=+b.getAttribute("data-d"); if(MODE==="jahr"){ MON={y:MON.y+d/12,m:MON.m}; paintPanel(); return; } var m=MON.m+d, y=MON.y; if(m<0){ m=11; y--; } if(m>11){ m=0; y++; } MON={y:y,m:m}; paintPanel(); }; });
   }
+  function modeHook(p){ p.querySelectorAll('.rbMode button').forEach(function(b){ b.onclick=function(){ MODE=b.getAttribute('data-mode'); paintPanel(); }; }); }
   function mount(){
     var sec=document.getElementById("log"), ent=document.getElementById("entries"); if(!sec||!ent) return;
     if(!document.getElementById("rbBtn")){
@@ -321,6 +357,9 @@ try{
     ".rbF{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#7b3fb0,#d58bff);box-shadow:0 0 8px rgba(213,139,255,.45)}",
     ".rbF.soft{background:linear-gradient(90deg,#1f8a52,#2ecc71)}.rbF.grenze{background:linear-gradient(90deg,#b8661f,#ff9f43)}.rbF.hard{background:linear-gradient(90deg,#9e2b22,#e74c3c)}.rbF.feld{background:linear-gradient(90deg,#5b2a99,#9a4dff)}.rbF.grau{background:linear-gradient(90deg,#5e5a6b,#9a96a6);box-shadow:none}",
     ".rbPills{display:flex;flex-wrap:wrap;gap:.35rem}.rbP{display:inline-flex;align-items:center;white-space:nowrap;font-size:.7rem;padding:.2rem .6rem;border-radius:999px;border:1px solid rgba(200,120,255,.25);color:#cdbbe8}.rbP.on{color:#e4ecff;background:rgba(160,90,255,.12)}.rbP b{margin-left:.2rem;color:#fff}",
+    ".rbMode{display:flex;gap:.3rem;justify-content:center;margin:0 0 .5rem}.rbMode button{min-height:0;padding:.25rem .9rem;font-size:.7rem;border-radius:999px;border:1px solid rgba(200,120,255,.25);background:transparent;color:#cdbbe8}.rbMode button.on{background:rgba(160,90,255,.22);color:#f6e6ff;border-color:rgba(200,120,255,.6);box-shadow:0 0 10px rgba(200,120,255,.3)}",
+    ".rbBal{height:.5rem;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin:.2rem 0 .45rem}.rbBal i{display:block;height:100%;background:linear-gradient(90deg,#7b3fb0,#d58bff);box-shadow:0 0 8px rgba(213,139,255,.45)}",
+    ".rbTop{list-style:none;margin:.2rem 0 0;padding:0}.rbTop li{display:flex;justify-content:space-between;gap:.6rem;font-size:.76rem;color:#e6d4ff;padding:.22rem 0;border-bottom:1px solid rgba(200,120,255,.1)}.rbTop li:last-child{border:0}.rbTop b{color:#fff;font-weight:600}",
     ".rbNote{margin:.55rem 0 0;font-size:.62rem;color:#8e7aa8}",
     ".rbTags{display:inline-flex;gap:.25rem;margin-left:.4rem;vertical-align:middle}",
     ".rbTag{font-size:.54rem;letter-spacing:.06em;padding:.05rem .42rem;min-height:0;line-height:1.5;border-radius:999px;border:1px dashed rgba(200,120,255,.3);background:transparent;color:#8e7aa8}",
