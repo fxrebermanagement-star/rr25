@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 91 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 92 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -1689,11 +1689,11 @@ try{
   function absichten(){
     var T=tags(), out=[];
     rows().forEach(function(e){
-      var ti=String(e&&e.titel||"").trim(), rz=/^Rezept · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
+      var ti=String(e&&e.titel||"").trim(), rz=/^(Rezept|Ritualbauer) · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
       var txt=rz?String(e.absicht||e.note||"").trim():String(e.note||e.wer||"").trim(); if(!txt) return;
       var ms=when(e); if(ms==null) return;
       var tg=T[String(e.id)]||[];
-      out.push({id:String(e.id),kind:rz?"Rezept":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
+      out.push({id:String(e.id),kind:rz?"Ritualbauer":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
     });
     out.sort(function(a,b){ return b.ms-a.ms; });
     return out;
@@ -1923,7 +1923,7 @@ try{
     out+='<input id="rzRname" class="rzRi" maxlength="40" placeholder="Name" value="'+h((S._dn=defName(),S.name||S._dn))+'" autocomplete="off">';
     out+='<div class="rzVb"><button type="button" class="btn ghost" data-a="start">Jetzt durchgehen</button><button type="button" class="btn primary" data-a="save">Speichern</button></div>';
     if(sv.length){
-      out+='<p class="rzRh">Meine Rezepte</p><ul class="rzSv">'+sv.map(function(r,i){ var f=r.fuer&&r.fuer.w?" · für "+h(r.fuer.w):""; return '<li><button type="button" class="rzOpen" data-r="'+i+'"><b>'+h(r.name)+'</b><small>'+h(r.ton)+' · '+r.steps.length+' Schritte'+f+(r.rep?' · '+r.rep+'×':'')+'</small></button><button type="button" class="rzDel" data-d="'+i+'" aria-label="Rezept löschen">×</button></li>'; }).join("")+'</ul>';
+      out+='<p class="rzRh">Meine Rituale</p><ul class="rzSv">'+sv.map(function(r,i){ var f=r.fuer&&r.fuer.w?" · für "+h(r.fuer.w):""; return '<li><button type="button" class="rzOpen" data-r="'+i+'"><b>'+h(r.name)+'</b><small>'+h(r.ton)+' · '+r.steps.length+' Schritte'+f+(r.rep?' · '+r.rep+'×':'')+'</small></button><button type="button" class="rzDel" data-d="'+i+'" aria-label="Ritual löschen">×</button></li>'; }).join("")+'</ul>';
     }
     return out;
   }
@@ -1965,7 +1965,7 @@ try{
       var id=typeof uid==="function"?uid():("r"+Date.now().toString(36));
       if(typeof load==="function"&&typeof save==="function"){
         var d=load(); d.log=d.log||[];
-        d.log.unshift({id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),titel:"Rezept · "+r.name,wer:fl,note:(r.absicht||"")+(r.absicht&&fl?" · ":"")+fl,absicht:r.absicht||"",fuer:fl,zeile:(V.zeile||"").trim()});
+        d.log.unshift({id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),titel:"Ritualbauer · "+r.name,wer:fl,note:(r.absicht||"")+(r.absicht&&fl?" · ":"")+fl,absicht:r.absicht||"",fuer:fl,zeile:(V.zeile||"").trim()});
         if(V.pic){ d.log[0].pics=1; }
         save(d);
         if(V.pic&&typeof fotoPut==="function") fotoPut(id,[V.pic]).then(function(){ if(typeof paintLog==="function") paintLog(); });
@@ -2122,7 +2122,7 @@ try{
 }catch(e){setTimeout(function(){throw e;});}
 /* ==== ritual-b85.js ==== */
 try{
-/* ritual-b85.js — Build 85: kleiner Knopf «Rezept bauen» auf der Startseite, direkt unter den Ritual-Chips.
+/* ritual-b85.js — Build 85: kleiner Knopf «Ritualbauer» auf der Startseite, direkt unter den Ritual-Chips.
    Öffnet den Ritualbauer (eigene Vollseite, Build 86). Tippfläche 40 px, sichtbar nur eine kleine Pille; Seitenhöhe bleibt. */
 (function(){
   if(window.__rr25b85) return; window.__rr25b85=1;
@@ -2130,8 +2130,8 @@ try{
     var home=document.getElementById("home"), cats=document.getElementById("cats"); if(!home||!cats) return;
     var b=document.getElementById("rezHome");
     if(!b){
-      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Rezept bauen, eigenes Ritual zusammenstellen");
-      b.textContent="✦ Rezept bauen";
+      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Ritualbauer öffnen, eigenes Ritual zusammenstellen");
+      b.textContent="✦ Ritualbauer";
       b.onclick=function(){
         try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); }catch(e){}
       };

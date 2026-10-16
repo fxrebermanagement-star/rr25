@@ -1,4 +1,4 @@
-/* ritual-b85.js — Build 85: kleiner Knopf «Rezept bauen» auf der Startseite, direkt unter den Ritual-Chips.
+/* ritual-b85.js — Build 85: kleiner Knopf «Ritualbauer» auf der Startseite, direkt unter den Ritual-Chips.
    Öffnet den Ritualbauer (eigene Vollseite, Build 86). Tippfläche 40 px, sichtbar nur eine kleine Pille; Seitenhöhe bleibt. */
 (function(){
   if(window.__rr25b85) return; window.__rr25b85=1;
@@ -6,8 +6,8 @@
     var home=document.getElementById("home"), cats=document.getElementById("cats"); if(!home||!cats) return;
     var b=document.getElementById("rezHome");
     if(!b){
-      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Rezept bauen, eigenes Ritual zusammenstellen");
-      b.textContent="✦ Rezept bauen";
+      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Ritualbauer öffnen, eigenes Ritual zusammenstellen");
+      b.textContent="✦ Ritualbauer";
       b.onclick=function(){
         try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); }catch(e){}
       };
