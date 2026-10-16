@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 90 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 91 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -1867,6 +1867,13 @@ try{
     return '<div class="rzV"><p class="rzVk">'+h(r.name)+' · '+(i+1)+' von '+r.steps.length+'</p><h4>'+h(s[0])+'</h4>'+stepHtml(s[1])+cnt+
       '<div class="rzVb"><button type="button" class="btn ghost" data-a="vb"'+(i===0?" disabled":"")+'>Zurück</button><button type="button" class="btn primary" data-a="vn">'+(last?"Abschliessen":"Weiter")+'</button></div></div><button type="button" class="rzLink" data-a="vx">Beenden</button>';
   }
+  /* Status «Es ist so»: wie im Ritual-Runner (status() in ritual-runner-v2.js): nach dem letzten Schritt, optional, einmal */
+  function status(){
+    var on=!!VIEW.status;
+    return '<div class="rzV"><h4>Status</h4><p class="rzRn">Optional, einmal. Feststellung statt Bitte. Nie Ersatz für So sei es.</p>'+
+      '<div class="rzVb"><button type="button" class="btn ghost" data-a="stset"'+(on?" disabled":"")+'>'+(on?"Es ist so. Gesetzt.":"Es ist so")+'</button></div>'+
+      '<div class="rzVb"><button type="button" class="btn primary" data-a="stnext">Weiter</button></div></div>';
+  }
   function danach(){
     var E=VIEW.echo, W=VIEW.wirk, P=VIEW.pic;
     return '<div class="rzV"><h4>So sei es.</h4><p class="rzRn">Eine Zeile für später, nur wenn du magst: Echo ist, was zurückkommt. Wirkung ist, was sich bewegt.</p>'+
@@ -1940,6 +1947,8 @@ try{
       else if(a==="cnt"){ var st=VIEW.r.steps[VIEW.i], x=st[2]&&st[2].rep?st[2]:null; if(x&&(VIEW.c||0)<x.rep){ VIEW.c=(VIEW.c||0)+1; if(VIEW.c>=x.rep){ buzz(x.rep>=9); var v=VIEW, ii=v.i; setTimeout(function(){ if(VIEW===v&&v.i===ii&&!v.fin){ v.c=0; if(v.i<v.r.steps.length-1) v.i++; else v.fin=true; paint(); } },900); } } }
       else if(a==="vb"){ VIEW.i=Math.max(0,VIEW.i-1); VIEW.c=0; }
       else if(a==="vn"){ VIEW.c=0; if(VIEW.i<VIEW.r.steps.length-1) VIEW.i++; else VIEW.fin=true; }
+      else if(a==="stset"){ VIEW.status=true; }
+      else if(a==="stnext"){ VIEW.sdone=true; }
       else if(a==="vx"){ VIEW=null; }
       else if(a==="foto"){ kamera(); return; }
       else if(a==="fotox"){ var z0=document.getElementById("rzZeile"); if(z0) VIEW.zeile=z0.value; VIEW.pic=""; }
@@ -1968,7 +1977,7 @@ try{
   }
   function paint(){
     var body=document.getElementById("rezBody"); if(!body) return;
-    body.innerHTML=VIEW?(VIEW.fin?danach():viewer(VIEW.r,VIEW.i)):builderHtml(); bind(body);
+    body.innerHTML=VIEW?(VIEW.fin?(VIEW.sdone?danach():status()):viewer(VIEW.r,VIEW.i)):builderHtml(); bind(body);
   }
   function ensure(){
     if(document.getElementById("rezept")) return;
@@ -2121,8 +2130,8 @@ try{
     var home=document.getElementById("home"), cats=document.getElementById("cats"); if(!home||!cats) return;
     var b=document.getElementById("rezHome");
     if(!b){
-      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.setAttribute("aria-label","Rezept bauen, eigenes Ritual zusammenstellen");
-      b.innerHTML="<span>✦ Rezept bauen</span>";
+      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Rezept bauen, eigenes Ritual zusammenstellen");
+      b.textContent="✦ Rezept bauen";
       b.onclick=function(){
         try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); }catch(e){}
       };
@@ -2134,12 +2143,12 @@ try{
   if(home&&window.MutationObserver){ var t; new MutationObserver(function(){ clearTimeout(t); t=setTimeout(place,30); }).observe(home,{childList:true}); }
   var css=document.createElement("style");
   css.textContent=[
-    "#rezHome{display:block;width:100%;height:40px;min-height:40px;margin:-5px 0 -5px;padding:0;background:transparent;border:0;box-shadow:none;text-align:center}",
-    "#rezHome span{display:inline-block;font-size:.72rem;letter-spacing:.06em;line-height:1;padding:.4rem .95rem;border-radius:999px;border:1px solid rgba(200,120,255,.3);background:rgba(160,90,255,.08);color:#d9c4f5}",
-    "#rezHome:active span,#rezHome:focus-visible span{border-color:rgba(200,120,255,.7);box-shadow:0 0 10px rgba(200,120,255,.3);color:#f6e6ff}",
-    "html body main:has(#home.on){padding-bottom:4.45rem!important}",
+    "#rezHome{display:inline-flex;align-items:center;justify-content:center;margin:4px 0 0;position:relative;padding:.38rem .7rem!important;font-size:.64rem!important;min-height:33.8px!important;white-space:nowrap}",
+    "#rezHome::after{content:'';position:absolute;left:-2px;right:-2px;top:-4px;bottom:-4px}",
+    "html body main:has(#home.on){padding-bottom:3.95rem!important}",
     "html #home #cats{margin-bottom:0!important}",
-    "html #home #skizze{margin-top:0!important}"
+    "html #home #skizze{margin-top:0!important}",
+    "#rezHome:active,#rezHome:focus-visible{border-color:rgba(200,120,255,.7);box-shadow:0 0 10px rgba(200,120,255,.3);color:#f6e6ff}"
   ].join("");
   document.head.appendChild(css);
 })();

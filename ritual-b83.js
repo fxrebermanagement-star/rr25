@@ -95,6 +95,13 @@
     return '<div class="rzV"><p class="rzVk">'+h(r.name)+' · '+(i+1)+' von '+r.steps.length+'</p><h4>'+h(s[0])+'</h4>'+stepHtml(s[1])+cnt+
       '<div class="rzVb"><button type="button" class="btn ghost" data-a="vb"'+(i===0?" disabled":"")+'>Zurück</button><button type="button" class="btn primary" data-a="vn">'+(last?"Abschliessen":"Weiter")+'</button></div></div><button type="button" class="rzLink" data-a="vx">Beenden</button>';
   }
+  /* Status «Es ist so»: wie im Ritual-Runner (status() in ritual-runner-v2.js): nach dem letzten Schritt, optional, einmal */
+  function status(){
+    var on=!!VIEW.status;
+    return '<div class="rzV"><h4>Status</h4><p class="rzRn">Optional, einmal. Feststellung statt Bitte. Nie Ersatz für So sei es.</p>'+
+      '<div class="rzVb"><button type="button" class="btn ghost" data-a="stset"'+(on?" disabled":"")+'>'+(on?"Es ist so. Gesetzt.":"Es ist so")+'</button></div>'+
+      '<div class="rzVb"><button type="button" class="btn primary" data-a="stnext">Weiter</button></div></div>';
+  }
   function danach(){
     var E=VIEW.echo, W=VIEW.wirk, P=VIEW.pic;
     return '<div class="rzV"><h4>So sei es.</h4><p class="rzRn">Eine Zeile für später, nur wenn du magst: Echo ist, was zurückkommt. Wirkung ist, was sich bewegt.</p>'+
@@ -168,6 +175,8 @@
       else if(a==="cnt"){ var st=VIEW.r.steps[VIEW.i], x=st[2]&&st[2].rep?st[2]:null; if(x&&(VIEW.c||0)<x.rep){ VIEW.c=(VIEW.c||0)+1; if(VIEW.c>=x.rep){ buzz(x.rep>=9); var v=VIEW, ii=v.i; setTimeout(function(){ if(VIEW===v&&v.i===ii&&!v.fin){ v.c=0; if(v.i<v.r.steps.length-1) v.i++; else v.fin=true; paint(); } },900); } } }
       else if(a==="vb"){ VIEW.i=Math.max(0,VIEW.i-1); VIEW.c=0; }
       else if(a==="vn"){ VIEW.c=0; if(VIEW.i<VIEW.r.steps.length-1) VIEW.i++; else VIEW.fin=true; }
+      else if(a==="stset"){ VIEW.status=true; }
+      else if(a==="stnext"){ VIEW.sdone=true; }
       else if(a==="vx"){ VIEW=null; }
       else if(a==="foto"){ kamera(); return; }
       else if(a==="fotox"){ var z0=document.getElementById("rzZeile"); if(z0) VIEW.zeile=z0.value; VIEW.pic=""; }
@@ -196,7 +205,7 @@
   }
   function paint(){
     var body=document.getElementById("rezBody"); if(!body) return;
-    body.innerHTML=VIEW?(VIEW.fin?danach():viewer(VIEW.r,VIEW.i)):builderHtml(); bind(body);
+    body.innerHTML=VIEW?(VIEW.fin?(VIEW.sdone?danach():status()):viewer(VIEW.r,VIEW.i)):builderHtml(); bind(body);
   }
   function ensure(){
     if(document.getElementById("rezept")) return;
