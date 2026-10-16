@@ -19,11 +19,11 @@
   function absichten(){
     var T=tags(), out=[];
     rows().forEach(function(e){
-      var ti=String(e&&e.titel||"").trim(); if(ti!=="Tagesziel"&&ti!=="Sigille") return;
-      var txt=String(e.note||e.wer||"").trim(); if(!txt) return;
+      var ti=String(e&&e.titel||"").trim(), rz=/^Rezept · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
+      var txt=rz?String(e.absicht||e.note||"").trim():String(e.note||e.wer||"").trim(); if(!txt) return;
       var ms=when(e); if(ms==null) return;
       var tg=T[String(e.id)]||[];
-      out.push({id:String(e.id),kind:ti==="Sigille"?"Zeichen":"Tagesziel",txt:txt,ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
+      out.push({id:String(e.id),kind:rz?"Rezept":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
     });
     out.sort(function(a,b){ return b.ms-a.ms; });
     return out;
@@ -42,7 +42,7 @@
     var shown=MORE?f:f.slice(0,MAXN);
     return '<p class="abSay">'+h(say)+'</p>'+(all.length?'<div class="abF">'+FL.map(function(x){ return '<button type="button" data-f="'+x[0]+'" class="'+(FILT===x[0]?"on":"")+'">'+x[1]+'</button>'; }).join("")+'</div>':'')+
       (shown.length?'<ul class="abL">'+shown.map(function(a){
-        return '<li><div class="abT"><span class="abK">'+a.kind+'</span><span class="abD">'+dstr(a.ms)+' · '+ago(a.ms)+'</span></div><p class="abX">'+h(a.txt)+'</p>'+
+        return '<li><div class="abT"><span class="abK">'+a.kind+'</span><span class="abD">'+dstr(a.ms)+' · '+ago(a.ms)+'</span></div><p class="abX">'+h(a.txt)+'</p>'+(a.fuer?'<p class="abF2">'+h(a.fuer)+'</p>':'')+(a.zeile?'<p class="abF2 i">'+h(a.zeile)+'</p>':'')+
           '<div class="abV"><span class="abDot on">gesetzt</span><button type="button" class="abDot'+(a.echo?" on":"")+'" data-id="'+h(a.id)+'" data-t="Echo" aria-pressed="'+a.echo+'">Echo</button><button type="button" class="abDot'+(a.wirk?" on":"")+'" data-id="'+h(a.id)+'" data-t="Wirkung" aria-pressed="'+a.wirk+'">Wirkung</button></div></li>';
       }).join("")+'</ul>':(all.length?'<p class="abNote">Nichts in dieser Auswahl.</p>':""))+
       (f.length>MAXN&&!MORE?'<button type="button" class="abMore">Ältere zeigen ('+(f.length-MAXN)+')</button>':'');
@@ -87,6 +87,7 @@
     ".abT{display:flex;justify-content:space-between;gap:.5rem;align-items:baseline}.abK{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:#d6a6ff}.abD{font-size:.64rem;color:#a994c4}",
     ".abX{margin:.2rem 0 .35rem;font-family:Georgia,serif;font-size:.92rem;line-height:1.35;color:#f1e1ff}",
     ".abV{display:flex;gap:.3rem;flex-wrap:wrap}.abDot{min-height:0;font-size:.62rem;line-height:1.5;padding:.05rem .6rem;border-radius:999px;border:1px dashed rgba(200,120,255,.3);background:transparent;color:#8e7aa8}.abDot.on{border-style:solid;border-color:rgba(200,120,255,.65);color:#f6e6ff;background:rgba(160,90,255,.2);box-shadow:0 0 8px rgba(200,120,255,.3)}",
+    ".abF2{margin:-.15rem 0 .35rem;font-size:.7rem;color:#a994c4}.abF2.i{font-style:italic}",
     ".abNote{margin:.4rem 0 0;font-size:.7rem;color:#8e7aa8}",
     ".abMore{margin:.4rem auto 0;display:block;min-height:0;padding:.25rem .9rem;font-size:.68rem;border-radius:999px;border:1px solid rgba(200,120,255,.25);background:transparent;color:#cdbbe8}"
   ].join("");
