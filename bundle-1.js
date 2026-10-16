@@ -1,4 +1,4 @@
-/* rr25 · Paket 1/7 · Build 75 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 1/7 · Build 76 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: doll.js, ritual-core.js, ritual-mondphase.js, ritual-zeit.js, rituals-v2.js */
 /* ==== doll.js ==== */
 try{
@@ -259,6 +259,14 @@ try{
     FILE.forEach(function(x){ f=Math.min(f,day0(x.s)); t=Math.max(t,x.all?x.e:addDays(day0(x.e-1),1)); });
     if(DATA.from) f=parseDay(DATA.from);
     if(DATA.to) t=addDays(parseDay(DATA.to),1);
+    /* Build 76: fehlt ein Teil der Datei (Netz, Teil nicht erreichbar), stimmt die Zahl der Termine nicht mit «count» überein.
+       Dann gilt nur der lückenlose Anfang als abgedeckt; ab dem ersten Tag ohne Eintrag rechnet die App selbst weiter,
+       statt Tage ohne Daten still als «abgedeckt» zu führen. */
+    if(DATA.count&&ev.length<DATA.count&&isFinite(f)){
+      var seen={}; FILE.forEach(function(x){ if(x.all){ for(var q=day0(x.s);q<x.e;q=addDays(q,1)) seen[q]=1; } else seen[day0(x.s)]=1; });
+      var c=day0(f); while(c<t&&seen[c]) c=addDays(c,1);
+      t=c; DATA.partial=true;
+    }
     COV=isFinite(f)&&isFinite(t)?{from:f,to:t}:null;
     LCACHE={};
   }
