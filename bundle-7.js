@@ -1,5 +1,5 @@
-/* rr25 · Paket 7/7 · Build 93 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js */
+/* rr25 · Paket 7/7 · Build 94 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -150,7 +150,7 @@ try{
   }
   var css=document.createElement("style");
   css.textContent="#sxBox{margin:.55rem .1rem 0;padding-top:.5rem;border-top:1px solid rgba(200,120,255,.14)}"+
-    "#sxBox .sxRow{display:flex;gap:.4rem;flex-wrap:wrap}#sxBox .sxRow .btn{flex:1;min-height:2.5rem!important;height:auto!important;padding:.5rem .6rem!important;display:flex!important;align-items:center;justify-content:center;font-size:.8rem!important;border-radius:.9rem!important;border:1px solid rgba(200,120,255,.25)!important;background:rgba(160,90,255,.1)!important;color:#e4ecff!important}#sxBox .sxRow .btn.primary{background:linear-gradient(160deg,#7b3fb0,#4a1f72)!important}"+
+    "#sxBox .sxRow{display:flex;gap:.4rem;flex-wrap:wrap}#sxBox .sxRow .btn{flex:1;min-height:40px!important;height:auto!important;padding:.5rem .6rem!important;display:flex!important;align-items:center;justify-content:center;font-size:.8rem!important;border-radius:.9rem!important;border:1px solid rgba(200,120,255,.25)!important;background:rgba(160,90,255,.1)!important;color:#e4ecff!important}#sxBox .sxRow .btn.primary{background:linear-gradient(160deg,#7b3fb0,#4a1f72)!important}"+
     "#sxBox .sxHint{margin:.4rem .2rem 0;font-size:.7rem;line-height:1.4;color:#d9c8f0;display:flex;gap:.45rem;align-items:flex-start}#sxBox .sxHint i{flex:none;width:.55rem;height:.55rem;margin-top:.3rem;border-radius:50%;background:#5fe0a0}#sxBox .sxHint.gelb i{background:#ffb86b}#sxBox .sxHint.rot i{background:#ff5470}#sxBox .sxHint.gelb{color:#ffd2a0}#sxBox .sxHint.rot{color:#ffb4c0}"+
     "#sxBox .sxLink{min-height:2.75rem;padding:0 .2rem;border:0;background:none;font:inherit;font-size:.7rem;color:#d6a6ff;text-decoration:underline;text-underline-offset:.2em;text-decoration-color:rgba(200,120,255,.4)}"+
     "#navMehr.sxDue{position:relative}#navMehr.sxDue::after{content:'';position:absolute;top:.35rem;right:calc(50% - 1.5rem);width:.55rem;height:.55rem;border-radius:50%;background:#ffb86b;box-shadow:0 0 8px rgba(255,184,107,.7)}"+
@@ -2149,6 +2149,36 @@ try{
     "html #home #cats{margin-bottom:0!important}",
     "html #home #skizze{margin-top:0!important}",
     "#rezHome:active,#rezHome:focus-visible{border-color:rgba(200,120,255,.7);box-shadow:0 0 10px rgba(200,120,255,.3);color:#f6e6ff}"
+  ].join("");
+  document.head.appendChild(css);
+})();
+
+}catch(e){setTimeout(function(){throw e;});}
+/* ==== ritual-b94.js ==== */
+try{
+/* ritual-b94.js — Build 94: Feinschliff. Nur Abstände, Tippflächen und Grössen, keine Logik.
+   Heute-Seite: Tippflächen nur unsichtbar vergrössert (::after), damit die Höhe 1088 px bleibt. */
+(function(){
+  if(window.__rr25b94) return; window.__rr25b94=1;
+  var css=document.createElement("style");
+  css.textContent=[
+    /* Heute: unsichtbar auf mindestens 40 px */
+    "#home #cats .chip,#home .toneChip,#home #rezHome,#home .bkLater,#home .btn:not(#sigilSave){position:relative}",
+    "#home #cats .chip::after{content:'';position:absolute;left:0;right:0;top:-3.2px;bottom:-3.2px}",
+    "#home .toneChip::after{content:'';position:absolute;left:0;right:0;top:-4.6px;bottom:-4.6px}",
+    "#home .bkLater::after{content:'';position:absolute;left:0;right:0;top:-4px;bottom:-4px}",
+    "#home .btn:not(#sigilSave)::after{content:'';position:absolute;left:0;right:0;top:-3px;bottom:-3px}",
+    /* andere Seiten: echte Mindesthöhe 40 px */
+    "main .screen:not(#home) button:not(.kmDay):not(.kmNav){min-height:40px}",
+    "html #abBtn,html #mzBtn,html #zlBtn,html #rbBtn{min-height:40px!important}",
+    "html #rbBar{display:grid!important;grid-template-columns:1fr 1fr;gap:.45rem}",
+    "#mehrSheet button,html #sxOut,html #sxIn{min-height:40px}",
+    "html #logFilt .logchip{min-height:40px}",
+    "html #logFilt .logchip.log-grau{font-size:.76rem;padding:.42rem .72rem;letter-spacing:0}",
+    "button.rbTag,button.rbNav,#abPanel button{min-width:40px}",
+    ".kmNav{width:40px;height:40px}",
+    "button.kmYear{min-height:40px;min-width:40px}",
+    ".kmDay{height:40px}"
   ].join("");
   document.head.appendChild(css);
 })();
