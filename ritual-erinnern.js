@@ -1,6 +1,7 @@
 /* ritual-erinnern.js — Build 37: Erinnerungen so gut es ohne Server geht.
    GitHub Pages hat keinen Push-Server: eine echte Push-Nachricht bei geschlossener App ist ohne Backend nicht möglich,
    und es wird bewusst kein fremder Push-Dienst eingebunden.
+   (Build 72: der Knopf sitzt klein im Kalender-Tab über der Liste, nicht mehr in Mehr.)
    1. Kalenderdatei (.ics): Hard-Feintakte und Rückkehr · Anker der nächsten 30 Tage, je mit Alarm 10 Min. vorher.
       Einmal ins Handy-Kalender übernehmen, dann erinnert der Kalender auch bei geschlossener App.
    2. Geplante Nachricht (Notification Triggers / TimestampTrigger), nur wenn der Browser das kann und die Erinnerung
@@ -90,27 +91,26 @@
   }
   function status(){
     var s=document.getElementById("erInfo"); if(!s) return;
-    s.textContent=TRIG?(optOn()?"Geplante Nachrichten aktiv (dieser Browser kann es).":"Dieser Browser kann geplante Nachrichten. Dafür oben die Erinnerung einschalten.")
-      :"Bei geschlossener App erinnert nur der Handy-Kalender. Dafür die Kalenderdatei übernehmen.";
+    s.textContent="Nächste 30 Tage, Alarm 10 Min. vorher. Bei geschlossener App erinnert nur der Handy-Kalender."+(TRIG&&optOn()?" Geplante Nachrichten sind in diesem Browser aktiv.":"");
   }
   function mount(){
-    var sh=document.getElementById("mehrSheet"); if(!sh) return false; if(document.getElementById("erBox")) return true;
+    var kal=document.getElementById("kal"), list=kal&&document.getElementById("kalList"); if(!kal||!list) return false;
+    if(document.getElementById("erBox")) return true;
     var box=document.createElement("div"); box.id="erBox";
-    box.innerHTML='<button type="button" class="btn ghost" id="erIcs">Hard und Anker in den Kalender<small>.ics · nächste 30 Tage · Alarm 10 Min. vorher</small></button><p id="erInfo" class="erL"></p><p id="erSay" class="erL erOk" hidden></p>';
-    var sx=document.getElementById("sxBox"); if(sx) sh.insertBefore(box,sx); else sh.appendChild(box);
-    box.addEventListener("click",function(e){ e.stopPropagation(); });
+    box.innerHTML='<button type="button" id="erIcs">In den Handy-Kalender (.ics)</button><span id="erInfo" class="erL"></span><p id="erSay" class="erL erOk" hidden></p>';
+    list.parentNode.insertBefore(box,list);
     document.getElementById("erIcs").onclick=download;
     var cb=document.getElementById("optNotify"); if(cb) cb.addEventListener("change",function(){ setTimeout(function(){ status(); schedule(); },600); });
     status();
     return true;
   }
   var css=document.createElement("style");
-  css.textContent="#erBox{margin:.55rem .1rem 0;padding-top:.5rem;border-top:1px solid rgba(200,120,255,.14)}"+
-    "#erIcs{width:100%;min-height:2.6rem!important;height:auto!important;padding:.45rem .7rem!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:.1rem;font-size:.8rem!important;border-radius:.9rem!important;border:1px solid rgba(200,120,255,.25)!important;background:rgba(160,90,255,.1)!important;color:#e4ecff!important}"+
-    "#erIcs small{font-size:.56rem;color:#a996c4;font-weight:400}"+
-    "#erBox .erL{margin:.35rem .2rem 0;font-size:.6rem;color:#8e7aa8;line-height:1.35}#erBox .erOk{color:#d9c8f0}";
+  css.textContent="#erBox{margin:.1rem .2rem .7rem;text-align:center}"+
+    "#erIcs{display:inline-block;min-height:2.5rem;padding:.4rem .9rem;border:0;background:none;font:inherit;font-size:.74rem;color:var(--ueberschrift,#d6a6ff);text-decoration:underline;text-underline-offset:.2em;text-decoration-color:rgba(200,120,255,.4);cursor:pointer;-webkit-tap-highlight-color:transparent}"+
+    "#erBox .erL{display:block;margin:-.2rem .4rem 0;font-size:.64rem;color:var(--dim,#8e7aa8);line-height:1.4}#erBox .erOk{color:#d9c8f0;margin-top:.2rem}";
   document.head.appendChild(css);
   if(!mount()){ var n=0, iv=setInterval(function(){ if(mount()||++n>40) clearInterval(iv); },250); }
+  setInterval(function(){ if(!document.getElementById("erBox")) mount(); },3000);
   if(K) K.onReady(function(){ schedule(); tick(); });
   setInterval(tick,30000);
   window.RR25_ERINNERN={ics:ics,upcoming:upcoming,triggers:TRIG};
