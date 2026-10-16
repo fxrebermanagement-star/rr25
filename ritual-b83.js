@@ -132,5 +132,5 @@
     ".rzSv{list-style:none;margin:0;padding:0}.rzSv li{display:flex;gap:.3rem;align-items:center;border-top:1px solid rgba(200,120,255,.12)}.rzOpen{flex:1;text-align:left;background:none;border:0;padding:.5rem 0;min-height:0;color:#f1e1ff}.rzOpen b{display:block;font-weight:500;font-size:.88rem}.rzOpen small{font-size:.66rem;color:#a994c4}.rzDel{min-height:0;width:2rem;height:2rem;border-radius:50%;border:1px solid rgba(200,120,255,.25);background:transparent;color:#a994c4;padding:0}"
   ].join("");
   document.head.appendChild(css);
-  window.RR25_REZEPT={list:rez};
+  window.RR25_REZEPT={list:rez,open:function(){ OPEN=true; loadLex(); mount(); paint(); }};
 })();
