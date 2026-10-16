@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 86 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 87 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -1782,7 +1782,27 @@ try{
   var TRAD={schutz:{d:[2,6],m:["ab","neu"]},ruhe:{d:[1],m:["ab","neu"]},herz:{d:[5],m:["zu","voll"]},klaerung:{d:[3],m:["zu","voll"]},mut:{d:[2],m:["zu"]},heilung:{d:[0,1],m:["zu"]},fuelle:{d:[4],m:["zu","voll"]},traum:{d:[1],m:["voll","neu"]},ende:{d:[6],m:["ab","neu"]}};
   var DL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"], PN=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
   var MK={neu:"Neumond",zu:"zunehmender Mond",voll:"Vollmond",ab:"abnehmender Mond"};
-  var TU={kraeuter:"Lege %s bereit (Duft, Tee oder Bild).",hausmittel:"Stelle %s bereit. Klein anwenden.",steine:"Nimm %s in die Hand.",kerzen:"Zünde %s an. Sicher stellen.",farben:"Lass die Farbe %s sehen (Tuch, Licht).",zahlen:"Halte die Zahl %s im Atem.",rauch:"Räuchere %s. Fenster einen Spalt offen."};
+  var ZA={"1":"den Anfang","2":"das Gegenüber","3":"das Wachstum","4":"den Boden","5":"die Bewegung","6":"den Ausgleich","7":"den Rückzug","8":"den Fluss","9":"den Abschluss"};
+  var HM={"Wasser":"Stelle ein Glas Wasser bereit.","Kerze":"Zünde eine Kerze an und stell sie sicher hin.","Weihrauch":"Räuchere ein wenig Weihrauch, Fenster einen Spalt offen.","Myrrhe":"Räuchere ein wenig Myrrhe, Fenster einen Spalt offen.","Messer":"Lege das Messer bereit, nur zum Zeigen, nicht zum Schneiden.","Nagel":"Lege einen Nagel bereit.","Schlüssel":"Nimm einen Schlüssel in die Hand.","Faden":"Halte einen Faden bereit.","Besen":"Stelle den Besen bereit.","Schwefel":"Schwefel nur als Wort: schreib ihn auf, verbrenne nichts.","Kreide":"Nimm die Kreide zur Hand.","Salz":"Stelle eine Prise Salz bereit.","Wein":"Stelle ein Glas Wein bereit, ein Schluck genügt."};
+  function low(x){ return x.charAt(0).toLowerCase()+x.slice(1); }
+  function kurz(e){ return e.cat==="zahlen"&&e.num?"Zahl "+e.num:String(e.name).replace(" / "," oder "); }
+  function zSatz(e){
+    var n=String(e.name).replace(" / "," oder ");
+    switch(e.cat){
+      case "zahlen": return e.num&&ZA[e.num]?"Atme in die Zahl "+e.num+", "+ZA[e.num]+".":"Atme ruhig in die Zahl "+n+".";
+      case "kraeuter": return "Nimm "+n+" dazu, als Duft, Tee oder Bild.";
+      case "steine": return "Nimm einen Stein in die Hand: "+n+".";
+      case "kerzen": return "Zünde die "+low(n)+" an und stell sie sicher hin.";
+      case "farben": return "Gib der Farbe "+n+" Raum: ein Tuch, ein Licht oder ein Blick darauf.";
+      case "rauch":
+        if(/^Räucherkohle/.test(n)) return "Lege die Räucherkohle bereit, mit Schale und Sand darunter.";
+        if(/^Räucherschale/.test(n)) return "Stelle die "+n+" bereit.";
+        if(/^Rauch mit Mass/.test(n)) return "Räuchere mit Mass: wenig Rauch, Fenster einen Spalt offen.";
+        return "Räuchere mit "+n+": wenig Rauch, Fenster einen Spalt offen.";
+      case "hausmittel": return HM[n]||"Als Hausmittel dabei: "+n+". Ein wenig reicht.";
+      default: return "Nimm "+n+" dazu.";
+    }
+  }
   var DATA=null, LINKS={}, st=0, PREV="home";
   var S0=function(){ return {th:"",ton:"Soft",txt:"",fm:"ich",fw:"",sel:[],name:"",_txtAuto:""}; };
   var S=S0(), VIEW=null;
@@ -1821,12 +1841,13 @@ try{
     var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
     var wo=fm==="person"&&w?" für "+w:fm==="situation"&&w?" für "+w:"";
     var steps=[];
-    steps.push(["Vorbereitung","Tu:|Ruhiger Ort. Wasser bereit."+(z.length?" "+z.map(function(e){ return e.name; }).join(", ")+" liegt bereit.":"")+(hard?"|Zeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")]);
+    steps.push(["Vorbereitung","Tu:|Ruhiger Ort. Wasser bereit."+(z.length?" Bereit: "+z.map(kurz).join(", ")+".":"")+(hard?"|Zeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")]);
     steps.push(["Standort","Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin hier. Ich bin klar."]);
     steps.push(["Absicht",(w?"Für "+w+".||":"")+"Sprich dreimal, leise:|"+ab]);
     steps.push(["Ich ❤️","Frag dich in Ruhe:|Was will ich wirklich"+wo+"?||Warte, bis ein einfacher Satz kommt.||Sprich:|Ich will …"+(w?" (für "+w+")":"")]);
-    var tu=z.length?z.map(function(e){ return (TU[e.cat]||"Stelle %s bereit.").replace("%s",e.name)+(e.text?" ("+e.text+")":""); }):["Ein kleiner Schritt von mir, hier und jetzt: Kerze, Atem oder Wasser."];
-    steps.push(["Spiel 🙏","Was tue ich dafür"+wo+"?||Tu:|"+tu.join("|")+"||Sprich:|Ich tue meinen Teil. Ich tue ihn gern."]);
+    var tu=z.length?z.map(zSatz):["Ein kleiner Schritt von mir, hier und jetzt: Kerze, Atem oder Wasser."];
+    var tr=z.filter(function(e){ return e.text; }).map(function(e){ return kurz(e)+": "+e.text; });
+    steps.push(["Spiel 🙏","Was tue ich dafür"+wo+"?||Tu:|"+tu.join("|")+(tr.length?"||Aus der Tradition:|"+tr.join("|"):"")+"||Sprich:|Ich tue meinen Teil. Ich tue ihn gern."]);
     steps.push(["Quelle 👁","Lass los"+(w?": "+w:"")+".||Tu:|Ein langer Atemzug. Hände öffnen.||Sprich:|Ich gebe es ab. Es ist gesät.|So sei es."]);
     if(hard){ steps.push(["Rückkehr","Sprich:|Ich bin hier. Ich bin ganz bei mir.||Tu:|Füsse. Atem. Raum."]); steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]); }
     else steps.push(["Schluss","Tu:|Wasser. Alltag."]);
@@ -1851,7 +1872,6 @@ try{
   }
   function builderHtml(){
     var sv=rez(), out='';
-    out+='<p class="rzRn">Aus Tradition und Erfahrung, kein Heilversprechen. Bei Beschwerden zählt ärztlicher Rat.</p>';
     out+='<p class="rzRh">1 · Absicht</p><textarea id="rzRt" class="rzRi rzTa" maxlength="160" rows="2" placeholder="Dein eigener Satz …">'+h(S.txt)+'</textarea>';
     out+='<p class="rzRn">Oder ein Thema als Vorschlag:</p><div class="rzCh">'+TH.map(function(t){ return '<button type="button" data-th="'+t[0]+'" class="'+(S.th===t[0]?"on":"")+'">'+t[1]+'</button>'; }).join("")+'</div>';
     out+='<p class="rzRh">2 · Für wen</p><div class="rzCh"><button type="button" data-fm="ich" class="'+(S.fm==="ich"?"on":"")+'">Für mich</button><button type="button" data-fm="person" class="'+(S.fm==="person"?"on":"")+'">Für eine Person</button><button type="button" data-fm="situation" class="'+(S.fm==="situation"?"on":"")+'">Für eine Situation</button></div>';
@@ -1955,7 +1975,7 @@ try{
     ".rzSv{list-style:none;margin:0;padding:0}.rzSv li{display:flex;gap:.3rem;align-items:center;border-top:1px solid rgba(200,120,255,.12)}.rzOpen{flex:1;text-align:left;background:none;border:0;padding:.5rem 0;min-height:2.75rem;color:#f1e1ff}.rzOpen b{display:block;font-weight:500;font-size:.9rem}.rzOpen small{font-size:.68rem;color:#a994c4}.rzDel{min-height:2.75rem;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid rgba(200,120,255,.25);background:transparent;color:#a994c4;padding:0}"
   ].join("");
   document.head.appendChild(css);
-  window.RR25_REZEPT={list:rez,open:open,close:close};
+  window.RR25_REZEPT={list:rez,open:open,close:close,satz:zSatz};
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
