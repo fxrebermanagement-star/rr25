@@ -33,7 +33,7 @@ PAKETE = [
     ["design-v3.js", "ritual-chronik-grau.js", "ritual-ton.js", "ritual-saison.js", "ritual-resonanzen.js"],
     ["ritual-sichern.js", "ritual-gerechnet.js", "ritual-rueckblick.js", "ritual-erinnern.js",
      "ritual-mondhinweis.js", "ritual-zaehler.js", "ritual-danksatz.js",
-     "ritual-sterne.js", "ritual-mondbild.js", "ritual-tippen.js", "ritual-b66.js", "ritual-b80.js"],
+     "ritual-sterne.js", "ritual-mondbild.js", "ritual-tippen.js", "ritual-b66.js", "ritual-b80.js", "ritual-b81.js"],
 ]
 
 # Dateien mit globalen Deklarationen: ohne Hülle
