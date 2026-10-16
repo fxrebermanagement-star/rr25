@@ -1,7 +1,12 @@
 (function(){
   var DATA=[];
-  var CAT_LAB={kraeuter:"Kräuter",hausmittel:"Hausmittel",steine:"Steine",kerzen:"Kerzen",farben:"Farben",fav:"★ Favoriten"};
-  var TAB_ORDER=["kraeuter","hausmittel","steine","kerzen","farben","fav"];
+  var CAT_LAB={kraeuter:"Kräuter",hausmittel:"Hausmittel",steine:"Steine",kerzen:"Kerzen",farben:"Farben",zahlen:"Zahlen",rauch:"Räucherwerk",fav:"★ Favoriten"};
+  var TAB_ORDER=["kraeuter","hausmittel","steine","kerzen","farben","zahlen","rauch","fav"];
+  var INTRO={kraeuter:"Pflanzen als Helfer: als Tee, Duft oder Bild. Tradition und Erfahrung, kein Heilversprechen.",hausmittel:"Alltägliches aus Küche und Haus. Klein anwenden und klar bleiben.",steine:"Steine als Begleiter und Symbol: in die Hand nehmen, bei sich tragen oder hinlegen.",kerzen:"Eine Flamme, eine Absicht. Kerzen nie unbeaufsichtigt brennen lassen.",farben:"Farben als Stimmung: in Kleidung, Kerze, Tuch oder Blick.",zahlen:"Zahlen als Symbol, aus der Tradition. Sie zeigen eine Stimmung und sagen nichts voraus. Die Planeten folgen den magischen Quadraten (Agrippa).",rauch:"Räuchern ist ein alter Brauch. Immer kurz, mit Mass und bei offenem Fenster.",fav:"Deine gemerkten Einträge."};
+  var PL_DAY={Sonne:"Sonntag",Mond:"Montag",Mars:"Dienstag",Merkur:"Mittwoch",Jupiter:"Donnerstag",Venus:"Freitag",Saturn:"Samstag"};
+  var DAY_PL=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
+  var TH_LAB={schutz:"Schutz",ruhe:"Ruhe",herz:"Herz",klaerung:"Klärung",mut:"Mut",heilung:"Heilung",fuelle:"Fülle",traum:"Traum und Schwelle",ende:"Abschluss"};
+  var LINKS={}, lf=null;
   var KFAV="rr25_rz_fav", KNOTE="rr25_rz_note";
   function lsGet(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
@@ -54,6 +59,16 @@
     "#resonanzen .rzNoteTa{display:block;width:100%;box-sizing:border-box;margin:.5rem 0 0;min-height:4.6rem;padding:.55rem .65rem;border-radius:.8rem;border:1px solid rgba(200,120,255,.3);background:rgba(10,4,24,.6);color:#f1e8ff;font:inherit;font-size:.9rem;line-height:1.4;resize:vertical}",
     "#resonanzen .rzNoteHint{margin:.25rem 0 0;font-size:.66rem;color:#a08cba}",
     "#resonanzen .rzRow.rzFlash{box-shadow:0 0 0 1px var(--ueberschrift,#d6a6ff),0 0 18px var(--glow,rgba(200,120,255,.4))}",
+    "#resonanzen .rzLinks{display:flex;flex-wrap:wrap;margin:.1rem 0 0 -.3rem}",
+    "#resonanzen .rzLk{min-height:2.75rem;padding:0 .3rem;border:0;background:none;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;display:inline-flex;align-items:center}",
+    "#resonanzen .rzLk span{display:inline-block;padding:.18rem .6rem;border-radius:999px;border:1px solid rgba(200,160,255,.3);font-size:.7rem;color:#d9c8f0;background:rgba(160,90,255,.08)}",
+    "#resonanzen .rzLk[data-lk=t] span{border-style:dashed}",
+    "#resonanzen .rzLf{display:flex;align-items:center;gap:.5rem;margin:0 0 .4rem;padding:.5rem .7rem;border:1px solid rgba(200,160,255,.3);border-radius:.9rem;background:rgba(20,8,48,.5);font-size:.8rem;color:#f1e8ff}",
+    "#resonanzen .rzLf[hidden]{display:none}",
+    "#resonanzen .rzLf b{font-weight:500}#resonanzen .rzLf small{display:block;font-size:.66rem;color:#a08cba;margin-top:.1rem}",
+    "#resonanzen .rzLf button{margin-left:auto;min-width:2.75rem;min-height:2.75rem;border:0;background:none;color:#d9c8f0;font-size:1.1rem}",
+    "#resonanzen .rzIntro{margin:0 .2rem .5rem;font-size:.76rem;line-height:1.45;color:#a08cba}",
+    "#resonanzen .rzNum{font-family:Georgia,serif;font-size:1.7rem;line-height:32px;text-align:center;width:32px;height:32px;display:block;color:#cfa8ff;text-shadow:0 0 8px rgba(231,184,255,.6)}",
     "#rzToday{margin:0 0 .6rem;padding:.7rem .85rem .75rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--rzc,#5fe0a0);border-radius:1rem;background:rgba(20,8,48,.5)}",
     "#rzToday[hidden]{display:none}",
     "#rzToday .rtH{margin:0;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift,#d6a6ff)}",
@@ -70,9 +85,11 @@
     });
   }
   function isFav(id){ return favs.indexOf(id)>=0; }
+  function hasLink(id){ var l=LINKS[id]; if(!l||!lf) return false; return lf.k==="p"?(l.p||[]).indexOf(lf.v)>=0:(l.t||[]).indexOf(lf.v)>=0; }
   function match(e){
     if(!e) return false;
-    if(q){}
+    if(lf){ if(!hasLink(e.id)) return false; }
+    else if(q){}
     else if(tab==="fav"){ if(!isFav(e.id)) return false; }
     else if(e.cat!==tab) return false;
     if(toneF && e.tone!==toneF) return false;
@@ -91,16 +108,31 @@
     var want=kind==="HARD"?"Soft→Hard":(kind==="GRENZE"?"Soft/Grenze":"Soft");
     var txt=kind==="HARD"?"Heute ist ein Hard-Tag. Diese Einträge gelten nur mit Rückkehr und Anker.":(kind==="GRENZE"?"Heute ist ein Grenze-Tag. Diese Einträge passen, kurz und bewusst.":"Heute ist ein Soft-Tag. Diese weichen Einträge passen.");
     var col=kind==="HARD"?"#ff5470":(kind==="GRENZE"?"#ffb86b":"#5fe0a0");
-    var pool=DATA.filter(function(e){ return e.tone===want&&e.cat!=="farben"; });
-    if(!pool.length){ box.hidden=true; return; }
-    var k=todayKey(), pick=[], used={}, step=7;
-    for(var i=0;i<pool.length*2&&pick.length<3;i++){
-      var e=pool[(k*step+i*step*3+i)%pool.length]; if(!e||used[e.id]) continue;
-      if(pick.length&&pick.some(function(x){ return x.cat===e.cat; })&&i<pool.length) continue;
-      used[e.id]=1; pick.push(e);
-    }
+    var okT=kind==="HARD"?["Soft→Hard"]:(kind==="GRENZE"?["Soft/Grenze","Soft"]:["Soft"]);
+    var pool=DATA.filter(function(e){ return okT.indexOf(e.tone)>=0&&e.cat!=="farben"; });
+    var wd=0; try{ var wn=new Intl.DateTimeFormat("en-US",{timeZone:"Europe/Zurich",weekday:"short"}).format(new Date()); wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(wn); }catch(e){ wd=new Date().getDay(); }
+    var dp=DAY_PL[wd<0?0:wd], hp=null, hint="";
+    try{ if(window.RR25_OPT&&window.RR25_OPT.get("planet")&&window.RR25_KAL&&window.RR25_KAL.planetAt){ var pa=window.RR25_KAL.planetAt(Date.now()); if(pa&&pa.cur&&pa.cur.p!==dp) hp=pa.cur.p; } }catch(e){}
+    function byP(pl){ return pool.filter(function(e){ var l=LINKS[e.id]; return l&&(l.p||[]).indexOf(pl)>=0; }); }
+    var k=todayKey(), pick=[], used={};
+    function take(arr,n,seed){ for(var i=0;i<arr.length*2&&n>0;i++){ var e=arr[(seed*7+i*5+i)%arr.length]; if(!e||used[e.id]) continue; if(pick.some(function(x){ return x.cat===e.cat; })&&i<arr.length) continue; used[e.id]=1; pick.push(e); n--; } }
+    take(byP(dp),hp?2:3,k);
+    if(hp) take(byP(hp),1,k+3);
+    if(pick.length<3) take(pool,3-pick.length,k+1);
+    txt+=" Es ist "+PL_DAY[dp]+", der Tag "+({Sonne:"der Sonne",Mond:"des Mondes",Mars:"des Mars",Merkur:"des Merkur",Jupiter:"des Jupiter",Venus:"der Venus",Saturn:"des Saturn"})[dp]+" (Tradition)."+(hp?" Jetzt läuft die Stunde des Planeten "+hp+".":"");
     box.style.setProperty("--rzc",col); box.hidden=false;
     box.innerHTML='<p class="rtH">Heute passend</p><p class="rtT">'+esc(txt)+'</p><div class="rtL">'+pick.map(function(e){ return '<button type="button" class="rtB" data-go="'+esc(e.id)+'">'+esc(e.name)+'<small>'+esc(CAT_LAB[e.cat])+'</small></button>'; }).join("")+'</div>';
+  }
+  function fallbackIco(e){
+    if(e.cat==="zahlen") return '<b class="rzNum">'+esc(e.num||"")+"</b>";
+    if(e.cat==="rauch") return '<svg viewBox="0 0 24 24"><path d="M9 21h6M10 21c-1-3 0-4 0-6M14 21c1-3 0-4 0-6"/><path d="M12 14c-3-2 2-4-1-6s2-4 0-6M16 12c-2-1 1-3-1-4"/></svg>';
+    return "";
+  }
+  function linkRow(id){
+    var l=LINKS[id]; if(!l) return "";
+    var h=(l.p||[]).map(function(p){ return '<button type="button" class="rzLk" data-lk="p" data-v="'+esc(p)+'" aria-label="Verbindung '+esc(p)+'"><span>'+esc(p)+" · "+PL_DAY[p].slice(0,2)+"</span></button>"; }).join("")+
+      (l.t||[]).map(function(t){ return '<button type="button" class="rzLk" data-lk="t" data-v="'+esc(t)+'" aria-label="Verbindung '+esc(TH_LAB[t])+'"><span>'+esc(TH_LAB[t])+"</span></button>"; }).join("");
+    return h?'<div class="rzLinks">'+h+"</div>":"";
   }
   function paint(){
     var root=document.getElementById("resonanzen");
@@ -121,7 +153,7 @@
         return '<button type="button" class="chip'+(tab===c?" on":"")+'" data-rz="'+c+'">'+CAT_LAB[c]+"</button>";
       }).join("");
       tabs.querySelectorAll("[data-rz]").forEach(function(b){
-        b.onclick=function(){ tab=b.getAttribute("data-rz")||"kraeuter"; paint(); };
+        b.onclick=function(){ tab=b.getAttribute("data-rz")||"kraeuter"; lf=null; paint(); };
       });
     }
     paintToday();
@@ -132,7 +164,14 @@
     }
     var rows=DATA.filter(match);
     var cnt=document.getElementById("rzCount");
-    if(cnt) cnt.textContent=q?(rows.length+(rows.length===1?" Treffer":" Treffer")+" in allen Gruppen"):(rows.length+(rows.length===1?" Eintrag":" Einträge"));
+    if(cnt) cnt.textContent=lf?(rows.length+" mit dieser Verbindung, alle Gruppen"):q?(rows.length+(rows.length===1?" Treffer":" Treffer")+" in allen Gruppen"):(rows.length+(rows.length===1?" Eintrag":" Einträge"));
+    var bar=document.getElementById("rzLf");
+    if(bar){
+      if(lf){ bar.hidden=false; bar.innerHTML='<div><b>Verbindung: '+esc(lf.k==="p"?lf.v+" · "+PL_DAY[lf.v]:TH_LAB[lf.v])+'</b><small>Tradition, die Quellen unterscheiden sich.</small></div><button type="button" id="rzLfX" aria-label="Verbindung aufheben">✕</button>'; var x=document.getElementById("rzLfX"); if(x) x.onclick=function(){ lf=null; paint(); }; }
+      else{ bar.hidden=true; bar.innerHTML=""; }
+    }
+    var intro=document.getElementById("rzIntro");
+    if(intro){ intro.textContent=(!lf&&!q&&INTRO[tab])?INTRO[tab]:""; intro.hidden=!intro.textContent; }
     if(!rows.length){
       list.innerHTML='<p class="rzEmpty">'+(tab==="fav"&&!q&&!toneF?"Noch keine Favoriten. Tippe den Stern an einem Eintrag, dann liegt er hier.":(toneF&&!q?"Hier gibt es keinen Eintrag mit diesem Ton. Der Filter «Alle» zeigt alles.":"Nichts gefunden. Eine andere Schreibweise oder der Filter «Alle» hilft."))+"</p>";
       return;
@@ -144,9 +183,10 @@
         '<p class="rzTxt">'+esc(e.text)+"</p>"+
         (nt&&!op?'<p class="rzMine">'+esc(nt)+"</p>":"")+
         (op?'<textarea class="rzNoteTa" data-note="'+esc(e.id)+'" maxlength="600" rows="3" placeholder="Eigene Notiz">'+esc(nt)+'</textarea><p class="rzNoteHint">Nur auf diesem Gerät gespeichert, auch in der Sicherung.</p>':"")+
+        linkRow(e.id)+
         '<button type="button" class="rzNoteBtn" data-nb="'+esc(e.id)+'">'+(op?"Fertig":(nt?"Notiz bearbeiten":"Eigene Notiz"))+"</button>";
       var star='<button type="button" class="rzStar'+(fv?" on":"")+'" data-fav="'+esc(e.id)+'" aria-pressed="'+fv+'" aria-label="'+(fv?"Favorit entfernen":"Als Favorit merken")+'">'+(fv?"★":"☆")+"</button>";
-      var ico=ICO[e.id], fl=flash===e.id?" rzFlash":"";
+      var ico=ICO[e.id]||fallbackIco(e), fl=flash===e.id?" rzFlash":"";
       if(!ico) return '<article class="rzRow'+fl+'" data-id="'+esc(e.id)+'">'+star+'<div class="rzMain">'+inner+"</div></article>";
       return '<article class="rzRow rzHas'+fl+'" data-id="'+esc(e.id)+'">'+star+'<span class="rzIco" aria-hidden="true">'+ico+'</span><div class="rzMain">'+inner+"</div></article>";
     }).join("");
@@ -170,9 +210,12 @@
       one("resonanzen-c.json?v=47"),
       one("resonanzen-ico-a.json?v=22"),
       one("resonanzen-ico-b.json?v=22"),
-      one("resonanzen-ico-c.json?v=22")
+      one("resonanzen-ico-c.json?v=22"),
+      one("resonanzen-d.json?v=74"),
+      one("resonanzen-links.json?v=74")
     ]).then(function(ps){
-      DATA=(ps[0]||[]).concat(ps[1]||[], ps[2]||[]);
+      DATA=(ps[0]||[]).concat(ps[1]||[], ps[2]||[], ps[6]||[]);
+      LINKS=ps[7]||{};
       ICO=Object.assign({}, ps[3]||{}, ps[4]||{}, ps[5]||{});
       ready=2;
       paint();
@@ -195,7 +238,8 @@
     if(list&&!list._rz){
       list._rz=1;
       list.addEventListener("click",function(ev){
-        var t=ev.target&&ev.target.closest?ev.target.closest("[data-fav],[data-nb]"):null; if(!t) return;
+        var t=ev.target&&ev.target.closest?ev.target.closest("[data-fav],[data-nb],[data-lk]"):null; if(!t) return;
+        if(t.getAttribute("data-lk")){ lf={k:t.getAttribute("data-lk"),v:t.getAttribute("data-v")}; openNote=""; paint(); try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){} return; }
         var id=t.getAttribute("data-fav");
         if(id){ var i=favs.indexOf(id); if(i>=0) favs.splice(i,1); else favs.push(id); lsSet(KFAV,favs); paint(); return; }
         id=t.getAttribute("data-nb"); openNote=(openNote===id)?"":id; paint();
