@@ -34,7 +34,7 @@
     }
   }
   var DATA=null, LINKS={}, st=0, PREV="home";
-  var S0=function(){ return {th:"",ton:"Soft",txt:"",fm:"ich",fw:"",sel:[],name:"",_txtAuto:""}; };
+  var S0=function(){ return {th:"",ton:"Soft",txt:"",fm:"ich",fw:"",rep:3,sel:[],name:"",_txtAuto:""}; };
   var S=S0(), VIEW=null;
   function js(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
   function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
@@ -73,11 +73,11 @@
     var steps=[];
     steps.push(["Vorbereitung","Tu:|Ruhiger Ort. Wasser bereit."+(z.length?" Bereit: "+z.map(kurz).join(", ")+".":"")+(hard?"|Zeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")]);
     steps.push(["Standort","Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin hier. Ich bin klar."]);
-    steps.push(["Absicht",(w?"Für "+w+".||":"")+"Sprich dreimal, leise:|"+ab]);
+    steps.push(["Absicht",(w?"Für "+w+".||":"")+"Sprich leise, einmal ganz bewusst:|"+ab]);
     steps.push(["Ich ❤️","Frag dich in Ruhe:|Was will ich wirklich"+wo+"?||Warte, bis ein einfacher Satz kommt.||Sprich:|Ich will …"+(w?" (für "+w+")":"")]);
     var tu=z.length?z.map(zSatz):["Ein kleiner Schritt von mir, hier und jetzt: Kerze, Atem oder Wasser."];
     var tr=z.filter(function(e){ return e.text; }).map(function(e){ return kurz(e)+": "+e.text; });
-    steps.push(["Spiel 🙏","Was tue ich dafür"+wo+"?||Tu:|"+tu.join("|")+(tr.length?"||Aus der Tradition:|"+tr.join("|"):"")+"||Sprich:|Ich tue meinen Teil. Ich tue ihn gern."]);
+    steps.push(["Spiel 🙏","Was tue ich dafür"+wo+"?||Tu:|"+tu.join("|")+(tr.length?"||Aus der Tradition:|"+tr.join("|"):"")+"||Sprich:|Ich tue meinen Teil. Ich tue ihn gern.",{rep:S.rep,txt:ab}]);
     steps.push(["Quelle 👁","Lass los"+(w?": "+w:"")+".||Tu:|Ein langer Atemzug. Hände öffnen.||Sprich:|Ich gebe es ab. Es ist gesät.|So sei es."]);
     if(hard){ steps.push(["Rückkehr","Sprich:|Ich bin hier. Ich bin ganz bei mir.||Tu:|Füsse. Atem. Raum."]); steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]); }
     else steps.push(["Schluss","Tu:|Wasser. Alltag."]);
@@ -87,10 +87,11 @@
     return String(t).split("||").map(function(b){ var L=b.split("|"); var head=L.shift(); return '<p class="rzRh">'+h(head)+'</p>'+L.map(function(x){ return '<p class="rzRl">'+h(x)+'</p>'; }).join(""); }).join("");
   }
   function defName(){ var t=TH.filter(function(x){ return x[0]===S.th; })[0]; return (t?t[1]:"Eigenes")+" · "+S.ton; }
-  function cur(){ return {id:"rz"+Date.now().toString(36),v:2,name:(S.name||defName()).trim()||defName(),th:S.th,ton:S.ton,absicht:(S.txt||"").trim(),fuer:{m:S.fm,w:fuerTxt(S)},zut:S.sel.slice(),steps:build(),made:Date.now()}; }
+  function cur(){ return {id:"rz"+Date.now().toString(36),v:2,name:(S.name||defName()).trim()||defName(),th:S.th,ton:S.ton,absicht:(S.txt||"").trim(),rep:S.rep,fuer:{m:S.fm,w:fuerTxt(S)},zut:S.sel.slice(),steps:build(),made:Date.now()}; }
   function viewer(r,i){
-    var s=r.steps[i], last=i===r.steps.length-1;
-    return '<div class="rzV"><p class="rzVk">'+h(r.name)+' · '+(i+1)+' von '+r.steps.length+'</p><h4>'+h(s[0])+'</h4>'+stepHtml(s[1])+
+    var s=r.steps[i], last=i===r.steps.length-1, x=s[2]&&s[2].rep?s[2]:null, c=VIEW.c||0, n=x?x.rep:0;
+    var cnt=x?'<div class="rzCnt"><p class="rzCq">'+h("«"+x.txt+"»")+'</p><button type="button" class="rzCb'+(c>=n?" fertig":"")+'" data-a="cnt" aria-live="polite"><span class="rzCn">'+c+' von '+n+'</span><small>'+(c>=n?"Geschafft":(c?"Weiter sprechen und tippen":"Sprich die Absicht und tippe"))+'</small></button></div>':'';
+    return '<div class="rzV"><p class="rzVk">'+h(r.name)+' · '+(i+1)+' von '+r.steps.length+'</p><h4>'+h(s[0])+'</h4>'+stepHtml(s[1])+cnt+
       '<div class="rzVb"><button type="button" class="btn ghost" data-a="vb"'+(i===0?" disabled":"")+'>Zurück</button><button type="button" class="btn primary" data-a="vn">'+(last?"Abschliessen":"Weiter")+'</button></div></div><button type="button" class="rzLink" data-a="vx">Beenden</button>';
   }
   function danach(){
@@ -104,6 +105,7 @@
     var sv=rez(), out='';
     out+='<p class="rzRh">1 · Absicht</p><textarea id="rzRt" class="rzRi rzTa" maxlength="160" rows="2" placeholder="Dein eigener Satz …">'+h(S.txt)+'</textarea>';
     out+='<p class="rzRn">Oder ein Thema als Vorschlag:</p><div class="rzCh">'+TH.map(function(t){ return '<button type="button" data-th="'+t[0]+'" class="'+(S.th===t[0]?"on":"")+'">'+t[1]+'</button>'; }).join("")+'</div>';
+    out+='<p class="rzRh">Absicht sprechen</p><div class="rzCh">'+[1,3,6,9].map(function(n){ return '<button type="button" data-rep="'+n+'" class="'+(S.rep===n?"on":"")+'" aria-pressed="'+(S.rep===n)+'">'+n+'×</button>'; }).join("")+'</div>';
     out+='<p class="rzRh">2 · Für wen</p><div class="rzCh"><button type="button" data-fm="ich" class="'+(S.fm==="ich"?"on":"")+'">Für mich</button><button type="button" data-fm="person" class="'+(S.fm==="person"?"on":"")+'">Für eine Person</button><button type="button" data-fm="situation" class="'+(S.fm==="situation"?"on":"")+'">Für eine Situation</button></div>';
     if(S.fm!=="ich") out+='<input id="rzFw" class="rzRi" maxlength="'+(S.fm==="person"?40:80)+'" placeholder="'+(S.fm==="person"?"Name":"Kurz beschrieben")+'" value="'+h(S.fw)+'" autocomplete="off">';
     out+='<p class="rzRh">3 · Ton</p><div class="rzCh"><button type="button" data-ton="Soft" class="tS'+(S.ton==="Soft"?" on":"")+'">Soft</button><button type="button" data-ton="Hard" class="tH'+(S.ton==="Hard"?" on":"")+'">Hard</button></div>';
@@ -117,7 +119,7 @@
     out+='<input id="rzRname" class="rzRi" maxlength="40" placeholder="Name" value="'+h((S._dn=defName(),S.name||S._dn))+'" autocomplete="off">';
     out+='<div class="rzVb"><button type="button" class="btn ghost" data-a="start">Jetzt durchgehen</button><button type="button" class="btn primary" data-a="save">Speichern</button></div>';
     if(sv.length){
-      out+='<p class="rzRh">Meine Rezepte</p><ul class="rzSv">'+sv.map(function(r,i){ var f=r.fuer&&r.fuer.w?" · für "+h(r.fuer.w):""; return '<li><button type="button" class="rzOpen" data-r="'+i+'"><b>'+h(r.name)+'</b><small>'+h(r.ton)+' · '+r.steps.length+' Schritte'+f+'</small></button><button type="button" class="rzDel" data-d="'+i+'" aria-label="Rezept löschen">×</button></li>'; }).join("")+'</ul>';
+      out+='<p class="rzRh">Meine Rezepte</p><ul class="rzSv">'+sv.map(function(r,i){ var f=r.fuer&&r.fuer.w?" · für "+h(r.fuer.w):""; return '<li><button type="button" class="rzOpen" data-r="'+i+'"><b>'+h(r.name)+'</b><small>'+h(r.ton)+' · '+r.steps.length+' Schritte'+f+(r.rep?' · '+r.rep+'×':'')+'</small></button><button type="button" class="rzDel" data-d="'+i+'" aria-label="Rezept löschen">×</button></li>'; }).join("")+'</ul>';
     }
     return out;
   }
@@ -128,6 +130,7 @@
   function bind(p){
     function all(sel,fn){ [].slice.call(p.querySelectorAll(sel)).forEach(fn); }
     all("[data-th]",function(b){ b.onclick=function(){ keep(); var id=b.getAttribute("data-th"); var auto=S.th&&SATZ[S.th]; if(!S.txt.trim()||S.txt===auto) S.txt=SATZ[id]; S.th=id; S.sel=[]; paint(); }; });
+    all("[data-rep]",function(b){ b.onclick=function(){ keep(); S.rep=+b.getAttribute("data-rep"); paint(); }; });
     all("[data-fm]",function(b){ b.onclick=function(){ keep(); S.fm=b.getAttribute("data-fm"); paint(); if(S.fm!=="ich"){ var i=document.getElementById("rzFw"); if(i) i.focus(); } }; });
     all("[data-ton]",function(b){ b.onclick=function(){ keep(); S.ton=b.getAttribute("data-ton"); S.sel=[]; paint(); }; });
     all("[data-z]",function(b){ b.onclick=function(){ keep(); var id=b.getAttribute("data-z"), i=S.sel.indexOf(id); if(i>=0) S.sel.splice(i,1); else if(S.sel.length<3) S.sel.push(id); paint(); }; });
@@ -138,8 +141,9 @@
       var a=b.getAttribute("data-a");
       if(a==="start"){ keep(); VIEW={r:cur(),i:0}; }
       else if(a==="save"){ keep(); var r=rez(); r.unshift(cur()); setRez(r.slice(0,30)); S=S0(); }
-      else if(a==="vb"){ VIEW.i=Math.max(0,VIEW.i-1); }
-      else if(a==="vn"){ if(VIEW.i<VIEW.r.steps.length-1) VIEW.i++; else VIEW.fin=true; }
+      else if(a==="cnt"){ var st=VIEW.r.steps[VIEW.i], x=st[2]&&st[2].rep?st[2]:null; if(x&&(VIEW.c||0)<x.rep){ VIEW.c=(VIEW.c||0)+1; if(VIEW.c>=x.rep){ var v=VIEW, ii=v.i; setTimeout(function(){ if(VIEW===v&&v.i===ii&&!v.fin){ v.c=0; if(v.i<v.r.steps.length-1) v.i++; else v.fin=true; paint(); } },900); } } }
+      else if(a==="vb"){ VIEW.i=Math.max(0,VIEW.i-1); VIEW.c=0; }
+      else if(a==="vn"){ VIEW.c=0; if(VIEW.i<VIEW.r.steps.length-1) VIEW.i++; else VIEW.fin=true; }
       else if(a==="vx"){ VIEW=null; }
       else if(a==="done"){ var z=document.getElementById("rzZeile"); if(z) VIEW.zeile=z.value; fin(VIEW); VIEW=null; S=S0(); close(); return; }
       paint();
@@ -153,7 +157,7 @@
       var id=typeof uid==="function"?uid():("r"+Date.now().toString(36));
       if(typeof load==="function"&&typeof save==="function"){
         var d=load(); d.log=d.log||[];
-        d.log.unshift({id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),titel:"Rezept · "+r.name,wer:fl,note:(r.absicht||"")+(r.absicht&&fl?" · ":"")+fl,absicht:r.absicht||"",fuer:fl,zeile:(V.zeile||"").trim()});
+        d.log.unshift({id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),titel:"Rezept · "+r.name,wer:fl,note:(r.absicht||"")+(r.absicht&&fl?" · ":"")+fl+(r.rep?((r.absicht||fl)?" · ":"")+r.rep+"×":""),absicht:r.absicht||"",fuer:fl,zeile:(V.zeile||"").trim()});
         save(d);
         var tg=[]; if(V.echo) tg.push("Echo"); if(V.wirk) tg.push("Wirkung");
         if(tg.length){ var T=js(KT,{}); if(!T||typeof T!=="object"||Array.isArray(T)) T={}; T[String(id)]=tg; try{ localStorage.setItem(KT,JSON.stringify(T)); }catch(e){} }
@@ -201,6 +205,10 @@
     ".rzRi{display:block;width:100%;margin:.5rem 0 0;min-height:2.75rem;font-size:.9rem}.rzTa{min-height:4rem;resize:vertical;font-family:inherit}",
     ".rzVb{display:flex;gap:.5rem;margin-top:.8rem}.rzVb .btn{flex:1;min-height:2.75rem}",
     ".rzV h4{margin:.1rem 0 .4rem;font-family:Georgia,serif;font-weight:400;font-size:1.25rem;color:#f1e1ff}.rzVk{margin:0;font-size:.62rem;letter-spacing:.12em;color:#a994c4}",
+    ".rzCnt{margin:.9rem 0 0;text-align:center}.rzCq{margin:0 0 .6rem;font-family:Georgia,serif;font-size:1rem;line-height:1.4;color:#f1e1ff}",
+    ".rzCb{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;width:100%;min-height:7.5rem;border-radius:1.4rem;border:1px solid rgba(200,120,255,.5);background:radial-gradient(circle at 50% 40%,rgba(160,90,255,.28),rgba(20,10,34,.6));color:#f6e6ff;box-shadow:0 0 18px rgba(160,90,255,.25)}.rzCb:active{box-shadow:0 0 28px rgba(200,120,255,.55);transform:scale(.99)}",
+    ".rzCn{font-family:Georgia,serif;font-size:2.4rem;line-height:1.1}.rzCb small{font-size:.7rem;color:#cdbbe8}.rzCb.fertig{border-color:rgba(95,224,160,.6);box-shadow:0 0 22px rgba(95,224,160,.25)}",
+    "@media (prefers-reduced-motion:reduce){.rzCb:active{transform:none}}",
     ".rzLink{display:block;margin:.7rem auto 0;background:none;border:0;color:#a994c4;font-size:.76rem;text-decoration:underline;min-height:2.75rem}",
     ".rzSv{list-style:none;margin:0;padding:0}.rzSv li{display:flex;gap:.3rem;align-items:center;border-top:1px solid rgba(200,120,255,.12)}.rzOpen{flex:1;text-align:left;background:none;border:0;padding:.5rem 0;min-height:2.75rem;color:#f1e1ff}.rzOpen b{display:block;font-weight:500;font-size:.9rem}.rzOpen small{font-size:.68rem;color:#a994c4}.rzDel{min-height:2.75rem;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid rgba(200,120,255,.25);background:transparent;color:#a994c4;padding:0}"
   ].join("");
