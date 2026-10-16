@@ -151,7 +151,7 @@
     out+='<input id="rzRname" class="rzRi" maxlength="40" placeholder="Name" value="'+h((S._dn=defName(),S.name||S._dn))+'" autocomplete="off">';
     out+='<div class="rzVb"><button type="button" class="btn ghost" data-a="start">Jetzt durchgehen</button><button type="button" class="btn primary" data-a="save">Speichern</button></div>';
     if(sv.length){
-      out+='<p class="rzRh">Meine Rezepte</p><ul class="rzSv">'+sv.map(function(r,i){ var f=r.fuer&&r.fuer.w?" · für "+h(r.fuer.w):""; return '<li><button type="button" class="rzOpen" data-r="'+i+'"><b>'+h(r.name)+'</b><small>'+h(r.ton)+' · '+r.steps.length+' Schritte'+f+(r.rep?' · '+r.rep+'×':'')+'</small></button><button type="button" class="rzDel" data-d="'+i+'" aria-label="Rezept löschen">×</button></li>'; }).join("")+'</ul>';
+      out+='<p class="rzRh">Meine Rituale</p><ul class="rzSv">'+sv.map(function(r,i){ var f=r.fuer&&r.fuer.w?" · für "+h(r.fuer.w):""; return '<li><button type="button" class="rzOpen" data-r="'+i+'"><b>'+h(r.name)+'</b><small>'+h(r.ton)+' · '+r.steps.length+' Schritte'+f+(r.rep?' · '+r.rep+'×':'')+'</small></button><button type="button" class="rzDel" data-d="'+i+'" aria-label="Ritual löschen">×</button></li>'; }).join("")+'</ul>';
     }
     return out;
   }
@@ -193,7 +193,7 @@
       var id=typeof uid==="function"?uid():("r"+Date.now().toString(36));
       if(typeof load==="function"&&typeof save==="function"){
         var d=load(); d.log=d.log||[];
-        d.log.unshift({id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),titel:"Rezept · "+r.name,wer:fl,note:(r.absicht||"")+(r.absicht&&fl?" · ":"")+fl,absicht:r.absicht||"",fuer:fl,zeile:(V.zeile||"").trim()});
+        d.log.unshift({id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),titel:"Ritualbauer · "+r.name,wer:fl,note:(r.absicht||"")+(r.absicht&&fl?" · ":"")+fl,absicht:r.absicht||"",fuer:fl,zeile:(V.zeile||"").trim()});
         if(V.pic){ d.log[0].pics=1; }
         save(d);
         if(V.pic&&typeof fotoPut==="function") fotoPut(id,[V.pic]).then(function(){ if(typeof paintLog==="function") paintLog(); });

@@ -19,11 +19,11 @@
   function absichten(){
     var T=tags(), out=[];
     rows().forEach(function(e){
-      var ti=String(e&&e.titel||"").trim(), rz=/^Rezept · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
+      var ti=String(e&&e.titel||"").trim(), rz=/^(Rezept|Ritualbauer) · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
       var txt=rz?String(e.absicht||e.note||"").trim():String(e.note||e.wer||"").trim(); if(!txt) return;
       var ms=when(e); if(ms==null) return;
       var tg=T[String(e.id)]||[];
-      out.push({id:String(e.id),kind:rz?"Rezept":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
+      out.push({id:String(e.id),kind:rz?"Ritualbauer":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
     });
     out.sort(function(a,b){ return b.ms-a.ms; });
     return out;
