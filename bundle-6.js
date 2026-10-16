@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 74 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 75 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -799,7 +799,7 @@ try{
   var PL_DAY={Sonne:"Sonntag",Mond:"Montag",Mars:"Dienstag",Merkur:"Mittwoch",Jupiter:"Donnerstag",Venus:"Freitag",Saturn:"Samstag"};
   var DAY_PL=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
   var TH_LAB={schutz:"Schutz",ruhe:"Ruhe",herz:"Herz",klaerung:"Klärung",mut:"Mut",heilung:"Heilung",fuelle:"Fülle",traum:"Traum und Schwelle",ende:"Abschluss"};
-  var LINKS={}, lf=null;
+  var LINKS={}, lf=null, MEHR={}, openMore={};
   var KFAV="rr25_rz_fav", KNOTE="rr25_rz_note";
   function lsGet(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
@@ -852,6 +852,12 @@ try{
     "#resonanzen .rzNoteTa{display:block;width:100%;box-sizing:border-box;margin:.5rem 0 0;min-height:4.6rem;padding:.55rem .65rem;border-radius:.8rem;border:1px solid rgba(200,120,255,.3);background:rgba(10,4,24,.6);color:#f1e8ff;font:inherit;font-size:.9rem;line-height:1.4;resize:vertical}",
     "#resonanzen .rzNoteHint{margin:.25rem 0 0;font-size:.66rem;color:#a08cba}",
     "#resonanzen .rzRow.rzFlash{box-shadow:0 0 0 1px var(--ueberschrift,#d6a6ff),0 0 18px var(--glow,rgba(200,120,255,.4))}",
+    "#resonanzen .rzMoreBtn{margin:.2rem 0 0 -.5rem;min-height:2.75rem;padding:0 .5rem;border:0;background:none;font:inherit;font-size:.78rem;color:var(--ueberschrift,#d6a6ff);cursor:pointer}",
+    "#resonanzen .rzMoreBtn::after{content:' ▾';font-size:.7em}#resonanzen .rzMoreBtn[aria-expanded=true]::after{content:' ▴'}",
+    "#resonanzen .rzMore{margin:.1rem 0 .3rem;padding:.55rem .7rem .6rem;border-left:2px solid rgba(200,160,255,.35);background:rgba(10,4,24,.35);border-radius:0 .7rem .7rem 0}",
+    "#resonanzen .rzMore dt{margin:.45rem 0 0;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ueberschrift,#d6a6ff)}#resonanzen .rzMore dt:first-child{margin-top:0}",
+    "#resonanzen .rzMore dd{margin:.1rem 0 0;font-size:.84rem;line-height:1.5;color:#e6dcff}",
+    "#resonanzen .rzMore .rzHk{color:#ffd2a0}#resonanzen .rzMore dd.rzHk{font-size:.8rem}",
     "#resonanzen .rzLinks{display:flex;flex-wrap:wrap;margin:.1rem 0 0 -.3rem}",
     "#resonanzen .rzLk{min-height:2.75rem;padding:0 .3rem;border:0;background:none;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;display:inline-flex;align-items:center}",
     "#resonanzen .rzLk span{display:inline-block;padding:.18rem .6rem;border-radius:999px;border:1px solid rgba(200,160,255,.3);font-size:.7rem;color:#d9c8f0;background:rgba(160,90,255,.08)}",
@@ -878,6 +884,26 @@ try{
     });
   }
   function isFav(id){ return favs.indexOf(id)>=0; }
+  function moreText(id){ var m=MEHR[id]; return m?(m.w+" "+m.n+" "+m.a+" "+(m.h||"")):""; }
+  function wann(e){
+    var t=e.tone, a=[];
+    a.push(t==="Hard"?"Nur an Hard-Tagen oder ganz bewusst, immer mit Ethik und Anker, nie aus Impuls.":t==="Soft→Hard"?"Passt an Soft-Tagen. An Hard-Tagen und rund um den Vollmond nur mit Rückkehr und Anker.":t==="Soft/Grenze"?"Passt an Soft- und Grenze-Tagen, kurz und bewusst.":"Passt an Soft-Tagen und im Alltag.");
+    var l=LINKS[e.id]||{}, ps=l.p||[];
+    if(ps.length) a.push("Tradition: am "+ps.map(function(p){ return PL_DAY[p]+" ("+p+")"; }).join(" oder ")+".");
+    var th=l.t||[], mo="";
+    if(th.indexOf("ende")>=0||th.indexOf("klaerung")>=0) mo="Mond (Tradition): abnehmend zum Loslassen und Klären.";
+    else if(th.indexOf("fuelle")>=0||th.indexOf("mut")>=0||th.indexOf("herz")>=0||th.indexOf("heilung")>=0) mo="Mond (Tradition): zunehmend zum Wachsen lassen.";
+    else if(th.indexOf("traum")>=0) mo="Mond (Tradition): Neumond und stille Nächte.";
+    if(mo) a.push(mo);
+    return a.join(" ");
+  }
+  function moreHtml(e){
+    var m=MEHR[e.id]; if(!m) return "";
+    var op=!!openMore[e.id];
+    var h='<button type="button" class="rzMoreBtn" data-more="'+esc(e.id)+'" aria-expanded="'+op+'">'+(op?"Weniger":"Mehr lesen")+"</button>";
+    if(!op) return h;
+    return h+'<dl class="rzMore"><dt>Was es ist</dt><dd>'+esc(m.w)+"</dd><dt>Wofür</dt><dd>"+esc(m.n)+"</dd><dt>Anwenden</dt><dd>"+esc(m.a)+"</dd><dt>Wann</dt><dd>"+esc(wann(e))+"</dd>"+(m.h?'<dt class="rzHk">Hinweis</dt><dd class="rzHk">'+esc(m.h)+"</dd>":"")+"</dl>";
+  }
   function hasLink(id){ var l=LINKS[id]; if(!l||!lf) return false; return lf.k==="p"?(l.p||[]).indexOf(lf.v)>=0:(l.t||[]).indexOf(lf.v)>=0; }
   function match(e){
     if(!e) return false;
@@ -887,7 +913,7 @@ try{
     else if(e.cat!==tab) return false;
     if(toneF && e.tone!==toneF) return false;
     if(!q) return true;
-    var hay=(e.name+" "+e.tone+" "+e.text+" "+(CAT_LAB[e.cat]||"")+" "+(notes[e.id]||"")).toLowerCase();
+    var hay=(e.name+" "+e.tone+" "+e.text+" "+(CAT_LAB[e.cat]||"")+" "+(notes[e.id]||"")+" "+moreText(e.id)).toLowerCase();
     return hay.indexOf(q)>=0;
   }
   /* Heute passend: nach dem Ton des Tages, täglich stabile Auswahl (Berner Datum) */
@@ -973,7 +999,7 @@ try{
       var fv=isFav(e.id), nt=notes[e.id]||"", op=openNote===e.id;
       var inner="<b>"+esc(e.name)+"</b>"+
         '<span class="rzTone" data-t="'+esc(e.tone)+'">'+esc(e.tone)+"</span>"+((q||tab==="fav")?'<span class="rzCat">'+esc(CAT_LAB[e.cat].replace("★ ",""))+"</span>":"")+
-        '<p class="rzTxt">'+esc(e.text)+"</p>"+
+        '<p class="rzTxt">'+esc(e.text)+"</p>"+moreHtml(e)+
         (nt&&!op?'<p class="rzMine">'+esc(nt)+"</p>":"")+
         (op?'<textarea class="rzNoteTa" data-note="'+esc(e.id)+'" maxlength="600" rows="3" placeholder="Eigene Notiz">'+esc(nt)+'</textarea><p class="rzNoteHint">Nur auf diesem Gerät gespeichert, auch in der Sicherung.</p>':"")+
         linkRow(e.id)+
@@ -1005,10 +1031,11 @@ try{
       one("resonanzen-ico-b.json?v=22"),
       one("resonanzen-ico-c.json?v=22"),
       one("resonanzen-d.json?v=74"),
-      one("resonanzen-links.json?v=74")
+      one("resonanzen-links.json?v=74"),
+      one("resonanzen-mehr.json?v=75")
     ]).then(function(ps){
       DATA=(ps[0]||[]).concat(ps[1]||[], ps[2]||[], ps[6]||[]);
-      LINKS=ps[7]||{};
+      LINKS=ps[7]||{}; MEHR=ps[8]||{};
       ICO=Object.assign({}, ps[3]||{}, ps[4]||{}, ps[5]||{});
       ready=2;
       paint();
@@ -1031,7 +1058,8 @@ try{
     if(list&&!list._rz){
       list._rz=1;
       list.addEventListener("click",function(ev){
-        var t=ev.target&&ev.target.closest?ev.target.closest("[data-fav],[data-nb],[data-lk]"):null; if(!t) return;
+        var t=ev.target&&ev.target.closest?ev.target.closest("[data-fav],[data-nb],[data-lk],[data-more]"):null; if(!t) return;
+        if(t.getAttribute("data-more")){ var mid=t.getAttribute("data-more"); openMore[mid]=!openMore[mid]; paint(); return; }
         if(t.getAttribute("data-lk")){ lf={k:t.getAttribute("data-lk"),v:t.getAttribute("data-v")}; openNote=""; paint(); try{ window.scrollTo({top:0,behavior:"smooth"}); }catch(e){} return; }
         var id=t.getAttribute("data-fav");
         if(id){ var i=favs.indexOf(id); if(i>=0) favs.splice(i,1); else favs.push(id); lsSet(KFAV,favs); paint(); return; }
