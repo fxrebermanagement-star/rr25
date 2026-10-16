@@ -1,5 +1,5 @@
-/* rr25 · Paket 7/7 · Build 84 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js */
+/* rr25 · Paket 7/7 · Build 85 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -1901,7 +1901,7 @@ try{
     ".rzSv{list-style:none;margin:0;padding:0}.rzSv li{display:flex;gap:.3rem;align-items:center;border-top:1px solid rgba(200,120,255,.12)}.rzOpen{flex:1;text-align:left;background:none;border:0;padding:.5rem 0;min-height:0;color:#f1e1ff}.rzOpen b{display:block;font-weight:500;font-size:.88rem}.rzOpen small{font-size:.66rem;color:#a994c4}.rzDel{min-height:0;width:2rem;height:2rem;border-radius:50%;border:1px solid rgba(200,120,255,.25);background:transparent;color:#a994c4;padding:0}"
   ].join("");
   document.head.appendChild(css);
-  window.RR25_REZEPT={list:rez};
+  window.RR25_REZEPT={list:rez,open:function(){ OPEN=true; loadLex(); mount(); paint(); }};
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
@@ -1991,6 +1991,41 @@ try{
     ".mzSay{margin:.5rem 0 .4rem;font-size:.8rem;color:#e6d4ff;line-height:1.4}.mzTop{margin:.5rem 0 0;font-size:.74rem;color:#cdbbe8}",
     ".mzL{list-style:none;margin:.6rem 0 0;padding:0}.mzL li{display:grid;grid-template-columns:4.3rem 1fr;gap:.1rem .5rem;padding:.35rem 0;border-top:1px solid rgba(200,120,255,.1);font-size:.8rem;color:#cdbbe8}.mzL li span{color:#a994c4;font-size:.66rem;padding-top:.15rem}.mzL li b{font-weight:500}.mzL li.mzR b{color:#f1e1ff}.mzL li small{grid-column:2;font-size:.68rem;color:#8e7aa8;line-height:1.35}",
     ".mzL li.mzV b{color:#d6a6ff;font-size:.72rem;letter-spacing:.04em}"
+  ].join("");
+  document.head.appendChild(css);
+})();
+
+}catch(e){setTimeout(function(){throw e;});}
+/* ==== ritual-b85.js ==== */
+try{
+/* ritual-b85.js — Build 85: kleiner Knopf «Rezept bauen» auf der Startseite, direkt unter den Ritual-Chips.
+   Öffnet den Rezept-Builder aus Build 83 (Resonanzen). Tippfläche 40 px, sichtbar nur eine kleine Pille; Seitenhöhe bleibt. */
+(function(){
+  if(window.__rr25b85) return; window.__rr25b85=1;
+  function place(){
+    var home=document.getElementById("home"), cats=document.getElementById("cats"); if(!home||!cats) return;
+    var b=document.getElementById("rezHome");
+    if(!b){
+      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.setAttribute("aria-label","Rezept bauen, eigenes Ritual zusammenstellen");
+      b.innerHTML="<span>✦ Rezept bauen</span>";
+      b.onclick=function(){
+        if(typeof show==="function") show("resonanzen");
+        setTimeout(function(){ try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); var r=document.getElementById("rzRezept"); if(r&&r.scrollIntoView) r.scrollIntoView({block:"start"}); }catch(e){} },260);
+      };
+    }
+    if(cats.nextElementSibling!==b) home.insertBefore(b,cats.nextSibling);
+  }
+  place();
+  var home=document.getElementById("home");
+  if(home&&window.MutationObserver){ var t; new MutationObserver(function(){ clearTimeout(t); t=setTimeout(place,30); }).observe(home,{childList:true}); }
+  var css=document.createElement("style");
+  css.textContent=[
+    "#rezHome{display:block;width:100%;height:40px;min-height:40px;margin:-5px 0 -5px;padding:0;background:transparent;border:0;box-shadow:none;text-align:center}",
+    "#rezHome span{display:inline-block;font-size:.72rem;letter-spacing:.06em;line-height:1;padding:.4rem .95rem;border-radius:999px;border:1px solid rgba(200,120,255,.3);background:rgba(160,90,255,.08);color:#d9c4f5}",
+    "#rezHome:active span,#rezHome:focus-visible span{border-color:rgba(200,120,255,.7);box-shadow:0 0 10px rgba(200,120,255,.3);color:#f6e6ff}",
+    "html body main:has(#home.on){padding-bottom:4.45rem!important}",
+    "html #home #cats{margin-bottom:0!important}",
+    "html #home #skizze{margin-top:0!important}"
   ].join("");
   document.head.appendChild(css);
 })();
