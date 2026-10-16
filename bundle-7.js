@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 76 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 77 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -79,17 +79,30 @@ try{
     return p.then(function(){ return done; });
   }
   function fileName(){ return "RR25-Sicherung-Build"+build()+"-"+stamp(new Date())+".json"; }
-  function out(){
-    var b=document.getElementById("sxOut"); if(b) b.disabled=true;
+  function done(name,p,how){
+    set(WHEN,String(Date.now()));
+    say((how==="teilen"?"Geteilt: ":"Gesichert: ")+name+" · "+line(count(p.keys,p.fotos))+(how==="teilen"?". Am besten in dein Drive oder an dich selbst senden.":". Die Datei liegt in den Downloads."));
+    hint();
+  }
+  function download(blob,name){
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; a.rel="noopener"; document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
+  }
+  /* ein Tipp: Datei teilen (Teilen-Menü des Handys), sonst Download. Nichts verlässt das Gerät ohne dein Tippen im Teilen-Menü. */
+  function out(mode){
+    var b=document.getElementById("sxOut"), b2=document.getElementById("sxFile"); if(b) b.disabled=true; if(b2) b2.disabled=true;
     pack().then(function(p){
-      var raw=JSON.stringify(p), name=fileName();
-      var blob=new Blob([raw],{type:"application/json"}), a=document.createElement("a");
-      a.href=URL.createObjectURL(blob); a.download=name; a.rel="noopener"; document.body.appendChild(a); a.click();
-      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },1500);
-      set(WHEN,String(Date.now()));
-      say("Gesichert: "+name+" · "+line(count(p.keys,p.fotos)));
-      hint();
-    }).catch(function(){ say("Sichern ging nicht."); }).then(function(){ if(b) b.disabled=false; });
+      var raw=JSON.stringify(p), name=fileName(), blob=new Blob([raw],{type:"application/json"});
+      var file=null; try{ file=new File([blob],name,{type:"application/json"}); }catch(e){}
+      var canShare=mode!=="datei"&&file&&navigator.share&&navigator.canShare&&navigator.canShare({files:[file]});
+      if(canShare){
+        return navigator.share({files:[file],title:name}).then(function(){ done(name,p,"teilen"); }).catch(function(err){
+          if(err&&err.name==="AbortError"){ say("Teilen abgebrochen. Noch nicht gesichert."); return; }
+          download(blob,name); done(name,p,"datei");
+        });
+      }
+      download(blob,name); done(name,p,"datei");
+    }).catch(function(){ say("Sichern ging nicht."); }).then(function(){ if(b) b.disabled=false; if(b2) b2.disabled=false; });
   }
   function say(t){ var s=document.getElementById("sxSay"); if(s){ s.textContent=t; s.hidden=!t; } }
   function pick(){
@@ -113,19 +126,24 @@ try{
       restore(n,m).then(function(k){ box.hidden=true; box.innerHTML=""; say("Wiederhergestellt ("+(m==="ersetzen"?"ersetzt":"zusammengeführt")+"): "+k+" Schlüssel. App lädt neu …"); setTimeout(function(){ location.reload(); },1400); });
     }; });
   }
+  function age(){ var t=+get(WHEN)||0; return t?Math.floor((Date.now()-t)/86400000):-1; }
   function hint(){
-    var h=document.getElementById("sxHint"); if(!h) return;
-    var t=+get(WHEN)||0, n=t?Math.floor((Date.now()-t)/86400000):-1;
-    h.textContent=n<0?"Noch keine Sicherung":n===0?"Letzte Sicherung heute":"Letzte Sicherung vor "+n+(n===1?" Tag":" Tagen");
-    h.className="sxHint"+((n<0||n>=30)?" alt":"");
+    var n=age(), due=(n<0||n>=7), h=document.getElementById("sxHint");
+    if(h){
+      var cls=n<0?"rot":(n>=30?"rot":(n>=7?"gelb":"gruen"));
+      h.innerHTML='<i></i>'+(n<0?"Noch keine Sicherung. Tippe «Sichern», dann liegen deine Daten sicher ausserhalb der App.":n===0?"Letzte Sicherung: heute":"Letzte Sicherung: vor "+n+(n===1?" Tag":" Tagen")+(n>=7?". Zeit für eine neue Sicherung.":""));
+      h.className="sxHint "+cls;
+    }
+    var nm=document.getElementById("navMehr"); if(nm) nm.classList.toggle("sxDue",due);
   }
   function mount(){
     var sh=document.getElementById("mehrSheet"); if(!sh||document.getElementById("sxBox")) return !!sh;
     var box=document.createElement("div"); box.id="sxBox";
-    box.innerHTML='<div class="sxRow"><button type="button" class="btn ghost" id="sxOut">Sichern</button><button type="button" class="btn ghost" id="sxIn">Wiederherstellen</button></div><p id="sxHint" class="sxHint"></p><p id="sxSay" class="sxL" hidden></p><div id="sxPrev" hidden></div>';
+    box.innerHTML='<div class="sxRow"><button type="button" class="btn ghost" id="sxOut">Sichern</button><button type="button" class="btn ghost" id="sxIn">Wiederherstellen</button></div><p id="sxHint" class="sxHint"></p><p class="sxL sxN"><button type="button" id="sxFile" class="sxLink">Nur als Datei speichern</button></p><p id="sxSay" class="sxL" hidden></p><div id="sxPrev" hidden></div>';
     sh.appendChild(box);
     box.addEventListener("click",function(e){ e.stopPropagation(); });
-    document.getElementById("sxOut").onclick=out;
+    document.getElementById("sxOut").onclick=function(){ out("teilen"); };
+    document.getElementById("sxFile").onclick=function(){ out("datei"); };
     document.getElementById("sxIn").onclick=pick;
     hint();
     return true;
@@ -133,12 +151,15 @@ try{
   var css=document.createElement("style");
   css.textContent="#sxBox{margin:.55rem .1rem 0;padding-top:.5rem;border-top:1px solid rgba(200,120,255,.14)}"+
     "#sxBox .sxRow{display:flex;gap:.4rem;flex-wrap:wrap}#sxBox .sxRow .btn{flex:1;min-height:2.5rem!important;height:auto!important;padding:.5rem .6rem!important;display:flex!important;align-items:center;justify-content:center;font-size:.8rem!important;border-radius:.9rem!important;border:1px solid rgba(200,120,255,.25)!important;background:rgba(160,90,255,.1)!important;color:#e4ecff!important}#sxBox .sxRow .btn.primary{background:linear-gradient(160deg,#7b3fb0,#4a1f72)!important}"+
-    "#sxBox .sxHint{margin:.35rem .2rem 0;font-size:.62rem;color:#8e7aa8}#sxBox .sxHint.alt{color:#d6a6ff}"+
+    "#sxBox .sxHint{margin:.4rem .2rem 0;font-size:.7rem;line-height:1.4;color:#d9c8f0;display:flex;gap:.45rem;align-items:flex-start}#sxBox .sxHint i{flex:none;width:.55rem;height:.55rem;margin-top:.3rem;border-radius:50%;background:#5fe0a0}#sxBox .sxHint.gelb i{background:#ffb86b}#sxBox .sxHint.rot i{background:#ff5470}#sxBox .sxHint.gelb{color:#ffd2a0}#sxBox .sxHint.rot{color:#ffb4c0}"+
+    "#sxBox .sxLink{min-height:2.75rem;padding:0 .2rem;border:0;background:none;font:inherit;font-size:.7rem;color:#d6a6ff;text-decoration:underline;text-underline-offset:.2em;text-decoration-color:rgba(200,120,255,.4)}"+
+    "#navMehr.sxDue{position:relative}#navMehr.sxDue::after{content:'';position:absolute;top:.35rem;right:calc(50% - 1.5rem);width:.55rem;height:.55rem;border-radius:50%;background:#ffb86b;box-shadow:0 0 8px rgba(255,184,107,.7)}"+
     "#sxBox .sxL{margin:.3rem .2rem;font-size:.64rem;color:#d9c8f0;line-height:1.35}#sxBox .sxN{color:#8e7aa8}"+
     "#sxBox .sxH{margin:.45rem .2rem 0;font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:#cfa8ff}"+
     "#sxPrev{margin-top:.4rem;padding:.4rem;border-radius:.8rem;background:rgba(160,90,255,.08);border:1px solid rgba(200,120,255,.2)}";
   document.head.appendChild(css);
   if(!mount()){ var tries=0, iv=setInterval(function(){ if(mount()||++tries>40) clearInterval(iv); },250); }
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) hint(); }); setInterval(hint,60000); setTimeout(hint,600); setTimeout(hint,2500);
   window.RR25_SICHERN={pack:pack,norm:norm,count:count,restore:restore,fileName:fileName};
 })();
 
