@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 101 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 102 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -2366,7 +2366,7 @@ try{
       return '<div class="wbD'+(D.W.ws+i===D.W.today?" on":"")+'"><i style="height:'+hh+'px;background:rgba('+c+','+(n?.85:.28)+');box-shadow:0 0 '+(n?8:0)+'px rgba('+c+',.45)"></i><b>'+(n||"")+'</b><span>'+WD[i]+'</span></div>';
     }).join("");
     var dots=PL.map(function(p){ return '<s style="background:rgb('+p[1]+')" title="'+p[0]+'"></s>'; }).join("");
-    return '<div class="wbHead"><button type="button" class="wbNav" id="wbPrev" aria-label="Eine Woche zurück">‹</button><div><b>'+h(D.title)+'</b><small>Berner Zeit</small></div><button type="button" class="wbNav" id="wbNext" aria-label="Eine Woche weiter"'+(D.W.now?' disabled':'')+'>›</button></div>'+
+    return '<div class="wbHead"><button type="button" class="wbNav" id="wbPrev" aria-label="Eine Woche zurück">‹</button><div><b>'+h(D.title)+'</b></div><button type="button" class="wbNav" id="wbNext" aria-label="Eine Woche weiter"'+(D.W.now?' disabled':'')+'>›</button></div>'+
       '<p class="wbSay">'+h(D.txt)+'</p><div class="wbBars">'+bars+'</div>'+
       '<div class="wbRow"><span>Mond</span><b>'+(D.M?h(D.M.sym+" "+D.M.txt):"–")+'</b></div>'+
       '<div class="wbRow"><span>Echo · Wirkung</span><b>'+D.S.echo+' · '+D.S.wirk+'</b></div>'+

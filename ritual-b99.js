@@ -68,7 +68,7 @@
       return '<div class="wbD'+(D.W.ws+i===D.W.today?" on":"")+'"><i style="height:'+hh+'px;background:rgba('+c+','+(n?.85:.28)+');box-shadow:0 0 '+(n?8:0)+'px rgba('+c+',.45)"></i><b>'+(n||"")+'</b><span>'+WD[i]+'</span></div>';
     }).join("");
     var dots=PL.map(function(p){ return '<s style="background:rgb('+p[1]+')" title="'+p[0]+'"></s>'; }).join("");
-    return '<div class="wbHead"><button type="button" class="wbNav" id="wbPrev" aria-label="Eine Woche zurück">‹</button><div><b>'+h(D.title)+'</b><small>Berner Zeit</small></div><button type="button" class="wbNav" id="wbNext" aria-label="Eine Woche weiter"'+(D.W.now?' disabled':'')+'>›</button></div>'+
+    return '<div class="wbHead"><button type="button" class="wbNav" id="wbPrev" aria-label="Eine Woche zurück">‹</button><div><b>'+h(D.title)+'</b></div><button type="button" class="wbNav" id="wbNext" aria-label="Eine Woche weiter"'+(D.W.now?' disabled':'')+'>›</button></div>'+
       '<p class="wbSay">'+h(D.txt)+'</p><div class="wbBars">'+bars+'</div>'+
       '<div class="wbRow"><span>Mond</span><b>'+(D.M?h(D.M.sym+" "+D.M.txt):"–")+'</b></div>'+
       '<div class="wbRow"><span>Echo · Wirkung</span><b>'+D.S.echo+' · '+D.S.wirk+'</b></div>'+
