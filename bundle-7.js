@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 97 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 98 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -1810,6 +1810,8 @@ try{
   var S=S0(), VIEW=null;
   function js(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
   function buzz(full){ try{ if(navigator.vibrate) navigator.vibrate(full?[40,50,80,50,140]:[55]); }catch(e){} }
+  /* alte gespeicherte Rezepte mit Quelle 9x: heute Quelle 3x «So sei es» */
+  function repOf(st){ var x=st&&st[2]&&st[2].rep?st[2]:null; return x&&x.rep>=9?{rep:3,txt:x.txt||"So sei es.",full:1}:x; }
   function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function favs(){ var f=js(KFAV,[]); return Array.isArray(f)?f:[]; }
   function rez(){ var r=js(KR,[]); return Array.isArray(r)?r:[]; }
@@ -1851,7 +1853,8 @@ try{
     var tu=z.length?z.map(zSatz):["Ein kleiner Schritt von mir, hier und jetzt: Kerze, Atem oder Wasser."];
     var tr=z.filter(function(e){ return e.text; }).map(function(e){ return kurz(e)+": "+e.text; });
     steps.push(["Spiel 🙏","Was tue ich dafür"+wo+"?||Tu:|"+tu.join("|")+(tr.length?"||Aus der Tradition:|"+tr.join("|"):"")+"||Sprich:|Ich tue meinen Teil. Ich tue ihn gern.",{rep:6,txt:ab}]);
-    steps.push(["Quelle 👁","Lass los"+(w?": "+w:"")+".||Tu:|Ein langer Atemzug. Hände öffnen.||Sprich:|Ich gebe es ab. Es ist gesät.",{rep:9,txt:"So sei es."}]);
+    steps.push(["Quelle 👁","Lass los"+(w?": "+w:"")+".||Tu:|Ein langer Atemzug. Hände öffnen.||Sprich dreimal:|So sei es.",{rep:3,txt:"So sei es.",full:1}]);
+    steps.push(["Quelle · Satz","Ein Satz, einmal gesprochen:||Die Quelle ist wach."]);
     if(hard){ steps.push(["Rückkehr","Sprich:|Ich bin hier. Ich bin ganz bei mir.||Tu:|Füsse. Atem. Raum."]); steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]); }
     else steps.push(["Schluss","Tu:|Wasser. Alltag."]);
     return steps;
@@ -1862,7 +1865,7 @@ try{
   function defName(){ var t=TH.filter(function(x){ return x[0]===S.th; })[0]; return (t?t[1]:"Eigenes")+" · "+S.ton; }
   function cur(){ return {id:"rz"+Date.now().toString(36),v:2,name:(S.name||defName()).trim()||defName(),th:S.th,ton:S.ton,absicht:(S.txt||"").trim(),fuer:{m:S.fm,w:fuerTxt(S)},zut:S.sel.slice(),steps:build(),made:Date.now()}; }
   function viewer(r,i){
-    var s=r.steps[i], last=i===r.steps.length-1, x=s[2]&&s[2].rep?s[2]:null, c=VIEW.c||0, n=x?x.rep:0;
+    var s=r.steps[i], last=i===r.steps.length-1, x=repOf(s), c=VIEW.c||0, n=x?x.rep:0;
     var cnt=x?'<div class="rzCnt"><p class="rzCq">'+h("«"+x.txt+"»")+'</p><button type="button" class="rzCb'+(c>=n?" fertig":"")+'" data-a="cnt" aria-live="polite"><span class="rzCn">'+c+' von '+n+'</span><small>'+(c>=n?"Geschafft":(c?"Weiter sprechen und tippen":"Sprich die Absicht und tippe"))+'</small></button></div>':'';
     return '<div class="rzV"><p class="rzVk">'+h(r.name)+' · '+(i+1)+' von '+r.steps.length+'</p><h4>'+h(s[0])+'</h4>'+stepHtml(s[1])+cnt+
       '<div class="rzVb"><button type="button" class="btn ghost" data-a="vb"'+(i===0?" disabled":"")+'>Zurück</button><button type="button" class="btn primary" data-a="vn">'+(last?"Abschliessen":"Weiter")+'</button></div></div><button type="button" class="rzLink" data-a="vx">Beenden</button>';
@@ -1944,7 +1947,7 @@ try{
       var a=b.getAttribute("data-a");
       if(a==="start"){ keep(); VIEW={r:cur(),i:0}; }
       else if(a==="save"){ keep(); var r=rez(); r.unshift(cur()); setRez(r.slice(0,30)); S=S0(); }
-      else if(a==="cnt"){ var st=VIEW.r.steps[VIEW.i], x=st[2]&&st[2].rep?st[2]:null; if(x&&(VIEW.c||0)<x.rep){ VIEW.c=(VIEW.c||0)+1; if(VIEW.c>=x.rep){ buzz(x.rep>=9); var v=VIEW, ii=v.i; setTimeout(function(){ if(VIEW===v&&v.i===ii&&!v.fin){ v.c=0; if(v.i<v.r.steps.length-1) v.i++; else v.fin=true; paint(); } },900); } } }
+      else if(a==="cnt"){ var st=VIEW.r.steps[VIEW.i], x=repOf(st); if(x&&(VIEW.c||0)<x.rep){ VIEW.c=(VIEW.c||0)+1; if(VIEW.c>=x.rep){ buzz(!!x.full); var v=VIEW, ii=v.i; setTimeout(function(){ if(VIEW===v&&v.i===ii&&!v.fin){ v.c=0; if(v.i<v.r.steps.length-1) v.i++; else v.fin=true; paint(); } },900); } } }
       else if(a==="vb"){ VIEW.i=Math.max(0,VIEW.i-1); VIEW.c=0; }
       else if(a==="vn"){ VIEW.c=0; if(VIEW.i<VIEW.r.steps.length-1) VIEW.i++; else VIEW.fin=true; }
       else if(a==="stset"){ VIEW.status=true; }
