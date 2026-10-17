@@ -127,7 +127,7 @@
     if(D.sz){ c.fillText("Saison: "+D.sz,300,1000,700); }
     D.W&&PL.forEach(function(p,i){ c.fillStyle="rgb("+p[1]+")"; c.beginPath(); c.arc(318+i*46,1060,14,0,7); c.fill(); });
     c.textAlign="center"; c.fillStyle="#e6d4ff"; c.font="italic 42px Georgia,serif"; wrap(c,"«"+D.sa+"»",540,1150,860,56,3);
-    c.fillStyle="rgba(200,160,255,.7)"; c.font="400 28px Georgia,serif"; c.fillText("RöffÄää · Berner Zeit",540,1275);
+    c.fillStyle="rgba(200,160,255,.7)"; c.font="400 28px Georgia,serif"; c.fillText("Rolf Reber 25",540,1275);
     return cv;
   }
   function msg(t){ var m=document.getElementById("wbMsg"); if(m) m.textContent=t; }

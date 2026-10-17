@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 100 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 101 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -2425,7 +2425,7 @@ try{
     if(D.sz){ c.fillText("Saison: "+D.sz,300,1000,700); }
     D.W&&PL.forEach(function(p,i){ c.fillStyle="rgb("+p[1]+")"; c.beginPath(); c.arc(318+i*46,1060,14,0,7); c.fill(); });
     c.textAlign="center"; c.fillStyle="#e6d4ff"; c.font="italic 42px Georgia,serif"; wrap(c,"«"+D.sa+"»",540,1150,860,56,3);
-    c.fillStyle="rgba(200,160,255,.7)"; c.font="400 28px Georgia,serif"; c.fillText("RöffÄää · Berner Zeit",540,1275);
+    c.fillStyle="rgba(200,160,255,.7)"; c.font="400 28px Georgia,serif"; c.fillText("Rolf Reber 25",540,1275);
     return cv;
   }
   function msg(t){ var m=document.getElementById("wbMsg"); if(m) m.textContent=t; }
