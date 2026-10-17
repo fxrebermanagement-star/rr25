@@ -283,7 +283,10 @@
     });
     var lab={3:"Ich",6:"Spiel",9:"Quelle"}, sym={3:"❤️",6:"🙏",9:"👁"};
     var head=rest.join("\n").replace(/\n+$/,"");
+    /* Build 98: Quelle = 3x «So sei es» (Zaehler) plus ein einzelner Satz; zusammen ergeben Ich 3, Spiel 6, Quelle 3 + Satz den Abschluss */
     return '<p class="words">'+h(head)+'</p><div class="z369v2">'+rows.map(function(x){
+      if(x.n===9) return '<button type="button" class="zrow" data-max="3" data-c="0"><span class="zn">'+sym[9]+'</span><span class="zt">So sei es.</span><span class="zc">0/3</span><small>Quelle · 3×</small></button>'+
+        (x.t?'<div class="zrow satz"><span class="zn">·</span><span class="zt">'+h(x.t)+'</span><small>Quelle · ein Satz, einmal</small></div>':'');
       return '<button type="button" class="zrow" data-max="'+x.n+'" data-c="0"><span class="zn">'+sym[x.n]+'</span><span class="zt">'+h(x.t)+'</span><span class="zc">0/'+x.n+'</span><small>'+lab[x.n]+'</small></button>';
     }).join("")+'</div>';
   }
@@ -338,7 +341,7 @@
     });
     var az=document.getElementById("absFromZ");
     if(az) az.onclick=function(){ var v=sigilAbsicht(); if(!v) return; cur.mem.Absicht=v; var i=document.getElementById("absT"); if(i) i.value=v; };
-    [].slice.call(document.querySelectorAll("#run .zrow")).forEach(function(b){
+    [].slice.call(document.querySelectorAll("#run .zrow:not(.satz)")).forEach(function(b){
       b.onclick=function(){
         var c=+b.getAttribute("data-c"), m=+b.getAttribute("data-max");
         c=c>=m?0:c+1; b.setAttribute("data-c",c); b.classList.toggle("full",c>=m);
@@ -536,6 +539,7 @@
     ".z369v2 .zt{font-family:Georgia,serif;font-size:1rem}",
     ".z369v2 .zc{font-size:.8rem;color:#b4c6f2}",
     ".z369v2 small{grid-column:2/4;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:#8e7aa8}",
+    ".z369v2 .zrow.satz{border-style:dashed;border-color:rgba(200,120,255,.28);background:rgba(160,90,255,.05);cursor:default}",
     ".z369v2 .zrow.full{border-color:#ff4fe0;box-shadow:0 0 14px rgba(255,122,217,.35)}",
     "#run .seal{display:flex;justify-content:center;margin:.4rem 0 .6rem}",
     "#run .seal img{width:7.5rem;height:7.5rem;border-radius:1rem;border:1px solid rgba(255,122,217,.4);background:#08040e}",
