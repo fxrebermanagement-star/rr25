@@ -43,8 +43,9 @@
     }).join("")+'</div><div class="wlDet">'+details(days[SEL])+'</div>';
     [].slice.call(box.querySelectorAll(".wlD")).forEach(function(b){ b.onclick=function(){ SEL=+b.getAttribute("data-n"); paint(); }; });
   }
+  window.RR25_FELDWETTER={info:info,addDays:addDays,PL:PL,DN:DN,DL:DL};
   function go(){ try{ paint(); }catch(e){} }
-  if(typeof show==="function"&&!show._b81){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="kal"){ SEL=0; setTimeout(go,120); } return r; }; show._b81=1; }
+  if(typeof show==="function"&&!show._b81){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="kal"){ SEL=window.__wkSel>0&&window.__wkSel<7?window.__wkSel:0; window.__wkSel=0; setTimeout(go,120); } return r; }; show._b81=1; }
   if(K.onReady) K.onReady(function(){ setTimeout(go,50); });
   setTimeout(go,600);
   var css=document.createElement("style");
