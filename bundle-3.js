@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 97 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 98 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -676,7 +676,7 @@ try{
     try{
       var x=JSON.parse(localStorage.getItem(KEY)||"{}");
       if(x.d!==ymd()) return {d:ymd(),n3:0,n6:0,n9:0};
-      return {d:x.d,n3:x.n3|0,n6:x.n6|0,n9:x.n9|0};
+      return {d:x.d,n3:x.n3|0,n6:x.n6|0,n9:Math.min(3,x.n9|0)};
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function saveZ(z){ localStorage.setItem(KEY, JSON.stringify(z)); }
@@ -692,7 +692,7 @@ try{
     el.innerHTML=
       '<button type="button" class="zbtn" data-z="n3">❤️ Ich<span>'+z.n3+'/3</span></button>'+
       '<button type="button" class="zbtn" data-z="n6">🙏 Spiel<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" class="zbtn" data-z="n9">👁 Quelle<span>'+z.n9+'/9</span></button>';
+      '<button type="button" class="zbtn" data-z="n9">👁 Quelle<span>'+z.n9+'/3</span></button>';
     var msg=document.getElementById("zahlMsg");
     if(!msg){
       msg=document.createElement("p");
@@ -703,10 +703,10 @@ try{
     msg.textContent=window._zVoll?"Voll. Zurück auf null.":"";
   }
   function tap(key){
-    var max={n3:3,n6:6,n9:9};
+    var max={n3:3,n6:6,n9:3};
     var z=loadZ();
     if(z[key]<max[key]) z[key]++;
-    if(z.n9>=9){
+    if(z.n9>=3){
       buzz(true);
       z.n3=0; z.n6=0; z.n9=0;
       window._zVoll=true;
@@ -1035,7 +1035,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=97;
+  var BUILD=98;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1054,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=97").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=98").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
