@@ -8,7 +8,7 @@
     try{
       var x=JSON.parse(localStorage.getItem(KEY)||"{}");
       if(x.d!==ymd()) return {d:ymd(),n3:0,n6:0,n9:0};
-      return {d:x.d,n3:x.n3|0,n6:x.n6|0,n9:x.n9|0};
+      return {d:x.d,n3:x.n3|0,n6:x.n6|0,n9:Math.min(3,x.n9|0)};
     }catch(e){ return {d:ymd(),n3:0,n6:0,n9:0}; }
   }
   function saveZ(z){ localStorage.setItem(KEY, JSON.stringify(z)); }
@@ -24,7 +24,7 @@
     el.innerHTML=
       '<button type="button" class="zbtn" data-z="n3">❤️ Ich<span>'+z.n3+'/3</span></button>'+
       '<button type="button" class="zbtn" data-z="n6">🙏 Spiel<span>'+z.n6+'/6</span></button>'+
-      '<button type="button" class="zbtn" data-z="n9">👁 Quelle<span>'+z.n9+'/9</span></button>';
+      '<button type="button" class="zbtn" data-z="n9">👁 Quelle<span>'+z.n9+'/3</span></button>';
     var msg=document.getElementById("zahlMsg");
     if(!msg){
       msg=document.createElement("p");
@@ -35,10 +35,10 @@
     msg.textContent=window._zVoll?"Voll. Zurück auf null.":"";
   }
   function tap(key){
-    var max={n3:3,n6:6,n9:9};
+    var max={n3:3,n6:6,n9:3};
     var z=loadZ();
     if(z[key]<max[key]) z[key]++;
-    if(z.n9>=9){
+    if(z.n9>=3){
       buzz(true);
       z.n3=0; z.n6=0; z.n9=0;
       window._zVoll=true;
