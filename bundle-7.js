@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 96 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 97 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -2198,7 +2198,9 @@ try{
   function N(a,b){ return "calc("+a+" + "+(b-a)+" * var(--f))"; }
   var rules=[
     ":root{--f:0.5}",
-    "html body main:has(#home.on),html body #home.on{padding-bottom:0!important}",
+    /* nur ohne gewählte Ritual-Kategorie ohne Unterkante; mit Liste bleibt Platz für die Tab-Leiste (Build 97) */
+    "html body main:has(#home.on):not(:has(#cats .chip.on)),html body #home.on:not(:has(#cats .chip.on)){padding-bottom:0!important}",
+    "html body main:has(#home.on):has(#cats .chip.on){padding-bottom:calc(66px + 16px + env(safe-area-inset-bottom,0px))!important}",
     /* Kachelzeile */
     P+".duo{grid-template-columns:minmax(0,1fr) "+L(104,181)+"!important;gap:"+L(6,8)+"!important}",
     P+"#kOut,"+P+"#sigilBox{height:"+L(104,181)+"!important;min-height:0!important}",
@@ -2266,7 +2268,7 @@ try{
     return {nt:Math.min(nt,vh), end:end};
   }
   function fit(){
-    var h=document.getElementById("home"); if(!h||!h.classList.contains("on")) return;
+    var h=document.getElementById("home"); if(!h||!h.classList.contains("on")||h.querySelector("#cats .chip.on")) return;
     var g=geom(); if(!g||!g.end.getBoundingClientRect().height) return;
     var root=document.documentElement, lo=0, hi=1, best=0, target=g.nt-RES;
     function bottom(f){ root.style.setProperty("--f",f); return g.end.getBoundingClientRect().bottom; }
@@ -2277,7 +2279,8 @@ try{
     window.RR25_HEUTE_FIT={f:best,bottom:g.end.getBoundingClientRect().bottom,navTop:g.nt};
     busy=false;
   }
-  function later(){ if(busy) return; clearTimeout(timer); timer=setTimeout(fit,40); }
+  var timer2=0;
+  function later(){ if(busy) return; clearTimeout(timer); clearTimeout(timer2); timer=setTimeout(fit,40); timer2=setTimeout(fit,500); }
   window.addEventListener("resize",later);
   if(window.visualViewport) window.visualViewport.addEventListener("resize",later);
   window.addEventListener("load",function(){ later(); setTimeout(fit,600); setTimeout(fit,1800); });
