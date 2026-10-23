@@ -1,6 +1,6 @@
 /* ritual-ico.js — Build 115: eigene Neon-Violett-Zeichen statt Emoji (Sonne, Mondphasen, Herz, Hände, Auge).
    window.RR25_ICO.svg(name) liefert ein Inline-SVG. Ein Beobachter tauscht Emoji in sichtbarem Text gegen diese Zeichen.
-   Ausgenommen: die Zeichen-Kachel (#sigilBox, Kachel «Zeichen»), Eingabefelder, Auswahllisten, SVG und Canvas. */
+   Ausgenommen: die Zeichen-Kachel (#sigilBox, Kachel «Zeichen»), die Sonne oben rechts (#sunWrap, Build 116: wieder Emoji), Eingabefelder, Auswahllisten, SVG und Canvas. */
 (function(){
   if(window.RR25_ICO) return;
   var R=8.2, C=12;
@@ -33,7 +33,7 @@
   var SKIP="#sigilBox,#sigilBox *,[data-go=sigilGo],#sigilGo,input,textarea,select,option,svg,canvas,script,style,title";
   function skipEl(el){
     if(!el||el.nodeType!==1) return true;
-    if(el.closest&&el.closest("#sigilBox,svg,canvas,select,textarea,script,style,.tile.t4,[data-go=sigilGo]")) return true;
+    if(el.closest&&el.closest("#sigilBox,#sunWrap,svg,canvas,select,textarea,script,style,.tile.t4,[data-go=sigilGo]")) return true;
     return false;
   }
   function fix(node){
