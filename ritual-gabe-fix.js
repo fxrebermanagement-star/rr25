@@ -116,7 +116,7 @@
     if(!holdEl) return;
     var rows=[];
     try{ rows=(read().log||[]).filter(isGabe); }catch(e){ rows=[]; }
-    if(!rows.length){ holdEl.innerHTML="<p class='meta'>Noch keine Gabe.</p>"; return; }
+    if(!rows.length){ holdEl.innerHTML="<p class='meta rrLeer'>Noch keine Gabe. Was du gibst, darf hier liegen, mit Foto, wenn du magst.</p>"; return; }
     holdEl.innerHTML=rows.map(function(e){
       var note=String(e.note||"");
       if(note.toLowerCase()==="gabe"||note===String(e.titel||"")) note="";

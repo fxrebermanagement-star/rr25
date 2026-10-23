@@ -21,7 +21,7 @@ import os, re, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PAKETE = [
-    ["doll.js", "ritual-core.js", "ritual-mondphase.js", "ritual-zeit.js", "rituals-v2.js"],
+    ["ritual-ico.js", "doll.js", "ritual-core.js", "ritual-mondphase.js", "ritual-zeit.js", "rituals-v2.js"],
     ["ritual-runner-v2.js", "ritual-karten.js"],
     ["ritual-sigil.js", "ritual-log.js", "ritual-notes.js", "ritual-plus.js", "ritual-nav.js", "ritual-layout.js",
      "ritual-look.js", "ritual-extra.js", "ritual-zahl.js", "ritual-home.js", "ritual-backup.js", "pwa.js",
@@ -33,7 +33,7 @@ PAKETE = [
     ["design-v3.js", "ritual-chronik-grau.js", "ritual-ton.js", "ritual-saison.js", "ritual-resonanzen.js"],
     ["ritual-sichern.js", "ritual-gerechnet.js", "ritual-rueckblick.js", "ritual-erinnern.js",
      "ritual-mondhinweis.js", "ritual-zaehler.js", "ritual-danksatz.js",
-     "ritual-sterne.js", "ritual-mondbild.js", "ritual-tippen.js", "ritual-b66.js", "ritual-b80.js", "ritual-b81.js", "ritual-b82.js", "ritual-b83.js", "ritual-b84.js", "ritual-b85.js", "ritual-b94.js", "ritual-b95.js", "ritual-b99.js", "ritual-b100.js", "ritual-b103.js", "ritual-echo-nachtrag.js", "ritual-b109.js", "ritual-b112.js"],
+     "ritual-sterne.js", "ritual-mondbild.js", "ritual-tippen.js", "ritual-b66.js", "ritual-b80.js", "ritual-b81.js", "ritual-b82.js", "ritual-b83.js", "ritual-b84.js", "ritual-b85.js", "ritual-b94.js", "ritual-b95.js", "ritual-b99.js", "ritual-b103.js", "ritual-echo-nachtrag.js", "ritual-b109.js", "ritual-b112.js"],
 ]
 
 # Dateien mit globalen Deklarationen: ohne Hülle

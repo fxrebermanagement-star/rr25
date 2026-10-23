@@ -441,7 +441,7 @@
       var p=document.createElement("div"); p.id="jrPanel"; p.className="card"; p.hidden=true;
       row.parentNode.insertBefore(p,row.nextSibling);
       bt.onclick=function(){
-        p.hidden=!p.hidden; bt.classList.toggle("on",!p.hidden); bt.textContent=p.hidden?"Jahresrad":"Jahresrad zu";
+        p.hidden=!p.hidden; bt.classList.toggle("on",!p.hidden); bt.textContent=p.hidden?"Jahresrad":"\u2715"; bt.setAttribute("aria-label",p.hidden?"Jahresrad öffnen":"Jahresrad schliessen");
         if(JR){ JR.stop(); JR=null; }
         if(!p.hidden) buildRad(p); else p.innerHTML="";
       };

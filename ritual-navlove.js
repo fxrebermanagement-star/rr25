@@ -18,28 +18,7 @@
   }
   var css=document.createElement("style");
   css.textContent=[
-    "nav{background:rgba(10,6,18,.94)!important;border-color:rgba(255,122,217,.16)!important;box-shadow:0 -10px 28px rgba(0,0,0,.35)}",
-    "nav .navR{gap:.28rem!important}",
-    "nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}",
-    "nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}",
-    "nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}",
     "nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#d6a6ff}",
-    "nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}",
-    "nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}",
-    "nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}",
-    "nav button[data-v=notiz] .ic{background:linear-gradient(160deg,#3a2460,#1a1230);color:#d2b6ff}",
-    "nav button[data-v=opfer] .ic{background:linear-gradient(160deg,#1c3a28,#101c16);color:#9eecc0}",
-    "nav button[data-v=buch] .ic{background:linear-gradient(160deg,#16324a,#101820);color:#8fd4ff}",
-    "nav button.on{background:rgba(255,255,255,.06)!important;color:#fff!important}",
-    "nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}",
-    "nav button[data-v=home].on{background:rgba(255,122,217,.16)!important}",
-    "nav button[data-v=geplant].on{background:rgba(255,139,122,.16)!important}",
-    "nav button[data-v=kal].on{background:rgba(155,140,255,.16)!important}",
-    "nav button[data-v=log].on{background:rgba(126,240,230,.14)!important}",
-    "nav button[data-v=notiz].on{background:rgba(201,166,255,.16)!important}",
-    "nav button[data-v=opfer].on{background:rgba(142,230,168,.14)!important}",
-    "nav button[data-v=buch].on{background:rgba(126,200,255,.14)!important}",
-    "nav button .lb{line-height:1.1}",
     "main{padding-bottom:9.1rem!important}"
   ].join("");
   document.head.appendChild(css);

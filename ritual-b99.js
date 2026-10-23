@@ -154,7 +154,7 @@
     var btn=document.createElement("button"); btn.type="button"; btn.className="btn ghost"; btn.id="wbBtn"; btn.textContent="Wochenbild"; bar.appendChild(btn);
     var p=document.createElement("div"); p.id="wbPanel"; p.className="card"; p.hidden=true;
     var ref=document.getElementById("mzPanel")||document.getElementById("abPanel")||document.getElementById("rbPanel"); sec.insertBefore(p,ref&&ref.nextSibling?ref.nextSibling:ent);
-    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"Wochenbild zu":"Wochenbild"; paint(); };
+    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"\u2715":"Wochenbild"; btn.setAttribute("aria-label",OPEN?"Wochenbild schliessen":"Wochenbild öffnen"); paint(); };
   }
   if(typeof show==="function"&&!show._b99){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,700); return r; }; show._b99=1; }
   setTimeout(mount,800);

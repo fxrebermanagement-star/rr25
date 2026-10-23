@@ -67,7 +67,7 @@
       bar.insertBefore(b,bar.firstChild);
       var p=document.createElement("div"); p.id="zlPanel"; p.className="card"; p.hidden=true;
       sec.insertBefore(p,ent);
-      b.onclick=function(){ OPEN=!OPEN; b.classList.toggle("on",OPEN); b.textContent=OPEN?"Zähler zu":"Zähler"; paintPanel(); };
+      b.onclick=function(){ OPEN=!OPEN; b.classList.toggle("on",OPEN); b.textContent=OPEN?"\u2715":"Zähler"; b.setAttribute("aria-label",OPEN?"Zähler schliessen":"Zähler öffnen"); paintPanel(); };
     }
     paintPanel();
   }

@@ -1,4 +1,4 @@
-/* rr25 · Paket 4/7 · Build 114 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 4/7 · Build 115 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-fotos.js, ritual-gpic.js, ritual-kalender.js, ritual-start.js, ritual-buch.js, ritual-navlove.js, ritual-final.js, ritual-gabe-fix.js */
 /* ==== ritual-fotos.js ==== */
 try{
@@ -197,7 +197,7 @@ try{
 }catch(e){setTimeout(function(){throw e;});}
 /* ==== ritual-kalender.js ==== */
 try{
-/* ritual-kalender.js — Kalender-Tab «Magie so sei es».
+/* ritual-kalender.js — Kalender-Tab «Kalender» (Quelle: Google-Kalender «Magie so sei es»).
    Regel und Daten: ritual-zeit.js (RR25_KAL), dieselbe Regel wie im Tor. Bänder gelten von Start bis Ende,
    Hard nur solange ein Feintakt offen ist, nie aus künftigen Terminen. Liest rr25_echo_v1 nur (Echo-Tag 3/9), speichert
    wie bisher nur beim Antippen einer Karte nach «Geplant» (rr25_ritual_v1.planned). */
@@ -256,12 +256,33 @@ try{
   function card(x,now){
     var k=x.k.toLowerCase(), sug=suggest(k), live=!x.all&&x.s<=now&&now<x.e;
     var sz=x.src==="saison";
-    var hint=sz?"Saison · nur lesen. Ändert Ton und Tor nicht.":k==="hard"?"Nur vormerken. Nicht automatisch setzen.":(sug.id?"Tippen legt nach Geplant.":"Nur lesen.");
+    var hint=sz?"Saison · nur lesen. Ändert Ton und Tor nicht.":k==="hard"?"":(sug.id?"Tippen legt nach Geplant.":"Nur lesen.");
     return '<article class="card kalcard '+k+(sz?' saison':'')+(live?' kallive':'')+'"'+(sz?'':' data-kal="1"')+' data-kind="'+k+'" data-title="'+h(x.t).replace(/"/g,"")+'" data-sid="'+sug.id+'" data-slabel="'+sug.label+'">'+
       '<b>'+h(x.t)+'</b>'+
       '<div class="meta">'+when(x)+(live?' · <span class="kalOn">läuft, '+rest(x.e,now)+'</span>':'')+(x.band&&x.s<=now&&now<x.e?' · '+left(x,now):'')+(x.src==="calc"?" · gerechnet":"")+'</div>'+
-      (x.d?'<p class="kalD">'+h(yr(x.d))+'</p>':'')+(x.all&&k==="hard"&&!sz&&/Rückkehr · Anker/.test(x.d)?'':'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>')+startBtn(x,now)+
+      (x.d?'<p class="kalD">'+h(yr(x.d))+'</p>':'')+(x.all&&k==="hard"&&!sz&&/Rückkehr · Anker/.test(x.d)||(!x.all&&k==="hard"&&!sz)?'':'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>')+startBtn(x,now)+
       '</article>';
+  }
+  /* Build 115: gleiche Tage mit mehreren HARD-Feintakten als EINE Karte. Hinweis «Nur vormerken» steht einmal oben. */
+  function cards(list,now){
+    var out=[], i=0;
+    while(i<list.length){
+      var x=list[i];
+      if(x.k==="HARD"&&!x.all&&x.src!=="saison"){
+        var g=[x], j=i+1;
+        while(j<list.length&&list[j].k==="HARD"&&!list[j].all&&list[j].src!=="saison"&&day0(list[j].s)===day0(x.s)){ g.push(list[j]); j++; }
+        if(g.length>1){
+          var live=g.some(function(y){ return y.s<=now&&now<y.e; }), btn="";
+          g.some(function(y){ btn=startBtn(y,now); return !!btn; });
+          out.push('<article class="card kalcard hard kalMerge'+(live?' kallive':'')+'" data-kind="hard"><b>HARD · '+g.length+' Feintakte</b><div class="meta">'+dstr(x.s)+'</div>'+
+            '<ul class="kalML">'+g.map(function(y){ var on=y.s<=now&&now<y.e;
+              return '<li'+(on?' class="on"':'')+'><span class="kalMT">'+tstr(y.s)+'–'+tstr(y.e)+'</span><span class="kalMN">'+h(String(y.t).replace(/^HARD\s*·\s*/,""))+(y.anker?' · Anker':'')+(on?' · <span class="kalOn">läuft</span>':'')+'</span></li>'; }).join("")+'</ul>'+btn+'</article>');
+          i=j; continue;
+        }
+      }
+      out.push(card(x,now)); i++;
+    }
+    return out.join("");
   }
   function left(b,now){ var n=Math.round((b.e-day0(now))/DAY); return n<=1?"letzter Tag":"noch "+n+" Tage"; }
 
@@ -436,7 +457,7 @@ try{
     else sugg=[byId("segen"),byId("dank"),byId("schutz")];
     sugg=sugg.filter(Boolean);
     var rl=sugg.length?'<div class="kalRits"><span class="kcK">Rituale'+(tk==="HARD"?' · nur im Feintakt, mit Gate und Rückkehr':'')+'</span>'+sugg.map(function(r){ return '<button type="button" class="kalRit" data-rid="'+h(r.id)+'">'+h(r.t)+'</button>'; }).join("")+'</div>':'';
-    return '<div id="kalDay"><p class="group">'+head+'</p>'+cx+rl+vh+(items.length?items.map(function(x){ return card(x,now); }).join(""):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
+    return '<div id="kalDay"><p class="group">'+head+'</p>'+cx+rl+vh+(items.length?cards(items,now):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
   }
   function covLine(now){
     var c=K.coverage(), stt=K.status();
@@ -457,12 +478,12 @@ try{
     var up=L.filter(function(x){ return x.e>T&&!(x.band&&x.s<=T); });
     var week=up.filter(function(x){ return x.s<wkEnd; }), rest=up.filter(function(x){ return x.s>=wkEnd; });
     CTX=[];
-    var html=todayCard(T)+(YEAR?yearView(T):month(T))+(SEL!=null&&!YEAR?dayDetail(SEL,T):'');
+    var html='<p class="kalVormerken">Nur vormerken. Nicht automatisch setzen.</p>'+todayCard(T)+(YEAR?yearView(T):month(T))+(SEL!=null&&!YEAR?dayDetail(SEL,T):'');
     html+='<p class="group">7 Tage</p>';
-    html+=week.length?week.map(function(x){ return card(x,T); }).join(""):"<p class='meta'>Keine Fenster in 7 Tagen.</p>";
+    html+=week.length?cards(week,T):"<p class='meta'>Keine Fenster in 7 Tagen.</p>";
     if(rest.length){
       html+='<div class="row"><button type="button" class="btn ghost" id="kalMore">'+(OPENALL?"Woche":"Weitere "+rest.length+" Einträge")+'</button></div>';
-      if(OPENALL) html+='<p class="group">Weitere</p>'+rest.map(function(x){ return card(x,T); }).join("");
+      if(OPENALL) html+='<p class="group">Weitere</p>'+cards(rest,T);
     }
     html+=covLine(T);
     box.innerHTML=html;
@@ -730,7 +751,7 @@ try{
   paintBuch=function(){
     var page=document.getElementById("page");
     if(!page) return;
-    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Ich · Spiel · Quelle · Mein Grimoire</button><small>privat, öffnet in deinem Drive</small><button type="button" id="urbuchOpen">Urbuch öffnen</button><small>Privat · öffnet in Google Drive</small></div>';
+    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Mein Grimoire</button><small>Ich · Spiel · Quelle · dein Arbeitsbuch, privat in Google Drive</small><button type="button" id="urbuchOpen" class="buchAlt">Urbuch</button><small>das ursprüngliche Buch · privat in Google Drive</small></div>';
     document.getElementById("buchOpen").onclick=function(){ go(OPEN); };
     document.getElementById("urbuchOpen").onclick=function(){ go(URBUCH); };
   };
@@ -768,28 +789,7 @@ try{
   }
   var css=document.createElement("style");
   css.textContent=[
-    "nav{background:rgba(10,6,18,.94)!important;border-color:rgba(255,122,217,.16)!important;box-shadow:0 -10px 28px rgba(0,0,0,.35)}",
-    "nav .navR{gap:.28rem!important}",
-    "nav button{background:transparent!important;color:#d7c6ee!important;font-weight:550!important;font-size:.58rem!important;letter-spacing:.02em;min-height:3.55rem!important;padding:.18rem .04rem .1rem!important;gap:.22rem!important;border-radius:1rem!important}",
-    "nav button .ic{width:2.55rem;height:2.55rem;border-radius:1.05rem;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)}",
-    "nav button .ic svg{width:22px!important;height:22px!important;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}",
     "nav button[data-v=home] .ic{background:linear-gradient(160deg,#5a1848,#2a1238);color:#d6a6ff}",
-    "nav button[data-v=geplant] .ic{background:linear-gradient(160deg,#5a221c,#2a1214);color:#ff9a8a}",
-    "nav button[data-v=kal] .ic{background:linear-gradient(160deg,#2c2460,#16122e);color:#b8a8ff}",
-    "nav button[data-v=log] .ic{background:linear-gradient(160deg,#163a3a,#0e1c22);color:#7ef0e6}",
-    "nav button[data-v=notiz] .ic{background:linear-gradient(160deg,#3a2460,#1a1230);color:#d2b6ff}",
-    "nav button[data-v=opfer] .ic{background:linear-gradient(160deg,#1c3a28,#101c16);color:#9eecc0}",
-    "nav button[data-v=buch] .ic{background:linear-gradient(160deg,#16324a,#101820);color:#8fd4ff}",
-    "nav button.on{background:rgba(255,255,255,.06)!important;color:#fff!important}",
-    "nav button.on .ic{transform:translateY(-1px);box-shadow:0 0 16px currentColor,inset 0 0 0 1px rgba(255,255,255,.2)}",
-    "nav button[data-v=home].on{background:rgba(255,122,217,.16)!important}",
-    "nav button[data-v=geplant].on{background:rgba(255,139,122,.16)!important}",
-    "nav button[data-v=kal].on{background:rgba(155,140,255,.16)!important}",
-    "nav button[data-v=log].on{background:rgba(126,240,230,.14)!important}",
-    "nav button[data-v=notiz].on{background:rgba(201,166,255,.16)!important}",
-    "nav button[data-v=opfer].on{background:rgba(142,230,168,.14)!important}",
-    "nav button[data-v=buch].on{background:rgba(126,200,255,.14)!important}",
-    "nav button .lb{line-height:1.1}",
     "main{padding-bottom:9.1rem!important}"
   ].join("");
   document.head.appendChild(css);
@@ -965,7 +965,7 @@ try{
     if(!holdEl) return;
     var rows=[];
     try{ rows=(read().log||[]).filter(isGabe); }catch(e){ rows=[]; }
-    if(!rows.length){ holdEl.innerHTML="<p class='meta'>Noch keine Gabe.</p>"; return; }
+    if(!rows.length){ holdEl.innerHTML="<p class='meta rrLeer'>Noch keine Gabe. Was du gibst, darf hier liegen, mit Foto, wenn du magst.</p>"; return; }
     holdEl.innerHTML=rows.map(function(e){
       var note=String(e.note||"");
       if(note.toLowerCase()==="gabe"||note===String(e.titel||"")) note="";

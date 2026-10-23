@@ -1,0 +1,74 @@
+/* styles-v115.css — Build 115: zentrales Stylesheet.
+   Steht am Ende von <body>, damit es nach allen Laufzeit-Stilen (im <head>) greift.
+   1) feste kleine Farbpalette, 2) eine Knopf-Schrift, 3) Neon-Zeichen, 4) Build-115-Anpassungen. */
+:root{
+  --rr-ink:#0a0426;          /* Grund */
+  --rr-card:rgba(30,14,48,.72);
+  --rr-line:rgba(200,120,255,.28);
+  --rr-violet:#c78bff;       /* Neon-Violett, Hauptakzent */
+  --rr-violet-hi:#ecd6ff;
+  --rr-pink:#ff7ad9;         /* warmer Akzent */
+  --rr-text:#eadcff;
+  --rr-mute:#a996c6;
+  --rr-soft:#2ecc71; --rr-grenze:#ff9f43; --rr-hard:#e74c3c; --rr-echo:#9a4dff; --rr-still:#9a96a6;
+  --rr-glow:0 0 10px rgba(199,139,255,.45);
+  --rr-font-btn:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+/* eine Knopf-Schrift überall, auch im Ritualbauer */
+html body button,html body .btn,html body .chip,html body input[type=button]{font-family:var(--rr-font-btn)}
+
+/* Neon-Zeichen statt Emoji */
+.rrIcoW{display:inline-flex;vertical-align:-.2em;line-height:1}
+.rrIco{width:1.2em;height:1.2em;fill:none;stroke:var(--rr-violet);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 3px rgba(199,139,255,.55))}
+.rrIco .icF{fill:rgba(199,139,255,.28)}
+.rrIco-mond .icO{fill:rgba(20,8,40,.6);stroke:rgba(199,139,255,.55)}
+.rrIco-mond .icF{fill:var(--rr-violet-hi);stroke:none}
+.rrIco-sonne{stroke:#ffc9f0}.rrIco-sonne .icF{fill:rgba(255,122,217,.35)}
+.rrIco-herz{stroke:var(--rr-pink)}.rrIco-herz .icF{fill:rgba(255,122,217,.3)}
+#sunSym .rrIco{width:2rem;height:2rem;display:block;margin:0 auto}
+#home .tile.t3 b{display:inline-flex;gap:.25rem;align-items:center}
+
+/* Heute ruhiger: Herz-Hände-Auge-Bild unten weg (die Reihe steht schon im Zähler) */
+html body #home #skizze > svg{display:none!important}
+/* Sicherung als kleine Zeile */
+html body #home #bakCard#bakCard.bkMini{display:flex!important;padding-top:.35rem!important;padding-bottom:.35rem!important;align-items:center;gap:.5rem;padding:.4rem .6rem!important;min-height:0!important;margin:.35rem 0!important;border-radius:.9rem!important}
+html body #home #bakCard#bakCard.bkMini .bkHead{font-size:.74rem!important;font-family:var(--rr-font-btn)!important;color:var(--rr-violet-hi);margin:0!important;white-space:nowrap}
+html body #home #bakCard#bakCard.bkMini .bkSub{flex:1;min-width:0;font-size:.64rem!important;color:var(--rr-mute);margin:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body #home #bakCard#bakCard.bkMini .bkBtns{display:flex!important;gap:.3rem;align-items:center;flex-direction:row!important;margin:0!important;position:static!important}
+html body #home #bakCard#bakCard.bkMini #bakGoV3{flex:none!important;min-height:30px!important;height:30px!important;padding:0 .7rem!important;font-size:.7rem!important;width:auto!important}
+html body #home #bakCard#bakCard.bkMini .bkLater{height:30px!important;font-size:.66rem!important;padding:0 .2rem!important;min-height:30px!important}
+
+/* Kalender */
+#kalList .kalVormerken{margin:.1rem .2rem .55rem;font-size:.72rem;color:var(--rr-mute);text-align:center}
+#kalList .kalMerge .kalML{list-style:none;margin:.35rem 0 0;padding:0;display:grid;gap:.2rem}
+#kalList .kalMerge .kalML li{display:flex;gap:.55rem;font-size:.76rem;color:#ffc9c0;line-height:1.35}
+#kalList .kalMerge .kalML li.on{color:#fff}
+#kalList .kalMerge .kalMT{flex:none;font-variant-numeric:tabular-nums;color:#ff8a7a;min-width:5.6rem}
+#kalList .kalMerge .kalMN{min-width:0}
+
+/* Mehr: eigene Neon-Schalter */
+#mehrSheet .msTog{display:flex;align-items:center;gap:.6rem}
+#mehrSheet .msTog input[type=checkbox]{-webkit-appearance:none;appearance:none;flex:none;position:relative;width:2.5rem;height:1.4rem;margin:0;border-radius:1rem;background:rgba(40,18,64,.9);border:1px solid var(--rr-line);cursor:pointer;transition:background .2s,box-shadow .2s}
+#mehrSheet .msTog input[type=checkbox]::after{content:"";position:absolute;top:.17rem;left:.2rem;width:.95rem;height:.95rem;border-radius:50%;background:#8a74ad;transition:transform .2s,background .2s}
+#mehrSheet .msTog input[type=checkbox]:checked{background:linear-gradient(90deg,rgba(255,122,217,.5),rgba(199,139,255,.55));box-shadow:var(--rr-glow);border-color:rgba(236,214,255,.6)}
+#mehrSheet .msTog input[type=checkbox]:checked::after{transform:translateX(1.05rem);background:#fff;box-shadow:0 0 8px #fff}
+#mehrSheet .msTog input[type=checkbox]:focus-visible{outline:2px solid var(--rr-violet);outline-offset:2px}
+/* Solange «Mehr» offen ist, leuchtet nur «Mehr» */
+html body nav.msOpen .navR button.on:not(#navMehr){background:transparent!important;box-shadow:none!important;color:rgb(215,198,238)!important}
+html body nav.msOpen .navR button.on:not(#navMehr) .ic{transform:none!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 6px 14px rgba(0,0,0,.22)!important}
+html body nav.msOpen #navMehr{background:rgba(255,122,217,.16)!important;box-shadow:0 0 18px rgba(255,122,217,.25)!important;color:#fff!important}
+html body nav.msOpen #navMehr .ic{transform:translateY(-1px);box-shadow:0 0 16px #d6a6ff,inset 0 0 0 1px rgba(255,255,255,.2)!important}
+/* der orange Punkt an «Mehr» (Sicherung fällig) entfällt: die Startseite und «Mehr» sagen es schon in Worten */
+html body #navMehr.sxDue::after{display:none!important}
+
+/* Buch: zwei klar verschiedene Knöpfe */
+html body #buchGo #urbuchOpen.buchAlt{background:rgba(160,90,255,.1)!important;color:var(--rr-violet-hi)!important;border:1px solid var(--rr-line)!important;box-shadow:none!important}
+
+/* Chronik: Leer-Hinweis nicht doppelt, wenn eine Ansicht offen ist */
+#log:has(#mzBtn.on,#abBtn.on,#zlBtn.on,#rbBtn.on,#wbBtn.on) .logLeer{display:none!important}
+/* warme Leer-Zustände (Geplant, Gabe, Notiz) */
+html body .rrLeer{display:block!important;margin:.9rem 0!important;padding:.9rem 1rem!important;text-align:center;font-family:Georgia,serif!important;font-size:.92rem!important;line-height:1.5!important;color:#d8c8f2!important;background:linear-gradient(185deg,rgba(70,24,90,.4),rgba(30,12,48,.4));border:1px dashed rgba(200,120,255,.3);border-radius:1rem}
+
+/* Geplant: Auswahlliste im App-Stil */
+html body #geplant select#plR{-webkit-appearance:none;appearance:none;padding-right:2.4rem!important;background-color:rgba(30,14,48,.8)!important;color:var(--rr-text)!important;border:1px solid var(--rr-line)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c78bff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right .8rem center!important;background-size:1.1rem!important}
+html body #geplant select#plR option{background:#1a0b2c;color:var(--rr-text)}

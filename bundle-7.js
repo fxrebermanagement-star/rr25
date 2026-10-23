@@ -1,5 +1,5 @@
-/* rr25 · Paket 7/7 · Build 114 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
+/* rr25 · Paket 7/7 · Build 115 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -333,7 +333,7 @@ try{
       bar.innerHTML='<button type="button" class="btn ghost" id="rbBtn">Rückblick</button>';
       var p=document.createElement("div"); p.id="rbPanel"; p.className="card"; p.hidden=true;
       sec.insertBefore(bar,ent); sec.insertBefore(p,ent);
-      bar.querySelector("#rbBtn").onclick=function(){ OPEN=!OPEN; this.classList.toggle("on",OPEN); this.textContent=OPEN?"Rückblick zu":"Rückblick"; paintPanel(); };
+      bar.querySelector("#rbBtn").onclick=function(){ OPEN=!OPEN; this.classList.toggle("on",OPEN); this.textContent=OPEN?"\u2715":"Rückblick"; this.setAttribute("aria-label",OPEN?"Rückblick schliessen":"Rückblick öffnen"); paintPanel(); };
     }
     chips();
   }
@@ -644,7 +644,7 @@ try{
       bar.insertBefore(b,bar.firstChild);
       var p=document.createElement("div"); p.id="zlPanel"; p.className="card"; p.hidden=true;
       sec.insertBefore(p,ent);
-      b.onclick=function(){ OPEN=!OPEN; b.classList.toggle("on",OPEN); b.textContent=OPEN?"Zähler zu":"Zähler"; paintPanel(); };
+      b.onclick=function(){ OPEN=!OPEN; b.classList.toggle("on",OPEN); b.textContent=OPEN?"\u2715":"Zähler"; b.setAttribute("aria-label",OPEN?"Zähler schliessen":"Zähler öffnen"); paintPanel(); };
     }
     paintPanel();
   }
@@ -1426,7 +1426,7 @@ try{
       var p=document.createElement("div"); p.id="jrPanel"; p.className="card"; p.hidden=true;
       row.parentNode.insertBefore(p,row.nextSibling);
       bt.onclick=function(){
-        p.hidden=!p.hidden; bt.classList.toggle("on",!p.hidden); bt.textContent=p.hidden?"Jahresrad":"Jahresrad zu";
+        p.hidden=!p.hidden; bt.classList.toggle("on",!p.hidden); bt.textContent=p.hidden?"Jahresrad":"\u2715"; bt.setAttribute("aria-label",p.hidden?"Jahresrad öffnen":"Jahresrad schliessen");
         if(JR){ JR.stop(); JR=null; }
         if(!p.hidden) buildRad(p); else p.innerHTML="";
       };
@@ -1793,7 +1793,7 @@ try{
     bar.insertBefore(btn,bar.firstChild);
     var p=document.createElement("div"); p.id="abPanel"; p.className="card"; p.hidden=true;
     var rp=document.getElementById("rbPanel"); sec.insertBefore(p,rp&&rp.nextSibling?rp.nextSibling:ent);
-    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"Absichten zu":"Absichten"; paintPanel(); };
+    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"\u2715":"Absichten"; btn.setAttribute("aria-label",OPEN?"Absichten schliessen":"Absichten öffnen"); paintPanel(); };
   }
   if(typeof show==="function"&&!show._b82){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,400); return r; }; show._b82=1; }
   if(typeof paintLog==="function"&&!paintLog._b82){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paintPanel,120); return r; }; paintLog._b82=1; }
@@ -2249,7 +2249,7 @@ try{
     bar.insertBefore(btn,bar.firstChild);
     var p=document.createElement("div"); p.id="mzPanel"; p.className="card"; p.hidden=true;
     var ref=document.getElementById("abPanel")||document.getElementById("rbPanel"); sec.insertBefore(p,ref&&ref.nextSibling?ref.nextSibling:ent);
-    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"Zyklus zu":"Mondzyklus"; paint(); };
+    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"\u2715":"Mondzyklus"; btn.setAttribute("aria-label",OPEN?"Mondzyklus schliessen":"Mondzyklus öffnen"); paint(); };
   }
   if(typeof show==="function"&&!show._b84){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,600); return r; }; show._b84=1; }
   if(typeof paintLog==="function"&&!paintLog._b84){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paint,140); return r; }; paintLog._b84=1; }
@@ -2312,6 +2312,7 @@ try{
    Heute-Seite: Tippflächen nur unsichtbar vergrössert (::after), damit die Höhe 1088 px bleibt. */
 (function(){
   if(window.__rr25b94) return; window.__rr25b94=1;
+  var A="content:'';position:absolute;left:-3px;right:-3px;top:-5px;bottom:-5px";
   var css=document.createElement("style");
   css.textContent=[
     /* Heute: unsichtbar auf mindestens 40 px */
@@ -2330,7 +2331,14 @@ try{
     "button.rbTag,button.rbNav,#abPanel button{min-width:40px}",
     ".kmNav{width:40px;height:40px}",
     "button.kmYear{min-height:40px;min-width:40px}",
-    ".kmDay{height:40px}"
+    ".kmDay{height:40px}",
+    /* Build 100 (eingefaltet in Build 115): Knopfzone der Chronik kompakter. Sichtbar ca. 30 px, Tippfläche 40 px per ::after */
+    "html body #rbBar{display:flex!important;flex-wrap:wrap;justify-content:center;gap:10px 8px;margin:.1rem auto .6rem;max-width:290px}",
+    "html body #rbBar>button{flex:0 0 auto;width:auto!important;position:relative;min-height:30px!important;height:30px;padding:0 .8rem!important;font-size:.72rem!important;line-height:1;letter-spacing:.01em;border-radius:999px!important;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}",
+    "html body #rbBar>button::after{"+A+"}",
+    "html body #logFilt{justify-content:center;gap:10px 6px!important;margin:.1rem 0 .6rem!important}",
+    "html body #logFilt .logchip{position:relative;min-height:30px!important;height:30px;padding:0 .7rem!important;font-size:.74rem!important;line-height:1;display:inline-flex;align-items:center;justify-content:center}",
+    "html body #logFilt .logchip::after{"+A+"}"
   ].join("");
   document.head.appendChild(css);
 })();
@@ -2601,7 +2609,7 @@ try{
     var btn=document.createElement("button"); btn.type="button"; btn.className="btn ghost"; btn.id="wbBtn"; btn.textContent="Wochenbild"; bar.appendChild(btn);
     var p=document.createElement("div"); p.id="wbPanel"; p.className="card"; p.hidden=true;
     var ref=document.getElementById("mzPanel")||document.getElementById("abPanel")||document.getElementById("rbPanel"); sec.insertBefore(p,ref&&ref.nextSibling?ref.nextSibling:ent);
-    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"Wochenbild zu":"Wochenbild"; paint(); };
+    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"\u2715":"Wochenbild"; btn.setAttribute("aria-label",OPEN?"Wochenbild schliessen":"Wochenbild öffnen"); paint(); };
   }
   if(typeof show==="function"&&!show._b99){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,700); return r; }; show._b99=1; }
   setTimeout(mount,800);
@@ -2623,26 +2631,6 @@ try{
   ].join("");
   document.head.appendChild(css);
   window.RR25_WOCHENBILD={data:data,render:render};
-})();
-
-}catch(e){setTimeout(function(){throw e;});}
-/* ==== ritual-b100.js ==== */
-try{
-/* ritual-b100.js — Build 100: Knopfzone der Chronik kompakter (Funktionsknöpfe und Filter-Chips).
-   Nur CSS. Sichtbare Höhe ca. 30 px, Tippfläche 40 px per unsichtbarem ::after, Abstand zwischen Reihen gross genug (kein Überlapp). */
-(function(){
-  if(window.__rr25b100) return; window.__rr25b100=1;
-  var A="content:'';position:absolute;left:-3px;right:-3px;top:-5px;bottom:-5px";
-  var css=document.createElement("style");
-  css.textContent=[
-    "html body #rbBar{display:flex!important;flex-wrap:wrap;justify-content:center;gap:10px 8px;margin:.1rem auto .6rem;max-width:290px}",
-    "html body #rbBar>button{flex:0 0 auto;width:auto!important;position:relative;min-height:30px!important;height:30px;padding:0 .8rem!important;font-size:.72rem!important;line-height:1;letter-spacing:.01em;border-radius:999px!important;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}",
-    "html body #rbBar>button::after{"+A+"}",
-    "html body #logFilt{justify-content:center;gap:10px 6px!important;margin:.1rem 0 .6rem!important}",
-    "html body #logFilt .logchip{position:relative;min-height:30px!important;height:30px;padding:0 .7rem!important;font-size:.74rem!important;line-height:1;display:inline-flex;align-items:center;justify-content:center}",
-    "html body #logFilt .logchip::after{"+A+"}"
-  ].join("");
-  document.head.appendChild(css);
 })();
 
 }catch(e){setTimeout(function(){throw e;});}

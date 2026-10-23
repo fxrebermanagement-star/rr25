@@ -1,11 +1,11 @@
-var CACHE="rr25-v114";
+var CACHE="rr25-v115";
 /* Offline-Vorrat: alles, was die App zum Starten braucht. Online bleibt es wie bisher: jede Datei frisch aus dem Netz.
    Der Vorrat ist nur der Ersatz, wenn kein Netz da ist. Liste anpassen, wenn index.html andere Dateien lädt. */
 var VORRAT=[
-  "./", "index.html", "styles-v13a.css", "styles-v13b.css",
+  "./", "index.html", "styles-v13a.css", "styles-v13b.css", "styles-v115.css",
   "bundle-1.js", "bundle-2.js", "bundle-3.js", "bundle-4.js", "bundle-5.js", "bundle-6.js", "bundle-7.js",
   "manifest.webmanifest", "icon-44.svg", "icon-44-maskable.svg", "icon.svg", "rune.svg",
-  "kalender.json", "kalender-more.json", "kalender-2027a.json", "kalender-2027b.json",
+  "kalender.json",
   "resonanzen-a.json", "resonanzen-b.json", "resonanzen-c.json", "resonanzen-d.json", "resonanzen-links.json", "resonanzen-mehr.json",
   "resonanzen-ico-a.json", "resonanzen-ico-b.json", "resonanzen-ico-c.json"
 ];

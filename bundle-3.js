@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 114 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 115 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -192,7 +192,7 @@ function openNote(id){
 function paintNotes(){
   const notes=loadNotes();
   const box=$("#notesOnly"); if(!box) return;
-  box.innerHTML=notes.length?notes.map(n=>`<button type="button" class="card" data-nid="${n.id}"><small>${esc(n.t)}</small><b>${esc((n.note||"").slice(0,90))}${(n.note||"").length>90?"…":""}</b></button>`).join(""):"<p class='sub'>Keine Notiz.</p>";
+  box.innerHTML=notes.length?notes.map(n=>`<button type="button" class="card" data-nid="${n.id}"><small>${esc(n.t)}</small><b>${esc((n.note||"").slice(0,90))}${(n.note||"").length>90?"…":""}</b></button>`).join(""):"<p class='sub rrLeer'>Noch keine Notiz. Ein Gedanke, ein Traum, ein Satz: hier ist Platz dafür.</p>";
   $$("#notesOnly [data-nid]").forEach(b=>b.onclick=()=>openNote(b.dataset.nid));
 }
 
@@ -378,14 +378,7 @@ try{
   }
   var s=document.createElement("style");
   s.textContent=[
-    "nav{position:fixed!important;left:50%;bottom:0;transform:translateX(-50%);width:100%;max-width:28rem;margin:0!important;z-index:40;display:flex!important;flex-direction:column;gap:.18rem;border-radius:1.15rem 1.15rem 0 0;padding:.34rem .28rem calc(.42rem + env(safe-area-inset-bottom));background:rgba(12,6,20,.97)!important;backdrop-filter:blur(16px);border:1px solid rgba(200,120,255,.22);border-bottom:0;box-sizing:border-box;grid-template-columns:none!important}",
-    "nav .navR{display:grid;gap:.18rem}",
-    "nav .navR:first-child{grid-template-columns:repeat(4,1fr)}",
-    "nav .navR:last-child{grid-template-columns:repeat(3,1fr);padding:0 8%}",
-    "nav button{font-size:.6rem!important;padding:.42rem .04rem .34rem!important;min-height:2.55rem}",
-    "nav button svg{width:18px!important;height:18px!important}",
-    "main{padding-bottom:8.2rem!important}",
-    "header nav{display:none}"
+    "main{padding-bottom:8.2rem!important}"
   ].join("");
   document.head.appendChild(s);
 })();
@@ -1055,7 +1048,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=114;
+  var BUILD=115;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1129,13 +1122,6 @@ try{
     ".kcard b,.kcard small,.kcard .group{display:block}",
     "#sigilT{text-transform:uppercase}",
     "input:focus,textarea:focus,select:focus{outline:0;border-color:rgba(255,122,217,.55);box-shadow:0 0 0 3px rgba(255,122,217,.12)}",
-    "nav{display:flex!important;flex-direction:column!important;grid-template-columns:none!important;gap:.16rem!important;padding:.32rem .22rem calc(.4rem + env(safe-area-inset-bottom))!important}",
-    "nav .navR{display:grid!important;gap:.16rem}",
-    "nav .navR:first-child{grid-template-columns:repeat(4,1fr)!important}",
-    "nav .navR:last-child{grid-template-columns:repeat(3,1fr)!important;padding:0 7%}",
-    "nav button{padding:.44rem .04rem .36rem!important;font-size:.6rem!important;gap:.14rem!important;min-height:2.5rem}",
-    "nav button svg{width:18px!important;height:18px!important}",
-    "nav button.on{box-shadow:0 0 18px rgba(255,122,217,.25)}",
     "main{padding-bottom:8.4rem!important}",
     ".bakBar .btn{min-height:2.15rem;font-size:.74rem;letter-spacing:.02em}",
     "#logFind{margin:.15rem 0 .55rem;min-height:2.25rem}",

@@ -89,7 +89,7 @@
     bar.insertBefore(btn,bar.firstChild);
     var p=document.createElement("div"); p.id="mzPanel"; p.className="card"; p.hidden=true;
     var ref=document.getElementById("abPanel")||document.getElementById("rbPanel"); sec.insertBefore(p,ref&&ref.nextSibling?ref.nextSibling:ent);
-    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"Zyklus zu":"Mondzyklus"; paint(); };
+    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"\u2715":"Mondzyklus"; btn.setAttribute("aria-label",OPEN?"Mondzyklus schliessen":"Mondzyklus öffnen"); paint(); };
   }
   if(typeof show==="function"&&!show._b84){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,600); return r; }; show._b84=1; }
   if(typeof paintLog==="function"&&!paintLog._b84){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paint,140); return r; }; paintLog._b84=1; }
