@@ -187,7 +187,8 @@ try{
     n=String(n||"").trim();
     if(/^(369|3 · 6 · 9|Ich · Spiel · Quelle)$/.test(n)) return 2;
     if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz|Gabe · Preis|Lösen)$/.test(n)) return 3;
-    if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo|Reinigen)$/.test(n)) return 4;
+    /* Build 107: «Reinigen» ohne feste Phase: nach der Rückkehr (Fluch) bleibt es dort, vorne (Raum reinigen) zaehlt es zur Absicht */
+    if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo)$/.test(n)) return 4;
     if(/^(Absicht|Zugang|Versetzen|Anker|Zurück aus|Wesenheit ·)/.test(n)) return 1;
     if(PRE.test(n)) return 0;
     return -1;
@@ -204,7 +205,7 @@ try{
     var r=curRit(sub);
     var stepMode=/\d+\/\d+/.test(sub);
     var names=r&&r.flow?r.flow.map(function(x){ return x[0]; }):[];
-    /* Build 106: im Lauf die echten Schritte nehmen (Zugang, Lösen, Härte-, Wesenheits-Schritte) statt der statischen flow-Liste */
+    /* Build 107: im Lauf die echten Schritte nehmen (Zugang, Lösen, Härte-, Wesenheits-Schritte) statt der statischen flow-Liste */
     var RS=window._rr25Steps; if(stepMode && r && RS && RS.id===r.id && RS.names && RS.names.length) names=RS.names.slice();
     if(title==="Ich · Spiel · Quelle" && names.indexOf("369")>=0) title="369";
     var has369=names.indexOf("369")>=0;
