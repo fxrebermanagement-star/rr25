@@ -23,7 +23,20 @@
   }
   function moon(ms){
     var M=window.RR25_MOND; if(!M) return "";
-    var k=M.day(ms).key; return {neu:"Neumond",zu:"Zunehmend",voll:"Vollmond",ab:"Abnehmend"}[k]||"";
+    var k=(M.fenster?M.fenster(ms):M.day(ms)).key; return {neu:"Neumond",zu:"Zunehmend",voll:"Vollmond",ab:"Abnehmend"}[k]||"";
+  }
+  /* Build 112: Wirkung nach Mondphase. Nur Rituale (Zählregel), Mondphase als Fenster (Neumond/Vollmond ±1 Tag). */
+  function wirkMond(S,e,mo,T){
+    if(!mo||!(window.RR25_ZAEHLREGEL&&window.RR25_ZAEHLREGEL.isRitual(e))) return;
+    if(!S.mw) S.mw={Neumond:{r:0,w:0},Zunehmend:{r:0,w:0},Vollmond:{r:0,w:0},Abnehmend:{r:0,w:0}};
+    S.mw[mo].r++; if((T[String(e.id)]||[]).indexOf("Wirkung")>=0) S.mw[mo].w++;
+  }
+  function wirkMondHtml(S){
+    var mw=S.mw, keys=["Neumond","Zunehmend","Vollmond","Abnehmend"];
+    if(!mw) return '<p class="rbH">Wirkung nach Mondphase</p><p class="rbNote">Noch keine Rituale in dieser Zeit.</p>';
+    return '<p class="rbH">Wirkung nach Mondphase</p><ul class="rbMw">'+keys.map(function(k){
+      var x=mw[k]; return '<li><span>'+k+'</span><b>'+x.r+(x.r===1?' Ritual':' Rituale')+(x.r?', '+x.w+' mit Wirkung':'')+'</b></li>';
+    }).join("")+'</ul><p class="rbNote">Neumond und Vollmond zählen je einen Tag davor und danach dazu. Wirkung = Merker am Eintrag.</p>';
   }
   function daytime(ms){ var hr=new Date(ms).getHours(); return hr>=5&&hr<11?"Morgen":hr<17&&hr>=11?"Tag":hr>=17&&hr<22?"Abend":"Nacht"; }
   function stats(y,m){
@@ -32,6 +45,7 @@
       var ms=when(e); if(ms==null) return; var d=new Date(ms); if(d.getFullYear()!==y||d.getMonth()!==m) return;
       S.n++; if(String(e.titel||'')==='Tagesziel') S.ziel++; else if(window.RR25_ZAEHLREGEL&&window.RR25_ZAEHLREGEL.isRitual(e)) S.rit++; S.ton[tone(e)]=(S.ton[tone(e)]||0)+1;
       var mo=moon(ms); if(mo) S.mond[mo]++;
+      wirkMond(S,e,mo,T);
       S.zeit[daytime(ms)]++;
       (T[String(e.id)]||[]).forEach(function(t){ if(t in S) S[t]++; });
     });
@@ -61,6 +75,7 @@
       if(isR){ Y.rit++; Y.monat[d.getMonth()]++; var nm=String(e.titel||"").trim(); if(nm) Y.top[nm]=(Y.top[nm]||0)+1; }
       var tn=tone(e); Y.ton[tn]=(Y.ton[tn]||0)+1;
       var mo=moon(ms); if(mo) Y.mond[mo]++;
+      wirkMond(Y,e,mo,T);
       (T[String(e.id)]||[]).forEach(function(t){ if(t in Y) Y[t]++; });
     });
     try{ (js("rr25_echo_v1",{}).items||[]).forEach(function(it){ ["3","9"].forEach(function(k){ var c=it.checks&&it.checks[k]; if(c&&c.a&&c.due){ var d=new Date(c.due); if(d.getFullYear()===y) Y.echoAnt++; } }); }); }catch(e){}
@@ -77,8 +92,8 @@
     return '<div class="rbHead"><button type="button" class="rbNav" data-d="-12" aria-label="Jahr zurück">‹</button><b>'+y+'</b><button type="button" class="rbNav" data-d="12" aria-label="Jahr vor"'+(fut?' disabled':'')+'>›</button></div>'+
       '<p class="rbSay">'+h(say)+'</p>'+
       '<p class="rbH">Rituale pro Monat</p>'+bars(mo,false,ml)+
-      '<p class="rbH">Ton · Soft und Hard</p>'+bars(Y.ton,true,LAB)+
-      '<p class="rbH">Mondphase</p>'+bars(Y.mond)+
+      '<p class="rbH">Ton · alle Einträge</p>'+bars(Y.ton,true,LAB)+
+      '<p class="rbH">Mondphase</p>'+bars(Y.mond)+wirkMondHtml(Y)+
       '<p class="rbH">Wirkung und Echo</p>'+(wd?'<div class="rbBal" aria-label="Wirkung '+Y.Wirkung+', Echo '+Y.Echo+'"><i style="width:'+wp+'%"></i></div>':'')+
       '<div class="rbPills"><span class="rbP on">Wirkung <b>'+Y.Wirkung+'</b></span><span class="rbP on">Echo <b>'+Y.Echo+'</b></span><span class="rbP">Echo-Tage beantwortet <b>'+Y.echoAnt+'</b></span></div>'+
       '<p class="rbH">Meistgenutzte Rituale</p>'+(top.length?'<ol class="rbTop">'+top.map(function(k){ return '<li><span>'+h(k)+'</span><b>'+Y.top[k]+'×</b></li>'; }).join("")+'</ol>':'<p class="rbNote">Noch keine Rituale in diesem Jahr.</p>');
@@ -95,7 +110,7 @@
     return modeBar()+'<div class="rbHead"><button type="button" class="rbNav" data-d="-1" aria-label="Monat zurück">‹</button><b>'+MN[MON.m]+' '+MON.y+'</b><button type="button" class="rbNav" data-d="1" aria-label="Monat vor"'+(fut?' disabled':'')+'>›</button></div>'+
       '<p class="rbSay">'+h(sentence(S))+'</p>'+
       '<p class="rbH">Ton · alle Einträge</p>'+bars(S.ton,true,LAB)+
-      '<p class="rbH">Mondphase</p>'+bars(S.mond)+
+      '<p class="rbH">Mondphase</p>'+bars(S.mond)+wirkMondHtml(S)+
       '<p class="rbH">Tageszeit</p>'+bars(S.zeit)+
       '<p class="rbH">Merker</p><div class="rbPills"><span class="rbP on">Wirkung <b>'+S.Wirkung+'</b></span><span class="rbP on">Echo <b>'+S.Echo+'</b></span><span class="rbP">Echo-Tage beantwortet <b>'+S.echoAnt+'</b></span></div>'+
       '<p class="rbNote">Merker setzt du direkt an einem Eintrag: «Wirkung» oder «Echo» antippen.</p>';
@@ -156,6 +171,7 @@
     ".rbMode{display:flex;gap:.3rem;justify-content:center;margin:0 0 .5rem}.rbMode button{min-height:0;padding:.25rem .9rem;font-size:.7rem;border-radius:999px;border:1px solid rgba(200,120,255,.25);background:transparent;color:#cdbbe8}.rbMode button.on{background:rgba(160,90,255,.22);color:#f6e6ff;border-color:rgba(200,120,255,.6);box-shadow:0 0 10px rgba(200,120,255,.3)}",
     ".rbBal{height:.5rem;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin:.2rem 0 .45rem}.rbBal i{display:block;height:100%;background:linear-gradient(90deg,#7b3fb0,#d58bff);box-shadow:0 0 8px rgba(213,139,255,.45)}",
     ".rbTop{list-style:none;margin:.2rem 0 0;padding:0}.rbTop li{display:flex;justify-content:space-between;gap:.6rem;font-size:.76rem;color:#e6d4ff;padding:.22rem 0;border-bottom:1px solid rgba(200,120,255,.1)}.rbTop li:last-child{border:0}.rbTop b{color:#fff;font-weight:600}",
+    ".rbMw{list-style:none;margin:.2rem 0 0;padding:0}.rbMw li{display:flex;justify-content:space-between;gap:.6rem;font-size:.74rem;color:#cdbbe8;padding:.2rem 0;border-bottom:1px solid rgba(200,120,255,.1)}.rbMw li:last-child{border:0}.rbMw b{font-weight:500;color:#f1e1ff}",
     ".rbNote{margin:.55rem 0 0;font-size:.62rem;color:#8e7aa8}",
     ".rbTags{display:inline-flex;gap:.25rem;margin-left:.4rem;vertical-align:middle}",
     ".rbTag{font-size:.54rem;letter-spacing:.06em;padding:.05rem .42rem;min-height:0;line-height:1.5;border-radius:999px;border:1px dashed rgba(200,120,255,.3);background:transparent;color:#8e7aa8}",

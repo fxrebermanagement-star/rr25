@@ -1,4 +1,4 @@
-/* rr25 · Paket 5/7 · Build 111 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 5/7 · Build 112 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-plan.js, ritual-hold.js, ritual-cam.js, ritual-sigil-save.js, ritual-more.js, ritual-fein.js, ritual-check.js, ritual-ui-v2.js, ritual-v3.js */
 /* ==== ritual-plan.js ==== */
 try{
@@ -444,6 +444,7 @@ try{
     if(!e) return "neutral";
     var t=String(e.titel||"").trim();
     if(e.kind==="gabe" || /^(Tagesziel|Sigille|Gabe|Opfer|Opfergabe)$/i.test(t)) return "neutral";
+    if(/ · abgebrochen$/.test(t)) return "neutral"; /* Build 112: Abbruch ist kein Ritual, eigenes graues Kennzeichen */
     var r=rById(ridOf(e.id));
     if(!r){
       var base=t.replace(/ · abgebrochen$/,""), best=null;
@@ -491,7 +492,7 @@ try{
       rows.forEach(function(e){ if(e) by[e.id]=e; });
       box.querySelectorAll("[data-eid]").forEach(function(el){
         var e=by[el.getAttribute("data-eid")];
-        var ok=FILT==="grau"?/^(Tagesziel|Sigille)$/i.test(String(e&&e.titel||"").trim()):toneOf(e)===FILT;
+        var ok=FILT==="grau"?/^(Tagesziel|Sigille)$| · abgebrochen$/i.test(String(e&&e.titel||"").trim()):toneOf(e)===FILT;
         if(!ok) el.style.display="none";
       });
     };

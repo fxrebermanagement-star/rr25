@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 111 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 112 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -514,7 +514,7 @@ try{
      Kante und Label in #8f8aa0. Soft/Grenze/Hard/Feld unangetastet. Kein Filter-Chip. Kein Mehr-Menue. */
   if(window.__rr25grauZiel) return;
   window.__rr25grauZiel=1;
-  var KIND={Tagesziel:"Ziel",Sigille:"Zeichen"};
+  var KIND={Tagesziel:"Tagesziel",Sigille:"Sigille"}; /* Build 112: gleiche Namen wie überall, Abbruch eigenes Kennzeichen */
   var GREY="#8f8aa0";
   function paint(){
     var box=document.getElementById("entries"); if(!box) return;
@@ -523,7 +523,7 @@ try{
     [].slice.call(box.querySelectorAll(".logrow[data-eid]")).forEach(function(row){
       var e=by[row.getAttribute("data-eid")]; if(!e) return;
       var t=String(e.titel||"").trim();
-      var lab=KIND[t]; if(!lab) return;
+      var lab=KIND[t]||(/ · abgebrochen$/.test(t)?"Abgebrochen":""); if(!lab) return;
       if(!row.classList.contains("v3c")) row.classList.add("v3c");
       row.classList.add("tone-neutral");
       row.style.setProperty("--t", GREY);

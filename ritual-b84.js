@@ -27,16 +27,35 @@
   function earliest(){ var m=Infinity; rows().forEach(function(e){ var t=when(e); if(t!=null&&t<m) m=t; }); return m; }
   function tone(e){ var t=window.RR25_TONE?window.RR25_TONE(e):"soft"; return t; }
   function stats(z){
-    var R=window.RR25_ZAEHLREGEL, items=[], rit=0, by={}, ton={soft:0,hard:0};
+    var R=window.RR25_ZAEHLREGEL, items=[], rit=0, by={}, ton={soft:0,grenze:0,hard:0,feld:0,grau:0}, ph={};
     rows().forEach(function(e){
       var t=when(e); if(t==null||t<z.s||t>=z.e) return;
       var ti=String(e.titel||"").trim(), isR=R&&R.isRitual(e);
       items.push({t:t,ti:ti,note:String(e.note||e.wer||"").trim(),r:!!isR});
-      if(isR){ rit++; by[ti]=(by[ti]||0)+1; var tn=tone(e); if(tn==="hard") ton.hard++; else if(tn==="soft") ton.soft++; }
+      var tn=tone(e); if(tn==="neutral") tn="grau"; if(tn in ton) ton[tn]++; /* Build 112: alle fünf Töne, alle Einträge */
+      if(isR){ rit++; by[ti]=(by[ti]||0)+1; }
+      var MF=window.RR25_MOND&&window.RR25_MOND.fenster; if(MF){ var k=MF(t).key; ph[k]=(ph[k]||0)+1; }
     });
     items.sort(function(a,b){ return a.t-b.t; });
     var top=Object.keys(by).sort(function(a,b){ return by[b]-by[a]||a.localeCompare(b); }).slice(0,4).map(function(k){ return k+(by[k]>1?" ×"+by[k]:""); });
-    return {items:items,rit:rit,top:top,ton:ton};
+    return {items:items,rit:rit,top:top,ton:ton,ph:ph};
+  }
+  /* Build 112: Mondphasen-Leiste über den Zyklus (8 echte Mondsymbole, heute markiert) und Einträge je Mondfenster */
+  var PSYM={neu:"\ud83c\udf11",zu:"\ud83c\udf12",voll:"\ud83c\udf15",ab:"\ud83c\udf18"}, PNAM={neu:"Neumond",zu:"Zunehmend",voll:"Vollmond",ab:"Abnehmend"};
+  function strip(z){
+    var M=window.RR25_MOND; if(!M||!M.fenster) return "";
+    var now=Date.now(), out=[];
+    for(var i=0;i<8;i++){
+      var t=z.s+(z.e-z.s)*(i+.5)/8, d=M.day(t), sym=i===0?"\ud83c\udf11":(i===4?"\ud83c\udf15":d.sym);
+      if(sym==="\u25cb") sym="\ud83c\udf11";
+      var on=z.now&&now>=z.s+(z.e-z.s)*i/8&&now<z.s+(z.e-z.s)*(i+1)/8;
+      out.push('<span class="mzS'+(on?' on':'')+'"><i>'+sym+'</i><small>'+h(fd(t))+'</small></span>');
+    }
+    return '<div class="mzStrip" aria-label="Mondphasen im Zyklus">'+out.join("")+'</div>';
+  }
+  function phasePills(S){
+    var ks=["neu","zu","voll","ab"].filter(function(k){ return S.ph[k]; });
+    return ks.length?'<div class="rbPills mzPh">'+ks.map(function(k){ return '<span class="rbP on">'+PSYM[k]+' '+PNAM[k]+' <b>'+S.ph[k]+'</b></span>'; }).join("")+'</div>':'';
   }
   function panel(){
     var z=zyklus(OFF); if(!z) return '<p class="mzSay">Mondzeiten sind noch nicht geladen.</p>';
@@ -45,12 +64,14 @@
     var vm=z.full?'<li class="mzV"><span></span><b>Vollmond · '+h(fdt(z.full))+'</b></li>':'';
     var inserted=false, list=S.items.map(function(x){
       var pre=''; if(!inserted&&z.full&&x.t>z.full){ pre=vm; inserted=true; }
-      return pre+'<li class="'+(x.r?"mzR":"")+'"><span>'+h(fdw(x.t))+'</span><b>'+h(x.ti)+'</b>'+(x.note&&x.note!==x.ti?'<small>'+h(x.note.slice(0,90))+'</small>':'')+'</li>';
+      var mf=window.RR25_MOND&&window.RR25_MOND.fenster?window.RR25_MOND.fenster(x.t):null;
+      return pre+'<li class="'+(x.r?"mzR":"")+'"><span>'+(mf?'<i class="mzMo" title="'+h(mf.name)+'">'+mf.sym+'</i> ':'')+h(fdw(x.t))+'</span><b>'+h(x.ti)+'</b>'+(x.note&&x.note!==x.ti?'<small>'+h(x.note.slice(0,90))+'</small>':'')+'</li>';
     });
     if(!inserted&&z.full) list.push(vm);
     return '<div class="mzHead"><button type="button" class="rbNav" data-d="-1" aria-label="Voriger Zyklus"'+(hasOlder?'':' disabled')+'>‹</button><div><b>'+h(fd(z.s))+' – '+h(fd(z.e))+'</b><small>'+(z.now?'laufender Zyklus':'Neumond bis Neumond')+'</small></div><button type="button" class="rbNav" data-d="1" aria-label="Nächster Zyklus"'+(OFF>=0?' disabled':'')+'>›</button></div>'+
-      '<p class="mzSay">'+h(say)+'</p>'+
-      (S.rit?'<div class="rbPills"><span class="rbP on">Soft <b>'+S.ton.soft+'</b></span><span class="rbP on">Hard <b>'+S.ton.hard+'</b></span></div>':'')+
+      strip(z)+
+      '<p class="mzSay">'+h(say)+'</p>'+phasePills(S)+
+      (S.items.length?'<div class="rbPills">'+[["soft","Soft"],["grenze","Grenze"],["hard","Hard"],["feld","Feld"],["grau","Grau"]].filter(function(k){ return S.ton[k[0]]; }).map(function(k){ return '<span class="rbP on">'+k[1]+' <b>'+S.ton[k[0]]+'</b></span>'; }).join("")+'</div>':'')+
       (S.top.length?'<p class="mzTop">'+h(S.top.join(" · "))+'</p>':'')+
       (list.length?'<ul class="mzL">'+list.join("")+'</ul>':'')+
       '<p class="rbNote">Neumond bis Neumond, Berner Zeit.</p>';
@@ -80,7 +101,11 @@
     "#mzPanel{margin:0 0 .8rem;padding:.75rem .8rem .7rem;background:linear-gradient(180deg,rgba(40,18,62,.78),rgba(14,8,24,.92))!important;border:1px solid rgba(200,120,255,.22)!important;border-radius:1.1rem!important}#mzPanel[hidden]{display:none!important}",
     ".mzHead{display:flex;align-items:center;justify-content:space-between;text-align:center}.mzHead b{display:block;font-family:Georgia,serif;font-weight:400;font-size:1.02rem;color:#e4ecff}.mzHead small{font-size:.62rem;letter-spacing:.12em;color:#a994c4}",
     ".mzSay{margin:.5rem 0 .4rem;font-size:.8rem;color:#e6d4ff;line-height:1.4}.mzTop{margin:.5rem 0 0;font-size:.74rem;color:#cdbbe8}",
-    ".mzL{list-style:none;margin:.6rem 0 0;padding:0}.mzL li{display:grid;grid-template-columns:4.3rem 1fr;gap:.1rem .5rem;padding:.35rem 0;border-top:1px solid rgba(200,120,255,.1);font-size:.8rem;color:#cdbbe8}.mzL li span{color:#a994c4;font-size:.66rem;padding-top:.15rem}.mzL li b{font-weight:500}.mzL li.mzR b{color:#f1e1ff}.mzL li small{grid-column:2;font-size:.68rem;color:#8e7aa8;line-height:1.35}",
+    ".mzL{list-style:none;margin:.6rem 0 0;padding:0}.mzL li{display:grid;grid-template-columns:5.2rem 1fr;gap:.1rem .5rem;padding:.35rem 0;border-top:1px solid rgba(200,120,255,.1);font-size:.8rem;color:#cdbbe8}.mzL li span{color:#a994c4;font-size:.66rem;padding-top:.15rem}.mzL li b{font-weight:500}.mzL li.mzR b{color:#f1e1ff}.mzL li small{grid-column:2;font-size:.68rem;color:#8e7aa8;line-height:1.35}",
+    ".mzStrip{display:grid;grid-template-columns:repeat(8,1fr);gap:.15rem;margin:.6rem 0 .2rem;padding:.4rem .2rem;border-radius:.9rem;background:rgba(160,90,255,.07);border:1px solid rgba(200,120,255,.15)}",
+    ".mzS{display:flex;flex-direction:column;align-items:center;gap:.1rem;padding:.15rem 0;border-radius:.6rem}.mzS i{font-style:normal;font-size:1.15rem;filter:drop-shadow(0 0 4px rgba(200,140,255,.55))}.mzS small{font-size:.55rem;color:#a994c4}",
+    ".mzS.on{background:rgba(200,120,255,.2);box-shadow:0 0 10px rgba(200,120,255,.35)}.mzS.on small{color:#f1e1ff}.mzPh{margin:.1rem 0 .35rem}",
+    ".mzL li .mzMo{font-style:normal;font-size:.72rem}",
     ".mzL li.mzV b{color:#d6a6ff;font-size:.72rem;letter-spacing:.04em}"
   ].join("");
   document.head.appendChild(css);

@@ -3,7 +3,7 @@
      Kante und Label in #8f8aa0. Soft/Grenze/Hard/Feld unangetastet. Kein Filter-Chip. Kein Mehr-Menue. */
   if(window.__rr25grauZiel) return;
   window.__rr25grauZiel=1;
-  var KIND={Tagesziel:"Ziel",Sigille:"Zeichen"};
+  var KIND={Tagesziel:"Tagesziel",Sigille:"Sigille"}; /* Build 112: gleiche Namen wie überall, Abbruch eigenes Kennzeichen */
   var GREY="#8f8aa0";
   function paint(){
     var box=document.getElementById("entries"); if(!box) return;
@@ -12,7 +12,7 @@
     [].slice.call(box.querySelectorAll(".logrow[data-eid]")).forEach(function(row){
       var e=by[row.getAttribute("data-eid")]; if(!e) return;
       var t=String(e.titel||"").trim();
-      var lab=KIND[t]; if(!lab) return;
+      var lab=KIND[t]||(/ · abgebrochen$/.test(t)?"Abgebrochen":""); if(!lab) return;
       if(!row.classList.contains("v3c")) row.classList.add("v3c");
       row.classList.add("tone-neutral");
       row.style.setProperty("--t", GREY);

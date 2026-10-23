@@ -36,7 +36,7 @@ try{
       '<div class="row"><button type="button" class="btn ghost" id="eeNo">Nicht mehr fragen</button><button type="button" class="btn primary" id="eeOk">In die Chronik</button></div>';
     var ref=document.getElementById("wkHome");
     if(ref&&ref.parentNode===home) home.insertBefore(c,ref); else if(c.parentNode!==home) home.insertBefore(c,home.firstChild);
-    function upd(f){ var d=load(), x=(d.log||[]).filter(function(y){ return String(y.id)===String(e.id); })[0]; if(!x) return; f(x); save(d); c.remove(); setTimeout(paint,50); }
+    function upd(f){ var d=load(), x=(d.log||[]).filter(function(y){ return String(y.id)===String(e.id); })[0]; if(!x) return; f(x); save(d); if(window.RR25_ECHOSYNC) window.RR25_ECHOSYNC(); c.remove(); setTimeout(paint,50); }
     document.getElementById("eeOk").onclick=function(){
       var v=(document.getElementById("eeTxt").value||"").trim().slice(0,800); if(!v){ document.getElementById("eeTxt").focus(); return; }
       upd(function(x){ x.echo=v; x.echoT=Date.now(); });
