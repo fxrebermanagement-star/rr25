@@ -49,6 +49,7 @@
     var t=String(e.titel||"").trim();
     if(e.kind==="gabe" || /^(Tagesziel|Sigille|Gabe|Opfer|Opfergabe)$/i.test(t)) return "neutral";
     if(/ · abgebrochen$/.test(t)) return "neutral"; /* Build 112: Abbruch ist kein Ritual, eigenes graues Kennzeichen */
+    if(e.tone && /^(soft|hard|grenze|feld)$/.test(e.tone)) return e.tone; /* Build 113: Ritualbauer speichert den Ton im Eintrag */
     var r=rById(ridOf(e.id));
     if(!r){
       var base=t.replace(/ · abgebrochen$/,""), best=null;
