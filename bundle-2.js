@@ -30,10 +30,17 @@ try{
     trenn:["Der Zugang zeigt, wo die Verbindung zur Person sitzt, damit der Schnitt genau trifft: Name, Foto, ein Ding von ihr oder ein Gefühl im Körper.","Mein Zugang ist [Zugang], und ich weiss: Hier hängt [Name] an mir, und hier wird gelöst.","Tu:\nZugang aus dem Raum bringen oder einpacken.\n\nSprich:\nDer Schnitt ist gesetzt. Kein Faden zurück. Ich drehe mich nicht um."],
     wesen:["Der Zugang ist der Punkt, über den die Wesenheit die Person findet: Name, Foto oder ein Gegenstand. Ohne Zugang keine Verbindung, mit klarem Zugang kein Irrweg.","Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur hier gilt der Auftrag.","Tu:\nZugang mit Salz umkreisen, dann weglegen.\n\nSprich:\nDer Zugang ist zu. Keine Präsenz geht über mich. [Name] und ich sind getrennt."],
     ahn:["Der Zugang ist das, was dich mit der Ahnin oder dem Ahnen verbindet: Name, ein altes Foto, ein Erbstück, ein Ort der Familie oder ein vertrautes Gefühl.","Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und unsere Linie trägt.","Tu:\nErbstück zurück an seinen Platz.\n\nSprich:\nDanke, [Name]. Du gehst in deine Welt, ich bleibe in meiner. Die Tür ist zu."],
+    fluch:["Der Zugang ist die Bahn zur Person: ihr Name laut, ein Foto oder ein Ding von ihr. Genau auf sie, auf nichts sonst.","Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur hier läuft die Bahn.","Tu:\nZugang mit Salz umkreisen, dann weglegen.\n\nSprich:\nDie Bahn ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."],
+    liebe:["Der Zugang ist dein Faden zur Person: Name, Foto, ein Geschenk von ihr, ein Lied oder das Gefühl, wenn du an sie denkst.","Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier hält der Faden.","Tu:\nZugang weglegen, Hände ausschütteln.\n\nSprich:\nDer Faden ist gelegt. Ich lasse los, er hält."],
+    liebe2:["Der Zugang verbindet dich mit beiden: zwei Namen, zwei Fotos nebeneinander oder ein Ding, das zu beiden gehört.","Mein Zugang ist [Zugang], und ich weiss: Hier stehen [A] und [B], und zwischen ihnen hält der Faden.","Tu:\nBeide Zugänge zusammenlegen, dann weglegen.\n\nSprich:\nDer Faden zwischen [A] und [B] ist gelegt. Ich gehe raus. Ich bin weder [A] noch [B]."],
+    trenn2:["Der Zugang zeigt, wo die Verbindung zwischen beiden sitzt: zwei Namen, zwei Fotos oder ein Ding, das sie verbindet.","Mein Zugang ist [Zugang], und ich weiss: Hier hängen [A] und [B] aneinander, und hier wird gelöst.","Tu:\nDie beiden Zugänge auseinanderlegen, dann weglegen.\n\nSprich:\n[A] geht frei, [B] geht frei. Ich gehe raus. Nichts hängt an mir."],
+    ueber:["Der Zugang ist die Tür zur Person: ihr Name laut, ein Foto oder etwas von ihr in der Hand. Kurz hinein, sofort zurück.","Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur für [Auftrag].","Tu:\nZugang weglegen, Hände unter kaltes Wasser.\n\nSprich:\nIch bin nicht [Name]. Die Tür ist zu. Ich bin wieder ganz ich."],
     band:["Der Zugang zeigt, wo das Band sitzt: Name, Foto, ein Gegenstand oder das Gefühl im Körper, wo es zieht.","Mein Zugang ist [Zugang], und ich weiss: Hier hängt das Band zwischen [Name] und mir.","Tu:\nZugang weglegen, Hände ausschütteln.\n\nSprich:\nDer Faden ist gelöst, [Name] geht frei, ich auch."]
   };
   /* Personen-Rituale brauchen den Namen (z. B. band hatte keinen) */
-  R.forEach(function(r){ if(ZUGANG[r.id]){ r.need=(r.need||[]).slice(); if(r.need.indexOf("Name")<0) r.need.unshift("Name"); } });
+  R.forEach(function(r){ if(ZUGANG[r.id]){ r.need=(r.need||[]).slice(); if(r.need.indexOf("Name")<0 && r.need.indexOf("A")<0) r.need.unshift("Name"); } });
+  /* Build 108: Zugang-Schluessel auch fuer zwei Personen (A und B) */
+  function zgWho(m){ return m.Name || [m.A,m.B].filter(Boolean).join("+"); }
   var ABS_DEF="Sprich:\nEin Satz: Wohin richte ich mich aus?";
   function zgKey(id,n){ return id+"|"+String(n||"").toLowerCase(); }
   function zgLoad(id,n){ try{ return (JSON.parse(localStorage.getItem("rr25_zugang_v1")||"{}")[zgKey(id,n)])||""; }catch(e){ return ""; } }
@@ -76,7 +83,7 @@ try{
     else txt=s.kind+" · "+(window.RR25_MOND?window.RR25_MOND.day().name:"");
     return {kind:s.kind,txt:txt,s:s};
   }
-  function fensterZeile(now){
+  function fensterZeile(now,kind){
     if(!KZ) return "";
     var L=KZ.list(now), d0=new Date(now); d0.setHours(0,0,0,0); d0=d0.getTime();
     var soft=[], hard=[];
@@ -88,9 +95,11 @@ try{
     var bits=[];
     if(soft.length) bits.push('Soft-Fenster: '+soft.map(function(x){ return hm(x.s)+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
     if(hard.length) bits.push('Hard-Feintakte: '+hard.map(function(x){ return hm(x.s)+(x.anker?' Anker':'')+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
-    if(!bits.length) bits.push('Heute kein Soft-Fenster und kein Hard-Feintakt mehr.');
+    /* Build 108: nur zeigen, wenn es zur Hauptaussage passt (kein «Soft-Fenster» oben und «kein Soft-Fenster» unten) */
+    if(!bits.length){ if(kind==="SOFT"||kind==="HARD") return ""; bits.push('Heute kein Soft-Fenster und kein Hard-Feintakt mehr.'); }
     return '<br><span class="meta fenLine">'+bits.join('<br>')+'</span>';
   }
+  function mondKlein(t){ return String(t).replace(/\b(Zunehmend|Abnehmend)(er)?\b( Mond)?/g,function(x,a){ return a.toLowerCase()+"er Mond"; }); }
   function wetterHtml(r){
     var w=wetter(), s=w.s, d=new Date().getDay(), now=Date.now();
     var say={SOFT:"Soft-Fenster. Weiche Arbeit trägt.",HARD:"Hard-Feintakt offen. Scharf. Nur mit Gate und Rückkehr.",ECHO:"Echo. Nicht nachsetzen. Schliessen, danken, ernten.",STILL:"Still. Heute eher nichts setzen."}[w.kind];
@@ -109,7 +118,7 @@ try{
       var n2=KZ.next("SOFT",now);
       warn='<br><b>Jetzt nicht.</b> '+(w.kind==="STILL"?'Still-Band.':'Echo-Tag.')+(n2?' Nächstes Soft-Fenster: '+relDay(n2.x.s)+' '+hm(n2.x.s)+'.':'');
     }
-    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(w.txt)+'</span><br>'+say+extra+warn+fensterZeile(now)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
+    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(mondKlein(w.txt))+'</span><br>'+say+extra+warn+fensterZeile(now,w.kind)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
   }
   setInterval(function(){ var w=document.getElementById("wetter"); if(w&&cur){ var x=wetterHtml(cur.r); if(x!==w.innerHTML) w.innerHTML=x; } },30000);
 
@@ -123,8 +132,12 @@ try{
     var keys=["Name","A","B","Auftrag","AuftragW","Wofür","Absicht","Zugang","Richtung"];
     var lines=String(s).split("\n").filter(function(line){
       if(r.needOpt && !m.Name && line.indexOf("[Name]")>=0) return false;
+      /* Build 108: {S} nur bei Segen, {F} nur bei Fluch (ohne Wahl gilt Segen) */
+      var fl=(m.Richtung==="Fluch");
+      if(line.indexOf("{S}")===0 && fl) return false;
+      if(line.indexOf("{F}")===0 && !fl) return false;
       return true;
-    });
+    }).map(function(line){ return line.replace(/^\{[SF]\}/,""); });
     s=lines.join("\n");
     keys.forEach(function(k){ s=s.split("["+k+"]").join(m[k]?m[k]:"["+k+"]"); });
     return s;
@@ -137,7 +150,7 @@ try{
     if(r.haerte && lv){
       var a=idx(/^Absicht$/);
       if(a>=0){
-        if(lv==="weich") out[a][1]+="\nNur so weit, wie es für alle stimmig ist. Der freie Wille bleibt.";
+        if(lv==="weich") out[a][1]+="\nSanft und leise.";
         if(lv==="nagel") out[a][1]+="\nKein Ausweg im Satz. Keine Hintertür.";
       }
       if(lv==="nagel" && r.ichHart){
@@ -261,7 +274,7 @@ try{
       ok.push(m?(z.mond==="zu"?(k==="zu"||k==="neu"):z.mond==="ab"?(k==="ab"||k==="voll"):k===z.mond):false);
     }
     var all=ok.every(Boolean), some=ok.some(Boolean);
-    var now="Heute "+TAGK[d]+" · "+PLAN[d]+(window.RR25_MOND?", "+window.RR25_MOND.day().name:"");
+    var now="Heute "+TAGK[d]+" · "+PLAN[d]+(window.RR25_MOND?", "+mondKlein(window.RR25_MOND.day().name):"");
     var say=all?"Heute passt die Zeit.":some?"Heute passt es zum Teil.":"Heute nicht die passende Zeit. Nur ein Hinweis.";
     return '<div class="zeitTor'+(all?' ok':'')+'"><b>Zeit</b> '+h(parts.join(" · "))+'<br><span class="meta">'+h(now)+'. '+h(say)+(r.hard?' Das Hard-Fenster geht vor.':'')+'</span></div>';
   }
@@ -286,7 +299,7 @@ try{
   function afterTor(){ if(cur.r.haerte) haerte(); else if(cur.r.hard && !cur.r.wesenSelf) wesenQ(); else startSteps(); }
   function haerte(){
     var body='<p class="words">Wie viel Dosis trägt die Sache?</p>'+
-      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht mit freiem Willen. Leise Ich · Spiel · Quelle. Einfaches So sei es.</small></button>'+
+      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht sanft gesetzt. Leise Ich · Spiel · Quelle. Einfaches So sei es.</small></button>'+
       '<button type="button" class="card lv" data-lv="mittel"><b>Mittel</b><small>Mit Anker auf Papier. Voller Siegelsatz.</small></button>'+
       '<button type="button" class="card lv" data-lv="nagel"><b>Nagelhart</b><small>Anker, Satz ohne Hintertür, Siegel mit Salz, Rückkehr in drei Schritten, Frist.'+(cur.r.ichHart?" Kurz hinein, sofort zurück.":"")+'</small></button>';
     frame({title:"Härte",body:body,prev:"Tor",noAbort:true});
@@ -361,7 +374,7 @@ try{
         '<label class="absLab">Ein Satz<input class="nm" id="echoSatz" data-n="Echo" placeholder="Was sich gezeigt hat" value="'+h(cur.mem.Echo||'')+'" autocomplete="off" maxlength="200"></label>';
     }
     else if(/^Zugang$/.test(st[0])){
-      if(!cur.mem.Zugang) cur.mem.Zugang=zgLoad(r.id,cur.mem.Name);
+      if(!cur.mem.Zugang) cur.mem.Zugang=zgLoad(r.id,zgWho(cur.mem));
       var zs=ZUGANG[r.id]||["",""];
       body='<p class="words">'+h(fillT(raw))+'</p>'+
         '<p class="words zgSatz" id="w0">'+h(fillT(zs[1]))+'</p>'+
@@ -421,7 +434,7 @@ try{
         if(!ok||!ok.checked){ msg("Erst zurückkehren."); return; }
         cur.back=true;
       }
-      if(/^Zugang$/.test(st[0])) zgSave(r.id,cur.mem.Name,cur.mem.Zugang);
+      if(/^Zugang$/.test(st[0])) zgSave(r.id,zgWho(cur.mem),cur.mem.Zugang);
       if(!last){ cur.i++; step(); return; }
       if(r.noStatus){ if(r.echoRead) finish((cur.mem.Echo||"").trim(),false); else echo(); } else status();
     };
@@ -732,7 +745,7 @@ try{
     {"id":"h06","k":"hard","t":"Erst das eigene Feld","z":"△","x":"Bevor du nach aussen wirkst, schliess dein eigenes Feld. Wer offen wirkt, wird offen getroffen."},
     {"id":"h07","k":"hard","t":"Frist setzen","z":"⊠","x":"Harte Arbeit braucht ein Ablaufdatum, etwa bis zum nächsten Vollmond. Dann endet sie. Ohne Frist hängt sie an dir.","m":["voll"]},
     {"id":"h08","k":"hard","t":"Der Mond nimmt","z":"◑","x":"Abnehmender Mond trägt das Wegnehmen: Bänder lösen, Schaden stoppen. Gemessen, mit Gate und Rückkehr.","m":["ab"]},
-    {"id":"h09","k":"hard","t":"Freier Wille","z":"☿","x":"Nichts über den freien Willen eines Menschen hinweg. Was nur mit Zwang hält, bricht und kommt zurück."},
+    {"id":"h09","k":"hard","t":"Setzen und gehen","z":"☿","x":"Was du setzt, setzt du ganz. Danach loslassen und nicht nachziehen. Was festgehalten wird, verliert Kraft."},
     {"id":"h10","k":"hard","t":"Erst Diagnose","z":"◈","x":"Erst prüfen, dann handeln: Zieht es, steht es, ist es still? Wer ohne Diagnose hart arbeitet, trifft das Falsche."},
     {"id":"h11","k":"hard","t":"Gast mit Auftrag","z":"✵","x":"Eine Wesenheit bekommt Auftrag, Frist und Abschied. Danken und entlassen. Kein Gast bleibt über Nacht."},
     {"id":"h12","k":"hard","t":"Kurz und klar","z":"↯","x":"Hartes wirkt am besten kurz: hinein, setzen, heraus. Nicht darin verweilen und nicht nachsehen, ob es trifft."},

@@ -98,7 +98,7 @@
     {"id":"h06","k":"hard","t":"Erst das eigene Feld","z":"△","x":"Bevor du nach aussen wirkst, schliess dein eigenes Feld. Wer offen wirkt, wird offen getroffen."},
     {"id":"h07","k":"hard","t":"Frist setzen","z":"⊠","x":"Harte Arbeit braucht ein Ablaufdatum, etwa bis zum nächsten Vollmond. Dann endet sie. Ohne Frist hängt sie an dir.","m":["voll"]},
     {"id":"h08","k":"hard","t":"Der Mond nimmt","z":"◑","x":"Abnehmender Mond trägt das Wegnehmen: Bänder lösen, Schaden stoppen. Gemessen, mit Gate und Rückkehr.","m":["ab"]},
-    {"id":"h09","k":"hard","t":"Freier Wille","z":"☿","x":"Nichts über den freien Willen eines Menschen hinweg. Was nur mit Zwang hält, bricht und kommt zurück."},
+    {"id":"h09","k":"hard","t":"Setzen und gehen","z":"☿","x":"Was du setzt, setzt du ganz. Danach loslassen und nicht nachziehen. Was festgehalten wird, verliert Kraft."},
     {"id":"h10","k":"hard","t":"Erst Diagnose","z":"◈","x":"Erst prüfen, dann handeln: Zieht es, steht es, ist es still? Wer ohne Diagnose hart arbeitet, trifft das Falsche."},
     {"id":"h11","k":"hard","t":"Gast mit Auftrag","z":"✵","x":"Eine Wesenheit bekommt Auftrag, Frist und Abschied. Danken und entlassen. Kein Gast bleibt über Nacht."},
     {"id":"h12","k":"hard","t":"Kurz und klar","z":"↯","x":"Hartes wirkt am besten kurz: hinein, setzen, heraus. Nicht darin verweilen und nicht nachsehen, ob es trifft."},
