@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 113 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 114 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -1846,7 +1846,7 @@ try{
   var DL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"], PN=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
   var MK={neu:"Neumond",zu:"zunehmender Mond",voll:"Vollmond",ab:"abnehmender Mond"};
   var ZA={"1":"den Anfang","2":"das Gegenüber","3":"das Wachstum","4":"den Boden","5":"die Bewegung","6":"den Ausgleich","7":"den Rückzug","8":"den Fluss","9":"den Abschluss"};
-  var HM={"Wasser":"Stelle ein Glas Wasser bereit.","Kerze":"Zünde eine Kerze an und stell sie sicher hin.","Weihrauch":"Räuchere ein wenig Weihrauch, Fenster einen Spalt offen.","Myrrhe":"Räuchere ein wenig Myrrhe, Fenster einen Spalt offen.","Messer":"Lege das Messer bereit, nur zum Zeigen, nicht zum Schneiden.","Nagel":"Lege einen Nagel bereit.","Schlüssel":"Nimm einen Schlüssel in die Hand.","Faden":"Halte einen Faden bereit.","Besen":"Stelle den Besen bereit.","Schwefel":"Schwefel nur als Wort: schreib ihn auf, verbrenne nichts.","Kreide":"Nimm die Kreide zur Hand.","Salz":"Stelle eine Prise Salz bereit.","Wein":"Stelle ein Glas Wein bereit, ein Schluck genügt."};
+  var HM={"Wasser":"Stelle ein Glas Wasser bereit.","Kerze":"Zünde eine Kerze an und stell sie sicher hin.","Weihrauch":"Räuchere ein wenig Weihrauch, Fenster einen Spalt offen.","Myrrhe":"Räuchere ein wenig Myrrhe, Fenster einen Spalt offen.","Messer":"Lege das Messer bereit, nur zum Zeigen, nicht zum Schneiden.","Nagel":"Lege einen Nagel bereit.","Schlüssel":"Nimm einen Schlüssel in die Hand.","Spiegel":"Stelle den Spiegel bereit, Spiegelseite nach aussen.","Glocke":"Läute die Glocke einmal zum Anfang.","Faden":"Halte einen Faden bereit.","Besen":"Stelle den Besen bereit.","Schwefel":"Schwefel nur als Wort: schreib ihn auf, verbrenne nichts.","Kreide":"Nimm die Kreide zur Hand.","Salz":"Stelle eine Prise Salz bereit.","Wein":"Stelle ein Glas Wein bereit, ein Schluck genügt."};
   function low(x){ return x.charAt(0).toLowerCase()+x.slice(1); }
   function kurz(e){ return e.cat==="zahlen"&&e.num?"Zahl "+e.num:String(e.name).replace(" / "," oder "); }
   function zSatz(e){
@@ -1855,7 +1855,9 @@ try{
       case "zahlen": return e.num&&ZA[e.num]?"Atme in die Zahl "+e.num+", "+ZA[e.num]+".":"Atme ruhig in die Zahl "+n+".";
       case "kraeuter": return "Nimm "+n+" dazu, als Duft, Tee oder Bild.";
       case "steine": return "Nimm einen Stein in die Hand: "+n+".";
-      case "kerzen": return "Zünde die "+low(n)+" an und stell sie sicher hin.";
+      case "kerzen": return e.id==="kerze"?"Zünde eine Kerze an und stell sie sicher hin.":"Zünde die "+low(n)+" an und stell sie sicher hin.";
+      case "werkzeuge": return HM[n]||"Lege "+n+" bereit, als Zeichen für deine Absicht.";
+      case "opfer": return "Stelle als Gabe bereit: "+n+". Ein wenig reicht, mit einem Danke.";
       case "farben": return "Gib der Farbe "+n+" Raum: ein Tuch, ein Licht oder ein Blick darauf.";
       case "rauch":
         if(/^Räucherkohle/.test(n)) return "Lege die Räucherkohle bereit, mit Schale und Sand darunter.";
@@ -1884,11 +1886,12 @@ try{
   function loadLex(){
     if(DATA||st) return; st=1;
     function one(u){ return fetch(u,{cache:"no-store"}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); }
-    Promise.all([one("resonanzen-a.json?v=47"),one("resonanzen-b.json?v=47"),one("resonanzen-c.json?v=47"),one("resonanzen-d.json?v=74"),one("resonanzen-links.json?v=74")]).then(function(p){
+    Promise.all([one("resonanzen-a.json?v=114"),one("resonanzen-b.json?v=114"),one("resonanzen-c.json?v=114"),one("resonanzen-d.json?v=114"),one("resonanzen-links.json?v=114")]).then(function(p){
       DATA=[].concat(p[0]||[],p[1]||[],p[2]||[],p[3]||[]); LINKS=p[4]||{}; paint();
     }).catch(function(){ st=0; });
   }
-  function toneOk(e,ton){ if(ton==="Hard") return true; var t=String(e.tone||"Soft"); return t==="Soft"||t==="Soft/Grenze"||(ton==="Grenze"&&/Grenze/.test(t))||(ton==="Feld"&&/Feld/.test(t)); }
+  /* Build 114: Lexikon-Töne Soft, Grenze, Hard, Feld (wie Kalender). Hard erlaubt alles, Grenze und Feld je ihren Ton plus Soft. */
+  function toneOk(e,ton){ if(ton==="Hard") return true; var t=String(e.tone||"Soft"); return t==="Soft"||(ton==="Soft"&&t==="Grenze")||(ton==="Grenze"&&t==="Grenze")||(ton==="Feld"&&t==="Feld"); }
   function vorschlag(){
     if(!DATA) return [];
     var F=favs(), pool=DATA.filter(function(e){ if(!toneOk(e,S.ton)) return false; if(!S.th) return F.indexOf(e.id)>=0; var l=LINKS[e.id]; return l&&(l.t||[]).indexOf(S.th)>=0; });
@@ -2009,6 +2012,7 @@ try{
     out+='<p class="rzRh">5 · Zutaten (bis 3, Favoriten zuerst)</p>';
     if(!DATA) out+='<p class="rzRn">Lexikon lädt…</p>';
     else { var F=favs(), v=vorschlag(); out+=v.length?'<div class="rzCh">'+v.map(function(e){ return '<button type="button" data-z="'+h(e.id)+'" class="'+(S.sel.indexOf(e.id)>=0?"on":"")+'">'+(F.indexOf(e.id)>=0?"★ ":"")+h(e.name)+'</button>'; }).join("")+'</div>':'<p class="rzRn">'+(S.th?"Dazu passt hier nichts. Das Ritual geht auch ohne Zutat.":"Wähle ein Thema, dann erscheinen passende Zutaten. Favoriten stehen immer zuerst.")+'</p>'; }
+    if(DATA&&S.info){ var ie=DATA.filter(function(e){ return e.id===S.info; })[0]; if(ie) out+='<div class="rzZi" role="status"><b>'+h(ie.name)+'</b><span>'+h(ie.text)+'</span><button type="button" class="rzZiGo" data-lex="'+h(ie.id)+'">Im Lexikon ansehen</button></div>'; }
     var wn=wann(); if(wn) out+='<p class="rzRn rzWann">'+h(wn)+'</p>';
     var steps=build();
     out+='<p class="rzRh">Vorschau · '+steps.length+' Schritte</p><p class="rzRn">'+steps.map(function(s){ var x=repOf(s); return h(s[0].replace(/ [^\wÄÖÜäöü·]+$/,""))+(x?" "+x.rep+"×":""); }).join(" → ")+'</p>';
@@ -2042,7 +2046,8 @@ try{
     var zgi=document.getElementById("rzZg"); if(zgi) zgi.addEventListener("input",function(){ VIEW.zg=zgi.value.trim(); var x=repOf(VIEW.r.steps[VIEW.i]), q=document.getElementById("rzCq"); if(q&&x) q.textContent="«"+x.txt.replace("[Zugang]",VIEW.zg||"…")+"»"; });
     all("[data-fm]",function(b){ b.onclick=function(){ keep(); S.fm=b.getAttribute("data-fm"); paint(); if(S.fm!=="ich"){ var i=document.getElementById("rzFw"); if(i) i.focus(); } }; });
     all("[data-ton]",function(b){ b.onclick=function(){ keep(); S.ton=b.getAttribute("data-ton"); S.sel=[]; paint(); }; });
-    all("[data-z]",function(b){ b.onclick=function(){ keep(); var id=b.getAttribute("data-z"), i=S.sel.indexOf(id); if(i>=0) S.sel.splice(i,1); else if(S.sel.length<3) S.sel.push(id); paint(); }; });
+    all("[data-z]",function(b){ b.onclick=function(){ keep(); var id=b.getAttribute("data-z"), i=S.sel.indexOf(id); if(i>=0) S.sel.splice(i,1); else if(S.sel.length<3) S.sel.push(id); S.info=id; paint(); }; });
+    all("[data-lex]",function(b){ b.onclick=function(){ var id=b.getAttribute("data-lex"); VIEW=null; if(window.RR25_RESO) window.RR25_RESO.open(id); }; });
     all("[data-r]",function(b){ b.onclick=function(){ var r=rez()[+b.getAttribute("data-r")]; if(r){ VIEW={r:r,i:0}; paint(); } }; });
     all("[data-d]",function(b){ b.onclick=function(){ ASK=+b.getAttribute("data-d"); paint(); }; });
     all("[data-tg]",function(b){ b.onclick=function(){ var z=document.getElementById("rzZeile"); if(z) VIEW.zeile=z.value; var k=b.getAttribute("data-tg"); VIEW[k]=!VIEW[k]; paint(); }; });
@@ -2111,15 +2116,21 @@ try{
   function mount(){
     var root=document.getElementById("resonanzen"); if(!root||document.getElementById("rzRezept")) return;
     var top=root.querySelector(".rzTop"); if(!top) return;
-    var w=document.createElement("div"); w.id="rzRezept";
-    w.innerHTML='<button type="button" class="btn ghost" id="rzRezBtn">Ritualbauer öffnen</button>';
-    root.insertBefore(w,top); w.querySelector("#rzRezBtn").onclick=open;
+    /* Build 114: kompakt neben der Suche */
+    var slot=document.getElementById("rzBauSlot");
+    var w=document.createElement(slot?"span":"div"); w.id="rzRezept";
+    w.innerHTML='<button type="button" class="btn ghost" id="rzRezBtn" aria-label="Ritualbauer öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 19.4h10M8.4 19.4c-.6-3.4 0-6 3.6-8.4 3.6 2.4 4.2 5 3.6 8.4"/><path d="M12 11V8.6M12 6.2l.01 0M9.2 5.2l.01 0M14.8 5.2l.01 0"/></svg>Ritualbauer</button>';
+    if(slot) slot.appendChild(w); else root.insertBefore(w,top); w.querySelector("#rzRezBtn").onclick=open;
   }
   ensure(); mount(); setTimeout(mount,500);
   if(typeof show==="function"&&!show._b83){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="resonanzen") setTimeout(mount,200); return r; }; show._b83=1; }
   var css=document.createElement("style");
   css.textContent=[
-    "#rzRezept{margin:.1rem 0 .55rem}#rzRezBtn{min-height:2.75rem;padding:.35rem 1rem;font-size:.78rem;border-radius:999px;border:1px solid rgba(200,120,255,.35);background:rgba(160,90,255,.1);color:#e4ecff}",
+    "#rzRezept{margin:.1rem 0 .55rem}#rzBauSlot{flex:none}#rzBauSlot #rzRezept{margin:0;display:block}#rzRezBtn{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap;min-height:2.6rem;padding:.3rem .8rem;font-size:.78rem}",
+    "#rzRezBtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}",
+    ".rzZi{margin:.45rem 0 .2rem;padding:.55rem .7rem;border-left:2px solid #d6a6ff;border-radius:0 .7rem .7rem 0;background:rgba(10,4,24,.45)}.rzZi b{display:block;font-family:Georgia,serif;font-weight:500;color:#f1e8ff}.rzZi span{display:block;margin:.15rem 0 0;font-size:.82rem;line-height:1.45;color:#e6dcff}",
+    ".rzZiGo{margin:.2rem 0 0 -.4rem;min-height:2.6rem;padding:0 .4rem;border:0;background:none;font:inherit;font-size:.78rem;color:#d6a6ff;text-decoration:underline;text-underline-offset:.2em}",
+    "#rzRezBtn{border-radius:999px;border:1px solid rgba(200,120,255,.35);background:rgba(160,90,255,.1);color:#e4ecff}",
     ".rezHero{display:flex;align-items:center;gap:.5rem}.rezHero h2{margin:0}.rezBackBtn{width:2.75rem;height:2.75rem;min-height:2.75rem;padding:0;border-radius:50%;border:1px solid rgba(200,120,255,.35);background:rgba(160,90,255,.1);color:#e4ecff;font-size:1.4rem;line-height:1}",
     "#rezBody{margin:.3rem 0 .8rem;padding:.8rem .85rem .9rem;background:linear-gradient(180deg,rgba(40,18,62,.78),rgba(14,8,24,.92))!important;border:1px solid rgba(200,120,255,.22)!important;border-radius:1.1rem!important}",
     ".rzRh{margin:.8rem 0 .3rem;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:#d6a6ff}.rzRh:first-child{margin-top:0}",
