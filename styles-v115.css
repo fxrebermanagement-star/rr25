@@ -25,11 +25,9 @@ html body button,html body .btn,html body .chip,html body input[type=button]{fon
 .rrIco-mond .icF{fill:var(--rr-violet-hi);stroke:none}
 .rrIco-sonne{stroke:#ffc9f0}.rrIco-sonne .icF{fill:rgba(255,122,217,.35)}
 .rrIco-herz{stroke:var(--rr-pink)}.rrIco-herz .icF{fill:rgba(255,122,217,.3)}
-#sunSym .rrIco{width:2rem;height:2rem;display:block;margin:0 auto}
 #home .tile.t3 b{display:inline-flex;gap:.25rem;align-items:center}
 
-/* Heute ruhiger: Herz-Hände-Auge-Bild unten weg (die Reihe steht schon im Zähler) */
-html body #home #skizze > svg{display:none!important}
+/* Build 116: 3·6·9-Bild (Herz, Hände, Auge) über dem Tagesziel wieder sichtbar wie in Build 114 */
 /* Sicherung als kleine Zeile */
 html body #home #bakCard#bakCard.bkMini{display:flex!important;padding-top:.35rem!important;padding-bottom:.35rem!important;align-items:center;gap:.5rem;padding:.4rem .6rem!important;min-height:0!important;margin:.35rem 0!important;border-radius:.9rem!important}
 html body #home #bakCard#bakCard.bkMini .bkHead{font-size:.74rem!important;font-family:var(--rr-font-btn)!important;color:var(--rr-violet-hi);margin:0!important;white-space:nowrap}
