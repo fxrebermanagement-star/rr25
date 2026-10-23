@@ -311,6 +311,7 @@
     function toggle(on){
       sheet.hidden=!on; veil.hidden=!on;
       mehr.classList.toggle("open",on);
+      var n=document.querySelector("nav"); if(n) n.classList.toggle("msOpen",on);
     }
     mehr.addEventListener("click",function(ev){ ev.stopPropagation(); toggle(sheet.hidden); });
     veil.onclick=function(){ toggle(false); };

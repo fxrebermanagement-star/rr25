@@ -18,7 +18,7 @@
   paintBuch=function(){
     var page=document.getElementById("page");
     if(!page) return;
-    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Ich · Spiel · Quelle · Mein Grimoire</button><small>privat, öffnet in deinem Drive</small><button type="button" id="urbuchOpen">Urbuch öffnen</button><small>Privat · öffnet in Google Drive</small></div>';
+    page.innerHTML='<div id="buchGo"><button type="button" id="buchOpen">Mein Grimoire</button><small>Ich · Spiel · Quelle · dein Arbeitsbuch, privat in Google Drive</small><button type="button" id="urbuchOpen" class="buchAlt">Urbuch</button><small>das ursprüngliche Buch · privat in Google Drive</small></div>';
     document.getElementById("buchOpen").onclick=function(){ go(OPEN); };
     document.getElementById("urbuchOpen").onclick=function(){ go(URBUCH); };
   };

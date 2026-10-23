@@ -13,6 +13,6 @@ function openNote(id){
 function paintNotes(){
   const notes=loadNotes();
   const box=$("#notesOnly"); if(!box) return;
-  box.innerHTML=notes.length?notes.map(n=>`<button type="button" class="card" data-nid="${n.id}"><small>${esc(n.t)}</small><b>${esc((n.note||"").slice(0,90))}${(n.note||"").length>90?"…":""}</b></button>`).join(""):"<p class='sub'>Keine Notiz.</p>";
+  box.innerHTML=notes.length?notes.map(n=>`<button type="button" class="card" data-nid="${n.id}"><small>${esc(n.t)}</small><b>${esc((n.note||"").slice(0,90))}${(n.note||"").length>90?"…":""}</b></button>`).join(""):"<p class='sub rrLeer'>Noch keine Notiz. Ein Gedanke, ein Traum, ein Satz: hier ist Platz dafür.</p>";
   $$("#notesOnly [data-nid]").forEach(b=>b.onclick=()=>openNote(b.dataset.nid));
 }

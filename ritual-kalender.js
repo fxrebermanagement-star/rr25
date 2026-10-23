@@ -1,4 +1,4 @@
-/* ritual-kalender.js — Kalender-Tab «Magie so sei es».
+/* ritual-kalender.js — Kalender-Tab «Kalender» (Quelle: Google-Kalender «Magie so sei es»).
    Regel und Daten: ritual-zeit.js (RR25_KAL), dieselbe Regel wie im Tor. Bänder gelten von Start bis Ende,
    Hard nur solange ein Feintakt offen ist, nie aus künftigen Terminen. Liest rr25_echo_v1 nur (Echo-Tag 3/9), speichert
    wie bisher nur beim Antippen einer Karte nach «Geplant» (rr25_ritual_v1.planned). */
@@ -57,12 +57,33 @@
   function card(x,now){
     var k=x.k.toLowerCase(), sug=suggest(k), live=!x.all&&x.s<=now&&now<x.e;
     var sz=x.src==="saison";
-    var hint=sz?"Saison · nur lesen. Ändert Ton und Tor nicht.":k==="hard"?"Nur vormerken. Nicht automatisch setzen.":(sug.id?"Tippen legt nach Geplant.":"Nur lesen.");
+    var hint=sz?"Saison · nur lesen. Ändert Ton und Tor nicht.":k==="hard"?"":(sug.id?"Tippen legt nach Geplant.":"Nur lesen.");
     return '<article class="card kalcard '+k+(sz?' saison':'')+(live?' kallive':'')+'"'+(sz?'':' data-kal="1"')+' data-kind="'+k+'" data-title="'+h(x.t).replace(/"/g,"")+'" data-sid="'+sug.id+'" data-slabel="'+sug.label+'">'+
       '<b>'+h(x.t)+'</b>'+
       '<div class="meta">'+when(x)+(live?' · <span class="kalOn">läuft, '+rest(x.e,now)+'</span>':'')+(x.band&&x.s<=now&&now<x.e?' · '+left(x,now):'')+(x.src==="calc"?" · gerechnet":"")+'</div>'+
-      (x.d?'<p class="kalD">'+h(yr(x.d))+'</p>':'')+(x.all&&k==="hard"&&!sz&&/Rückkehr · Anker/.test(x.d)?'':'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>')+startBtn(x,now)+
+      (x.d?'<p class="kalD">'+h(yr(x.d))+'</p>':'')+(x.all&&k==="hard"&&!sz&&/Rückkehr · Anker/.test(x.d)||(!x.all&&k==="hard"&&!sz)?'':'<p class="meta">'+(x.all&&k==="hard"&&!sz?"Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.":hint)+'</p>')+startBtn(x,now)+
       '</article>';
+  }
+  /* Build 115: gleiche Tage mit mehreren HARD-Feintakten als EINE Karte. Hinweis «Nur vormerken» steht einmal oben. */
+  function cards(list,now){
+    var out=[], i=0;
+    while(i<list.length){
+      var x=list[i];
+      if(x.k==="HARD"&&!x.all&&x.src!=="saison"){
+        var g=[x], j=i+1;
+        while(j<list.length&&list[j].k==="HARD"&&!list[j].all&&list[j].src!=="saison"&&day0(list[j].s)===day0(x.s)){ g.push(list[j]); j++; }
+        if(g.length>1){
+          var live=g.some(function(y){ return y.s<=now&&now<y.e; }), btn="";
+          g.some(function(y){ btn=startBtn(y,now); return !!btn; });
+          out.push('<article class="card kalcard hard kalMerge'+(live?' kallive':'')+'" data-kind="hard"><b>HARD · '+g.length+' Feintakte</b><div class="meta">'+dstr(x.s)+'</div>'+
+            '<ul class="kalML">'+g.map(function(y){ var on=y.s<=now&&now<y.e;
+              return '<li'+(on?' class="on"':'')+'><span class="kalMT">'+tstr(y.s)+'–'+tstr(y.e)+'</span><span class="kalMN">'+h(String(y.t).replace(/^HARD\s*·\s*/,""))+(y.anker?' · Anker':'')+(on?' · <span class="kalOn">läuft</span>':'')+'</span></li>'; }).join("")+'</ul>'+btn+'</article>');
+          i=j; continue;
+        }
+      }
+      out.push(card(x,now)); i++;
+    }
+    return out.join("");
   }
   function left(b,now){ var n=Math.round((b.e-day0(now))/DAY); return n<=1?"letzter Tag":"noch "+n+" Tage"; }
 
@@ -237,7 +258,7 @@
     else sugg=[byId("segen"),byId("dank"),byId("schutz")];
     sugg=sugg.filter(Boolean);
     var rl=sugg.length?'<div class="kalRits"><span class="kcK">Rituale'+(tk==="HARD"?' · nur im Feintakt, mit Gate und Rückkehr':'')+'</span>'+sugg.map(function(r){ return '<button type="button" class="kalRit" data-rid="'+h(r.id)+'">'+h(r.t)+'</button>'; }).join("")+'</div>':'';
-    return '<div id="kalDay"><p class="group">'+head+'</p>'+cx+rl+vh+(items.length?items.map(function(x){ return card(x,now); }).join(""):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
+    return '<div id="kalDay"><p class="group">'+head+'</p>'+cx+rl+vh+(items.length?cards(items,now):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
   }
   function covLine(now){
     var c=K.coverage(), stt=K.status();
@@ -258,12 +279,12 @@
     var up=L.filter(function(x){ return x.e>T&&!(x.band&&x.s<=T); });
     var week=up.filter(function(x){ return x.s<wkEnd; }), rest=up.filter(function(x){ return x.s>=wkEnd; });
     CTX=[];
-    var html=todayCard(T)+(YEAR?yearView(T):month(T))+(SEL!=null&&!YEAR?dayDetail(SEL,T):'');
+    var html='<p class="kalVormerken">Nur vormerken. Nicht automatisch setzen.</p>'+todayCard(T)+(YEAR?yearView(T):month(T))+(SEL!=null&&!YEAR?dayDetail(SEL,T):'');
     html+='<p class="group">7 Tage</p>';
-    html+=week.length?week.map(function(x){ return card(x,T); }).join(""):"<p class='meta'>Keine Fenster in 7 Tagen.</p>";
+    html+=week.length?cards(week,T):"<p class='meta'>Keine Fenster in 7 Tagen.</p>";
     if(rest.length){
       html+='<div class="row"><button type="button" class="btn ghost" id="kalMore">'+(OPENALL?"Woche":"Weitere "+rest.length+" Einträge")+'</button></div>';
-      if(OPENALL) html+='<p class="group">Weitere</p>'+rest.map(function(x){ return card(x,T); }).join("");
+      if(OPENALL) html+='<p class="group">Weitere</p>'+cards(rest,T);
     }
     html+=covLine(T);
     box.innerHTML=html;

@@ -70,7 +70,7 @@
     bar.insertBefore(btn,bar.firstChild);
     var p=document.createElement("div"); p.id="abPanel"; p.className="card"; p.hidden=true;
     var rp=document.getElementById("rbPanel"); sec.insertBefore(p,rp&&rp.nextSibling?rp.nextSibling:ent);
-    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"Absichten zu":"Absichten"; paintPanel(); };
+    btn.onclick=function(){ OPEN=!OPEN; btn.classList.toggle("on",OPEN); btn.textContent=OPEN?"\u2715":"Absichten"; btn.setAttribute("aria-label",OPEN?"Absichten schliessen":"Absichten öffnen"); paintPanel(); };
   }
   if(typeof show==="function"&&!show._b82){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log") setTimeout(mount,400); return r; }; show._b82=1; }
   if(typeof paintLog==="function"&&!paintLog._b82){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(paintPanel,120); return r; }; paintLog._b82=1; }

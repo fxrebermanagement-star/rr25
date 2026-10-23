@@ -129,7 +129,7 @@
       bar.innerHTML='<button type="button" class="btn ghost" id="rbBtn">Rückblick</button>';
       var p=document.createElement("div"); p.id="rbPanel"; p.className="card"; p.hidden=true;
       sec.insertBefore(bar,ent); sec.insertBefore(p,ent);
-      bar.querySelector("#rbBtn").onclick=function(){ OPEN=!OPEN; this.classList.toggle("on",OPEN); this.textContent=OPEN?"Rückblick zu":"Rückblick"; paintPanel(); };
+      bar.querySelector("#rbBtn").onclick=function(){ OPEN=!OPEN; this.classList.toggle("on",OPEN); this.textContent=OPEN?"\u2715":"Rückblick"; this.setAttribute("aria-label",OPEN?"Rückblick schliessen":"Rückblick öffnen"); paintPanel(); };
     }
     chips();
   }

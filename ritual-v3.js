@@ -328,7 +328,7 @@
   }
   window.RR25_V3={pack:pack,packAll:packAll,fotosAll:fotosAll,sichern:sichern,sichern2:sichern2,schedule:schedule,paintEcho:paintEcho,paintWin:paintWin,winLine:function(id){ return winLine(rit(id)); },kindNow:kindNow,dueList:dueList};
   /* Wochen-Sicherung (Build 45): EINE Erinnerung auf der Startseite, unter der Ton-Zeile (nie über der Zeichen-Kachel).
-     Fällig, wenn die letzte Sicherung älter als 7 Tage ist oder nie war. «später» schiebt 2 Tage auf.
+     Fällig, wenn die letzte Sicherung älter als 7 Tage ist oder nie war. «später» schiebt 7 Tage auf (Build 115: kleine Zeile statt Karte).
      «Jetzt sichern» nutzt denselben Ablauf wie «Sichern» in «Mehr» (RR25_SICHERN, Datei-Download). */
   var SNOOZE="rr25_sicherung_spaeter", WEEK=7*DAY;
   function del(k){ try{ localStorage.removeItem(k); }catch(e){} }
@@ -367,11 +367,10 @@
     }
     el.classList.remove("bkDone");
     var t=lastBak(), days=t?Math.floor((Date.now()-t)/DAY):null;
-    var sub=msg?h(msg):(t?'Letzte Sicherung vor '+days+(days===1?' Tag':' Tagen'):'Noch keine Sicherung')+' · eine Datei mit allem, auch den Fotos.';
-    el.innerHTML='<p class="bkTag">Sicherung</p><b class="bkHead">Zeit für deine Wochen-Sicherung</b><small class="bkSub">'+sub+'</small>'+
+    el.classList.add("bkMini"); el.innerHTML='<b class="bkHead">Wochen-Sicherung</b><small class="bkSub">'+(msg?h(msg):(t?'zuletzt vor '+days+(days===1?' Tag':' Tagen'):'noch keine'))+'</small>'+
       '<div class="bkBtns"><button type="button" class="btn primary" id="bakGoV3">Jetzt sichern</button><button type="button" class="bkLater" id="bakLater">später</button></div>';
     document.getElementById("bakGoV3").onclick=function(){ bakNow(); };
-    document.getElementById("bakLater").onclick=function(){ set(SNOOZE,String(Date.now()+2*DAY)); var x=document.getElementById("bakCard"); if(x) x.remove(); };
+    document.getElementById("bakLater").onclick=function(){ set(SNOOZE,String(Date.now()+WEEK)); var x=document.getElementById("bakCard"); if(x) x.remove(); };
   }
   function bakNow(){
     var S=window.RR25_SICHERN;
