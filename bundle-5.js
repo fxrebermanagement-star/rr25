@@ -382,7 +382,6 @@ try{
 
   var css=document.createElement("style");
   css.textContent=[
-    ".app.runmode nav{display:none!important}",
     ".app.runmode main{padding-bottom:1.4rem!important}",
     "#plMond{margin:.15rem 0 .35rem;line-height:1.35}",
     "#logFilt{display:flex;flex-wrap:wrap;gap:.32rem;margin:0 0 .55rem}"
