@@ -2866,7 +2866,19 @@ try{
     "#entries .card .logFotoRow{margin-top:.5rem}",
     "#entries .card #logShots{margin-top:.4rem}",
     "#entries .card .logDelRow{display:flex;justify-content:center;margin-top:1.4rem;padding-top:.7rem;border-top:1px solid rgba(200,120,255,.12)}",
-    "#entries .card .logDel{min-height:0!important;padding:.25rem .8rem!important;font-size:.68rem!important;letter-spacing:.06em;background:transparent!important;border:0!important;color:#9a86b5!important;text-decoration:underline;text-underline-offset:3px;box-shadow:none!important}"
+    "#entries .card .logDel{min-height:0!important;padding:.25rem .8rem!important;font-size:.68rem!important;letter-spacing:.06em;background:transparent!important;border:0!important;color:#9a86b5!important;text-decoration:underline;text-underline-offset:3px;box-shadow:none!important}",
+    /* Build 113: fünf gleiche Spalten ohne Scrollen, Symbol mit kleiner Beschriftung darunter */
+    "html body #lgViews #rbBar{display:grid!important;grid-template-columns:repeat(5,1fr);gap:.3rem;overflow:visible}",
+    "html body #lgViews #rbBar>button{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;min-width:0;width:100%;min-height:3.4rem!important;padding:.35rem .1rem!important;font-size:0!important;border-radius:.9rem!important;white-space:nowrap}",
+    "html body #lgViews #rbBar>button::before{font-size:1.15rem;line-height:1;color:#c98bff;text-shadow:0 0 8px rgba(200,120,255,.75)}",
+    "html body #lgViews #rbBar>button::before,html body #lgViews #rbBar>button::after{position:static!important;inset:auto!important;transform:none!important;margin:0!important;display:block}",
+    "html body #lgViews #rbBar>button::after{font-size:.56rem;font-weight:400;letter-spacing:.02em;line-height:1.1;color:#cdbbe8}",
+    "#lgViews #mzBtn::before{content:'☾'}#lgViews #mzBtn::after{content:'Mondzyklus'}",
+    "#lgViews #abBtn::before{content:'✦'}#lgViews #abBtn::after{content:'Absichten'}",
+    "#lgViews #zlBtn::before{content:'#'}#lgViews #zlBtn::after{content:'Zähler'}",
+    "#lgViews #rbBtn::before{content:'↺'}#lgViews #rbBtn::after{content:'Rückblick'}",
+    "#lgViews #wbBtn::before{content:'▦'}#lgViews #wbBtn::after{content:'Wochenbild'}",
+    "html body #lgViews #rbBar>button.on::after{color:#f6e6ff}"
   ].join("");
   document.head.appendChild(css);
 })();
