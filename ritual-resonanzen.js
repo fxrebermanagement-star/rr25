@@ -8,7 +8,7 @@
   var DAY_PL=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
   var TH_LAB={schutz:"Schutz",ruhe:"Ruhe",herz:"Herz",klaerung:"Klärung",mut:"Mut",heilung:"Heilung",fuelle:"Fülle",traum:"Traum und Schwelle",ende:"Abschluss"};
   var LINKS={}, lf=null, MEHR={}, openMore={};
-  var KFAV="rr25_rz_fav", KNOTE="rr25_rz_note", KPFAD="rr25_rz_pfad";
+  var KFAV="rr25_rz_fav", KNOTE="rr25_rz_note";
   /* Build 114: zusammengelegte Einträge, alte IDs zeigen auf den neuen (Favoriten, Notizen, gespeicherte Rituale) */
   var MERGE={kranewitt:"wacholder","raeucher-beifuss":"beifuss",lavendelbluete:"lavendel",rosenbluete:"rose"};
   function migrate(){
@@ -27,12 +27,12 @@
   var favs=lsGet(KFAV,[]); if(!Array.isArray(favs)) favs=[];
   var notes=lsGet(KNOTE,{}); if(!notes||typeof notes!=="object"||Array.isArray(notes)) notes={};
   var openNote="", flash="";
-  var tab="kraeuter", q="", toneF="", ready=0, pfad=lsGet(KPFAD,0)?1:0;
+  var tab="kraeuter", q="", toneF="", ready=0;
 
   var ICO={};
   /* Build 114: Töne wie im Kalender und im Ritualbauer. Tippen wählt, nochmals tippen hebt auf. */
   var TONE_CHIPS=[["Soft","Soft"],["Grenze","Grenze"],["Hard","Hard"],["Feld","Feld"]];
-  /* «Mein Pfad»: der Ton des heutigen Tages aus dem Kalender (RR25_KAL.state) bestimmt, welche Töne passen */
+  /* Ton des heutigen Tages aus dem Kalender (RR25_KAL.state), für «Heute passend» */
   function dayKind(){ var k="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&(S.tone||S.kind)) k=S.tone||S.kind; }catch(e){} return k; }
   function pathTones(k){ return k==="HARD"?["Soft","Grenze","Hard","Feld"]:k==="GRENZE"?["Soft","Grenze"]:(k==="ECHO"||k==="STILL")?["Soft","Feld"]:["Soft"]; }
   var KIND_LAB={SOFT:"Soft",HARD:"Hard",GRENZE:"Grenze",ECHO:"Echo",STILL:"Still"};
@@ -60,8 +60,6 @@
     "#resonanzen .rzTop{display:flex;flex-wrap:nowrap;gap:.4rem;align-items:center;margin:.1rem 0 .4rem}",
     "#resonanzen .rzSearch{margin:0;flex:1 1 auto;min-width:0;width:auto;min-height:2.6rem;font-size:.9rem}",
     "#resonanzen .rzFil{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:0 0 .4rem}",
-    "#resonanzen .rzPfad{display:inline-flex;border:1px solid rgba(200,160,255,.35);border-radius:999px;overflow:hidden;flex:none}#resonanzen .rzPfad button{min-height:2rem;padding:0 .65rem;border:0;background:none;color:#cdbbe8;font:500 .7rem system-ui,sans-serif}#resonanzen .rzPfad button.on{background:rgba(160,90,255,.28);color:#fff}",
-    "#resonanzen .rzPfadHint{flex:1 1 100%;margin:0;font-size:.66rem;color:#a08cba}#resonanzen .rzPfadHint:empty{display:none}",
         "#resonanzen .rzTones{display:flex;flex-wrap:wrap;gap:.3rem;margin:0}",
     "#resonanzen .rzToneF{display:inline-flex;align-items:center;gap:.3rem;min-height:2rem;padding:0 .6rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.45);color:#d9d0e6;font:500 .74rem system-ui,sans-serif;letter-spacing:.01em}",
     "#resonanzen .rzToneF i{width:.42rem;height:.42rem;border-radius:50%;background:#9a96a6;flex:none}",
@@ -124,7 +122,6 @@
     "#rzToday .rtB small{margin-left:.35rem;font-size:.62rem;color:#a08cba}",
     "/* Build 114: kompakter Kopf */",
     "#resonanzen .rzFil{flex-wrap:wrap;gap:.25rem}#resonanzen .rzFil .rzToneF{min-height:2rem!important;height:2rem!important;padding:0 .5rem!important;font-size:.68rem!important;gap:.25rem}",
-    "#resonanzen .rzPfad button{min-height:2rem!important;height:2rem!important;padding:0 .55rem!important;font-size:.68rem!important;border-radius:0!important;box-shadow:none!important}",
     "#resonanzen .rzTabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:.25rem}",
     "#resonanzen .rzTabs .chip{min-height:2.1rem!important;height:auto!important;padding:.15rem .1rem!important;font-size:.66rem!important;letter-spacing:0!important;white-space:nowrap;text-align:center;justify-content:center;min-width:0;overflow:hidden;text-overflow:ellipsis}",
     "#rzToday .rtB{min-height:2rem!important;height:2rem!important;padding:0 .6rem!important;font-size:.76rem!important}#rzToday .rtB small{margin-left:.25rem}",
@@ -170,7 +167,6 @@
     else if(tab==="fav"){ if(!isFav(e.id)) return false; }
     else if(!inCat(e,tab)) return false;
     if(toneF && e.tone!==toneF) return false;
-    if(pfad && pathTones(dayKind()).indexOf(e.tone)<0) return false;
     if(!q) return true;
     return rank(e)>=0;
   }
@@ -217,15 +213,11 @@
     var tones=document.getElementById("rzTones");
     var list=document.getElementById("rzList");
     if(tones){
-      var kd=dayKind();
-      tones.innerHTML='<span class="rzPfad" role="group" aria-label="Pfad"><button type="button" data-pf="0" class="'+(pfad?"":"on")+'" aria-pressed="'+!pfad+'">Alle</button><button type="button" data-pf="1" class="'+(pfad?"on":"")+'" aria-pressed="'+!!pfad+'">Nur mein Pfad</button></span>'+TONE_CHIPS.map(function(c){
+      tones.innerHTML=TONE_CHIPS.map(function(c){
         return '<button type="button" class="rzToneF'+(toneF===c[0]?" on":"")+'" data-tn="'+c[0]+'" aria-pressed="'+(toneF===c[0])+'"><i></i>'+c[1]+"</button>";
-      }).join("")+'<p class="rzPfadHint">'+(pfad?esc("Mein Pfad heute: "+(KIND_LAB[kd]||"Soft")+"-Tag laut Kalender, passend sind "+pathTones(kd).join(", ")+"."):"")+'</p>';
+      }).join("");
       tones.querySelectorAll("[data-tn]").forEach(function(b){
         b.onclick=function(){ var v=b.getAttribute("data-tn")||""; toneF=toneF===v?"":v; paint(); };
-      });
-      tones.querySelectorAll("[data-pf]").forEach(function(b){
-        b.onclick=function(){ pfad=+b.getAttribute("data-pf"); lsSet(KPFAD,pfad); paint(); };
       });
     }
     if(tabs){
@@ -256,11 +248,11 @@
     if(!rows.length){
       if(q){
         var tr=["Salbei","Schutz","Kerze","Opfergaben"].filter(function(x){ return norm(x).indexOf(norm(q))<0; }).slice(0,3);
-        list.innerHTML='<div class="rzEmpty"><b>Nichts gefunden für «'+esc(q)+'»</b> – versuch es mit einem anderen Wortanfang, zum Beispiel:'+'<div class="rzTry">'+tr.map(function(x){ return '<button type="button" data-try="'+esc(x)+'">'+esc(x)+'</button>'; }).join("")+'</div>'+((toneF||pfad)?'<p style="margin:.4rem 0 0">Ein Ton-Filter oder «Nur mein Pfad» ist aktiv und blendet einiges aus.</p>':"")+'</div>';
+        list.innerHTML='<div class="rzEmpty"><b>Nichts gefunden für «'+esc(q)+'»</b> – versuch es mit einem anderen Wortanfang, zum Beispiel:'+'<div class="rzTry">'+tr.map(function(x){ return '<button type="button" data-try="'+esc(x)+'">'+esc(x)+'</button>'; }).join("")+'</div>'+(toneF?'<p style="margin:.4rem 0 0">Ein Ton-Filter ist aktiv und blendet einiges aus.</p>':"")+'</div>';
         list.querySelectorAll("[data-try]").forEach(function(b){ b.onclick=function(){ var f=document.getElementById("rzFind"); q=norm(b.getAttribute("data-try")); if(f) f.value=b.getAttribute("data-try"); q=(f?f.value:q).trim().toLowerCase(); paint(); }; });
         return;
       }
-      list.innerHTML='<p class="rzEmpty">'+(tab==="fav"&&!toneF&&!pfad?"Noch keine Favoriten. Tippe den Stern an einem Eintrag, dann liegt er hier.":"Hier passt gerade nichts zu Ton oder Pfad. Tippe den Ton nochmals an oder wähle «Alle».")+"</p>";
+      list.innerHTML='<p class="rzEmpty">'+(tab==="fav"&&!toneF?"Noch keine Favoriten. Tippe den Stern an einem Eintrag, dann liegt er hier.":"Hier passt gerade nichts zu diesem Ton. Tippe den Ton nochmals an, dann siehst du wieder alles.")+"</p>";
       return;
     }
     list.innerHTML=rows.map(function(e){
@@ -313,7 +305,7 @@
       if(list) list.innerHTML='<p class="rzEmpty">Lexikon nicht geladen.</p>';
     });
   }
-  function goTo(e){ tab=e.cat; q=""; toneF=""; pfad=0; lf=null; var f=document.getElementById("rzFind"); if(f) f.value=""; flash=e.id; openMore[e.id]=true; paint(); }
+  function goTo(e){ tab=e.cat; q=""; toneF=""; lf=null; var f=document.getElementById("rzFind"); if(f) f.value=""; flash=e.id; openMore[e.id]=true; paint(); }
   /* Build 114: Sprung aus dem Ritualbauer («Im Lexikon ansehen») */
   window.RR25_RESO={open:function(id){ id=MERGE[id]||id; if(typeof show==="function") show("resonanzen"); boot(); var t=0; (function w(){ var e=DATA.filter(function(x){ return x.id===id; })[0]; if(e){ goTo(e); return; } if(++t<40) setTimeout(w,100); })(); }};
   function boot(){
