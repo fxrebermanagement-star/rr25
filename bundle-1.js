@@ -451,8 +451,8 @@ try{
     ['Vorbereitung','Name oben. Foto nur als Anker, dann umdrehen. Sonst reicht der Name.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Schutz für [Name]. Kein Mehr.|Ich bleibe ich. [Name] bleibt [Name].'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.|Ich richte mich auf [Name] aus, ohne mich zu verlieren.'],
     ['Feld','Tu:|Grenze um dich.||Sprich:|Ich schliesse mein Feld. Meine Energie gehört mir.|Wärme ja. Verschmelzen nein.'],
-    ['Absicht','Sprich:|Das Feld von [Name] wird klar und geschützt.|Die Energie bleibt bei [Name]. Alles Ziehende prallt ab.'],
-    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Feld von [Name] ist geschützt.|Sechs: Es bleibt klar und geschlossen.|Neun: Ich sehe es. [Name] ist in der Kraft.'],
+    ['Absicht','Sprich:|{S}Das Feld von [Name] wird klar und geschützt.|{S}Die Energie bleibt bei [Name]. Alles Ziehende prallt ab.|{F}Ich setze für [Name] eine klare Grenze.|{F}Was von [Name] zieht, prallt ab und bleibt bei [Name].'],
+    ['369','Tu:|Jede Zeile laut. Antippen zählt.||{S}Drei: Das Feld von [Name] ist geschützt.|{F}Drei: Die Grenze zu [Name] steht.|Sechs: Es bleibt klar und geschlossen.|{S}Neun: Ich sehe es. [Name] ist in der Kraft.|{F}Neun: Ich sehe es. Ich bin in der Kraft.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig in mich zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
@@ -490,7 +490,7 @@ try{
     ['Vorbereitung','Name oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Heilung für [Name]. Arzt bleibt parallel. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
     ['Rahmen','Sprich:|Ich öffne nur für reine, stimmige Heilung.'],
-    ['Absicht','Sprich:|Der Körper von [Name] findet natürliche, vollständige Heilung.|Alles, was die Heilung behindert, löst sich. Zum höchsten Wohl.'],
+    ['Absicht','Sprich:|Der Körper von [Name] findet natürliche, vollständige Heilung.|Alles, was die Heilung behindert, löst sich.|{S}Zum höchsten Wohl.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Heilung sitzt.|Sechs: Alles Störende löst sich.|Neun: Ich sehe es. Die Heilung ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
@@ -519,8 +519,8 @@ try{
   {id:'segen',tone:'soft',t:'Segen',s:'Ein Name. Ein Wofür. Soft.',cat:'Energie',hard:false,need:['Name','Wofür'],zeit:{tag:[0,4],mond:'zu'},flow:[
     ['Vorbereitung','Name und Wofür oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Segen für [Name]. Nur [Wofür]. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Sprich:|Ich setze Segen für [Name]: [Wofür].|Nur zum Guten. Der freie Wille bleibt.'],
-    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Segen sitzt.|Sechs: [Wofür] findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
+    ['Absicht','Sprich:|Ich setze für [Name]: [Wofür].|{S}Nur zum Guten.'],
+    ['369','Tu:|Jede Zeile laut. Antippen zählt.||{S}Drei: Der Segen sitzt.|{F}Drei: Es sitzt.|Sechs: [Wofür] findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
@@ -543,17 +543,17 @@ try{
   ]},
 
   /* ---------- LIEBE ---------- */
-  {id:'anz',tone:'soft',t:'Anziehung',s:'Öffnen ohne Zwang. Soft.',cat:'Liebe',hard:false,need:['Name'],zeit:{tag:[5],mond:'zu'},flow:[
-    ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Anziehung. Kein Halten. Kein Zwang. Ich bleibe ich.'],
+  {id:'anz',tone:'soft',t:'Anziehung',s:'Kontakt öffnen. Soft.',cat:'Liebe',hard:false,need:['Name'],zeit:{tag:[5],mond:'zu'},flow:[
+    ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Anziehung. Kein Halten. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Sprich:|[Name] fühlt sich zu mir hingezogen und spürt den Wunsch nach Kontakt.|Kontakt geschieht leicht und natürlich. Nur wenn es für beide stimmig ist.|Kein Festhalten. Kein Brechen des Willens.'],
+    ['Absicht','Sprich:|[Name] fühlt sich zu mir hingezogen und spürt den Wunsch nach Kontakt.|Kontakt geschieht leicht und natürlich. Kein Festhalten.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Anziehung ist da.|Sechs: Der Kontakt findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht täglich nachziehen.']
   ]},
   {id:'einladen',tone:'soft',t:'Liebe einladen',s:'Ohne Namen. Venus. Soft.',cat:'Liebe',hard:false,zeit:{tag:[5],mond:'zu'},flow:[
-    ['Vorbereitung','Wenn möglich Freitag, Venustag.||Tu:|Eine Kerze, rosa oder weiss. Wasser danach.||Sprich:|Ohne Namen. Ohne Zwang. Ich öffne mich.'],
+    ['Vorbereitung','Wenn möglich Freitag, Venustag.||Tu:|Eine Kerze, rosa oder weiss. Wasser danach.||Sprich:|Ohne Namen. Ich öffne mich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
     ['Absicht','Sprich:|Ich bin offen für Liebe, die mir guttut.|Die passende Liebe findet den Weg zu mir, frei und stimmig.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Ich bin offen.|Sechs: Liebe findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
@@ -599,13 +599,13 @@ try{
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig in mich zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
-  {id:'band',tone:'grenze',t:'Band lösen',s:'Ein Band zu einer Person sanft lösen. Grenze.',cat:'Trennung',hard:false,grenze:true,zeit:{tag:[6],mond:'ab'},flow:[
-    ['Vorbereitung','Name oben. Das Band darf auch an einem Muster, einer Gewohnheit oder einem Ort hängen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur das Band zu [Name]. Kein Urteil. Kein Nachsetzen.'],
+  {id:'band',tone:'grenze',t:'Band lösen',s:'Ein Band zu einer Person sanft lösen. Grenze.',cat:'Trennung',hard:false,grenze:true,need:['Name'],zeit:{tag:[6],mond:'ab'},flow:[
+    ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur das Band zu [Name]. Kein Urteil. Kein Nachsetzen.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Tu:|Das Band still benennen.||Sprich:|Das Band, das nicht mehr stimmt, darf sich lösen.|Alle unstimmigen Fäden fallen ab. Ich lasse frei und werde frei.'],
-    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Band löst sich.|Sechs: Die Fäden fallen ab.|Neun: Ich sehe es. Es ist gesetzt.'],
+    ['Absicht','Sprich:|Das Band zwischen mir und [Name], das nicht mehr stimmt, löst sich jetzt.|Alle unstimmigen Fäden fallen ab. Ich lasse frei und werde frei.'],
+    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Band zu [Name] löst sich.|Sechs: Die Fäden zwischen [Name] und mir fallen ab.|Neun: Ich sehe es. [Name] und ich sind frei.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
-    ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
+    ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'trenn2',tone:'hard',soft:'trenn',haerte:true,t:'Trennung anderer',s:'Faden zwischen A und B. Hart.',cat:'Trennung',hard:true,need:['A','B'],zeit:{tag:[6],mond:'ab'},
@@ -643,7 +643,7 @@ try{
     ['Vorbereitung','Name und Auftrag oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur [Auftrag]. Ich bin noch ich.'],
     ['Bannen','Tu:|Salz oder Rauch. Einmal um dich.||Sprich:|Was nicht hierher gehört, geht. Der Raum ist rein.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge. Grenze um dich.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.|Ich schliesse mein Feld hart. Noch nicht [Name].'],
-    ['Absicht','Sprich:|Ich setze: [Auftrag].|Ein Satz. Nur so weit, wie es stimmig ist.'],
+    ['Absicht','Sprich:|Ich setze: [Auftrag].|Ein Satz. Klar und genau.'],
     ['Versetzen','Tu:|Foto umgedreht unter die Hand. Name laut.||Sprich:|Ich bin [Name]. Nur für [Auftrag].|Von innen setze ich die Absicht.'],
     ['Zurück aus [Name]','Sprich sofort:|Ich bin nicht mehr [Name].|Ich bin wieder ich. Die Quelle hält.|Die Aufgabe läuft, ohne dass ich bleibe.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Saat gesetzt.|Sechs: Bewegung hält.|Neun: Ich sehe es. Ich bin zurück und klar.'],

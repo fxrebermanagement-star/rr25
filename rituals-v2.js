@@ -104,7 +104,7 @@
   {id:'segen',tone:'soft',t:'Segen',s:'Ein Name. Ein Wofür. Soft.',cat:'Energie',hard:false,need:['Name','Wofür'],zeit:{tag:[0,4],mond:'zu'},flow:[
     ['Vorbereitung','Name und Wofür oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Segen für [Name]. Nur [Wofür]. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Sprich:|Ich setze Segen für [Name]: [Wofür].|Nur zum Guten. Der freie Wille bleibt.'],
+    ['Absicht','Sprich:|Ich setze für [Name]: [Wofür].|Nur zum Guten.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Segen sitzt.|Sechs: [Wofür] findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
@@ -128,17 +128,17 @@
   ]},
 
   /* ---------- LIEBE ---------- */
-  {id:'anz',tone:'soft',t:'Anziehung',s:'Öffnen ohne Zwang. Soft.',cat:'Liebe',hard:false,need:['Name'],zeit:{tag:[5],mond:'zu'},flow:[
-    ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Anziehung. Kein Halten. Kein Zwang. Ich bleibe ich.'],
+  {id:'anz',tone:'soft',t:'Anziehung',s:'Kontakt öffnen. Soft.',cat:'Liebe',hard:false,need:['Name'],zeit:{tag:[5],mond:'zu'},flow:[
+    ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Anziehung. Kein Halten. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Sprich:|[Name] fühlt sich zu mir hingezogen und spürt den Wunsch nach Kontakt.|Kontakt geschieht leicht und natürlich. Nur wenn es für beide stimmig ist.|Kein Festhalten. Kein Brechen des Willens.'],
+    ['Absicht','Sprich:|[Name] fühlt sich zu mir hingezogen und spürt den Wunsch nach Kontakt.|Kontakt geschieht leicht und natürlich. Kein Festhalten.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Anziehung ist da.|Sechs: Der Kontakt findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht täglich nachziehen.']
   ]},
   {id:'einladen',tone:'soft',t:'Liebe einladen',s:'Ohne Namen. Venus. Soft.',cat:'Liebe',hard:false,zeit:{tag:[5],mond:'zu'},flow:[
-    ['Vorbereitung','Wenn möglich Freitag, Venustag.||Tu:|Eine Kerze, rosa oder weiss. Wasser danach.||Sprich:|Ohne Namen. Ohne Zwang. Ich öffne mich.'],
+    ['Vorbereitung','Wenn möglich Freitag, Venustag.||Tu:|Eine Kerze, rosa oder weiss. Wasser danach.||Sprich:|Ohne Namen. Ich öffne mich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
     ['Absicht','Sprich:|Ich bin offen für Liebe, die mir guttut.|Die passende Liebe findet den Weg zu mir, frei und stimmig.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Ich bin offen.|Sechs: Liebe findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
@@ -228,7 +228,7 @@
     ['Vorbereitung','Name und Auftrag oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur [Auftrag]. Ich bin noch ich.'],
     ['Bannen','Tu:|Salz oder Rauch. Einmal um dich.||Sprich:|Was nicht hierher gehört, geht. Der Raum ist rein.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge. Grenze um dich.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.|Ich schliesse mein Feld hart. Noch nicht [Name].'],
-    ['Absicht','Sprich:|Ich setze: [Auftrag].|Ein Satz. Nur so weit, wie es stimmig ist.'],
+    ['Absicht','Sprich:|Ich setze: [Auftrag].|Ein Satz. Klar und genau.'],
     ['Versetzen','Tu:|Foto umgedreht unter die Hand. Name laut.||Sprich:|Ich bin [Name]. Nur für [Auftrag].|Von innen setze ich die Absicht.'],
     ['Zurück aus [Name]','Sprich sofort:|Ich bin nicht mehr [Name].|Ich bin wieder ich. Die Quelle hält.|Die Aufgabe läuft, ohne dass ich bleibe.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Saat gesetzt.|Sechs: Bewegung hält.|Neun: Ich sehe es. Ich bin zurück und klar.'],

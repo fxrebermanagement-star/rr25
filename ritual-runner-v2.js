@@ -112,7 +112,7 @@
     if(r.haerte && lv){
       var a=idx(/^Absicht$/);
       if(a>=0){
-        if(lv==="weich") out[a][1]+="\nNur so weit, wie es für alle stimmig ist. Der freie Wille bleibt.";
+        if(lv==="weich") out[a][1]+="\nSanft und leise.";
         if(lv==="nagel") out[a][1]+="\nKein Ausweg im Satz. Keine Hintertür.";
       }
       if(lv==="nagel" && r.ichHart){
@@ -252,7 +252,7 @@
   function afterTor(){ if(cur.r.haerte) haerte(); else if(cur.r.hard && !cur.r.wesenSelf) wesenQ(); else startSteps(); }
   function haerte(){
     var body='<p class="words">Wie viel Dosis trägt die Sache?</p>'+
-      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht mit freiem Willen. Leise Ich · Spiel · Quelle. Einfaches So sei es.</small></button>'+
+      '<button type="button" class="card lv" data-lv="weich"><b>Weich</b><small>Absicht sanft gesetzt. Leise Ich · Spiel · Quelle. Einfaches So sei es.</small></button>'+
       '<button type="button" class="card lv" data-lv="mittel"><b>Mittel</b><small>Mit Anker auf Papier. Voller Siegelsatz.</small></button>'+
       '<button type="button" class="card lv" data-lv="nagel"><b>Nagelhart</b><small>Anker, Satz ohne Hintertür, Siegel mit Salz, Rückkehr in drei Schritten, Frist.'+(cur.r.ichHart?" Kurz hinein, sofort zurück.":"")+'</small></button>';
     frame({title:"Härte",body:body,prev:"Tor",noAbort:true});
