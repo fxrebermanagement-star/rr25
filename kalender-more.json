@@ -146,7 +146,7 @@
   {"t": "HARD · Scharf · 18:12 Untergang", "start": "2027-02-27T18:12:00+01:00", "end": "2027-02-27T19:02:00+01:00", "all": false},
   {"t": "HARD · Scharf · 22:30 Nacht · Anker", "start": "2027-02-27T22:30:00+01:00", "end": "2027-02-27T23:25:00+01:00", "all": false},
   {"t": "ECHO · Nachlauf", "start": "2027-02-28", "end": "2027-03-01", "all": true},
-  {"t": "HARD · Venus rückläufig", "start": "2026-10-03", "end": "2026-11-15", "all": true, "d": "Venus rückläufig 3.10. (09:16 MESZ) – 14.11.2026 (01:30 MEZ). Beziehungen und Wert prüfen; nichts Neues binden, Altes klären. Abends Rückkehr · Anker.", "sz": "Venus rückläufig", "k": "HARD"},
+  {"t": "Saison · Venus rückläufig", "start": "2026-10-03", "end": "2026-11-15", "all": true, "d": "Venus rückläufig 3.10. (09:16 MESZ) – 14.11.2026 (01:30 MEZ). Beziehungen und Wert prüfen; nichts Neues binden, Altes klären.", "sz": "Venus rückläufig", "k": "SAISON"},
   {"t": "ECHO · Merkur rückläufig", "start": "2026-10-24", "end": "2026-11-14", "all": true, "d": "Merkur rückläufig 24.10. (09:13 MESZ) – 13.11.2026 (16:54 MEZ). Überprüfen, nachlesen, nichts Neues starten.", "sz": "Merkur rückläufig", "k": "ECHO"},
   {"t": "SCHLEIER · Samhain", "start": "2026-10-31", "end": "2026-11-01", "all": true, "d": "Samhain · Schleierzeit. Ahnen ehren, Schutz zuerst. Hard-nah: nur mit Gate, danach Rückkehr · Anker.", "sz": "Samhain", "k": "HARD"},
   {"t": "STILL · Rauhnächte", "start": "2026-12-25", "end": "2027-01-07", "all": true, "d": "Rauhnächte 25.12.2026 – 6.1.2027. Orakel, Rückschau, Echo; jede Nacht ein Monat des neuen Jahres.", "sz": "Rauhnächte", "k": "STILL"},

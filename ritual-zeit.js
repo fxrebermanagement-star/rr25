@@ -136,6 +136,8 @@
       var k=String(e.k||x.k).toUpperCase();
       /* Build 110: Rückläufigkeiten sind Saison (nur Hinweis), ohne HARD/ECHO/GRENZE-Präfix */
       if(/rückläufig/.test(String(e.sz))){ k="SAISON"; x.t="Saison · "+String(e.sz); }
+      /* Build 111: Finsternis-Saison ist Saison (nur Hinweis), nicht Hard. Die Finsternistage selbst bleiben, wie sie sind. */
+      else if(/^FINSTERNIS\s*·\s*Saison/i.test(String(e.t))){ k="SAISON"; x.t="Saison · Finsternis"; }
       x.k=k; x.sz=String(e.sz); x.rank=SZRANK[x.sz]||(k==="SOFT"||x.sz==="Samhain"?2:1); return x;
     }).filter(Boolean);
     var f=Infinity, t=-Infinity;
