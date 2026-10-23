@@ -1,5 +1,5 @@
 /* rr25 · Paket 7/7 · Build 115 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -2312,6 +2312,7 @@ try{
    Heute-Seite: Tippflächen nur unsichtbar vergrössert (::after), damit die Höhe 1088 px bleibt. */
 (function(){
   if(window.__rr25b94) return; window.__rr25b94=1;
+  var A="content:'';position:absolute;left:-3px;right:-3px;top:-5px;bottom:-5px";
   var css=document.createElement("style");
   css.textContent=[
     /* Heute: unsichtbar auf mindestens 40 px */
@@ -2330,7 +2331,14 @@ try{
     "button.rbTag,button.rbNav,#abPanel button{min-width:40px}",
     ".kmNav{width:40px;height:40px}",
     "button.kmYear{min-height:40px;min-width:40px}",
-    ".kmDay{height:40px}"
+    ".kmDay{height:40px}",
+    /* Build 100 (eingefaltet in Build 115): Knopfzone der Chronik kompakter. Sichtbar ca. 30 px, Tippfläche 40 px per ::after */
+    "html body #rbBar{display:flex!important;flex-wrap:wrap;justify-content:center;gap:10px 8px;margin:.1rem auto .6rem;max-width:290px}",
+    "html body #rbBar>button{flex:0 0 auto;width:auto!important;position:relative;min-height:30px!important;height:30px;padding:0 .8rem!important;font-size:.72rem!important;line-height:1;letter-spacing:.01em;border-radius:999px!important;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}",
+    "html body #rbBar>button::after{"+A+"}",
+    "html body #logFilt{justify-content:center;gap:10px 6px!important;margin:.1rem 0 .6rem!important}",
+    "html body #logFilt .logchip{position:relative;min-height:30px!important;height:30px;padding:0 .7rem!important;font-size:.74rem!important;line-height:1;display:inline-flex;align-items:center;justify-content:center}",
+    "html body #logFilt .logchip::after{"+A+"}"
   ].join("");
   document.head.appendChild(css);
 })();
@@ -2623,26 +2631,6 @@ try{
   ].join("");
   document.head.appendChild(css);
   window.RR25_WOCHENBILD={data:data,render:render};
-})();
-
-}catch(e){setTimeout(function(){throw e;});}
-/* ==== ritual-b100.js ==== */
-try{
-/* ritual-b100.js — Build 100: Knopfzone der Chronik kompakter (Funktionsknöpfe und Filter-Chips).
-   Nur CSS. Sichtbare Höhe ca. 30 px, Tippfläche 40 px per unsichtbarem ::after, Abstand zwischen Reihen gross genug (kein Überlapp). */
-(function(){
-  if(window.__rr25b100) return; window.__rr25b100=1;
-  var A="content:'';position:absolute;left:-3px;right:-3px;top:-5px;bottom:-5px";
-  var css=document.createElement("style");
-  css.textContent=[
-    "html body #rbBar{display:flex!important;flex-wrap:wrap;justify-content:center;gap:10px 8px;margin:.1rem auto .6rem;max-width:290px}",
-    "html body #rbBar>button{flex:0 0 auto;width:auto!important;position:relative;min-height:30px!important;height:30px;padding:0 .8rem!important;font-size:.72rem!important;line-height:1;letter-spacing:.01em;border-radius:999px!important;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}",
-    "html body #rbBar>button::after{"+A+"}",
-    "html body #logFilt{justify-content:center;gap:10px 6px!important;margin:.1rem 0 .6rem!important}",
-    "html body #logFilt .logchip{position:relative;min-height:30px!important;height:30px;padding:0 .7rem!important;font-size:.74rem!important;line-height:1;display:inline-flex;align-items:center;justify-content:center}",
-    "html body #logFilt .logchip::after{"+A+"}"
-  ].join("");
-  document.head.appendChild(css);
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
