@@ -84,7 +84,10 @@
     var list=[];
     for(var k=0;k<2;k++){
       FEST.forEach(function(f){
-        list.push({d:new Date(y+k,f[0]-1,f[1]), name:f[2], text:f[3]});
+        /* Build 111: Sonnwenden und Tagundnachtgleichen exakt, falls die Tabelle da ist */
+        var si={Ostara:0,Litha:1,Mabon:2,Jul:3}[f[2]], T=window.RR25_SOLT&&window.RR25_SOLT[y+k], dd=null;
+        if(si!=null&&T){ try{ var pp=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Zurich",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(T[si])).split("-"); dd=new Date(+pp[0],+pp[1]-1,+pp[2]); }catch(e){} }
+        list.push({d:dd||new Date(y+k,f[0]-1,f[1]), name:f[2], text:f[3]});
       });
     }
     var now=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime();

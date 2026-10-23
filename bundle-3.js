@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 110 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 111 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -532,7 +532,10 @@ try{
     var list=[];
     for(var k=0;k<2;k++){
       FEST.forEach(function(f){
-        list.push({d:new Date(y+k,f[0]-1,f[1]), name:f[2], text:f[3]});
+        /* Build 111: Sonnwenden und Tagundnachtgleichen exakt, falls die Tabelle da ist */
+        var si={Ostara:0,Litha:1,Mabon:2,Jul:3}[f[2]], T=window.RR25_SOLT&&window.RR25_SOLT[y+k], dd=null;
+        if(si!=null&&T){ try{ var pp=new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Zurich",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(T[si])).split("-"); dd=new Date(+pp[0],+pp[1]-1,+pp[2]); }catch(e){} }
+        list.push({d:dd||new Date(y+k,f[0]-1,f[1]), name:f[2], text:f[3]});
       });
     }
     var now=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime();
@@ -1035,7 +1038,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=110;
+  var BUILD=111;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1054,7 +1057,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=110").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=111").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }
