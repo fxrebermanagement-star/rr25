@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 105 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 106 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -26,7 +26,7 @@ try{
     karma:["Der Zugang verbindet dich mit der Person, mit der etwas auszugleichen ist: Name, Foto oder ein Ding, das zu eurer Geschichte gehört.","Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und zwischen uns darf es ausgeglichen sein.","Tu:\nEinen Schritt zurück.\n\nSprich:\nWas ausgeglichen ist, ist ausgeglichen. [Name] geht ihren Weg, ich meinen."],
     zur:["Der Zugang ist die Stelle, an der deine Energie bei der Person hängt: Name, Foto, ein Geschenk von ihr oder der Ort, an dem es passiert ist.","Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und von hier kommt meine Energie zu mir zurück.","Tu:\nMit der Hand vom Zugang zu dir einen Bogen ziehen, dann loslassen.\n\nSprich:\nMeins ist bei mir. Was [Name] gehört, bleibt bei [Name]. Faden zu."],
     segen:["Der Zugang ist die Tür, durch die der Segen zur Person geht: ihr Name, ein Foto, ein Gegenstand oder ein Ort, der zu ihr und zu [Wofür] passt.","Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und das trägt sie.","Tu:\nZugang sanft weglegen, lächeln.\n\nSprich:\nDer Segen ist unterwegs und braucht mich nicht mehr. Ich lasse los."],
-    anz:["Der Zugang ist dein Faden zur Person: Name, Foto, ein Lied, ein Duft oder das Kribbeln, wenn du an sie denkst. Leicht halten, nicht festzurren.","Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und der freie Wille bleibt.","Tu:\nLied aus, Foto weg.\n\nSprich:\nIch halte nicht fest. Was kommen will, findet mich. Ich bin frei, [Name] auch."],
+    anz:["Der Zugang ist dein Faden zur Person: Name, Foto, ein Lied, ein Duft oder das Kribbeln, wenn du an sie denkst. Leicht halten, nicht festzurren.","Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier wirkt es.","Tu:\nLied aus, Foto weg.\n\nSprich:\nDer Faden ist gelegt. Ich lasse los, er wirkt."],
     trenn:["Der Zugang zeigt, wo die Verbindung zur Person sitzt, damit der Schnitt genau trifft: Name, Foto, ein Ding von ihr oder ein Gefühl im Körper.","Mein Zugang ist [Zugang], und ich weiss: Hier hängt [Name] an mir, und hier wird gelöst.","Tu:\nZugang aus dem Raum bringen oder einpacken.\n\nSprich:\nDer Schnitt ist gesetzt. Kein Faden zurück. Ich drehe mich nicht um."],
     wesen:["Der Zugang ist der Punkt, über den die Wesenheit die Person findet: Name, Foto oder ein Gegenstand. Ohne Zugang keine Verbindung, mit klarem Zugang kein Irrweg.","Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur hier gilt der Auftrag.","Tu:\nZugang mit Salz umkreisen, dann weglegen.\n\nSprich:\nDer Zugang ist zu. Keine Präsenz geht über mich. [Name] und ich sind getrennt."],
     ahn:["Der Zugang ist das, was dich mit der Ahnin oder dem Ahnen verbindet: Name, ein altes Foto, ein Erbstück, ein Ort der Familie oder ein vertrautes Gefühl.","Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und unsere Linie trägt.","Tu:\nErbstück zurück an seinen Platz.\n\nSprich:\nDanke, [Name]. Du gehst in deine Welt, ich bleibe in meiner. Die Tür ist zu."],
@@ -335,6 +335,8 @@ try{
   }
   function step(){
     var r=cur.r, st=cur.steps[cur.i], last=cur.i===cur.steps.length-1;
+    /* Build 106: echte Schrittfolge fuer die Fortschrittsleiste (bundle-6 phaseNow) */
+    window._rr25Steps={id:r.id,names:cur.steps.map(function(x){ return fillT(x[0]); })};
     var t=fillT(st[0]), raw=st[1];
     var n=needs(), inputs="";
     if(cur.i===0 && n.length){
