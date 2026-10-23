@@ -182,9 +182,10 @@
   function phaseOfName(n){
     n=String(n||"").trim();
     if(/^(369|3 · 6 · 9|Ich · Spiel · Quelle)$/.test(n)) return 2;
-    if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz|Gabe · Preis)$/.test(n)) return 3;
-    if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo|Reinigen)$/.test(n)) return 4;
-    if(/^(Absicht|Versetzen|Anker|Zurück aus|Wesenheit ·)/.test(n)) return 1;
+    if(/^(So sei es|Entlassen|Wesenheit · Entlassen|Siegel|Salz|Gabe · Preis|Lösen)$/.test(n)) return 3;
+    /* Build 107: «Reinigen» ohne feste Phase: nach der Rückkehr (Fluch) bleibt es dort, vorne (Raum reinigen) zaehlt es zur Absicht */
+    if(/^(Rückkehr|Schluss|Abschluss|Ende|Status|Echo)$/.test(n)) return 4;
+    if(/^(Absicht|Zugang|Versetzen|Anker|Zurück aus|Wesenheit ·)/.test(n)) return 1;
     if(PRE.test(n)) return 0;
     return -1;
   }
@@ -200,11 +201,14 @@
     var r=curRit(sub);
     var stepMode=/\d+\/\d+/.test(sub);
     var names=r&&r.flow?r.flow.map(function(x){ return x[0]; }):[];
+    /* Build 107: im Lauf die echten Schritte nehmen (Zugang, Lösen, Härte-, Wesenheits-Schritte) statt der statischen flow-Liste */
+    var RS=window._rr25Steps; if(stepMode && r && RS && RS.id===r.id && RS.names && RS.names.length) names=RS.names.slice();
+    if(title==="Ich · Spiel · Quelle" && names.indexOf("369")>=0) title="369";
     var has369=names.indexOf("369")>=0;
     var p, seq=null;
     if(has369){ seq=[]; var lst=0; names.forEach(function(nm){ var x=phaseOfName(nm); if(x<0) x=Math.max(1,lst); x=Math.max(x,lst); seq.push(x); lst=x; }); }
     if(!stepMode){
-      if(/^(Status|Echo|Ein Satz für die Chronik)$/.test(title)) p=5; else p=0;
+      if(/^(Status|Echo|Echo · .*|Ein Satz für die Chronik)$/.test(title)) p=5; else p=0;
     } else {
       /* Phasen laufen nur vorwärts: ein spätes «Grenze» oder «Feld» fällt nicht auf «Tor» zurück */
       seq=[]; var last=0;
