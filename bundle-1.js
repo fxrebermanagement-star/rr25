@@ -1,4 +1,4 @@
-/* rr25 · Paket 1/7 · Build 109 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 1/7 · Build 110 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: doll.js, ritual-core.js, ritual-mondphase.js, ritual-zeit.js, rituals-v2.js */
 /* ==== doll.js ==== */
 try{
@@ -253,7 +253,10 @@ try{
     FILE=ev.filter(function(e){ return !e.sz; }).map(function(e){ return norm(e,"kal"); }).filter(Boolean);
     SEAS=ev.filter(function(e){ return e.sz; }).map(function(e){
       var x=norm(e,"saison"); if(!x) return null;
-      var k=String(e.k||x.k).toUpperCase(); x.k=k; x.sz=String(e.sz); x.rank=SZRANK[x.sz]||(k==="SOFT"||x.sz==="Samhain"?2:1); return x;
+      var k=String(e.k||x.k).toUpperCase();
+      /* Build 110: Rückläufigkeiten sind Saison (nur Hinweis), ohne HARD/ECHO/GRENZE-Präfix */
+      if(/rückläufig/.test(String(e.sz))){ k="SAISON"; x.t="Saison · "+String(e.sz); }
+      x.k=k; x.sz=String(e.sz); x.rank=SZRANK[x.sz]||(k==="SOFT"||x.sz==="Samhain"?2:1); return x;
     }).filter(Boolean);
     var f=Infinity, t=-Infinity;
     FILE.forEach(function(x){ f=Math.min(f,day0(x.s)); t=Math.max(t,x.all?x.e:addDays(day0(x.e-1),1)); });
@@ -271,12 +274,53 @@ try{
     LCACHE={};
   }
   var LCACHE={};
+  /* Build 110: Hard-Phase (ganztägiges HARD-Band, z. B. 3 Tage um den Vollmond) hat Vorrang vor Soft und Echo.
+     - Soft-/Echo-Sonnenfenster in der Phase werden zu Hard-Feintakten (gleiche Zeiten, 22:30 = Rückkehr · Anker).
+     - Andere Soft-Fenster in der Phase (z. B. Venus · Liebe) und der Echo-Nachlauf entfallen. Der Mond-Zeitpunkt bleibt als Marker.
+     - Phasentage ohne Feintakt bekommen die vier Scharf-Fenster wie die Datei (Aufgang, Mittag, Untergang, 22:30 Anker).
+     - Andere Bänder (Soft, Still, Echo) werden an der Phase abgeschnitten, damit sie nicht überlappen.
+     Nur Anzeige- und Listenregel, die Datei bleibt unverändert. */
+  function cloneX(x,o){ var y={}; for(var k in x) y[k]=x[k]; for(var j in o) y[j]=o[j]; return y; }
+  function harden(L){
+    var P=L.filter(function(x){ return x.all&&x.band&&x.k==="HARD"; });
+    if(!P.length) return L;
+    function inP(d){ return P.some(function(p){ return p.s<=d&&d<p.e; }); }
+    var out=[], hasHard={};
+    L.forEach(function(x){
+      if(x.all&&x.band&&x.k!=="HARD"){
+        var segs=[[x.s,x.e]];
+        P.forEach(function(p){ var n=[]; segs.forEach(function(g){ if(p.e<=g[0]||p.s>=g[1]) n.push(g); else { if(p.s>g[0]) n.push([g[0],p.s]); if(p.e<g[1]) n.push([p.e,g[1]]); } }); segs=n; });
+        segs.forEach(function(g){ out.push(g[0]===x.s&&g[1]===x.e?x:cloneX(x,{s:g[0],e:g[1],band:Math.round((g[1]-g[0])/DAY)>1,cut:1})); });
+        return;
+      }
+      if(x.all&&!x.band&&(x.k==="ECHO"||x.k==="HARD")&&inP(day0(x.s))&&!/Phase/.test(x.t)) return;
+      if(!x.all&&!x.moon&&(x.k==="SOFT"||x.k==="ECHO")&&inP(day0(x.s))){
+        var m=String(x.t).match(/(\d\d:\d\d)\s+(Aufgang|Mittag|Untergang|Nacht)/);
+        if(!m) return;
+        var nacht=m[2]==="Nacht";
+        out.push(cloneX(x,{t:"HARD · Scharf · "+m[1]+" "+(nacht?"Nacht · Anker":m[2]),k:"HARD",anker:nacht,phase:1,d:""}));
+        hasHard[day0(x.s)]=1; return;
+      }
+      if(!x.all&&x.k==="HARD") hasHard[day0(x.s)]=1;
+      out.push(x);
+    });
+    P.forEach(function(p){
+      for(var d=p.s;d<p.e;d=addDays(d,1)){
+        if(hasHard[d]) continue; hasHard[d]=1;
+        var S=sun(d);
+        [["Aufgang",S.rise],["Mittag",S.noon],["Untergang",S.set]].forEach(function(w){ var s=floorMin(w[1]); out.push(mk("HARD · Scharf · "+tstr(s)+" "+w[0], s, s+50*MIN, false)); });
+        var a=at(d,22,30); out.push(mk("HARD · Scharf · 22:30 Nacht · Anker", a, a+55*MIN, false));
+        out.slice(-4).forEach(function(y){ y.src=p.src; y.phase=1; });
+      }
+    });
+    return out;
+  }
   function list(ref){
     ref=ref==null?Date.now():ref;
     var r0=day0(ref), lo=addDays(r0,-40), hi=addDays(r0,80), key=lo+"/"+hi;
     if(LCACHE.key===key&&LCACHE.data===DATA) return LCACHE.list;
     var extra=COV?calc(Math.max(COV.to,lo),hi).concat(calc(lo,Math.min(COV.from,hi))):calc(lo,hi); /* nur ausserhalb der Datei */
-    var L=FILE.concat(extra).sort(function(a,b){ return a.s-b.s||(b.all-a.all); });
+    var L=harden(FILE.concat(extra)).sort(function(a,b){ return a.s-b.s||(b.all-a.all); });
     LCACHE={key:key,data:DATA,list:L};
     return L;
   }
@@ -340,7 +384,10 @@ try{
        Der Grundton (base) bleibt für Tor/Wetter massgeblich: Hard-Arbeit weiter nur im offenen Feintakt, mit Gate und Rückkehr · Anker. */
     var hd=r.items.filter(function(x){ return x.all&&x.k==="HARD"; }).sort(function(a,b){ return (a.band-b.band)||(b.s-a.s); })[0]||null;
     r.base=kind; r.baseSrc=src; r.hardDay=hd;
-    if(hd){ kind="HARD"; src=hd.band?"hardphase":"hardtag"; }
+    /* Build 110: nur die Hard-Phase (Band) färbt den ganzen Tag Hard. Einzelne Hard-Tage (Mars Di, Saturn Sa) behalten den
+       Grundton; Hard gilt dort nur im Feintakt (roter Punkt im Monat). So bleibt ein Soft-Band ohne rote Einzeltage. */
+    r.hardTag=hd&&!hd.band?hd:null;
+    if(hd&&hd.band){ kind="HARD"; src="hardphase"; }
     r.kind=kind; r.src=src; r.band=band; r.single=single||soft; r.day=d0;
     return r;
   }
@@ -349,7 +396,11 @@ try{
     var L=list(t), p=dayParts(t,L), open=null;
     L.forEach(function(x){ if(!x.all&&x.s<=t&&t<x.e&&(!open||RANK[x.k]>RANK[open.k])) open=x; });
     var timed=p.items.filter(function(x){ return !x.all; });
-    return {t:t,kind:open?open.k:p.base,src:open?"fenster":p.baseSrc,open:open,dayKind:p.kind,daySrc:p.src,hardDay:p.hardDay,band:p.band,single:p.single,marker:p.marker,
+    /* Build 110: gemeinsamer Ton für Tor-Chip, Heute, Tor-Wetter und Kalender: Hard-Phase gewinnt vor Echo und Soft.
+       kind bleibt die Gate-Regel (Hard nur im offenen Feintakt). */
+    var ph=p.hardDay&&p.hardDay.band?p.hardDay:null;
+    var tone=ph?"HARD":(open?open.k:p.base);
+    return {t:t,tone:tone,toneSrc:ph?"hardphase":(open?"fenster":p.baseSrc),phase:ph,hardTag:p.hardTag,kind:open?open.k:p.base,src:open?"fenster":p.baseSrc,open:open,dayKind:p.kind,daySrc:p.src,hardDay:p.hardDay,band:p.band,single:p.single,marker:p.marker,
       items:p.items,hard:timed.filter(function(x){ return x.k==="HARD"; }),anker:timed.filter(function(x){ return x.anker; })[0]||null,
       covered:!!COV&&t>=COV.from&&t<COV.to,calc:!COV||t>=COV.to||t<COV.from};
   }
@@ -403,7 +454,7 @@ try{
     var d0=day0(t==null?Date.now():t);
     return SEAS.filter(function(x){ return x.s<=d0&&x.e>d0; }).sort(function(a,b){ return (b.rank-a.rank)||(a.band-b.band)||(b.s-a.s); });
   }
-  window.RR25_KAL={seasons:seasons,load:load,onReady:onReady,state:state,next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },dayPartsIn:dayParts,
+  window.RR25_KAL={seasons:seasons,load:load,onReady:onReady,state:state,tone:function(t){ return state(t).tone; },next:next,list:list,dayParts:function(t){ return dayParts(t,list(t)); },dayPartsIn:dayParts,
     planetDay:planetDay,planetAt:planetAt,venusNext:venusNext,
     sun:sun,moonNext:moonNext,coverage:function(){ return COV; },status:function(){ return st; },data:function(){ return DATA; },
     kindOf:kindOf,ORT:ORT,RANK:RANK,calc:calc};

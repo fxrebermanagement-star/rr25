@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 109 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 110 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -585,10 +585,12 @@ try{
   function paintChip(){
     var chip=document.getElementById("toneChip"), link=document.getElementById("toneAnker");
     if(!chip||!K) return;
-    var now=Date.now(), s=K.state(now), txt=NAME[s.kind]||"Soft";
-    if(s.open) txt+=" · noch "+rest(s.open.e,now);
+    /* Build 110: gemeinsamer Ton (state().tone) wie im Kalender: Hard-Phase gewinnt vor Echo und Soft */
+    var now=Date.now(), s=K.state(now), tk=s.tone||s.kind, txt=NAME[tk]||"Soft";
+    if(s.open&&s.open.k===tk) txt+=" · noch "+rest(s.open.e,now);
+    else if(s.phase) txt+=" · Phase";
     else if(s.band&&s.src==="band") txt+=" · Band";
-    var tone=s.kind.toLowerCase(), sp=chip.querySelector("span");
+    var tone=tk.toLowerCase(), sp=chip.querySelector("span");
     if(chip.getAttribute("data-tone")!==tone) chip.setAttribute("data-tone",tone);
     if(sp&&sp.textContent!==txt) sp.textContent=txt;
     chip.setAttribute("aria-label","Ton jetzt: "+txt+". Kalender öffnen");
@@ -640,7 +642,8 @@ try{
       "html #seasonChip[data-tone=hard]{border-color:rgba(255,84,112,.6)}html #seasonChip[data-tone=hard] i{background:#ff5470}"+
       "html #seasonChip[data-tone=echo]{border-color:rgba(179,107,255,.6)}html #seasonChip[data-tone=echo] i{background:#9a4dff}"+
       "html #seasonChip[data-tone=still]{border-color:rgba(154,150,166,.55)}"+
-      "html #seasonChip[data-tone=grenze]{border-color:rgba(255,159,67,.6)}html #seasonChip[data-tone=grenze] i{background:#ff9f43}";
+      "html #seasonChip[data-tone=grenze]{border-color:rgba(255,159,67,.6)}html #seasonChip[data-tone=grenze] i{background:#ff9f43}"+
+      "html #seasonChip[data-tone=saison]{border-color:rgba(224,180,90,.6)}html #seasonChip[data-tone=saison] i{background:#e0b45a}";
     document.head.appendChild(st);
   })();
   var _pc=paintChip; paintChip=function(){ _pc(); try{ paintSeason(); }catch(e){} };
@@ -784,7 +787,7 @@ try{
   }
   var st=document.createElement("style");
   st.textContent=".kyD{position:relative}.kyD b.kyS{position:absolute;right:-1px;top:-2px;width:4px;height:4px;display:block;box-sizing:border-box;border-radius:1px;transform:rotate(45deg);background:#ff5470}"+
-    ".kyD b.kyS.soft{background:#2ecc71}.kyD b.kyS.echo{background:#9a4dff}.kyD b.kyS.still{background:#c9c5d4}.kyD b.kyS.grenze{background:#ff9f43}";
+    ".kyD b.kyS.soft{background:#2ecc71}.kyD b.kyS.echo{background:#9a4dff}.kyD b.kyS.still{background:#c9c5d4}.kyD b.kyS.grenze{background:#ff9f43}.kyD b.kyS.saison{background:#e0b45a}";
   document.head.appendChild(st);
   var box=document.getElementById("kalList"); if(!box) return;
   function run(){ try{ deco(box); }catch(e){} }
@@ -927,7 +930,7 @@ try{
   function paintToday(){
     var box=document.getElementById("rzToday"); if(!box) return;
     if(ready!==2){ box.hidden=true; return; }
-    var kind="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&S.kind) kind=S.kind; }catch(e){}
+    var kind="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&(S.tone||S.kind)) kind=S.tone||S.kind; }catch(e){}
     var want=kind==="HARD"?"Soft→Hard":(kind==="GRENZE"?"Soft/Grenze":"Soft");
     var txt=kind==="HARD"?"Heute ist ein Hard-Tag. Diese Einträge gelten nur mit Rückkehr und Anker.":(kind==="GRENZE"?"Heute ist ein Grenze-Tag. Diese Einträge passen, kurz und bewusst.":"Heute ist ein Soft-Tag. Diese weichen Einträge passen.");
     var col=kind==="HARD"?"#ff5470":(kind==="GRENZE"?"#ffb86b":"#5fe0a0");

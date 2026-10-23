@@ -159,11 +159,11 @@
     return "M0,"+(-r)+" A"+r+","+r+" 0 0 "+o+" 0,"+r+" A"+rx.toFixed(2)+","+r+" 0 0 "+t+" 0,"+(-r)+"Z";
   }
   /* Build 69/70: Soft/Hard-Band, Mondmarker, Zeiträume und Finsternisse aus den vorhandenen Kalenderdaten (RR25_KAL, RR25_MOND) */
-  var TONF={HARD:{c:"#ff5470",n:"Hard"},GRENZE:{c:"#ffb86b",n:"Grenze"},ECHO:{c:"#b98cff",n:"Echo"},STILL:{c:"#9a96a8",n:"Still"},SOFT:{c:"#5fe0a0",n:"Soft"}};
+  var TONF={SAISON:{c:"#e0b45a",n:"Saison"},HARD:{c:"#ff5470",n:"Hard"},GRENZE:{c:"#ffb86b",n:"Grenze"},ECHO:{c:"#b98cff",n:"Echo"},STILL:{c:"#9a96a8",n:"Still"},SOFT:{c:"#5fe0a0",n:"Soft"}};
   var GRUND={
-    "Venus rückläufig":"Venus läuft scheinbar rückwärts. Im Kalender als Hard-Zeitraum geführt.",
-    "Merkur rückläufig":"Merkur läuft scheinbar rückwärts. Im Kalender als Echo-Zeitraum geführt.",
-    "Mars rückläufig":"Mars läuft scheinbar rückwärts. Im Kalender als Grenze-Zeitraum geführt.",
+    "Venus rückläufig":"Venus läuft scheinbar rückwärts. Saison: nur Hinweis, ändert den Ton nicht.",
+    "Merkur rückläufig":"Merkur läuft scheinbar rückwärts. Saison: nur Hinweis, ändert den Ton nicht.",
+    "Mars rückläufig":"Mars läuft scheinbar rückwärts. Saison: nur Hinweis, ändert den Ton nicht.",
     "Rauhnächte":"Die Zeit zwischen den Jahren. Im Kalender als Still-Zeitraum geführt.",
     "Finsternis":"Sonnen- oder Mondfinsternis. Im Kalender als Hard-Tag geführt."
   };
@@ -197,7 +197,7 @@
     ev.filter(function(e){ return e.sz&&GRUND[e.sz]&&e.sz!=="Finsternis"; }).sort(function(p,q){ return String(p.start).localeCompare(String(q.start)); }).forEach(function(e){
       var s=dayFromStr(e.start), en=e.end?dayFromStr(e.end):s+1;
       if(en<=y0||s>=y0+len) return;
-      var k=String(e.t).split("·")[0].trim().toUpperCase(); if(!TONF[k]) k="SOFT";
+      var k=String(e.t).split("·")[0].trim().toUpperCase(); if(/rückläufig/.test(String(e.sz))) k="SAISON"; if(!TONF[k]) k="SOFT";
       var ls=Math.max(s,y0), le=Math.min(en,y0+len), lane=0;
       while(lanesEnd[lane]!=null&&lanesEnd[lane]>ls) lane++;
       lanesEnd[lane]=le;
@@ -226,8 +226,8 @@
     iv.sort(function(p,q){ return p.s-q.s; });
     iv.forEach(function(v){ var l=out.saison[out.saison.length-1]; if(l&&v.s<=l.e){ l.e=Math.max(l.e,v.e); } else out.saison.push({s:v.s,e:v.e}); });
     var cov=null; try{ cov=K&&K.coverage&&K.coverage(); }catch(x){}
-    if(cov&&cov.from>Date.UTC(y,0,1)){ var cd=bern(cov.from); out.left.push("Rückläufigkeiten (Venus, Merkur, Mars) vor dem "+cd.d+"."+cd.m+"."+cd.y+", die Kalenderdaten beginnen später"); }
-    if(cov&&cov.to<Date.UTC(y+1,0,1)-864e5){ var ce=bern(cov.to-1); out.left.push("Rückläufigkeiten nach dem "+ce.d+"."+ce.m+"."+ce.y+", die Kalenderdaten enden früher"); }
+    if(cov&&cov.from>Date.UTC(y,0,1)){ var cd=bern(cov.from); out.left.push("Rückläufigkeiten sind erst ab "+cd.d+"."+cd.m+"."+cd.y+" eingetragen (Beginn der Kalenderdaten)"); }
+    if(cov&&cov.to<Date.UTC(y+1,0,1)-864e5){ var ce=bern(cov.to-1); out.left.push("Rückläufigkeiten sind nur bis "+ce.d+"."+ce.m+"."+ce.y+" eingetragen (Ende der Kalenderdaten)"); }
     if(!FINS_TAB[y]&&!out.eclipses.length) out.left.push("Finsternisse "+y+" (weder in den Kalenderdaten noch in der Tabelle)");
     return out;
   }
@@ -243,11 +243,11 @@
       '<div class="jrLeg">'+
         '<div><b>Ton</b><span><i class="d" style="background:#5fe0a0"></i>Soft</span><span><i class="d" style="background:#ff5470"></i>Hard</span><span><i class="d" style="background:#b98cff"></i>Echo</span><span><i class="d" style="background:#ffb86b"></i>Grenze</span></div>'+
         '<div><b>Mond</b><span><i class="d mv"></i>Vollmond</span><span><i class="d mn"></i>Neumond</span></div>'+
-        '<div><b>Zeiten</b><span><i class="l"></i>Rückläufig</span><span><i class="r"></i>Finsternis</span><span><i class="s"></i>Finsternis-Saison</span><span><i class="h"></i>Heute</span></div>'+
+        '<div><b>Zeiten</b><span><i class="l"></i>Rückläufig (Saison)</span><span><i class="r"></i>Finsternis</span><span><i class="s"></i>Finsternis-Saison</span><span><i class="h"></i>Heute</span></div>'+
       '</div><p class="jrNote"></p>';
     var stage=box.querySelector(".jrStage"), card=box.querySelector(".jrCard"), note=box.querySelector(".jrNote");
-    note.textContent="Soft ist hier alles ausserhalb der Hard-Zeiten. Hard: je 3 Tage um den Vollmond sowie Finsternisse, Venus rückläufig und die Finsternis-Saison laut Kalender. Dienstag (Mars) und Samstag (Saturn) als Einzeltage sind nicht eingezeichnet. "+
-      (YD.tabUsed?"Finsternisdaten 2026 ergänzt nach NASA (grösste Phase, Berner Zeit). ":"")+(YD.left.length?"Fehlt: "+YD.left.join("; ")+". ":"")+"Festdaten ungefähr. Berner Zeit.";
+    note.textContent="Soft ist hier alles ausserhalb der Hard-Zeiten. Hard: je 3 Tage um den Vollmond sowie Finsternisse und die Finsternis-Saison laut Kalender. Rückläufigkeiten (Venus, Merkur, Mars) sind Saison: nur Hinweis, sie ändern den Ton nicht. Dienstag (Mars) und Samstag (Saturn) sind keine Hard-Tage im Rad, Hard gilt dort nur in den Feintakten. "+
+      (YD.tabUsed?"Finsternisdaten 2026 ergänzt nach NASA (grösste Phase, Berner Zeit). ":"")+(YD.left.length?"Hinweis: "+YD.left.join("; ")+". ":"")+"Festdaten ungefähr. Berner Zeit.";
     var svg=el("svg",{viewBox:"0 24 "+W+" 368","class":"jrSvg","aria-hidden":"true"},stage);
     var defs=el("defs",{},svg);
     var g=el("filter",{id:"jrGlow",x:"-60%",y:"-60%",width:"220%",height:"220%"},defs); el("feGaussianBlur",{stdDeviation:"2.2",result:"b"},g);
@@ -317,7 +317,7 @@
       nodes.push({a:a,halo:ring,node:n,lab:lab});
     });
     /* heute */
-    var tone="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&TONF[S.kind]) tone=S.kind; }catch(e){}
+    var tone="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); var tk=S&&(S.tone||S.kind); if(tk&&TONF[tk]) tone=tk; }catch(e){}
     var tf=TONF[tone], ta=ang(t-y0), tm=el("g",{"class":"jrToday"},rot);
     var tp=xy(0,R); el("circle",{cx:tp[0],cy:tp[1],r:"7","class":"jrPulse",fill:tf.c},tm); el("circle",{cx:tp[0],cy:tp[1],r:"3.8","class":"jrHeute",stroke:tf.c},tm);
     el("path",{d:"M"+C+","+(C-LR-24)+" l-5,-8 h10z","class":"jrPtr"},svg);
@@ -485,7 +485,7 @@
     ".jrLeg b{flex:0 0 3.4rem;font-weight:500;font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ueberschrift)}",
     ".jrLeg span{display:inline-flex;align-items:center;gap:.35rem}.jrLeg i{display:inline-block;flex:none}",
     ".jrLeg i.d{width:.55rem;height:.55rem;border-radius:50%}.jrLeg i.mv{background:#fff3d8}.jrLeg i.mn{background:#0a0426;border:1.2px solid #cdb6ff}",
-    ".jrLeg i.l{width:.9rem;height:3px;border-radius:2px;background:#ff5470}.jrLeg i.r{width:.5rem;height:.5rem;background:#ff5470;transform:rotate(45deg)}.jrLeg i.h{width:.55rem;height:.55rem;border-radius:50%;background:#fff;border:1.5px solid #5fe0a0;box-sizing:border-box}.jrLeg i.s{width:.9rem;height:4px;border-radius:2px;background:rgba(255,84,112,.5)}",
+    ".jrLeg i.l{width:.9rem;height:3px;border-radius:2px;background:#e0b45a}.jrLeg i.r{width:.5rem;height:.5rem;background:#ff5470;transform:rotate(45deg)}.jrLeg i.h{width:.55rem;height:.55rem;border-radius:50%;background:#fff;border:1.5px solid #5fe0a0;box-sizing:border-box}.jrLeg i.s{width:.9rem;height:4px;border-radius:2px;background:rgba(255,84,112,.5)}",
     ".jrCard{margin:.5rem .1rem 0;min-height:6.2rem;padding:.7rem .85rem .75rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--jc,var(--ueberschrift));border-radius:.9rem;background:rgba(20,8,48,.5);text-align:left}",
     ".jrHd{display:flex;align-items:center;justify-content:space-between;gap:.6rem}",
     ".jrName{font-family:Georgia,serif;font-weight:400;font-size:1.1rem;color:var(--zahl)}",
