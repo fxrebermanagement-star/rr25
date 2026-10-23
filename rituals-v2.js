@@ -30,17 +30,17 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Mein Schutz ist stark.|Sechs: Alles Fremde prallt ab.|Neun: Ich bin die Quelle. Ich bin klar und bei mir.'],
     ['So sei es','Tu:|Hand aufs Herz.||Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört nur mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
   ]},
   {id:'schutz2',tone:'soft',t:'Schutz für eine andere Person',s:'Feld von Person X. Soft.',cat:'Schutz',hard:false,need:['Name'],zeit:{tag:[2,6]},flow:[
     ['Vorbereitung','Name oben. Foto nur als Anker, dann umdrehen. Sonst reicht der Name.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Schutz für [Name]. Kein Mehr.|Ich bleibe ich. [Name] bleibt [Name].'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.|Ich richte mich auf [Name] aus, ohne mich zu verlieren.'],
     ['Feld','Tu:|Grenze um dich.||Sprich:|Ich schliesse mein Feld. Meine Energie gehört mir.|Wärme ja. Verschmelzen nein.'],
-    ['Absicht','Sprich:|Das Feld von [Name] wird klar und geschützt.|Die Energie bleibt bei [Name]. Alles Ziehende prallt ab.'],
-    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Feld von [Name] ist geschützt.|Sechs: Es bleibt klar und geschlossen.|Neun: Ich sehe es. [Name] ist in der Kraft.'],
+    ['Absicht','Sprich:|{S}Das Feld von [Name] wird klar und geschützt.|{S}Die Energie bleibt bei [Name]. Alles Ziehende prallt ab.|{F}Ich setze für [Name] eine klare Grenze.|{F}Was von [Name] zieht, prallt ab und bleibt bei [Name].'],
+    ['369','Tu:|Jede Zeile laut. Antippen zählt.||{S}Drei: Das Feld von [Name] ist geschützt.|{F}Drei: Die Grenze zu [Name] steht.|Sechs: Es bleibt klar und geschlossen.|{S}Neun: Ich sehe es. [Name] ist in der Kraft.|{F}Neun: Ich sehe es. Ich bin in der Kraft.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig in mich zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
   ]},
   {id:'stopp',tone:'grenze',t:'Schaden stoppen',s:'Angriff endet. Feld zu. Grenze.',cat:'Schutz',hard:false,grenze:true,need:['Name'],zeit:{tag:[2],mond:'ab'},flow:[
     ['Vorbereitung','Name oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur Stopp. Nur Distanz. Nur [Name]. Kein Nachsetzen.'],
@@ -50,7 +50,7 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Schaden stoppt.|Sechs: Der Zugriff fällt ab.|Neun: Ich sehe es. Ich bin frei und geschützt.'],
     ['So sei es','Tu:|Hand aufs Herz.||Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
   ]},
   {id:'kreis',tone:'soft',t:'Schutzkreis · kurz',s:'Jeden Tag oder unterwegs. Kurz. Soft.',cat:'Schutz',hard:false,skipTiming:true,flow:[
     ['Standort','Tu:|Füsse. Ein Atem.||Sprich:|Ich bin hier.'],
@@ -75,11 +75,11 @@
     ['Vorbereitung','Name oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Heilung für [Name]. Arzt bleibt parallel. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
     ['Rahmen','Sprich:|Ich öffne nur für reine, stimmige Heilung.'],
-    ['Absicht','Sprich:|Der Körper von [Name] findet natürliche, vollständige Heilung.|Alles, was die Heilung behindert, löst sich. Zum höchsten Wohl.'],
+    ['Absicht','Sprich:|Der Körper von [Name] findet natürliche, vollständige Heilung.|Alles, was die Heilung behindert, löst sich.|{S}Zum höchsten Wohl.'],
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Heilung sitzt.|Sechs: Alles Störende löst sich.|Neun: Ich sehe es. Die Heilung ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachfragen.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachfragen.']
   ]},
   {id:'karma',tone:'soft',t:'Karma-Ausgleich',s:'Nicht Rache. Soft.',cat:'Energie',hard:false,need:['Name'],needOpt:true,zeit:{tag:[6],mond:'ab'},flow:[
     ['Vorbereitung','Tu:|Eine Kerze. Wasser danach.||Sprich:|Ausgleich. Nicht Rache. Ohne Hass. Ich bleibe ich.'],
@@ -89,7 +89,7 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Ausgleich geschieht.|Sechs: Die Energie kehrt rein zurück.|Neun: Ich sehe es. Es ist vollendet.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachkontrollieren.']
   ]},
   {id:'zur',tone:'soft',t:'Energie zurückholen',s:'Nach Kontakt. Nur holen. Soft.',cat:'Energie',hard:false,need:['Name'],needOpt:true,zeit:{tag:[0]},flow:[
     ['Vorbereitung','Name oben, wenn der Kontakt eine Person war.||Tu:|Eine Kerze am Platz. Wasser danach.||Sprich:|Nur zurück. Nichts rufen.|Was mein ist, kommt. Was nicht mein ist, geht.'],
@@ -99,16 +99,16 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Energie kehrt rein zurück.|Sechs: Fremdes löst sich und geht.|Neun: Ich bin die Quelle. Ich bin vollständig bei mir.'],
     ['So sei es','Tu:|Hand aufs Herz.||Sprich:|Versiegelt. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin zurück in mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Körper. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Körper. Alltag.']
   ]},
   {id:'segen',tone:'soft',t:'Segen',s:'Ein Name. Ein Wofür. Soft.',cat:'Energie',hard:false,need:['Name','Wofür'],zeit:{tag:[0,4],mond:'zu'},flow:[
     ['Vorbereitung','Name und Wofür oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Segen für [Name]. Nur [Wofür]. Ich bleibe ich.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Sprich:|Ich setze für [Name]: [Wofür].|Nur zum Guten.'],
-    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Der Segen sitzt.|Sechs: [Wofür] findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
+    ['Absicht','Sprich:|Ich setze für [Name]: [Wofür].|{S}Nur zum Guten.'],
+    ['369','Tu:|Jede Zeile laut. Antippen zählt.||{S}Drei: Der Segen sitzt.|{F}Drei: Es sitzt.|Sechs: [Wofür] findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'fuelle',tone:'soft',t:'Fülle und Geld',s:'Versorgung. Soft.',cat:'Energie',hard:false,zeit:{tag:[4],mond:'zu'},flow:[
     ['Vorbereitung','Tu:|Eine Kerze. Etwas mit Wert vor dir. Wasser danach.||Sprich:|Nur Fülle. Ohne Hetze.'],
@@ -135,7 +135,7 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Die Anziehung ist da.|Sechs: Der Kontakt findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht täglich nachziehen.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht täglich nachziehen.']
   ]},
   {id:'einladen',tone:'soft',t:'Liebe einladen',s:'Ohne Namen. Venus. Soft.',cat:'Liebe',hard:false,zeit:{tag:[5],mond:'zu'},flow:[
     ['Vorbereitung','Wenn möglich Freitag, Venustag.||Tu:|Eine Kerze, rosa oder weiss. Wasser danach.||Sprich:|Ohne Namen. Ich öffne mich.'],
@@ -144,7 +144,7 @@
     ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Ich bin offen.|Sechs: Liebe findet den Weg.|Neun: Ich sehe es. Es ist gesetzt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin ganz bei mir. Ich warte nicht, ich lebe.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'liebe',tone:'hard',soft:'anz',t:'Bindung',s:'Hält den Faden. Hart.',cat:'Liebe',hard:true,haerte:true,need:['Name'],zeit:{tag:[5],mond:'zu'},
     preis:'Zäher Faden — was du bindest, bindet dich mit.',gegen:'Beweglichkeit sinkt. Rückbindung möglich. Fehlende 9 kostet.',flow:[
@@ -157,7 +157,7 @@
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Gabe · Preis','Tu:|Eine Gabe hinstellen: Wasser, Salz oder etwas von dir.||Sprich:|Ich gebe das als Ausgleich. Ich trage den Preis.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir. Die Quelle bleibt wach.|Alles Fremde löst sich und geht.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
   ]},
   {id:'liebe2',tone:'hard',soft:'anz',t:'Bindung zweier',s:'Faden zwischen A und B. Hart.',cat:'Liebe',hard:true,haerte:true,need:['A','B'],zeit:{tag:[5],mond:'zu'},
     preis:'Zwei Willen — der Ausgleich sucht dich.',gegen:'Rückbindung möglich. Ohne 9 der Kreis aus Macht und Preis.',flow:[
@@ -170,7 +170,7 @@
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Gabe · Preis','Tu:|Eine Gabe hinstellen: Wasser, Salz oder etwas von dir.||Sprich:|Ich gebe das als Ausgleich. Ich trage den Preis.'],
     ['Rückkehr','Sprich:|Ich bin nicht [A]. Ich bin nicht [B].|Ich kehre vollständig zurück. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
   ]},
 
   /* ---------- TRENNUNG ---------- */
@@ -182,16 +182,16 @@
     ['Schnitt','Tu:|Einen Faden durchschneiden oder über der Kerze verbrennen.|Reste aus dem Haus bringen.||Sprich:|Getrennt.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig in mich zurück.|Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
-  {id:'band',tone:'grenze',t:'Band lösen',s:'Ohne Person · Muster oder Ort. Sanft. Grenze.',cat:'Trennung',hard:false,grenze:true,zeit:{tag:[6],mond:'ab'},flow:[
-    ['Vorbereitung','Für ein Muster, eine Gewohnheit oder einen Ort. Für eine Person: «Trennung selbst».||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur das Band. Kein Urteil. Kein Nachsetzen.'],
+  {id:'band',tone:'grenze',t:'Band lösen',s:'Ein Band zu einer Person sanft lösen. Grenze.',cat:'Trennung',hard:false,grenze:true,need:['Name'],zeit:{tag:[6],mond:'ab'},flow:[
+    ['Vorbereitung','Name oben. Foto als Anker, dann umdrehen.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur das Band zu [Name]. Kein Urteil. Kein Nachsetzen.'],
     ['Standort','Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach.'],
-    ['Absicht','Tu:|Das Muster oder den Ort still benennen.||Sprich:|Das Band, das nicht mehr stimmt, darf sich lösen.|Alle unstimmigen Fäden fallen ab. Ich lasse frei und werde frei.'],
-    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Band löst sich.|Sechs: Die Fäden fallen ab.|Neun: Ich sehe es. Es ist gesetzt.'],
+    ['Absicht','Sprich:|Das Band zwischen mir und [Name], das nicht mehr stimmt, löst sich jetzt.|Alle unstimmigen Fäden fallen ab. Ich lasse frei und werde frei.'],
+    ['369','Tu:|Jede Zeile laut. Antippen zählt.||Drei: Das Band zu [Name] löst sich.|Sechs: Die Fäden zwischen [Name] und mir fallen ab.|Neun: Ich sehe es. [Name] und ich sind frei.'],
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
-    ['Rückkehr','Sprich:|Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich bin ganz bei mir. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'trenn2',tone:'hard',soft:'trenn',haerte:true,t:'Trennung anderer',s:'Faden zwischen A und B. Hart.',cat:'Trennung',hard:true,need:['A','B'],zeit:{tag:[6],mond:'ab'},
     preis:'Fremde Fäden schneiden — der Ausgleich sucht dich.',gegen:'Nur wenn klar und nötig. Sonst soft.',flow:[
@@ -204,7 +204,7 @@
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Gabe · Preis','Tu:|Eine Gabe hinstellen: Wasser, Salz oder etwas von dir.||Sprich:|Ich gebe das als Ausgleich. Ich trage den Preis.'],
     ['Rückkehr','Sprich:|Ich bin nicht [A]. Ich bin nicht [B].|Ich kehre vollständig zurück. Meine Energie gehört mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
 
   /* ---------- PERSON X ---------- */
@@ -221,7 +221,7 @@
     ['Gabe · Preis','Tu:|Eine Gabe hinstellen: Wasser, Salz oder etwas von dir.||Sprich:|Ich gebe das als Ausgleich. Ich trage den Preis.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört mir. Ich bleibe im Spiel. Ich bleibe ich.|Füsse. Atem. Raum.'],
     ['Reinigen','Tu:|Hände mit Salzwasser waschen. Das Wasser weggiessen.||Sprich:|Rein. Nichts bleibt an mir.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag. Nicht nachladen.']
   ]},
   {id:'ueber',tone:'hard',soft:'segen',haerte:true,t:'Person übernehmen',s:'Hinein. Sofort raus. Hart.',cat:'Person X',hard:true,ich:true,need:['Name','Auftrag'],zeit:{tag:[3]},
     preis:'Hängen ohne Rückkehr.',gegen:'Qualitätswechsel, fremder Blick. Ohne Sofort-Rückkehr zahlst du.',flow:[
@@ -235,7 +235,7 @@
     ['So sei es','Sprich:|Versiegelt. Übergeben. So sei es.'],
     ['Gabe · Preis','Tu:|Eine Gabe hinstellen: Wasser, Salz oder etwas von dir.||Sprich:|Ich gebe das als Ausgleich. Ich trage den Preis.'],
     ['Rückkehr','Doppelt prüfen.||Sprich:|Ich bin nicht [Name]. Ich kehre vollständig zurück.|Meine Energie gehört nur mir. Alles Fremde geht.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
 
   /* ---------- FELD ---------- */
@@ -251,7 +251,7 @@
     ['So sei es','Sprich:|Versiegelt. So sei es.'],
     ['Wesenheit · Entlassen','Sprich:|Der Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.|Du bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt.'],
     ['Rückkehr','Sprich:|Ich bin nicht die Wesenheit. Ich bin ganz bei mir.|Meine Energie gehört nur mir. Alles Fremde löst sich und geht.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'ahn',tone:'feld',t:'Ahnen rufen',s:'Ehren, begrenzen, entlassen. Feld.',cat:'Feld',hard:false,need:['Name'],zeit:{tag:[1,6],mond:'ab'},flow:[
     ['Vorbereitung','Name oben.||Tu:|Eine Kerze. Wasser danach.||Sprich:|Nur [Name]. Ich bleibe ich.'],
@@ -262,7 +262,7 @@
     ['So sei es','Sprich:|Versiegelt. So sei es.'],
     ['Entlassen','Sprich:|Danke. Du kannst in Frieden gehen.|Ich schliesse den Kontakt. Meine Energie gehört mir.'],
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich bin ganz bei mir.|Füsse. Atem. Raum.'],
-    ['Schluss','Sprich:|Danke Feld.||Tu:|Wasser. Alltag.']
+    ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
   {id:'neumond',tone:'feld',t:'Neumond · Aussaat',s:'Neu setzen. Soft.',cat:'Feld',hard:false,zeit:{mond:'neu'},flow:[
     ['Vorbereitung','Neumond oder zunehmender Mond.||Tu:|Eine Kerze. Papier und Stift.||Sprich:|Neu setzen. Still wachsen lassen.'],
@@ -298,7 +298,7 @@
   {id:'echo',tone:'feld',t:'Echo lesen',s:'Nur beobachten. Ein Satz. Kein neues Portal.',cat:'Feld',hard:false,skipTiming:true,noStatus:true,echoRead:true,flow:[
     ['Beobachten','Tu:|Still werden. Keine Kerze aus Pflicht.||Sprich:|Nur lesen. Nicht nachladen. Kein neues Portal.'],
     ['Ein Satz','Tu:|Was sich gezeigt hat, in einem Satz notieren.|Anruf, Gefühl, Zufall — nur Rohdaten.||Sprich:|Ich schaue. Ich deute nicht.'],
-    ['Schluss','Sprich:|Danke Feld. Buch zu.||Tu:|Wasser. Alltag. Heute nichts nachsetzen.']
+    ['Schluss','Sprich:|Danke, Feld. Buch zu.||Tu:|Wasser. Alltag. Heute nichts nachsetzen.']
   ]},
   {id:'abbr',tone:'neutral',t:'Abbruch',s:'Laufenden Zug beenden. Heimkehren.',cat:'Feld',hard:false,neutral:true,skipTiming:true,noStatus:true,flow:[
     ['Lage','Sprich:|Ein Zug läuft noch. Ich breche ab. Kein neuer Auftrag.'],

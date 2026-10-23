@@ -13,6 +13,36 @@
   var ANKER="Anker: Daumen und Zeigefinger zusammen. Eigener Vorname laut.";
   var ABBR_TXT="Ich stoppe jetzt. Die Arbeit ist nicht gesetzt.\nIch kehre vollständig in mich zurück.\nDas Feld ist geschlossen. So ist es.";
   var LV={weich:"Weich",mittel:"Mittel",nagel:"Nagelhart"};
+  /* Build 105: 3·6·9 bei Ritualen mit anderer Person. 3 Absicht (Segen/Fluch waehlbar) -> 6 Zugang -> ... -> Loesen -> 9 Echo «Was kam zurück?».
+     [0]=Zugang-Erklaerung, [1]=Zugang-Satz, [2]=Loesen. Eingaben lokal: rr25_zugang_v1 (pro Ritual + Name), Echo im Chronik-Eintrag (e.echo). */
+  /* Build 109: Zeilen mit {S} nur bei «als Segen», mit {F} nur bei «als Fluch» (fillT) */
+  var ZUGANG={
+    schutz2:["{S}Der Zugang ist dein Draht zur Person: ihr Name laut, ein Foto, etwas von ihr, das du in der Hand hältst. Wähl, was sie dir am nächsten bringt.\n{F}Der Zugang ist dein Draht zur Person, gegen die du die Grenze setzt: ihr Name laut, ein Foto oder etwas von ihr in der Hand.", "{S}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und das trägt sie.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und hier steht die Grenze.", "Tu:\nZugang weglegen, Hände ausschütteln.\n\nSprich:\n{S}Der Schutz bleibt bei [Name]. Mein Faden kommt zu mir zurück. Nichts hängt.\n{F}Die Grenze zu [Name] steht. Mein Faden kommt zu mir zurück. Nichts hängt."],
+    stopp:["{S}Der Zugang zeigt genau auf die Person, die geschützt werden soll: Name, Foto oder ein Gegenstand von ihr. Nicht auf den Schaden, nur auf sie.\n{F}Der Zugang zeigt genau auf die Person, von der der Schaden kommt: Name, Foto oder ein Gegenstand von ihr. Nur auf sie, auf nichts sonst.", "Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und hier hört der Schaden auf.", "Tu:\nZugang umdrehen oder zudecken.\n\nSprich:\nDer Riegel steht. Ich gehe raus. Vom Schaden klebt nichts an mir."],
+    heil:["{S}Der Zugang ist das, worüber die Heilung zu der Person fliesst: Foto, Name, ein Ort, an dem du sie dir gut vorstellst, oder das warme Gefühl, wenn du an sie denkst.\n{F}Der Zugang ist das, worüber die Arbeit zu der Person fliesst: Foto, Name, ein Gegenstand oder ein Ort, der zu ihr gehört.", "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und das Gute findet den Weg.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und die Arbeit findet den Weg.", "Tu:\nHände unter kaltes Wasser.\n\nSprich:\n{S}Die Heilung gehört [Name]. Ihre Last bleibt nicht bei mir. Ich bin wieder ich.\n{F}Was gesetzt ist, gehört [Name]. Nichts davon bleibt bei mir. Ich bin wieder ich."],
+    karma:["Der Zugang verbindet dich mit der Person, mit der etwas auszugleichen ist: Name, Foto oder ein Ding, das zu eurer Geschichte gehört.", "{S}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und zwischen uns darf es ausgeglichen sein.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und was zurück muss, geht zurück.", "Tu:\nEinen Schritt zurück.\n\nSprich:\nWas ausgeglichen ist, ist ausgeglichen. [Name] geht ihren Weg, ich meinen."],
+    zur:["Der Zugang ist die Stelle, an der deine Energie bei der Person hängt: Name, Foto, ein Geschenk von ihr oder der Ort, an dem es passiert ist.", "Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und von hier kommt meine Energie zu mir zurück.", "Tu:\nMit der Hand vom Zugang zu dir einen Bogen ziehen, dann loslassen.\n\nSprich:\nMeins ist bei mir. Was [Name] gehört, bleibt bei [Name]. Faden zu."],
+    segen:["{S}Der Zugang ist die Tür, durch die der Segen zur Person geht: ihr Name, ein Foto, ein Gegenstand oder ein Ort, der zu ihr und zu [Wofür] passt.\n{F}Der Zugang ist die Tür, durch die der Fluch zur Person geht: ihr Name, ein Foto, ein Gegenstand oder ein Ort, der zu ihr und zu [Wofür] passt.", "{S}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und das trägt sie.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und hier trifft es.", "Tu:\n{S}Zugang sanft weglegen, lächeln.\n{F}Zugang weglegen, Hände ausschütteln.\n\nSprich:\n{S}Der Segen ist unterwegs und braucht mich nicht mehr. Ich lasse los.\n{F}Der Fluch ist unterwegs und braucht mich nicht mehr. Nichts davon klebt an mir."],
+    anz:["Der Zugang ist dein Faden zur Person: Name, Foto, ein Lied, ein Duft oder das Kribbeln, wenn du an sie denkst. Leicht halten, nicht festzurren.", "Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier wirkt es.", "Tu:\nLied aus, Foto weg.\n\nSprich:\nDer Faden ist gelegt. Ich lasse los, er wirkt."],
+    trenn:["Der Zugang zeigt, wo die Verbindung zur Person sitzt, damit der Schnitt genau trifft: Name, Foto, ein Ding von ihr oder ein Gefühl im Körper.", "Mein Zugang ist [Zugang], und ich weiss: Hier hängt [Name] an mir, und hier wird gelöst.", "Tu:\nZugang aus dem Raum bringen oder einpacken.\n\nSprich:\nDer Schnitt ist gesetzt. Kein Faden zurück. Ich drehe mich nicht um."],
+    wesen:["Der Zugang ist der Punkt, über den die Wesenheit die Person findet: Name, Foto oder ein Gegenstand. Ohne Zugang keine Verbindung, mit klarem Zugang kein Irrweg.", "Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur hier gilt der Auftrag.", "Tu:\nZugang mit Salz umkreisen, dann weglegen.\n\nSprich:\nDer Zugang ist zu. Keine Präsenz geht über mich. [Name] und ich sind getrennt."],
+    ahn:["Der Zugang ist das, was dich mit der Ahnin oder dem Ahnen verbindet: Name, ein altes Foto, ein Erbstück, ein Ort der Familie oder ein vertrautes Gefühl.", "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und unsere Linie trägt.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier wird die Linie begrenzt.", "Tu:\nErbstück zurück an seinen Platz.\n\nSprich:\n{S}Danke, [Name]. Du gehst in deine Welt, ich bleibe in meiner. Die Tür ist zu.\n{F}[Name], du gehst in deine Welt, ich bleibe in meiner. Die Tür ist zu."],
+    fluch:["{F}Der Zugang ist die Bahn zur Person: ihr Name laut, ein Foto oder ein Ding von ihr. Genau auf sie, auf nichts sonst.\n{S}Der Zugang ist der Weg zur Person: ihr Name laut, ein Foto oder ein Ding von ihr. Genau auf sie, auf nichts sonst.", "{F}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur hier läuft die Bahn.\n{S}Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur hier wirkt es.", "Tu:\nZugang mit Salz umkreisen, dann weglegen.\n\nSprich:\n{F}Die Bahn ist gesetzt. Ich gehe raus. Nichts davon klebt an mir.\n{S}Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."],
+    liebe:["Der Zugang ist dein Faden zur Person: Name, Foto, ein Geschenk von ihr, ein Lied oder das Gefühl, wenn du an sie denkst.", "Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier hält der Faden.", "Tu:\nZugang weglegen, Hände ausschütteln.\n\nSprich:\nDer Faden ist gelegt. Ich lasse los, er hält."],
+    liebe2:["Der Zugang verbindet dich mit beiden: zwei Namen, zwei Fotos nebeneinander oder ein Ding, das zu beiden gehört.", "Mein Zugang ist [Zugang], und ich weiss: Hier stehen [A] und [B], und zwischen ihnen hält der Faden.", "Tu:\nBeide Zugänge zusammenlegen, dann weglegen.\n\nSprich:\nDer Faden zwischen [A] und [B] ist gelegt. Ich gehe raus. Ich bin weder [A] noch [B]."],
+    trenn2:["Der Zugang zeigt, wo die Verbindung zwischen beiden sitzt: zwei Namen, zwei Fotos oder ein Ding, das sie verbindet.", "Mein Zugang ist [Zugang], und ich weiss: Hier hängen [A] und [B] aneinander, und hier wird gelöst.", "Tu:\nDie beiden Zugänge auseinanderlegen, dann weglegen.\n\nSprich:\n[A] geht frei, [B] geht frei. Ich gehe raus. Nichts hängt an mir."],
+    ueber:["Der Zugang ist die Tür zur Person: ihr Name laut, ein Foto oder etwas von ihr in der Hand. Kurz hinein, sofort zurück.", "Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur für [Auftrag].", "Tu:\nZugang weglegen, Hände unter kaltes Wasser.\n\nSprich:\nIch bin nicht [Name]. Die Tür ist zu. Ich bin wieder ganz ich."],
+    band:["Der Zugang zeigt, wo das Band sitzt: Name, Foto, ein Gegenstand oder das Gefühl im Körper, wo es zieht.", "Mein Zugang ist [Zugang], und ich weiss: Hier hängt das Band zwischen [Name] und mir.", "Tu:\nZugang weglegen, Hände ausschütteln.\n\nSprich:\nDer Faden ist gelöst, [Name] geht frei, ich auch."]
+  };
+  /* Personen-Rituale brauchen den Namen (z. B. band hatte keinen) */
+  R.forEach(function(r){ if(ZUGANG[r.id]){ r.need=(r.need||[]).slice(); if(r.need.indexOf("Name")<0 && r.need.indexOf("A")<0) r.need.unshift("Name"); } });
+  /* Build 108: Zugang-Schluessel auch fuer zwei Personen (A und B) */
+  function zgWho(m){ return m.Name || [m.A,m.B].filter(Boolean).join("+"); }
+  var ABS_DEF="Sprich:\nEin Satz: Wohin richte ich mich aus?";
+  function zgKey(id,n){ return id+"|"+String(n||"").toLowerCase(); }
+  /* Build 109: Zugang merken pro Person (Name bzw. A+B), ritualuebergreifend unter «*|name»; alter Schluessel «ritual|name» bleibt gueltig */
+  function zgLoad(id,n){ try{ var d=JSON.parse(localStorage.getItem("rr25_zugang_v1")||"{}"); return d[zgKey(id,n)]||(n?d[zgKey("*",n)]:"")||""; }catch(e){ return ""; } }
+  function zgSave(id,n,v){ try{ var d=JSON.parse(localStorage.getItem("rr25_zugang_v1")||"{}"); if(v){ d[zgKey(id,n)]=v; if(n) d[zgKey("*",n)]=v; } else delete d[zgKey(id,n)]; localStorage.setItem("rr25_zugang_v1",JSON.stringify(d)); }catch(e){} }
 
   R.forEach(function(r){ r.tag=r.cat; if(!r.steps) r.steps=r.flow; });
   function byId(id){
@@ -51,7 +81,7 @@
     else txt=s.kind+" · "+(window.RR25_MOND?window.RR25_MOND.day().name:"");
     return {kind:s.kind,txt:txt,s:s};
   }
-  function fensterZeile(now){
+  function fensterZeile(now,kind){
     if(!KZ) return "";
     var L=KZ.list(now), d0=new Date(now); d0.setHours(0,0,0,0); d0=d0.getTime();
     var soft=[], hard=[];
@@ -63,9 +93,11 @@
     var bits=[];
     if(soft.length) bits.push('Soft-Fenster: '+soft.map(function(x){ return hm(x.s)+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
     if(hard.length) bits.push('Hard-Feintakte: '+hard.map(function(x){ return hm(x.s)+(x.anker?' Anker':'')+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
-    if(!bits.length) bits.push('Heute kein Soft-Fenster und kein Hard-Feintakt mehr.');
+    /* Build 108: nur zeigen, wenn es zur Hauptaussage passt (kein «Soft-Fenster» oben und «kein Soft-Fenster» unten) */
+    if(!bits.length){ if(kind==="SOFT"||kind==="HARD") return ""; bits.push('Heute kein Soft-Fenster und kein Hard-Feintakt mehr.'); }
     return '<br><span class="meta fenLine">'+bits.join('<br>')+'</span>';
   }
+  function mondKlein(t){ return String(t).replace(/\b(Zunehmend|Abnehmend)(er)?\b( Mond)?/g,function(x,a){ return a.toLowerCase()+"er Mond"; }); }
   function wetterHtml(r){
     var w=wetter(), s=w.s, d=new Date().getDay(), now=Date.now();
     var say={SOFT:"Soft-Fenster. Weiche Arbeit trägt.",HARD:"Hard-Feintakt offen. Scharf. Nur mit Gate und Rückkehr.",ECHO:"Echo. Nicht nachsetzen. Schliessen, danken, ernten.",STILL:"Still. Heute eher nichts setzen."}[w.kind];
@@ -84,7 +116,7 @@
       var n2=KZ.next("SOFT",now);
       warn='<br><b>Jetzt nicht.</b> '+(w.kind==="STILL"?'Still-Band.':'Echo-Tag.')+(n2?' Nächstes Soft-Fenster: '+relDay(n2.x.s)+' '+hm(n2.x.s)+'.':'');
     }
-    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(w.txt)+'</span><br>'+say+extra+warn+fensterZeile(now)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
+    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(mondKlein(w.txt))+'</span><br>'+say+extra+warn+fensterZeile(now,w.kind)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
   }
   setInterval(function(){ var w=document.getElementById("wetter"); if(w&&cur){ var x=wetterHtml(cur.r); if(x!==w.innerHTML) w.innerHTML=x; } },30000);
 
@@ -95,11 +127,15 @@
   }
   function fillT(s){
     var r=cur.r, m=cur.mem;
-    var keys=["Name","A","B","Auftrag","AuftragW","Wofür","Absicht"];
+    var keys=["Name","A","B","Auftrag","AuftragW","Wofür","Absicht","Zugang","Richtung"];
     var lines=String(s).split("\n").filter(function(line){
       if(r.needOpt && !m.Name && line.indexOf("[Name]")>=0) return false;
+      /* Build 108: {S} nur bei Segen, {F} nur bei Fluch (ohne Wahl gilt Segen) */
+      var fl=(m.Richtung==="Fluch");
+      if(line.indexOf("{S}")===0 && fl) return false;
+      if(line.indexOf("{F}")===0 && !fl) return false;
       return true;
-    });
+    }).map(function(line){ return line.replace(/^\{[SF]\}/,""); });
     s=lines.join("\n");
     keys.forEach(function(k){ s=s.split("["+k+"]").join(m[k]?m[k]:"["+k+"]"); });
     return s;
@@ -148,6 +184,15 @@
         ["Wesenheit · Auftrag","Sprich:\nDein Auftrag ist: "+(ownAuf()?"[AuftragW]":"[Auftrag]")+". Nur in diesem Rahmen.\nOhne unnötigen Schaden. Der Auftrag endet, wenn er erfüllt ist."]);
       var k2=idx(/^Rückkehr$/);
       out.splice(k2,0,["Wesenheit · Entlassen","Sprich:\nDer Auftrag ist beendet, wenn er erfüllt ist. Ich danke dir.\nDu bist frei. Löse alle Verbindungen. Ich schliesse den Kontakt."]);
+    }
+    /* Build 105: 3·6·9 nur bei Ritualen mit anderer Person */
+    var zg=ZUGANG[r.id];
+    if(zg){
+      var zi=idx(/^Absicht$/);
+      if(zi<0){ zi=idx(/^Wesenheit · Auftrag$/); if(zi<0) zi=idx(/^369$/); if(zi<0) zi=out.length; out.splice(zi,0,["Absicht",ABS_DEF]); }
+      out.splice(zi+1,0,["Zugang",zg[0]]);
+      var zl=idx(/^Rückkehr$/); if(zl<0) zl=out.length;
+      out.splice(zl,0,["Lösen",zg[2]]);
     }
     var kk=idx(/^Rückkehr$/);
     if(kk>=0 && r.id!=="schlaf") out[kk][1]+="\n\n"+ANKER;
@@ -227,7 +272,7 @@
       ok.push(m?(z.mond==="zu"?(k==="zu"||k==="neu"):z.mond==="ab"?(k==="ab"||k==="voll"):k===z.mond):false);
     }
     var all=ok.every(Boolean), some=ok.some(Boolean);
-    var now="Heute "+TAGK[d]+" · "+PLAN[d]+(window.RR25_MOND?", "+window.RR25_MOND.day().name:"");
+    var now="Heute "+TAGK[d]+" · "+PLAN[d]+(window.RR25_MOND?", "+mondKlein(window.RR25_MOND.day().name):"");
     var say=all?"Heute passt die Zeit.":some?"Heute passt es zum Teil.":"Heute nicht die passende Zeit. Nur ein Hinweis.";
     return '<div class="zeitTor'+(all?' ok':'')+'"><b>Zeit</b> '+h(parts.join(" · "))+'<br><span class="meta">'+h(now)+'. '+h(say)+(r.hard?' Das Hard-Fenster geht vor.':'')+'</span></div>';
   }
@@ -301,6 +346,8 @@
   }
   function step(){
     var r=cur.r, st=cur.steps[cur.i], last=cur.i===cur.steps.length-1;
+    /* Build 106: echte Schrittfolge fuer die Fortschrittsleiste (bundle-6 phaseNow) */
+    window._rr25Steps={id:r.id,names:cur.steps.map(function(x){ return fillT(x[0]); })};
     var t=fillT(st[0]), raw=st[1];
     var n=needs(), inputs="";
     if(cur.i===0 && n.length){
@@ -324,6 +371,25 @@
       body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
         '<label class="absLab">Ein Satz<input class="nm" id="echoSatz" data-n="Echo" placeholder="Was sich gezeigt hat" value="'+h(cur.mem.Echo||'')+'" autocomplete="off" maxlength="200"></label>';
     }
+    else if(/^Zugang$/.test(st[0])){
+      var zgW=zgWho(cur.mem), zgMem=false;
+      if(!cur.mem.Zugang){ cur.mem.Zugang=zgLoad(r.id,zgW); zgMem=!!cur.mem.Zugang; }
+      var zs=ZUGANG[r.id]||["",""];
+      body='<p class="words">'+h(fillT(raw))+'</p>'+
+        '<p class="words zgSatz" id="w0">'+h(fillT(zs[1]))+'</p>'+
+        '<label class="absLab">Mein Zugang<input class="nm" id="zgT" data-n="Zugang" placeholder="Name, Foto, Gegenstand, Ort, Gefühl" value="'+h(cur.mem.Zugang||"")+'" autocomplete="off" maxlength="160"></label>'+
+        (zgMem?'<p class="meta zgMem">Gemerkt für '+h(zgW.replace("+"," und "))+'. Du kannst es ändern.</p>':'');
+      raw=zs[1];
+    }
+    else if(/^Absicht$/.test(st[0]) && ZUGANG[r.id]){
+      if(!cur.mem.Absicht){ var sg0=sigilAbsicht(); if(sg0) cur.mem.Absicht=sg0; }
+      if(!cur.mem.Richtung) cur.mem.Richtung="Segen";
+      raw=raw+"\n\nIch richte mich auf [Absicht] aus, als [Richtung].";
+      body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
+        '<div class="row rtg">'+["Segen","Fluch"].map(function(x){ return '<button type="button" class="chip'+(cur.mem.Richtung===x?" on":"")+'" data-rtg="'+x+'" aria-pressed="'+(cur.mem.Richtung===x)+'">als '+x+'</button>'; }).join("")+'</div>'+
+        '<label class="absLab">Absicht · einmal<input class="nm" id="absT" data-n="Absicht" placeholder="Worauf richte ich mich aus?" value="'+h(cur.mem.Absicht||'')+'" autocomplete="off" maxlength="200"></label>'+
+        (sigilAbsicht()?'<button type="button" class="btn ghost" id="absFromZ">Von Zeichen übernehmen</button>':'');
+    }
     else if(/^Absicht$/.test(st[0])){
       if(!cur.mem.Absicht){ var sg=sigilAbsicht(); if(sg) cur.mem.Absicht=sg; }
       body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
@@ -338,6 +404,11 @@
         cur.mem[inp.getAttribute("data-n")]=inp.value.trim();
         var w=document.getElementById("w0"); if(w) w.innerHTML=h(fillT(raw));
       };
+    });
+    [].slice.call(document.querySelectorAll("#run [data-rtg]")).forEach(function(b){
+      b.onclick=function(){ cur.mem.Richtung=b.getAttribute("data-rtg");
+        [].slice.call(document.querySelectorAll("#run [data-rtg]")).forEach(function(x){ var on=x===b; x.classList.toggle("on",on); x.setAttribute("aria-pressed",on); });
+        var w=document.getElementById("w0"); if(w) w.innerHTML=h(fillT(raw)); };
     });
     var az=document.getElementById("absFromZ");
     if(az) az.onclick=function(){ var v=sigilAbsicht(); if(!v) return; cur.mem.Absicht=v; var i=document.getElementById("absT"); if(i) i.value=v; };
@@ -363,6 +434,7 @@
         if(!ok||!ok.checked){ msg("Erst zurückkehren."); return; }
         cur.back=true;
       }
+      if(/^Zugang$/.test(st[0])) zgSave(r.id,zgWho(cur.mem),cur.mem.Zugang);
       if(!last){ cur.i++; step(); return; }
       if(r.noStatus){ if(r.echoRead) finish((cur.mem.Echo||"").trim(),false); else echo(); } else status();
     };
@@ -390,6 +462,11 @@
       document.getElementById("next").onclick=function(){ finish(((document.getElementById("echoT")||{}).value||"").trim(),false); };
       return;
     }
+    if(ZUGANG[cur.r.id]){
+      frame({title:"Echo · Was kam zurück?",body:'<p class="words">Was kam zurück? Jetzt schon etwas, oder später in der Chronik nachtragen.\nNicht nachladen, nur schauen.</p><textarea id="echoT" placeholder="Was kam zurück? (optional, später nachtragbar)"></textarea>',next:"In die Chronik",noAbort:true});
+      document.getElementById("next").onclick=function(){ cur.echoZ=((document.getElementById("echoT")||{}).value||"").trim(); finish("",false); };
+      return;
+    }
     var body='<p class="words">Was klingt nach? Ein Satz genügt.\nNicht nachladen.'+(w.kind==="ECHO"?"\nHeute ist Echo: nur schauen.":"")+'</p>'+
       '<textarea id="echoT" placeholder="Echo · Notiz für die Chronik (optional)"></textarea>';
     frame({title:"Echo",body:body,next:"In die Chronik",noAbort:true});
@@ -402,9 +479,10 @@
   function finish(note,aborted){
     var r=cur.r, d=load();
     var titel=r.t+(cur.lvl?" · "+LV[cur.lvl]:"")+(aborted?" · abgebrochen":"");
-    var e={id:uid(),t:now(),titel:titel,wer:werTxt(),wesen:!!(cur.wesen||r.wesenSelf)};
+    var e={id:uid(),t:now(),ms:Date.now(),titel:titel,wer:werTxt(),wesen:!!(cur.wesen||r.wesenSelf)};
     if(note) e.note=note;
     if(cur.mem.Absicht) e.absicht=cur.mem.Absicht;
+    if(ZUGANG[r.id]){ e.person=true; e.richtung=cur.mem.Richtung||"Segen"; if(cur.mem.Zugang) e.zugang=cur.mem.Zugang; if(cur.echoZ){ e.echo=cur.echoZ; e.echoT=Date.now(); } }
     d.log=d.log||[]; d.log.unshift(e);
     if(!aborted && fromPlan){ d.planned=(d.planned||[]).filter(function(p){ return p.pid!==fromPlan; }); fromPlan=null; }
     save(d);
