@@ -103,7 +103,12 @@
     "@media (prefers-reduced-motion:reduce){#skizze svg .sy,#skizze svg .wd{transition:none}}",
     "#skizze svg circle{animation:skNeon 6.5s ease-in-out infinite}",
     "@keyframes skNeon{0%,100%{opacity:.9}50%{opacity:1}}",
-    "@media (prefers-reduced-motion:reduce){#skizze svg circle{animation:none}}"
+    "@media (prefers-reduced-motion:reduce){#skizze svg circle{animation:none}}",
+    /* Build 117: Tagesziel-Karte zeigt nur den Satz, kein Zeichen, kein Bild; Höhe nach Inhalt */
+    "html body #skizze .skZiel{height:auto!important;min-height:0!important;max-height:none!important;background-image:none!important;overflow:hidden}",
+    "html body #skizze .skZiel>:not(small):not(b),html body #skizze .skZiel svg,html body #skizze .skZiel canvas,html body #skizze .skZiel img{display:none!important}",
+    "html body #skizze .skZiel::before,html body #skizze .skZiel::after,html body #skizze .skZiel b::before,html body #skizze .skZiel b::after{content:none!important;display:none!important;background:none!important}",
+    "html body #skizze .skZiel b{overflow-wrap:anywhere}"
   ].join("");
   document.head.appendChild(css);
   mount(); paint();
