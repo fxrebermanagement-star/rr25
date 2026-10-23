@@ -20,10 +20,12 @@
   function paintChip(){
     var chip=document.getElementById("toneChip"), link=document.getElementById("toneAnker");
     if(!chip||!K) return;
-    var now=Date.now(), s=K.state(now), txt=NAME[s.kind]||"Soft";
-    if(s.open) txt+=" · noch "+rest(s.open.e,now);
+    /* Build 110: gemeinsamer Ton (state().tone) wie im Kalender: Hard-Phase gewinnt vor Echo und Soft */
+    var now=Date.now(), s=K.state(now), tk=s.tone||s.kind, txt=NAME[tk]||"Soft";
+    if(s.open&&s.open.k===tk) txt+=" · noch "+rest(s.open.e,now);
+    else if(s.phase) txt+=" · Phase";
     else if(s.band&&s.src==="band") txt+=" · Band";
-    var tone=s.kind.toLowerCase(), sp=chip.querySelector("span");
+    var tone=tk.toLowerCase(), sp=chip.querySelector("span");
     if(chip.getAttribute("data-tone")!==tone) chip.setAttribute("data-tone",tone);
     if(sp&&sp.textContent!==txt) sp.textContent=txt;
     chip.setAttribute("aria-label","Ton jetzt: "+txt+". Kalender öffnen");
@@ -75,7 +77,8 @@
       "html #seasonChip[data-tone=hard]{border-color:rgba(255,84,112,.6)}html #seasonChip[data-tone=hard] i{background:#ff5470}"+
       "html #seasonChip[data-tone=echo]{border-color:rgba(179,107,255,.6)}html #seasonChip[data-tone=echo] i{background:#9a4dff}"+
       "html #seasonChip[data-tone=still]{border-color:rgba(154,150,166,.55)}"+
-      "html #seasonChip[data-tone=grenze]{border-color:rgba(255,159,67,.6)}html #seasonChip[data-tone=grenze] i{background:#ff9f43}";
+      "html #seasonChip[data-tone=grenze]{border-color:rgba(255,159,67,.6)}html #seasonChip[data-tone=grenze] i{background:#ff9f43}"+
+      "html #seasonChip[data-tone=saison]{border-color:rgba(224,180,90,.6)}html #seasonChip[data-tone=saison] i{background:#e0b45a}";
     document.head.appendChild(st);
   })();
   var _pc=paintChip; paintChip=function(){ _pc(); try{ paintSeason(); }catch(e){} };

@@ -6,10 +6,10 @@
   var LINK="https://calendar.google.com/calendar/r?cid=47c369013814767dea03adb95f43c3b7b64174e10565af9fbe6799f0a8eb0e3a@group.calendar.google.com";
   var K=window.RR25_KAL;
   if(!K) return;
-  var DAY=86400000, OPENALL=false, MONTH=null, SEL=null, YEAR=false, CTX=[];
+  var DAY=86400000, OPENALL=false, MONTH=null, SEL=null, YEAR=false, YOFF=0, CTX=[];
   var DN=["So","Mo","Di","Mi","Do","Fr","Sa"], WD=["Mo","Di","Mi","Do","Fr","Sa","So"];
   var MN=["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
-  var NAME={SOFT:"Soft",HARD:"Hard",ECHO:"Echo",STILL:"Still",GRENZE:"Grenze"};
+  var NAME={SOFT:"Soft",HARD:"Hard",ECHO:"Echo",STILL:"Still",GRENZE:"Grenze",SAISON:"Saison"};
   function seas(t){ return K.seasons?K.seasons(t):[]; } /* Saisons: nur Anzeige, ändern den Ton nie */
   /* Build 33: Datumsbereiche einheitlich mit Jahr («3.10. (…) – 14.11.2026» -> «3.10.2026 (…) – 14.11.2026», «30.1.–28.2.2027» -> «30.1.2027 – 28.2.2027») */
   function yr(s){ return String(s==null?"":s).replace(/(\b\d{1,2})\.(\d{1,2})\.(?!\d)((?:\s*\([^)]*\))?)\s*–\s*(\d{1,2})\.(\d{1,2})\.(\d{4})/g,function(m,d1,m1,p,d2,m2,y){ return d1+"."+m1+"."+(+m1>+m2?y-1:y)+p+" – "+d2+"."+m2+"."+y; }); }
@@ -84,30 +84,58 @@
     return out.sort(function(a,b){ return a.due-b.due; });
   }
 
+  /* Build 110: Chronik pro Tag (nur lesen). Zeit aus ms, sonst aus t («23.10.2026, 18:56:00»), sonst aus der id (Zeitstempel). */
+  function ritOf(titel){
+    var t=String(titel||"").trim(), best=null, L=(typeof R!=="undefined"&&R)||window.RR_RITUALS||[];
+    L.forEach(function(r){ if(r&&r.t&&(t===r.t||t.indexOf(r.t+" · ")===0)&&(!best||r.t.length>best.t.length)) best=r; });
+    return best;
+  }
+  function entryMs(e){
+    if(e.ms&&+e.ms>0) return +e.ms;
+    var m=String(e.t||"").match(/(\d{1,2})\.(\d{1,2})\.(\d{4})(?:[,\s]+(\d{1,2}):(\d{2}))?/);
+    if(m) return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||12),+(m[5]||0)).getTime();
+    var n=parseInt(String(e.id||"").slice(0,8),36); return n>1.5e12&&n<4e12?n:0;
+  }
+  var CHR=null;
+  function chronik(){
+    if(CHR&&CHR.at>Date.now()-2000) return CHR.map;
+    var map={}, log=[];
+    try{ log=(typeof load==="function"?load().log:JSON.parse(localStorage.getItem("rr25_ritual_v1")||"{}").log)||[]; }catch(e){}
+    log.forEach(function(e){
+      if(!e||e.kind==="gabe") return;
+      var ms=entryMs(e); if(!ms) return;
+      var k=ymd(ms); (map[k]=map[k]||[]).push({ms:ms,titel:String(e.titel||"Eintrag"),wer:String(e.wer||""),r:ritOf(e.titel),ab:/ · abgebrochen$/.test(String(e.titel||""))});
+    });
+    for(var k in map) map[k].sort(function(a,b){ return a.ms-b.ms; });
+    CHR={at:Date.now(),map:map};
+    return map;
+  }
   function todayCard(now){
-    var s=K.state(now), tone=s.kind.toLowerCase(), title;
+    var s=K.state(now), tone=(s.tone||s.kind).toLowerCase(), title;
     if(s.open) title=s.open.t;
     else if(s.src==="tag"&&s.single) title=s.single.t;
     else if(s.src==="band"&&s.band) title=s.band.t;
     else if(s.src==="mondtag"&&s.marker) title=s.marker.t;
     else title=NAME[s.kind]+" · "+moonLabel(now);
     /* Build 33: nur Anzeige. Hard-Tag/-Phase ohne offenen Feintakt: Kopf zeigt Hard wie die Tagesansicht (Ton/Gate unverändert). */
-    var dp=K.dayParts(now), hov=s.kind!=="HARD"&&dp.kind==="HARD";
-    if(hov){ tone="hard"; title=s.hardDay?s.hardDay.t:(dp.band&&dp.band.k==="HARD"?dp.band.t:(dp.single&&dp.single.k==="HARD"?dp.single.t:"HARD · Tag")); }
+    /* Build 110: gemeinsamer Ton (RR25_KAL.state().tone), derselbe wie Tor-Chip und Tor-Wetter: Hard-Phase gewinnt */
+    var hov=s.tone==="HARD"&&s.kind!=="HARD";
+    if(hov){ tone="hard"; title=s.phase?s.phase.t:"HARD · Phase"; }
     var sag={
       HARD:"Feintakt offen. Nur mit Gate und Rückkehr.",
       STILL:"Heute still. Buch zu. Keine Kerze aus Pflicht.",
       ECHO:s.open?"Echo-Fenster. Lesen, nicht nachladen.":"Heute Nachlauf. Lesen, nicht nachladen.",
       SOFT:s.open?"Soft-Fenster offen. Öffnen erlaubt. Halten nicht.":"Heute soft. Öffnen erlaubt. Halten nicht."
     }[s.kind];
-    if(hov) sag="Hard-Tag. Arbeit nur im Feintakt, abends Rückkehr · Anker.";
+    if(hov) sag="Hard-Phase. Arbeit nur im Feintakt, abends Rückkehr · Anker.";
     var L=[];
     if(s.open) L.push('<p class="kalNow"><span class="kalOn">offen</span> bis '+tstr(s.open.e)+' · '+rest(s.open.e,now)+'</p>');
     L.push('<p>'+sag+'</p>');
-    if(s.band) L.push('<p class="kalBand"><i class="kb '+s.band.k.toLowerCase()+'"></i>Band '+NAME[s.band.k]+' · '+dstr(s.band.s)+' – '+dstr(s.band.e-1)+' · '+left(s.band,now)+(s.band.src==="calc"?' · gerechnet':'')+'</p>');
+    if(s.phase) L.push('<p class="kalBand"><i class="kb hard"></i>Hard-Phase · '+dstr(s.phase.s)+' – '+dstr(s.phase.e-1)+' · '+left(s.phase,now)+(s.phase.src==="calc"?' · gerechnet':'')+'</p>');
+    else if(s.band) L.push('<p class="kalBand"><i class="kb '+s.band.k.toLowerCase()+'"></i>Band '+NAME[s.band.k]+' · '+dstr(s.band.s)+' – '+dstr(s.band.e-1)+' · '+left(s.band,now)+(s.band.src==="calc"?' · gerechnet':'')+'</p>');
     var nh=K.next("HARD",now), later=s.hard.filter(function(x){ return x.s>now; });
     if(s.kind!=="HARD"||later.length){
-      if(nh) L.push('<p class="kalNext">Nächster Hard-Feintakt: <span class="kalEm">'+rel(nh.x.s,now)+' · '+tstr(nh.x.s)+'–'+tstr(nh.x.e)+'</span>'+(nh.more.length?'<br><span>dann '+nh.more.map(function(y){ return tstr(y.s)+(y.anker?' (Anker)':''); }).join(" · ")+'</span>':'')+'</p>');
+      if(nh) L.push('<p class="kalNext">'+(s.phase&&nh.x.s<s.phase.e?'Hard-Phase · nächster Feintakt: ':'Nächster Hard-Feintakt: ')+'<span class="kalEm">'+rel(nh.x.s,now)+' · '+tstr(nh.x.s)+'–'+tstr(nh.x.e)+'</span>'+(nh.more.length?'<br><span>dann '+nh.more.map(function(y){ return tstr(y.s)+(y.anker?' (Anker)':''); }).join(" · ")+'</span>':'')+'</p>');
       else L.push('<p class="kalNext">Kein Hard-Feintakt mehr im Kalender.</p>');
     }
     var hints=[];
@@ -142,7 +170,7 @@
     return '<p class="kalPlan"><span class="kpTag">Planetenstunde</span> '+(c.p==="Mars"||c.p==="Saturn"?'<b class="kpHard">'+c.p+'</b>':c.p)+(c.p==="Venus"?' ♀':'')+' · bis '+tstr(c.e)+(vt&&c.p!=="Venus"?' · '+vt:'')+'<br><span>Nur Info. Der Ton oben gilt.</span></p>';
   }
   function yearView(now){
-    var n=new Date(now), y0=n.getMonth()>=8?n.getFullYear():n.getFullYear()-1, out=[];
+    var n=new Date(now), y0=(n.getMonth()>=8?n.getFullYear():n.getFullYear()-1)+YOFF, out=[];
     for(var m=0;m<12;m++){
       var m0=new Date(y0,8+m,1).getTime(), d=new Date(m0), L=K.list(m0+15*DAY), first=(d.getDay()+6)%7, cells=[], calcAll=true;
       for(var j=0;j<first;j++) cells.push('<i class="kyE"></i>');
@@ -153,7 +181,8 @@
       }
       out.push('<button type="button" class="kyM'+(calcAll?' calc':'')+'" data-ym="'+m0+'"><b>'+MN[d.getMonth()].slice(0,3)+' '+String(d.getFullYear()).slice(2)+'</b><span class="kyG">'+cells.join("")+'</span></button>');
     }
-    return '<div class="kalMonth kalYear"><div class="kmHead"><button type="button" class="kmNav" id="kyBack" aria-label="Zurück zum Monat">‹</button><b>Jahr · Sep '+y0+' – Aug '+(y0+1)+'</b><span class="kmNav kmGhost"></span></div>'+
+    /* Build 110: Jahr zurück/vor (bis in die gerechneten Monate), «Monat» führt zurück zur Monatsansicht */
+    return '<div class="kalMonth kalYear"><div class="kmHead">'+(YOFF>-1?'<button type="button" class="kmNav kyNav" data-y="-1" aria-label="Jahr zurück">‹</button>':'<span class="kmNav kmGhost"></span>')+'<b>Jahr · Sep '+y0+' – Aug '+(y0+1)+'</b><span class="kmR"><button type="button" class="kmYear" id="kyBack">Monat</button>'+(YOFF<3?'<button type="button" class="kmNav kyNav" data-y="1" aria-label="Jahr vor">›</button>':'<span class="kmNav kmGhost"></span>')+'</span></div>'+
       '<div class="kyGrid">'+out.join("")+'</div>'+
       LEG(true)+'</div>';
   }
@@ -161,6 +190,7 @@
     var m0=MONTH||new Date(new Date(now).getFullYear(),new Date(now).getMonth(),1).getTime();
     var d=new Date(m0), first=(d.getDay()+6)%7, start=addDays(m0,-first), ec={};
     echoChecks().forEach(function(x){ ec[ymd(x.due)]=1; });
+    var chr=chronik();
     var M=window.RR25_MOND, cells=WD.map(function(w){ return '<span class="kmWd">'+w+'</span>'; });
     for(var i=0;i<42;i++){
       var dm=addDays(start,i), dd=new Date(dm);
@@ -169,6 +199,7 @@
       if(p.items.some(function(x){ return !x.all&&x.k==="HARD"; })) dots+='<i class="dh"></i>';
       if(p.items.some(function(x){ return x.k==="ECHO"&&(x.all||!x.moon); })&&p.kind!=="ECHO"||(p.single&&p.single.k==="ECHO")) dots+='<i class="de"></i>';
       if(ec[ymd(dm)]) dots+='<i class="dc"></i>';
+      if(chr[ymd(dm)]) dots+='<i class="dr"></i>';
       var zz=seas(dm+12*3600000)[0]; if(zz) dots+='<i class="ds '+zz.k.toLowerCase()+'"></i>';
       var mk=M?M.day(dm+12*3600000).key:"", moon=mk==="voll"?"●":(mk==="neu"?"○":"");
       var calc=!p.items.some(function(x){ return x.src==="kal"; });
@@ -181,8 +212,8 @@
   }
   /* Legende (Build 33): Symbol+Text bleiben zusammen (nowrap je Eintrag, Zeile bricht zwischen Einträgen) */
   function LEG(yr){
-    var a=['<i class="kl soft"></i>Soft','<i class="kl still"></i>Still','<i class="kl echo"></i>Echo','<i class="kl hard"></i>Hard-Tag/Phase','<i class="dh"></i>Hard-Feintakt'];
-    if(!yr) a.push('<i class="de"></i>Nachlauf');
+    var a=['<i class="kl soft"></i>Soft','<i class="kl still"></i>Still','<i class="kl echo"></i>Echo','<i class="kl hard"></i>Hard-Phase','<i class="dh"></i>Hard-Feintakt'];
+    if(!yr) a.push('<i class="de"></i>Nachlauf','<i class="dr"></i>Chronik');
     a.push('<i class="ds hard"></i>Saison','● Voll','○ Neu');
     if(yr) a.push('gestrichelt = gerechnet (ohne Hard)');
     return '<p class="kmLeg">'+a.map(function(x){ return '<span class="kmLi">'+x+'</span>'; }).join("")+'</p>';
@@ -193,7 +224,20 @@
     var items=p.items.concat(seas(dm+12*3600000)).sort(function(a,b){ return (b.band-a.band)||(a.s-b.s); });
     var vh="";
     if(planetOn()&&K.planetDay){ var V=K.planetDay(dm).filter(function(x){ return x.p==="Venus"; }); if(V.length) vh='<p class="kalPlan"><span class="kpTag">Venus-Stunden</span> '+V.map(function(x){ return tstr(x.s)+"–"+tstr(x.e)+(x.nacht?" (Nacht)":""); }).join(" · ")+'<br><span>Nur Info. Der Ton gilt.</span></p>'; }
-    return '<div id="kalDay"><p class="group">'+head+'</p>'+vh+(items.length?items.map(function(x){ return card(x,now); }).join(""):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
+    var ce=chronik()[ymd(dm)]||[], cx="", MAXC=5;
+    if(ce.length) cx='<div class="kalChr"><p class="kcK">Chronik · '+ce.length+(ce.length===1?' Eintrag':' Einträge')+'</p>'+ce.slice(0,MAXC).map(function(e){
+      return '<div class="kcR"><span class="kcT">'+tstr(e.ms)+'</span><span class="kcN">'+h(e.titel)+(e.wer?'<i> · '+h(e.wer)+'</i>':'')+'</span>'+(e.r&&!e.ab?'<button type="button" class="kalRit" data-rid="'+h(e.r.id)+'">Öffnen</button>':'')+'</div>';
+    }).join("")+(ce.length>MAXC?'<p class="kcMore">… und '+(ce.length-MAXC===1?'ein weiterer Eintrag':(ce.length-MAXC)+' weitere')+', alle im Tab Chronik</p>':'')+'</div>';
+    var tk=p.kind, sugg=[];
+    var RL=(typeof R!=="undefined"&&R)||[];
+    function byId(id){ return RL.filter(function(r){ return r.id===id; })[0]; }
+    if(tk==="HARD") sugg=[byId("anker")].concat(RL.filter(function(r){ return r.hard; }).slice(0,3));
+    else if(tk==="ECHO") sugg=[byId("echo"),byId("dank")];
+    else if(tk==="STILL") sugg=[byId("dank")];
+    else sugg=[byId("segen"),byId("dank"),byId("schutz")];
+    sugg=sugg.filter(Boolean);
+    var rl=sugg.length?'<div class="kalRits"><span class="kcK">Rituale'+(tk==="HARD"?' · nur im Feintakt, mit Gate und Rückkehr':'')+'</span>'+sugg.map(function(r){ return '<button type="button" class="kalRit" data-rid="'+h(r.id)+'">'+h(r.t)+'</button>'; }).join("")+'</div>':'';
+    return '<div id="kalDay"><p class="group">'+head+'</p>'+cx+rl+vh+(items.length?items.map(function(x){ return card(x,now); }).join(""):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
   }
   function covLine(now){
     var c=K.coverage(), stt=K.status();
@@ -225,11 +269,12 @@
     box.innerHTML=html;
     var more=document.getElementById("kalMore");
     if(more) more.onclick=function(){ OPENALL=!OPENALL; paint(); };
-    box.querySelectorAll(".kmNav").forEach(function(b){
+    box.querySelectorAll(".kyNav").forEach(function(b){ b.onclick=function(){ YOFF+=+b.getAttribute("data-y"); paint(); }; });
+    box.querySelectorAll(".kmNav[data-m]").forEach(function(b){
       b.onclick=function(){ var base=MONTH||new Date(new Date(T).getFullYear(),new Date(T).getMonth(),1).getTime(), d=new Date(base);
         MONTH=new Date(d.getFullYear(),d.getMonth()+(+b.getAttribute("data-m")),1).getTime(); paint(); };
     });
-    var yb=document.getElementById("kmYear"); if(yb) yb.onclick=function(){ YEAR=true; paint(); };
+    var yb=document.getElementById("kmYear"); if(yb) yb.onclick=function(){ YEAR=true; var bm=new Date(MONTH||T), bn=new Date(T); YOFF=(bm.getMonth()>=8?bm.getFullYear():bm.getFullYear()-1)-(bn.getMonth()>=8?bn.getFullYear():bn.getFullYear()-1); paint(); };
     var yk=document.getElementById("kyBack"); if(yk) yk.onclick=function(){ YEAR=false; paint(); };
     box.querySelectorAll(".kyM").forEach(function(b){ b.onclick=function(){ MONTH=+b.getAttribute("data-ym"); YEAR=false; SEL=null; paint(); }; });
     function go(el,rid){ var c=CTX[+el.getAttribute("data-ctx")]; if(c&&window.RR25_OPEN) window.RR25_OPEN(rid,c); }
@@ -249,9 +294,14 @@
         go(b,c.kind==="ECHO"?"echo":"segen");
       };
     });
+    box.querySelectorAll(".kalRit").forEach(function(b){ b.onclick=function(ev){ ev.stopPropagation(); var id=b.getAttribute("data-rid"); if(id&&window.RR25_OPEN) window.RR25_OPEN(id); }; });
+    /* Build 110: Tipp auf einen Tag führt direkt zur Tagesansicht (unter der Kopfzeile) */
     box.querySelectorAll(".kmDay").forEach(function(b){
       b.onclick=function(){ var dm=+b.getAttribute("data-day"); SEL=SEL===dm?null:dm; paint();
-        var el=document.getElementById("kalDay"); if(el&&el.scrollIntoView) el.scrollIntoView({block:"nearest",behavior:"smooth"}); };
+        var el=document.getElementById("kalDay"); if(!el) return;
+        var hd=document.querySelector("header"), off=(hd&&getComputedStyle(hd).position!=="static"?hd.getBoundingClientRect().bottom:0)+8;
+        var y=el.getBoundingClientRect().top+window.scrollY-off;
+        try{ window.scrollTo({top:Math.max(0,y),behavior:"smooth"}); }catch(e){ window.scrollTo(0,Math.max(0,y)); } };
     });
     box.querySelectorAll("[data-kal]").forEach(function(el){
       el.onclick=function(){
@@ -329,6 +379,14 @@
     ".kmMoon{position:absolute;top:1px;right:3px;font-size:.55rem;line-height:1;color:#fff1c2}",
     ".kmDots{display:flex;gap:2px;height:5px}",
     ".kmDots i,.kmLeg i.dh,.kmLeg i.de{display:inline-block;width:5px;height:5px;border-radius:50%}",
+    "i.dr{background:#ffd27a}.kmLeg i.dr{display:inline-block;width:5px;height:5px;border-radius:50%;margin:0 .2rem 0 .35rem}",
+    ".kalChr,.kalRits{margin:.2rem 0 .6rem;padding:.5rem .6rem;border-radius:12px;background:rgba(255,210,122,.07);border:1px solid rgba(255,210,122,.22)}",
+    ".kalRits{background:rgba(155,140,255,.07);border-color:rgba(155,140,255,.22);display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}",
+    ".kcK{display:block;width:100%;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#d9c08a;margin:0 0 .25rem}.kalRits .kcK{color:#b9a8e8}",
+    ".kcR{display:flex;align-items:center;gap:.45rem;font-size:.78rem;color:#efe4c8;padding:.18rem 0;min-width:0}.kcT{color:#c9b27a;font-variant-numeric:tabular-nums}.kcN{flex:1;min-width:0;overflow-wrap:anywhere}.kcN i{color:#a996cf;font-style:normal}",
+    ".kcMore{margin:.2rem 0 0!important;font-size:.7rem;color:#c9b27a}",
+    ".kalRit{min-height:2rem;padding:.25rem .7rem;border-radius:999px;border:1px solid rgba(155,140,255,.4);background:rgba(155,140,255,.12);color:#e6dcff;font-size:.74rem}",
+    ".kalcard[data-kind=saison]{border-color:#e0b45a;background:rgba(224,180,90,.10)}.kalcard[data-kind=saison] b{color:#f3d08a}.kalSz.saison{color:#f3d08a}i.ds.saison{background:#e0b45a}",
     "i.dh{background:#ff5470}i.de{background:#c77dff}i.dc{box-sizing:border-box;border:1.2px solid #ff4fe0}",
     ".kmLeg{margin:.45rem .1rem 0;font-size:.62rem;color:#a996cf;line-height:1.6;display:flex;flex-wrap:wrap;column-gap:.55rem;row-gap:0}.kmLeg .kmLi{white-space:nowrap}.kmLeg .kmLi>i:first-child{margin-left:0}",
     ".kmLeg i.dh,.kmLeg i.de{margin:0 .2rem 0 .35rem}",

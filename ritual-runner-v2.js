@@ -72,14 +72,16 @@
     KZ.onReady(function(){ var w=document.getElementById("wetter"); if(w) w.innerHTML=wetterHtml(cur&&cur.r); });
   }
   function wetter(){
-    if(!KZ) return {kind:"SOFT",txt:"SOFT",s:null};
+    if(!KZ) return {kind:"SOFT",tone:"SOFT",txt:"SOFT",s:null};
     var s=KZ.state(), txt;
+    /* Build 110: Anzeige mit dem gemeinsamen Ton (Hard-Phase gewinnt), Gate bleibt bei kind */
+    if(s.tone==="HARD"&&s.kind!=="HARD"&&s.phase) return {kind:s.kind,tone:"HARD",txt:s.phase.t,s:s};
     if(s.open) txt=s.open.t;
     else if(s.src==="tag"&&s.single) txt=s.single.t;
     else if(s.src==="band"&&s.band) txt=s.band.t;
     else if(s.src==="mondtag"&&s.marker) txt=s.marker.t;
     else txt=s.kind+" · "+(window.RR25_MOND?window.RR25_MOND.day().name:"");
-    return {kind:s.kind,txt:txt,s:s};
+    return {kind:s.kind,tone:s.tone||s.kind,txt:txt,s:s};
   }
   function fensterZeile(now,kind){
     if(!KZ) return "";
@@ -101,6 +103,7 @@
   function wetterHtml(r){
     var w=wetter(), s=w.s, d=new Date().getDay(), now=Date.now();
     var say={SOFT:"Soft-Fenster. Weiche Arbeit trägt.",HARD:"Hard-Feintakt offen. Scharf. Nur mit Gate und Rückkehr.",ECHO:"Echo. Nicht nachsetzen. Schliessen, danken, ernten.",STILL:"Still. Heute eher nichts setzen."}[w.kind];
+    if(w.tone==="HARD"&&w.kind!=="HARD") say="Hard-Phase. Arbeit nur im Feintakt, abends Rückkehr · Anker.";
     var extra="";
     if(s&&s.open){
       var m=Math.max(1,Math.ceil((s.open.e-now)/60000));
@@ -116,7 +119,7 @@
       var n2=KZ.next("SOFT",now);
       warn='<br><b>Jetzt nicht.</b> '+(w.kind==="STILL"?'Still-Band.':'Echo-Tag.')+(n2?' Nächstes Soft-Fenster: '+relDay(n2.x.s)+' '+hm(n2.x.s)+'.':'');
     }
-    return '<span class="wk wk-'+w.kind.toLowerCase()+'">'+h(mondKlein(w.txt))+'</span><br>'+say+extra+warn+fensterZeile(now,w.kind)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
+    return '<span class="wk wk-'+(w.tone||w.kind).toLowerCase()+'">'+h(mondKlein(w.txt))+'</span><br>'+say+extra+warn+fensterZeile(now,w.kind)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
   }
   setInterval(function(){ var w=document.getElementById("wetter"); if(w&&cur){ var x=wetterHtml(cur.r); if(x!==w.innerHTML) w.innerHTML=x; } },30000);
 
