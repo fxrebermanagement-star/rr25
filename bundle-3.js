@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 111 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 112 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -84,6 +84,22 @@ function escAttr(s){
 function wesenTxt(e){
   return (e && e.wesen) ? "Mit Wesenheit" : "Ohne Wesenheit";
 }
+/* Build 112: Datum und Zeit oben im Eintrag, z. B. «Mo 19.10.2026 · 15:34», dazu die Mondphase. (.sub ist global versteckt.) */
+function logWannMs(e){
+  var m=String(e&&e.t||"").match(/(\d{1,2})\.(\d{1,2})\.(\d{4})(?:,?\s*(\d{1,2}):(\d{2}))?/);
+  if(m) return new Date(+m[3],+m[2]-1,+m[1],+(m[4]||12),+(m[5]||0)).getTime();
+  var p=Date.parse(String(e&&e.t||"")); return isNaN(p)?null:p;
+}
+function logWann(e){
+  var ms=logWannMs(e); if(ms==null) return String(e&&e.t||"");
+  var d=new Date(ms), W=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  function z(n){ return (n<10?"0":"")+n; }
+  return W[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+"."+d.getFullYear()+" \u00b7 "+z(d.getHours())+":"+z(d.getMinutes());
+}
+function logMond(e){
+  var ms=logWannMs(e), M=window.RR25_MOND; if(ms==null||!M||!M.fenster) return "";
+  var f=M.fenster(ms); return f.sym+" "+f.say;
+}
 function delLog(id){
   var d=load();
   d.log=(d.log||[]).filter(function(x){ return x.id!==id; });
@@ -106,16 +122,17 @@ function openLog(id){
   if(!box) return;
   box.innerHTML=
     '<div class="card">'+
-    '<p class="sub">'+esc(e.t)+'</p>'+
+    '<p class="logWann">'+esc(logWann(e))+'</p>'+
+    (logMond(e)?'<p class="logMond">'+esc(logMond(e))+'</p>':'')+
     '<h2 style="font-family:Georgia,serif;font-weight:500;margin:.2rem 0">'+esc(window.RR_ANZEIGE?window.RR_ANZEIGE(e.titel):e.titel)+'</h2>'+
-    '<p class="sub">'+wesenTxt(e)+'</p>'+
+    '<p class="logWesen">'+wesenTxt(e)+'</p>'+
     '<input id="logWer" placeholder="Name / Person X" value="'+escAttr(e.wer||"")+'">'+
     '<textarea id="logNote" placeholder="Kommentar">'+esc(e.note||"")+'</textarea>'+
     '<div class="row">'+
     '<button type="button" class="btn ghost" id="logBack">Liste</button>'+
     '<button type="button" class="btn primary" id="logSave">Speichern</button>'+
     '</div>'+
-    '<div class="row"><button type="button" class="btn ghost" id="logDel">Löschen</button></div>'+
+    '<div class="logDelRow"><button type="button" class="logDel" id="logDel">Löschen</button></div>'+
     '</div>';
   function store(){
     saveLogWer(id, (document.getElementById("logWer")||{}).value||"");
@@ -1038,7 +1055,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=111;
+  var BUILD=112;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
@@ -1057,7 +1074,7 @@ try{
   navigator.serviceWorker.getRegistrations().then(function(rs){
     rs.forEach(function(r){ r.update(); });
   });
-  navigator.serviceWorker.register("./sw.js?v=111").then(function(reg){
+  navigator.serviceWorker.register("./sw.js?v=112").then(function(reg){
     if(reg.waiting){
       try{ reg.waiting.postMessage("skip"); }catch(e){}
     }

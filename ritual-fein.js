@@ -48,6 +48,7 @@
     if(!e) return "neutral";
     var t=String(e.titel||"").trim();
     if(e.kind==="gabe" || /^(Tagesziel|Sigille|Gabe|Opfer|Opfergabe)$/i.test(t)) return "neutral";
+    if(/ · abgebrochen$/.test(t)) return "neutral"; /* Build 112: Abbruch ist kein Ritual, eigenes graues Kennzeichen */
     var r=rById(ridOf(e.id));
     if(!r){
       var base=t.replace(/ · abgebrochen$/,""), best=null;
@@ -95,7 +96,7 @@
       rows.forEach(function(e){ if(e) by[e.id]=e; });
       box.querySelectorAll("[data-eid]").forEach(function(el){
         var e=by[el.getAttribute("data-eid")];
-        var ok=FILT==="grau"?/^(Tagesziel|Sigille)$/i.test(String(e&&e.titel||"").trim()):toneOf(e)===FILT;
+        var ok=FILT==="grau"?/^(Tagesziel|Sigille)$| · abgebrochen$/i.test(String(e&&e.titel||"").trim()):toneOf(e)===FILT;
         if(!ok) el.style.display="none";
       });
     };

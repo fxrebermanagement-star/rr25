@@ -70,5 +70,24 @@
     return {key:key,name:name,p:p,waxing:p<0.5,sym:SYM[si],viertel:hit[1]!=null?1:(hit[3]!=null?3:0),at:hit[2]!=null?hit[2]:hit[0],
       fullIn:nf?dayDiff(s,nf):null,newIn:nn?dayDiff(s,nn):null,nextFull:nf,nextNew:nn,lastFull:prev(2,ms)};
   }
-  window.RR25_MOND={events:events,phase:phase,day:day,next:next,prev:prev,phaseMs:phaseMs};
+  /* Build 112: Mondphase als Fenster. Neumond und Vollmond gelten je ±1 Kalendertag (Berner Zeit), dazwischen zu- oder abnehmend.
+     {key,name,sym,say}: say z. B. «zunehmend · 3 Tage vor Vollmond» oder «Vollmond-Fenster · 1 Tag nach Vollmond». */
+  function fenster(ms){
+    if(ms==null) ms=Date.now();
+    var s=dayStart(ms), d=day(ms), win=null;
+    events(s-2*DAY, s+3*DAY).forEach(function(x){
+      if(x.q!==0&&x.q!==2) return;
+      var dd=dayDiff(x.t,s); if(Math.abs(dd)<=1&&(!win||Math.abs(dd)<Math.abs(win.dd))) win={q:x.q,dd:dd};
+    });
+    function tage(n){ return n===1?"1 Tag":n+" Tage"; }
+    if(win){
+      var nm=win.q===2?"Vollmond":"Neumond";
+      return {key:win.q===2?"voll":"neu",name:nm,sym:win.q===2?SYM[4]:"\ud83c\udf11",
+        say:win.dd===0?nm:nm+"-Fenster · "+tage(1)+(win.dd<0?" vor ":" nach ")+nm};
+    }
+    var zu=d.p<0.5, nf=next(2,s+DAY), nn=next(0,s+DAY);
+    return {key:zu?"zu":"ab",name:zu?"Zunehmend":"Abnehmend",sym:d.sym,
+      say:zu?"zunehmend"+(nf?" · "+tage(dayDiff(s,nf))+" vor Vollmond":""):"abnehmend"+(nn?" · "+tage(dayDiff(s,nn))+" vor Neumond":"")};
+  }
+  window.RR25_MOND={events:events,phase:phase,day:day,next:next,prev:prev,phaseMs:phaseMs,fenster:fenster};
 })();

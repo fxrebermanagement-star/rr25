@@ -1,5 +1,5 @@
-/* rr25 · Paket 7/7 · Build 111 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js */
+/* rr25 · Paket 7/7 · Build 112 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b100.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -227,7 +227,20 @@ try{
   }
   function moon(ms){
     var M=window.RR25_MOND; if(!M) return "";
-    var k=M.day(ms).key; return {neu:"Neumond",zu:"Zunehmend",voll:"Vollmond",ab:"Abnehmend"}[k]||"";
+    var k=(M.fenster?M.fenster(ms):M.day(ms)).key; return {neu:"Neumond",zu:"Zunehmend",voll:"Vollmond",ab:"Abnehmend"}[k]||"";
+  }
+  /* Build 112: Wirkung nach Mondphase. Nur Rituale (Zählregel), Mondphase als Fenster (Neumond/Vollmond ±1 Tag). */
+  function wirkMond(S,e,mo,T){
+    if(!mo||!(window.RR25_ZAEHLREGEL&&window.RR25_ZAEHLREGEL.isRitual(e))) return;
+    if(!S.mw) S.mw={Neumond:{r:0,w:0},Zunehmend:{r:0,w:0},Vollmond:{r:0,w:0},Abnehmend:{r:0,w:0}};
+    S.mw[mo].r++; if((T[String(e.id)]||[]).indexOf("Wirkung")>=0) S.mw[mo].w++;
+  }
+  function wirkMondHtml(S){
+    var mw=S.mw, keys=["Neumond","Zunehmend","Vollmond","Abnehmend"];
+    if(!mw) return '<p class="rbH">Wirkung nach Mondphase</p><p class="rbNote">Noch keine Rituale in dieser Zeit.</p>';
+    return '<p class="rbH">Wirkung nach Mondphase</p><ul class="rbMw">'+keys.map(function(k){
+      var x=mw[k]; return '<li><span>'+k+'</span><b>'+x.r+(x.r===1?' Ritual':' Rituale')+(x.r?', '+x.w+' mit Wirkung':'')+'</b></li>';
+    }).join("")+'</ul><p class="rbNote">Neumond und Vollmond zählen je einen Tag davor und danach dazu. Wirkung = Merker am Eintrag.</p>';
   }
   function daytime(ms){ var hr=new Date(ms).getHours(); return hr>=5&&hr<11?"Morgen":hr<17&&hr>=11?"Tag":hr>=17&&hr<22?"Abend":"Nacht"; }
   function stats(y,m){
@@ -236,6 +249,7 @@ try{
       var ms=when(e); if(ms==null) return; var d=new Date(ms); if(d.getFullYear()!==y||d.getMonth()!==m) return;
       S.n++; if(String(e.titel||'')==='Tagesziel') S.ziel++; else if(window.RR25_ZAEHLREGEL&&window.RR25_ZAEHLREGEL.isRitual(e)) S.rit++; S.ton[tone(e)]=(S.ton[tone(e)]||0)+1;
       var mo=moon(ms); if(mo) S.mond[mo]++;
+      wirkMond(S,e,mo,T);
       S.zeit[daytime(ms)]++;
       (T[String(e.id)]||[]).forEach(function(t){ if(t in S) S[t]++; });
     });
@@ -265,6 +279,7 @@ try{
       if(isR){ Y.rit++; Y.monat[d.getMonth()]++; var nm=String(e.titel||"").trim(); if(nm) Y.top[nm]=(Y.top[nm]||0)+1; }
       var tn=tone(e); Y.ton[tn]=(Y.ton[tn]||0)+1;
       var mo=moon(ms); if(mo) Y.mond[mo]++;
+      wirkMond(Y,e,mo,T);
       (T[String(e.id)]||[]).forEach(function(t){ if(t in Y) Y[t]++; });
     });
     try{ (js("rr25_echo_v1",{}).items||[]).forEach(function(it){ ["3","9"].forEach(function(k){ var c=it.checks&&it.checks[k]; if(c&&c.a&&c.due){ var d=new Date(c.due); if(d.getFullYear()===y) Y.echoAnt++; } }); }); }catch(e){}
@@ -281,8 +296,8 @@ try{
     return '<div class="rbHead"><button type="button" class="rbNav" data-d="-12" aria-label="Jahr zurück">‹</button><b>'+y+'</b><button type="button" class="rbNav" data-d="12" aria-label="Jahr vor"'+(fut?' disabled':'')+'>›</button></div>'+
       '<p class="rbSay">'+h(say)+'</p>'+
       '<p class="rbH">Rituale pro Monat</p>'+bars(mo,false,ml)+
-      '<p class="rbH">Ton · Soft und Hard</p>'+bars(Y.ton,true,LAB)+
-      '<p class="rbH">Mondphase</p>'+bars(Y.mond)+
+      '<p class="rbH">Ton · alle Einträge</p>'+bars(Y.ton,true,LAB)+
+      '<p class="rbH">Mondphase</p>'+bars(Y.mond)+wirkMondHtml(Y)+
       '<p class="rbH">Wirkung und Echo</p>'+(wd?'<div class="rbBal" aria-label="Wirkung '+Y.Wirkung+', Echo '+Y.Echo+'"><i style="width:'+wp+'%"></i></div>':'')+
       '<div class="rbPills"><span class="rbP on">Wirkung <b>'+Y.Wirkung+'</b></span><span class="rbP on">Echo <b>'+Y.Echo+'</b></span><span class="rbP">Echo-Tage beantwortet <b>'+Y.echoAnt+'</b></span></div>'+
       '<p class="rbH">Meistgenutzte Rituale</p>'+(top.length?'<ol class="rbTop">'+top.map(function(k){ return '<li><span>'+h(k)+'</span><b>'+Y.top[k]+'×</b></li>'; }).join("")+'</ol>':'<p class="rbNote">Noch keine Rituale in diesem Jahr.</p>');
@@ -299,7 +314,7 @@ try{
     return modeBar()+'<div class="rbHead"><button type="button" class="rbNav" data-d="-1" aria-label="Monat zurück">‹</button><b>'+MN[MON.m]+' '+MON.y+'</b><button type="button" class="rbNav" data-d="1" aria-label="Monat vor"'+(fut?' disabled':'')+'>›</button></div>'+
       '<p class="rbSay">'+h(sentence(S))+'</p>'+
       '<p class="rbH">Ton · alle Einträge</p>'+bars(S.ton,true,LAB)+
-      '<p class="rbH">Mondphase</p>'+bars(S.mond)+
+      '<p class="rbH">Mondphase</p>'+bars(S.mond)+wirkMondHtml(S)+
       '<p class="rbH">Tageszeit</p>'+bars(S.zeit)+
       '<p class="rbH">Merker</p><div class="rbPills"><span class="rbP on">Wirkung <b>'+S.Wirkung+'</b></span><span class="rbP on">Echo <b>'+S.Echo+'</b></span><span class="rbP">Echo-Tage beantwortet <b>'+S.echoAnt+'</b></span></div>'+
       '<p class="rbNote">Merker setzt du direkt an einem Eintrag: «Wirkung» oder «Echo» antippen.</p>';
@@ -360,6 +375,7 @@ try{
     ".rbMode{display:flex;gap:.3rem;justify-content:center;margin:0 0 .5rem}.rbMode button{min-height:0;padding:.25rem .9rem;font-size:.7rem;border-radius:999px;border:1px solid rgba(200,120,255,.25);background:transparent;color:#cdbbe8}.rbMode button.on{background:rgba(160,90,255,.22);color:#f6e6ff;border-color:rgba(200,120,255,.6);box-shadow:0 0 10px rgba(200,120,255,.3)}",
     ".rbBal{height:.5rem;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;margin:.2rem 0 .45rem}.rbBal i{display:block;height:100%;background:linear-gradient(90deg,#7b3fb0,#d58bff);box-shadow:0 0 8px rgba(213,139,255,.45)}",
     ".rbTop{list-style:none;margin:.2rem 0 0;padding:0}.rbTop li{display:flex;justify-content:space-between;gap:.6rem;font-size:.76rem;color:#e6d4ff;padding:.22rem 0;border-bottom:1px solid rgba(200,120,255,.1)}.rbTop li:last-child{border:0}.rbTop b{color:#fff;font-weight:600}",
+    ".rbMw{list-style:none;margin:.2rem 0 0;padding:0}.rbMw li{display:flex;justify-content:space-between;gap:.6rem;font-size:.74rem;color:#cdbbe8;padding:.2rem 0;border-bottom:1px solid rgba(200,120,255,.1)}.rbMw li:last-child{border:0}.rbMw b{font-weight:500;color:#f1e1ff}",
     ".rbNote{margin:.55rem 0 0;font-size:.62rem;color:#8e7aa8}",
     ".rbTags{display:inline-flex;gap:.25rem;margin-left:.4rem;vertical-align:middle}",
     ".rbTag{font-size:.54rem;letter-spacing:.06em;padding:.05rem .42rem;min-height:0;line-height:1.5;border-radius:999px;border:1px dashed rgba(200,120,255,.3);background:transparent;color:#8e7aa8}",
@@ -2100,16 +2116,35 @@ try{
   function earliest(){ var m=Infinity; rows().forEach(function(e){ var t=when(e); if(t!=null&&t<m) m=t; }); return m; }
   function tone(e){ var t=window.RR25_TONE?window.RR25_TONE(e):"soft"; return t; }
   function stats(z){
-    var R=window.RR25_ZAEHLREGEL, items=[], rit=0, by={}, ton={soft:0,hard:0};
+    var R=window.RR25_ZAEHLREGEL, items=[], rit=0, by={}, ton={soft:0,grenze:0,hard:0,feld:0,grau:0}, ph={};
     rows().forEach(function(e){
       var t=when(e); if(t==null||t<z.s||t>=z.e) return;
       var ti=String(e.titel||"").trim(), isR=R&&R.isRitual(e);
       items.push({t:t,ti:ti,note:String(e.note||e.wer||"").trim(),r:!!isR});
-      if(isR){ rit++; by[ti]=(by[ti]||0)+1; var tn=tone(e); if(tn==="hard") ton.hard++; else if(tn==="soft") ton.soft++; }
+      var tn=tone(e); if(tn==="neutral") tn="grau"; if(tn in ton) ton[tn]++; /* Build 112: alle fünf Töne, alle Einträge */
+      if(isR){ rit++; by[ti]=(by[ti]||0)+1; }
+      var MF=window.RR25_MOND&&window.RR25_MOND.fenster; if(MF){ var k=MF(t).key; ph[k]=(ph[k]||0)+1; }
     });
     items.sort(function(a,b){ return a.t-b.t; });
     var top=Object.keys(by).sort(function(a,b){ return by[b]-by[a]||a.localeCompare(b); }).slice(0,4).map(function(k){ return k+(by[k]>1?" ×"+by[k]:""); });
-    return {items:items,rit:rit,top:top,ton:ton};
+    return {items:items,rit:rit,top:top,ton:ton,ph:ph};
+  }
+  /* Build 112: Mondphasen-Leiste über den Zyklus (8 echte Mondsymbole, heute markiert) und Einträge je Mondfenster */
+  var PSYM={neu:"\ud83c\udf11",zu:"\ud83c\udf12",voll:"\ud83c\udf15",ab:"\ud83c\udf18"}, PNAM={neu:"Neumond",zu:"Zunehmend",voll:"Vollmond",ab:"Abnehmend"};
+  function strip(z){
+    var M=window.RR25_MOND; if(!M||!M.fenster) return "";
+    var now=Date.now(), out=[];
+    for(var i=0;i<8;i++){
+      var t=z.s+(z.e-z.s)*(i+.5)/8, d=M.day(t), sym=i===0?"\ud83c\udf11":(i===4?"\ud83c\udf15":d.sym);
+      if(sym==="\u25cb") sym="\ud83c\udf11";
+      var on=z.now&&now>=z.s+(z.e-z.s)*i/8&&now<z.s+(z.e-z.s)*(i+1)/8;
+      out.push('<span class="mzS'+(on?' on':'')+'"><i>'+sym+'</i><small>'+h(fd(t))+'</small></span>');
+    }
+    return '<div class="mzStrip" aria-label="Mondphasen im Zyklus">'+out.join("")+'</div>';
+  }
+  function phasePills(S){
+    var ks=["neu","zu","voll","ab"].filter(function(k){ return S.ph[k]; });
+    return ks.length?'<div class="rbPills mzPh">'+ks.map(function(k){ return '<span class="rbP on">'+PSYM[k]+' '+PNAM[k]+' <b>'+S.ph[k]+'</b></span>'; }).join("")+'</div>':'';
   }
   function panel(){
     var z=zyklus(OFF); if(!z) return '<p class="mzSay">Mondzeiten sind noch nicht geladen.</p>';
@@ -2118,12 +2153,14 @@ try{
     var vm=z.full?'<li class="mzV"><span></span><b>Vollmond · '+h(fdt(z.full))+'</b></li>':'';
     var inserted=false, list=S.items.map(function(x){
       var pre=''; if(!inserted&&z.full&&x.t>z.full){ pre=vm; inserted=true; }
-      return pre+'<li class="'+(x.r?"mzR":"")+'"><span>'+h(fdw(x.t))+'</span><b>'+h(x.ti)+'</b>'+(x.note&&x.note!==x.ti?'<small>'+h(x.note.slice(0,90))+'</small>':'')+'</li>';
+      var mf=window.RR25_MOND&&window.RR25_MOND.fenster?window.RR25_MOND.fenster(x.t):null;
+      return pre+'<li class="'+(x.r?"mzR":"")+'"><span>'+(mf?'<i class="mzMo" title="'+h(mf.name)+'">'+mf.sym+'</i> ':'')+h(fdw(x.t))+'</span><b>'+h(x.ti)+'</b>'+(x.note&&x.note!==x.ti?'<small>'+h(x.note.slice(0,90))+'</small>':'')+'</li>';
     });
     if(!inserted&&z.full) list.push(vm);
     return '<div class="mzHead"><button type="button" class="rbNav" data-d="-1" aria-label="Voriger Zyklus"'+(hasOlder?'':' disabled')+'>‹</button><div><b>'+h(fd(z.s))+' – '+h(fd(z.e))+'</b><small>'+(z.now?'laufender Zyklus':'Neumond bis Neumond')+'</small></div><button type="button" class="rbNav" data-d="1" aria-label="Nächster Zyklus"'+(OFF>=0?' disabled':'')+'>›</button></div>'+
-      '<p class="mzSay">'+h(say)+'</p>'+
-      (S.rit?'<div class="rbPills"><span class="rbP on">Soft <b>'+S.ton.soft+'</b></span><span class="rbP on">Hard <b>'+S.ton.hard+'</b></span></div>':'')+
+      strip(z)+
+      '<p class="mzSay">'+h(say)+'</p>'+phasePills(S)+
+      (S.items.length?'<div class="rbPills">'+[["soft","Soft"],["grenze","Grenze"],["hard","Hard"],["feld","Feld"],["grau","Grau"]].filter(function(k){ return S.ton[k[0]]; }).map(function(k){ return '<span class="rbP on">'+k[1]+' <b>'+S.ton[k[0]]+'</b></span>'; }).join("")+'</div>':'')+
       (S.top.length?'<p class="mzTop">'+h(S.top.join(" · "))+'</p>':'')+
       (list.length?'<ul class="mzL">'+list.join("")+'</ul>':'')+
       '<p class="rbNote">Neumond bis Neumond, Berner Zeit.</p>';
@@ -2153,7 +2190,11 @@ try{
     "#mzPanel{margin:0 0 .8rem;padding:.75rem .8rem .7rem;background:linear-gradient(180deg,rgba(40,18,62,.78),rgba(14,8,24,.92))!important;border:1px solid rgba(200,120,255,.22)!important;border-radius:1.1rem!important}#mzPanel[hidden]{display:none!important}",
     ".mzHead{display:flex;align-items:center;justify-content:space-between;text-align:center}.mzHead b{display:block;font-family:Georgia,serif;font-weight:400;font-size:1.02rem;color:#e4ecff}.mzHead small{font-size:.62rem;letter-spacing:.12em;color:#a994c4}",
     ".mzSay{margin:.5rem 0 .4rem;font-size:.8rem;color:#e6d4ff;line-height:1.4}.mzTop{margin:.5rem 0 0;font-size:.74rem;color:#cdbbe8}",
-    ".mzL{list-style:none;margin:.6rem 0 0;padding:0}.mzL li{display:grid;grid-template-columns:4.3rem 1fr;gap:.1rem .5rem;padding:.35rem 0;border-top:1px solid rgba(200,120,255,.1);font-size:.8rem;color:#cdbbe8}.mzL li span{color:#a994c4;font-size:.66rem;padding-top:.15rem}.mzL li b{font-weight:500}.mzL li.mzR b{color:#f1e1ff}.mzL li small{grid-column:2;font-size:.68rem;color:#8e7aa8;line-height:1.35}",
+    ".mzL{list-style:none;margin:.6rem 0 0;padding:0}.mzL li{display:grid;grid-template-columns:5.2rem 1fr;gap:.1rem .5rem;padding:.35rem 0;border-top:1px solid rgba(200,120,255,.1);font-size:.8rem;color:#cdbbe8}.mzL li span{color:#a994c4;font-size:.66rem;padding-top:.15rem}.mzL li b{font-weight:500}.mzL li.mzR b{color:#f1e1ff}.mzL li small{grid-column:2;font-size:.68rem;color:#8e7aa8;line-height:1.35}",
+    ".mzStrip{display:grid;grid-template-columns:repeat(8,1fr);gap:.15rem;margin:.6rem 0 .2rem;padding:.4rem .2rem;border-radius:.9rem;background:rgba(160,90,255,.07);border:1px solid rgba(200,120,255,.15)}",
+    ".mzS{display:flex;flex-direction:column;align-items:center;gap:.1rem;padding:.15rem 0;border-radius:.6rem}.mzS i{font-style:normal;font-size:1.15rem;filter:drop-shadow(0 0 4px rgba(200,140,255,.55))}.mzS small{font-size:.55rem;color:#a994c4}",
+    ".mzS.on{background:rgba(200,120,255,.2);box-shadow:0 0 10px rgba(200,120,255,.35)}.mzS.on small{color:#f1e1ff}.mzPh{margin:.1rem 0 .35rem}",
+    ".mzL li .mzMo{font-style:normal;font-size:.72rem}",
     ".mzL li.mzV b{color:#d6a6ff;font-size:.72rem;letter-spacing:.04em}"
   ].join("");
   document.head.appendChild(css);
@@ -2593,6 +2634,21 @@ try{
 /* Echo (9) bei Personen-Ritualen: «Was kam zurück?» im Chronik-Eintrag (e.echo), jederzeit nachtragbar. Nur Chronik, kein Home-Element. */
 (function(){
   if(typeof load!=="function"||typeof save!=="function") return;
+  /* Build 112: «Was kam zurück?» ausgefüllt = Merker «Echo» (rr25_tags_v1). So stimmen Liste, Rückblick und Absichten überein.
+     Gilt auch für bestehende Einträge mit Echo-Text. */
+  window.RR25_ECHOSYNC=function(){
+    try{
+      var T=JSON.parse(localStorage.getItem("rr25_tags_v1")||"{}"); if(!T||typeof T!=="object"||Array.isArray(T)) T={};
+      var ch=false;
+      (load().log||[]).forEach(function(e){
+        if(!e||!String(e.echo||"").trim()) return;
+        var k=String(e.id), a=T[k]||[]; if(a.indexOf("Echo")<0){ T[k]=a.concat("Echo"); ch=true; }
+      });
+      if(ch) localStorage.setItem("rr25_tags_v1",JSON.stringify(T));
+      return ch;
+    }catch(err){ return false; }
+  };
+  window.RR25_ECHOSYNC();
   function esc2(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function find(d,id){ return (d.log||[]).filter(function(x){ return String(x.id)===String(id); })[0]; }
   if(typeof openLog==="function"){
@@ -2606,12 +2662,13 @@ try{
         'Was kam zurück?<textarea id="logEcho" placeholder="Anruf, Gefühl, Zufall · später nachtragen geht immer">'+esc2(e.echo||"")+'</textarea>';
       var card=box.querySelector(".card")||box; card.appendChild(w);
       var t=document.getElementById("logEcho");
-      t.onchange=t.onblur=function(){ var d=load(), x=find(d,id); if(!x) return; x.echo=t.value.trim().slice(0,800); x.echoT=x.echo?Date.now():0; save(d); };
+      t.onchange=t.onblur=function(){ var d=load(), x=find(d,id); if(!x) return; x.echo=t.value.trim().slice(0,800); x.echoT=x.echo?Date.now():0; save(d); window.RR25_ECHOSYNC(); };
     };
   }
   if(typeof paintLog==="function"){
     var _p=paintLog;
     paintLog=function(){
+      window.RR25_ECHOSYNC();
       _p.apply(this,arguments);
       var d=load(), box=document.getElementById("entries"); if(!box) return;
       (d.log||[]).forEach(function(e){
@@ -2665,7 +2722,7 @@ try{
       '<div class="row"><button type="button" class="btn ghost" id="eeNo">Nicht mehr fragen</button><button type="button" class="btn primary" id="eeOk">In die Chronik</button></div>';
     var ref=document.getElementById("wkHome");
     if(ref&&ref.parentNode===home) home.insertBefore(c,ref); else if(c.parentNode!==home) home.insertBefore(c,home.firstChild);
-    function upd(f){ var d=load(), x=(d.log||[]).filter(function(y){ return String(y.id)===String(e.id); })[0]; if(!x) return; f(x); save(d); c.remove(); setTimeout(paint,50); }
+    function upd(f){ var d=load(), x=(d.log||[]).filter(function(y){ return String(y.id)===String(e.id); })[0]; if(!x) return; f(x); save(d); if(window.RR25_ECHOSYNC) window.RR25_ECHOSYNC(); c.remove(); setTimeout(paint,50); }
     document.getElementById("eeOk").onclick=function(){
       var v=(document.getElementById("eeTxt").value||"").trim().slice(0,800); if(!v){ document.getElementById("eeTxt").focus(); return; }
       upd(function(x){ x.echo=v; x.echoT=Date.now(); });
@@ -2685,3 +2742,73 @@ try{
 }catch(e){ console.warn("rr25 b109",e); }
 
 ;
+/* ==== ritual-b112.js ==== */
+try{
+/* ritual-b112.js — Build 112: Chronik-Feinschliff.
+   - Eintrag offen: «Foto dazu» und Fotos in der Karte, «Löschen» klein und abgesetzt ganz unten. Datum, Mondphase, Wesenheit gut lesbar.
+   - Liste: kleines Mondsymbol pro Eintrag (Mondfenster: Neumond/Vollmond je ±1 Tag).
+   - Kopf: die fünf Ansichten in einer ruhigen, seitlich wischbaren Reihe «Ansichten».
+   Nur Darstellung, keine neuen Schlüssel im Speicher. */
+(function(){
+  if(window.__rr25b112) return; window.__rr25b112=1;
+  function h(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+  function tidyDetail(){
+    var box=document.getElementById("entries"); if(!box) return;
+    var card=box.querySelector(".card"), del=card&&card.querySelector(".logDelRow"); if(!card||!del) return;
+    var fb=box.querySelector("#logFoto"), row=fb&&fb.closest(".row"), sh=box.querySelector("#logShots");
+    if(row&&row.parentNode!==card){ row.classList.add("logFotoRow"); card.appendChild(row); }
+    if(sh&&sh.parentNode!==card) card.appendChild(sh);
+    card.appendChild(del); /* Löschen immer zuletzt, auch nach «Was kam zurück?» */
+  }
+  if(typeof openLog==="function"&&!openLog._b112){
+    var ol=openLog;
+    openLog=function(id){ var r=ol.apply(this,arguments); tidyDetail(); setTimeout(tidyDetail,60); setTimeout(tidyDetail,400); return r; };
+    openLog._b112=1;
+  }
+  function moons(){
+    var box=document.getElementById("entries"), M=window.RR25_MOND; if(!box||!M||!M.fenster||typeof load!=="function") return;
+    var by={}; (load().log||[]).forEach(function(e){ if(e) by[String(e.id)]=e; });
+    [].slice.call(box.querySelectorAll(".logrow[data-eid]")).forEach(function(row){
+      var e=by[row.getAttribute("data-eid")], top=row.querySelector(".v3top")||row.querySelector("b"); if(!e||!top||row.querySelector(".lgMo")) return;
+      var ms=typeof logWannMs==="function"?logWannMs(e):null; if(ms==null) return;
+      var f=M.fenster(ms), sp=document.createElement("span");
+      sp.className="lgMo"; sp.textContent=f.sym; sp.title=f.name; sp.setAttribute("aria-label",f.name);
+      top.appendChild(sp);
+    });
+  }
+  function header(){
+    var bar=document.getElementById("rbBar"); if(!bar) return;
+    var wrap=document.getElementById("lgViews");
+    if(!wrap){
+      wrap=document.createElement("div"); wrap.id="lgViews";
+      wrap.innerHTML='<span class="lgViewsL">Ansichten</span>';
+      bar.parentNode.insertBefore(wrap,bar); wrap.appendChild(bar);
+    }
+    /* feste Reihenfolge: Mondzyklus, Absichten, Zähler, Rückblick, Wochenbild */
+    ["mzBtn","abBtn","zlBtn","rbBtn","wbBtn"].forEach(function(id){ var b=document.getElementById(id); if(b&&b.parentNode===bar) bar.appendChild(b); });
+  }
+  function go(){ try{ header(); moons(); }catch(err){ console.warn("rr25 b112",err); } }
+  if(typeof paintLog==="function"&&!paintLog._b112){ var pl=paintLog; paintLog=function(){ var r=pl.apply(this,arguments); setTimeout(go,180); return r; }; paintLog._b112=1; }
+  if(typeof show==="function"&&!show._b112){ var sh=show; show=function(id){ var r=sh.apply(this,arguments); if(id==="log"){ setTimeout(go,700); setTimeout(go,1200); } return r; }; show._b112=1; }
+  setTimeout(go,900);
+  var css=document.createElement("style");
+  css.textContent=[
+    "#lgViews{margin:-.1rem 0 .55rem}",
+    "#lgViews .lgViewsL{display:block;font-size:.56rem;letter-spacing:.18em;text-transform:uppercase;color:#a994c4;margin:0 0 .3rem .2rem}",
+    "html body #lgViews #rbBar{display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;gap:.4rem;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0!important;padding:.1rem .1rem .3rem;scroll-snap-type:x proximity;width:100%!important;max-width:none!important;box-sizing:border-box}",
+    "#lgViews #rbBar::-webkit-scrollbar{display:none}",
+    "html body #lgViews #rbBar>button{flex:0 0 auto;scroll-snap-align:start;white-space:nowrap;min-height:2rem!important;padding:.3rem .9rem!important;font-size:.74rem!important;border-radius:999px!important;border:1px solid rgba(200,120,255,.3)!important;background:rgba(160,90,255,.08)!important;color:#e4ecff!important;margin:0!important}",
+    "html body #lgViews #rbBar>button.on{background:rgba(160,90,255,.24)!important;box-shadow:0 0 12px rgba(200,120,255,.35)}",
+    ".lgMo{font-size:.78rem;margin-left:.4rem;opacity:.9;filter:drop-shadow(0 0 3px rgba(200,140,255,.45));vertical-align:middle}",
+    "#entries .card .logWann{display:block;margin:0;font-size:.86rem;letter-spacing:.04em;color:#f1e1ff}",
+    "#entries .card .logMond{display:block;margin:.15rem 0 .2rem;font-size:.76rem;color:#cdbbe8}",
+    "#entries .card .logWesen{display:block;margin:0 0 .5rem;font-size:.72rem;color:#a994c4}",
+    "#entries .card .logFotoRow{margin-top:.5rem}",
+    "#entries .card #logShots{margin-top:.4rem}",
+    "#entries .card .logDelRow{display:flex;justify-content:center;margin-top:1.4rem;padding-top:.7rem;border-top:1px solid rgba(200,120,255,.12)}",
+    "#entries .card .logDel{min-height:0!important;padding:.25rem .8rem!important;font-size:.68rem!important;letter-spacing:.06em;background:transparent!important;border:0!important;color:#9a86b5!important;text-decoration:underline;text-underline-offset:3px;box-shadow:none!important}"
+  ].join("");
+  document.head.appendChild(css);
+})();
+
+}catch(e){setTimeout(function(){throw e;});}
