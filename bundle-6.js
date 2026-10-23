@@ -1,4 +1,4 @@
-/* rr25 · Paket 6/7 · Build 113 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 6/7 · Build 114 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: design-v3.js, ritual-chronik-grau.js, ritual-ton.js, ritual-saison.js, ritual-resonanzen.js */
 /* ==== design-v3.js ==== */
 try{
@@ -800,41 +800,78 @@ try{
 try{
 (function(){
   var DATA=[];
-  var CAT_LAB={kraeuter:"Kräuter",hausmittel:"Hausmittel",steine:"Steine",kerzen:"Kerzen",farben:"Farben",zahlen:"Zahlen",rauch:"Räucherwerk",fav:"★ Favoriten"};
-  var TAB_ORDER=["kraeuter","hausmittel","steine","kerzen","farben","zahlen","rauch","fav"];
-  var INTRO={kraeuter:"Pflanzen als Helfer: als Tee, Duft oder Bild. Tradition und Erfahrung, kein Heilversprechen.",hausmittel:"Alltägliches aus Küche und Haus. Klein anwenden und klar bleiben.",steine:"Steine als Begleiter und Symbol: in die Hand nehmen, bei sich tragen oder hinlegen.",kerzen:"Eine Flamme, eine Absicht. Kerzen nie unbeaufsichtigt brennen lassen.",farben:"Farben als Stimmung: in Kleidung, Kerze, Tuch oder Blick.",zahlen:"Zahlen als Symbol, aus der Tradition. Sie zeigen eine Stimmung und sagen nichts voraus. Die Planeten folgen den magischen Quadraten (Agrippa).",rauch:"Räuchern ist ein alter Brauch. Immer kurz, mit Mass und bei offenem Fenster.",fav:"Deine gemerkten Einträge."};
+  /* Build 114: Opfergaben und Werkzeuge als eigene Gruppen, Einträge können zusätzlich in einer zweiten Gruppe stehen (e.also) */
+  var CAT_LAB={kraeuter:"Kräuter",hausmittel:"Hausmittel",werkzeuge:"Werkzeuge",opfer:"Opfergaben",steine:"Steine",kerzen:"Kerzen",farben:"Farben",rauch:"Räucherwerk",zahlen:"Zahlen",fav:"★ Favoriten"};
+  var TAB_ORDER=["kraeuter","hausmittel","werkzeuge","opfer","steine","kerzen","farben","rauch","zahlen","fav"];
+  var INTRO={kraeuter:"Pflanzen als Helfer: als Tee, Duft oder Bild. Tradition und Erfahrung, kein Heilversprechen.",hausmittel:"Alltägliches aus Küche und Haus. Klein anwenden und klar bleiben.",steine:"Steine als Begleiter und Symbol: in die Hand nehmen, bei sich tragen oder hinlegen.",kerzen:"Eine Flamme, eine Absicht. Kerzen nie unbeaufsichtigt brennen lassen.",farben:"Farben als Stimmung: in Kleidung, Kerze, Tuch oder Blick.",zahlen:"Zahlen als Symbol, aus der Tradition. Sie zeigen eine Stimmung und sagen nichts voraus. Die Planeten folgen den magischen Quadraten (Agrippa).",rauch:"Räuchern ist ein alter Brauch. Immer kurz, mit Mass und bei offenem Fenster.",werkzeuge:"Dinge aus dem Haus, die im Ritual etwas zeigen: öffnen, binden, fegen, trennen. Meist reicht das Bild davon.",opfer:"Kleine Gaben zum Danken und Teilen. Was draussen liegt, soll Tieren und Natur gut tun, darum lieber wenig und unverarbeitet.",fav:"Deine gemerkten Einträge."};
   var PL_DAY={Sonne:"Sonntag",Mond:"Montag",Mars:"Dienstag",Merkur:"Mittwoch",Jupiter:"Donnerstag",Venus:"Freitag",Saturn:"Samstag"};
   var DAY_PL=["Sonne","Mond","Mars","Merkur","Jupiter","Venus","Saturn"];
   var TH_LAB={schutz:"Schutz",ruhe:"Ruhe",herz:"Herz",klaerung:"Klärung",mut:"Mut",heilung:"Heilung",fuelle:"Fülle",traum:"Traum und Schwelle",ende:"Abschluss"};
   var LINKS={}, lf=null, MEHR={}, openMore={};
-  var KFAV="rr25_rz_fav", KNOTE="rr25_rz_note";
+  var KFAV="rr25_rz_fav", KNOTE="rr25_rz_note", KPFAD="rr25_rz_pfad";
+  /* Build 114: zusammengelegte Einträge, alte IDs zeigen auf den neuen (Favoriten, Notizen, gespeicherte Rituale) */
+  var MERGE={kranewitt:"wacholder","raeucher-beifuss":"beifuss",lavendelbluete:"lavendel",rosenbluete:"rose"};
+  function migrate(){
+    try{
+      var f=JSON.parse(localStorage.getItem(KFAV)||"[]"), ch=0;
+      if(Array.isArray(f)){ var out=[]; f.forEach(function(id){ var n=MERGE[id]||id; if(n!==id) ch=1; if(out.indexOf(n)<0) out.push(n); else ch=1; }); if(ch) localStorage.setItem(KFAV,JSON.stringify(out)); }
+      var no=JSON.parse(localStorage.getItem(KNOTE)||"{}"), cn=0;
+      if(no&&typeof no==="object"&&!Array.isArray(no)){ Object.keys(MERGE).forEach(function(o){ if(no[o]==null) return; var n=MERGE[o], v=String(no[o]); no[n]=no[n]?(String(no[n]).indexOf(v)>=0?no[n]:(no[n]+"\n"+v).slice(0,600)):v; delete no[o]; cn=1; }); if(cn) localStorage.setItem(KNOTE,JSON.stringify(no)); }
+      var rz=JSON.parse(localStorage.getItem("rr25_rezepte")||"[]"), cr=0;
+      if(Array.isArray(rz)){ rz.forEach(function(r){ if(r&&Array.isArray(r.zut)){ var z=[]; r.zut.forEach(function(id){ var n=MERGE[id]||id; if(n!==id) cr=1; if(z.indexOf(n)<0) z.push(n); }); r.zut=z; } }); if(cr) localStorage.setItem("rr25_rezepte",JSON.stringify(rz)); }
+    }catch(e){}
+  }
+  migrate();
   function lsGet(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
   function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
   var favs=lsGet(KFAV,[]); if(!Array.isArray(favs)) favs=[];
   var notes=lsGet(KNOTE,{}); if(!notes||typeof notes!=="object"||Array.isArray(notes)) notes={};
   var openNote="", flash="";
-  var tab="kraeuter", q="", toneF="", ready=0;
+  var tab="kraeuter", q="", toneF="", ready=0, pfad=lsGet(KPFAD,0)?1:0;
 
   var ICO={};
-  var TONE_CHIPS=[["","Alle"],["Soft","Soft"],["Soft/Grenze","Grenze"],["Soft→Hard","Soft→Hard"],["Hard","Hard"]];
+  /* Build 114: Töne wie im Kalender und im Ritualbauer. Tippen wählt, nochmals tippen hebt auf. */
+  var TONE_CHIPS=[["Soft","Soft"],["Grenze","Grenze"],["Hard","Hard"],["Feld","Feld"]];
+  /* «Mein Pfad»: der Ton des heutigen Tages aus dem Kalender (RR25_KAL.state) bestimmt, welche Töne passen */
+  function dayKind(){ var k="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&(S.tone||S.kind)) k=S.tone||S.kind; }catch(e){} return k; }
+  function pathTones(k){ return k==="HARD"?["Soft","Grenze","Hard","Feld"]:k==="GRENZE"?["Soft","Grenze"]:(k==="ECHO"||k==="STILL")?["Soft","Feld"]:["Soft"]; }
+  var KIND_LAB={SOFT:"Soft",HARD:"Hard",GRENZE:"Grenze",ECHO:"Echo",STILL:"Still"};
+  function inCat(e,c){ return e.cat===c||(e.also||[]).indexOf(c)>=0; }
+  function norm(x){ return String(x||"").toLowerCase().replace(/ä/g,"a").replace(/ö/g,"o").replace(/ü/g,"u"); }
+  function wordStart(text,qq){ return (" "+norm(text)).replace(/[^a-z0-9]+/g," ").indexOf(" "+qq)>=0; }
+  /* Suche: Name und Alias am Wortanfang, ab 3 Zeichen auch Wortanfänge im Text. Rang 0 = Name genau, 1 = Name beginnt so, 2 = Wort im Namen/Alias/Gruppe, 3 = Text */
+  function rank(e){
+    var qq=norm(q).replace(/[^a-z0-9 ]+/g," ").trim(); if(!qq) return 0;
+    var nm=[e.name].concat(e.alias||[]);
+    if(nm.some(function(n){ return norm(n)===qq; })) return 0;
+    if(nm.some(function(n){ return norm(n).indexOf(qq)===0; })) return 1;
+    var cl=[CAT_LAB[e.cat]].concat((e.also||[]).map(function(c){ return CAT_LAB[c]; })).join(" ");
+    if(nm.some(function(n){ return wordStart(n,qq); })||wordStart(cl,qq)) return 2;
+    if(qq.length>=3&&wordStart(e.text+" "+(notes[e.id]||"")+" "+moreText(e.id)+" "+e.tone,qq)) return 3;
+    return -1;
+  }
 
   var css=document.createElement("style");
   css.id="rr25-resonanzen";
   css.textContent=[
     "#mehrSheet .msGrid{grid-template-columns:repeat(2,1fr)!important}",
     "#mehrSheet .msItem[data-v=resonanzen] .ic{background:linear-gradient(160deg,#4a1f6a,#1e1030);color:#cfa8ff}",
-    "#resonanzen .rzTop{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.1rem 0 .55rem}",
-    "#resonanzen .rzSearch{margin:0;flex:1 1 100%;min-width:8.5rem;min-height:2.6rem;font-size:.9rem}",
+    "#resonanzen .hero{margin:0 0 .2rem!important;padding:0!important;min-height:0!important}#resonanzen .hero h2{margin:0!important;font-size:1.35rem!important}#resonanzen>.rzHint{display:none}",
+    "#resonanzen .rzTop{display:flex;flex-wrap:nowrap;gap:.4rem;align-items:center;margin:.1rem 0 .4rem}",
+    "#resonanzen .rzSearch{margin:0;flex:1 1 auto;min-width:0;width:auto;min-height:2.6rem;font-size:.9rem}",
+    "#resonanzen .rzFil{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:0 0 .4rem}",
+    "#resonanzen .rzPfad{display:inline-flex;border:1px solid rgba(200,160,255,.35);border-radius:999px;overflow:hidden;flex:none}#resonanzen .rzPfad button{min-height:2rem;padding:0 .65rem;border:0;background:none;color:#cdbbe8;font:500 .7rem system-ui,sans-serif}#resonanzen .rzPfad button.on{background:rgba(160,90,255,.28);color:#fff}",
+    "#resonanzen .rzPfadHint{flex:1 1 100%;margin:0;font-size:.66rem;color:#a08cba}#resonanzen .rzPfadHint:empty{display:none}",
         "#resonanzen .rzTones{display:flex;flex-wrap:wrap;gap:.3rem;margin:0}",
-    "#resonanzen .rzToneF{display:inline-flex;align-items:center;gap:.32rem;min-height:2.75rem;padding:0 .8rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.45);color:#d9d0e6;font:500 .74rem system-ui,sans-serif;letter-spacing:.01em}",
+    "#resonanzen .rzToneF{display:inline-flex;align-items:center;gap:.3rem;min-height:2rem;padding:0 .6rem;border-radius:999px;border:1px solid rgba(154,150,166,.45);background:rgba(20,10,34,.45);color:#d9d0e6;font:500 .74rem system-ui,sans-serif;letter-spacing:.01em}",
     "#resonanzen .rzToneF i{width:.42rem;height:.42rem;border-radius:50%;background:#9a96a6;flex:none}",
     "#resonanzen .rzToneF[data-tn=Soft]{border-color:rgba(46,204,113,.55)}#resonanzen .rzToneF[data-tn=Soft] i{background:#2ecc71}",
-    "#resonanzen .rzToneF[data-tn='Soft/Grenze']{border-color:rgba(255,196,92,.6)}#resonanzen .rzToneF[data-tn='Soft/Grenze'] i{background:#ffc45c}",
-    "#resonanzen .rzToneF[data-tn='Soft→Hard']{border-color:rgba(179,107,255,.6)}#resonanzen .rzToneF[data-tn='Soft→Hard'] i{background:#9a4dff}",
+    "#resonanzen .rzToneF[data-tn=Grenze]{border-color:rgba(255,196,92,.6)}#resonanzen .rzToneF[data-tn=Grenze] i{background:#ffc45c}",
+    "#resonanzen .rzToneF[data-tn=Feld]{border-color:rgba(179,107,255,.6)}#resonanzen .rzToneF[data-tn=Feld] i{background:#9a4dff}",
     "#resonanzen .rzToneF[data-tn=Hard]{border-color:rgba(255,84,112,.65)}#resonanzen .rzToneF[data-tn=Hard] i{background:#ff5470}",
     "#resonanzen .rzToneF.on{color:#eaf2ff;background:rgba(255,255,255,.06)}",
-    "#resonanzen .rzTabs{display:flex;flex-wrap:wrap;gap:.3rem;margin:0 0 .55rem}",
-    "#resonanzen .rzTabs .chip{min-height:2.75rem;padding:.4rem .85rem;font-size:.8rem}",
+    "#resonanzen .rzTabs{display:flex;flex-wrap:wrap;gap:.28rem;margin:0 0 .45rem;overflow:visible!important;max-width:100%}",
+    "#resonanzen .rzTabs .chip{min-height:2.15rem;padding:.2rem .62rem;font-size:.74rem;flex:0 0 auto;margin:0}",
     "#resonanzen .rzList{display:flex;flex-direction:column;gap:.4rem}",
     "#resonanzen .rzRow{position:relative;display:block;width:100%;text-align:left;border:1px solid rgba(200,120,255,.18);background:linear-gradient(180deg,rgba(48,18,72,.62),rgba(14,8,24,.9));border-radius:1.05rem;padding:.72rem .85rem .78rem;color:#eaf2ff}",
     "#resonanzen .rzRow.rzHas{display:flex;gap:.62rem;align-items:flex-start}",
@@ -845,7 +882,9 @@ try{
     "#resonanzen .rzTone{display:inline-block;margin-top:.28rem;font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:#cfa8ff;border:1px solid rgba(231,184,255,.35);border-radius:999px;padding:.12rem .5rem}",
     "#resonanzen .rzTone[data-t=Soft]{color:#9eecc0;border-color:rgba(158,236,192,.35)}",
     "#resonanzen .rzTone[data-t=Hard]{color:#ff8aa0;border-color:rgba(255,138,160,.4)}",
-    "#resonanzen .rzTone[data-t=\"Soft/Grenze\"],#resonanzen .rzTone[data-t=\"Soft→Hard\"]{color:#ffd2a0;border-color:rgba(255,210,160,.4)}",
+    "#resonanzen .rzTone[data-t=Grenze]{color:#ffd2a0;border-color:rgba(255,210,160,.4)}#resonanzen .rzTone[data-t=Feld]{color:#d7b8ff;border-color:rgba(179,107,255,.5)}",
+    "#resonanzen .rzEmpty b{color:#f1e8ff;font-weight:500}#resonanzen .rzTry{display:flex;flex-wrap:wrap;gap:.3rem;margin:.45rem 0 0}#resonanzen .rzTry button{min-height:2.2rem;padding:0 .75rem;border-radius:999px;border:1px solid rgba(200,160,255,.35);background:rgba(160,90,255,.1);color:#f1e8ff;font:inherit;font-size:.8rem}",
+    "#resonanzen .rzAka{display:block;margin-top:.15rem;font-size:.68rem;color:#a08cba}",
     "#resonanzen .rzTxt{display:block;margin:.42rem 0 0;font-size:.88rem;line-height:1.45;color:#e6dcff}",
     "#resonanzen .rzHint{margin:.2rem 0 .1rem;font-size:.72rem;color:#a08cba}",
     "#resonanzen .rzEmpty{margin:.8rem .2rem;color:#a08cba;font-size:.86rem;line-height:1.45}",
@@ -875,13 +914,23 @@ try{
     "#resonanzen .rzLf button{margin-left:auto;min-width:2.75rem;min-height:2.75rem;border:0;background:none;color:#d9c8f0;font-size:1.1rem}",
     "#resonanzen .rzIntro{margin:0 .2rem .5rem;font-size:.76rem;line-height:1.45;color:#a08cba}",
     "#resonanzen .rzNum{font-family:Georgia,serif;font-size:1.7rem;line-height:32px;text-align:center;width:32px;height:32px;display:block;color:#cfa8ff;text-shadow:0 0 8px rgba(231,184,255,.6)}",
-    "#rzToday{margin:0 0 .6rem;padding:.7rem .85rem .75rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--rzc,#5fe0a0);border-radius:1rem;background:rgba(20,8,48,.5)}",
+    "#rzToday{margin:0 0 .45rem;padding:.45rem .7rem .5rem;border:1px solid rgba(200,160,255,.25);border-left:3px solid var(--rzc,#5fe0a0);border-radius:1rem;background:rgba(20,8,48,.5)}",
     "#rzToday[hidden]{display:none}",
     "#rzToday .rtH{margin:0;font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ueberschrift,#d6a6ff)}",
-    "#rzToday .rtT{margin:.25rem 0 .45rem;font-size:.84rem;line-height:1.4;color:#e6dcff}",
-    "#rzToday .rtL{display:flex;flex-wrap:wrap;gap:.35rem}",
-    "#rzToday .rtB{min-height:2.75rem;padding:0 .85rem;border-radius:999px;border:1px solid rgba(200,160,255,.35);background:rgba(160,90,255,.1);color:#f1e8ff;font:inherit;font-size:.82rem}",
-    "#rzToday .rtB small{margin-left:.35rem;font-size:.62rem;color:#a08cba}"
+    "#rzToday .rtH{display:flex;justify-content:space-between;gap:.4rem}#rzToday .rtH span{letter-spacing:.04em;text-transform:none;color:#a08cba}",
+    "#rzToday .rtT{display:none}",
+    "#rzToday .rtL{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.3rem}",
+    "#rzToday .rtB{min-height:2.2rem;padding:0 .7rem;border-radius:999px;border:1px solid rgba(200,160,255,.35);background:rgba(160,90,255,.1);color:#f1e8ff;font:inherit;font-size:.82rem}",
+    "#rzToday .rtB small{margin-left:.35rem;font-size:.62rem;color:#a08cba}",
+    "/* Build 114: kompakter Kopf */",
+    "#resonanzen .rzFil{flex-wrap:wrap;gap:.25rem}#resonanzen .rzFil .rzToneF{min-height:2rem!important;height:2rem!important;padding:0 .5rem!important;font-size:.68rem!important;gap:.25rem}",
+    "#resonanzen .rzPfad button{min-height:2rem!important;height:2rem!important;padding:0 .55rem!important;font-size:.68rem!important;border-radius:0!important;box-shadow:none!important}",
+    "#resonanzen .rzTabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:.25rem}",
+    "#resonanzen .rzTabs .chip{min-height:2.1rem!important;height:auto!important;padding:.15rem .1rem!important;font-size:.66rem!important;letter-spacing:0!important;white-space:nowrap;text-align:center;justify-content:center;min-width:0;overflow:hidden;text-overflow:ellipsis}",
+    "#rzToday .rtB{min-height:2rem!important;height:2rem!important;padding:0 .6rem!important;font-size:.76rem!important}#rzToday .rtB small{margin-left:.25rem}",
+    "#rzToday .rtL{flex-wrap:wrap}",
+    "#resonanzen .rzCount{display:inline;margin:0 .2rem 0 .2rem}#resonanzen .rzIntro{margin:.1rem .2rem .45rem;font-size:.72rem;line-height:1.35}",
+    "#rzRezBtn{min-height:2.6rem!important}#rzRezBtn svg{display:inline-block!important}"
   ].join("\n");
   document.head.appendChild(css);
 
@@ -894,7 +943,9 @@ try{
   function moreText(id){ var m=MEHR[id]; return m?(m.w+" "+m.n+" "+m.a+" "+(m.h||"")):""; }
   function wann(e){
     var t=e.tone, a=[];
-    a.push(t==="Hard"?"Nur an Hard-Tagen oder ganz bewusst, immer mit Ethik und Anker, nie aus Impuls.":t==="Soft→Hard"?"Passt an Soft-Tagen. An Hard-Tagen und rund um den Vollmond nur mit Rückkehr und Anker.":t==="Soft/Grenze"?"Passt an Soft- und Grenze-Tagen, kurz und bewusst.":"Passt an Soft-Tagen und im Alltag.");
+    var m0=MEHR[e.id]||{};
+    if(m0.zw){ a.push(m0.zw); }
+    else a.push(t==="Hard"?"Nur an Hard-Tagen oder ganz bewusst, immer mit Ethik und Anker, nie aus Impuls.":t==="Feld"?"Für Feld-Arbeit, Traum und Schwelle: an ruhigen Tagen, immer mit Rückkehr ins Hier.":t==="Grenze"?"Passt an Soft- und Grenze-Tagen, kurz und bewusst.":"Passt an Soft-Tagen und im Alltag.");
     var l=LINKS[e.id]||{}, ps=l.p||[];
     if(ps.length) a.push("Tradition: am "+ps.map(function(p){ return PL_DAY[p]+" ("+p+")"; }).join(" oder ")+".");
     var th=l.t||[], mo="";
@@ -909,7 +960,7 @@ try{
     var op=!!openMore[e.id];
     var h='<button type="button" class="rzMoreBtn" data-more="'+esc(e.id)+'" aria-expanded="'+op+'">'+(op?"Weniger":"Mehr lesen")+"</button>";
     if(!op) return h;
-    return h+'<dl class="rzMore"><dt>Was es ist</dt><dd>'+esc(m.w)+"</dd><dt>Wofür</dt><dd>"+esc(m.n)+"</dd><dt>Anwenden</dt><dd>"+esc(m.a)+"</dd><dt>Wann</dt><dd>"+esc(wann(e))+"</dd>"+(m.h?'<dt class="rzHk">Hinweis</dt><dd class="rzHk">'+esc(m.h)+"</dd>":"")+"</dl>";
+    return h+'<dl class="rzMore"><dt>Was es ist</dt><dd>'+esc(m.w)+"</dd><dt>Wofür</dt><dd>"+esc(m.n)+"</dd><dt>Anwenden</dt><dd>"+esc(m.a)+"</dd><dt>Wann</dt><dd>"+esc(wann(e))+"</dd>"+(e.saison?"<dt>Saison</dt><dd>Hinweis: "+esc(e.saison)+"</dd>":"")+(m.h?'<dt class="rzHk">Hinweis</dt><dd class="rzHk">'+esc(m.h)+"</dd>":"")+"</dl>";
   }
   function hasLink(id){ var l=LINKS[id]; if(!l||!lf) return false; return lf.k==="p"?(l.p||[]).indexOf(lf.v)>=0:(l.t||[]).indexOf(lf.v)>=0; }
   function match(e){
@@ -917,11 +968,11 @@ try{
     if(lf){ if(!hasLink(e.id)) return false; }
     else if(q){}
     else if(tab==="fav"){ if(!isFav(e.id)) return false; }
-    else if(e.cat!==tab) return false;
+    else if(!inCat(e,tab)) return false;
     if(toneF && e.tone!==toneF) return false;
+    if(pfad && pathTones(dayKind()).indexOf(e.tone)<0) return false;
     if(!q) return true;
-    var hay=(e.name+" "+e.tone+" "+e.text+" "+(CAT_LAB[e.cat]||"")+" "+(notes[e.id]||"")+" "+moreText(e.id)).toLowerCase();
-    return hay.indexOf(q)>=0;
+    return rank(e)>=0;
   }
   /* Heute passend: nach dem Ton des Tages, täglich stabile Auswahl (Berner Datum) */
   function todayKey(){
@@ -930,11 +981,10 @@ try{
   function paintToday(){
     var box=document.getElementById("rzToday"); if(!box) return;
     if(ready!==2){ box.hidden=true; return; }
-    var kind="SOFT"; try{ var S=window.RR25_KAL&&window.RR25_KAL.state&&window.RR25_KAL.state(Date.now()); if(S&&(S.tone||S.kind)) kind=S.tone||S.kind; }catch(e){}
-    var want=kind==="HARD"?"Soft→Hard":(kind==="GRENZE"?"Soft/Grenze":"Soft");
+    var kind=dayKind();
     var txt=kind==="HARD"?"Heute ist ein Hard-Tag. Diese Einträge gelten nur mit Rückkehr und Anker.":(kind==="GRENZE"?"Heute ist ein Grenze-Tag. Diese Einträge passen, kurz und bewusst.":"Heute ist ein Soft-Tag. Diese weichen Einträge passen.");
     var col=kind==="HARD"?"#ff5470":(kind==="GRENZE"?"#ffb86b":"#5fe0a0");
-    var okT=kind==="HARD"?["Soft→Hard"]:(kind==="GRENZE"?["Soft/Grenze","Soft"]:["Soft"]);
+    var okT=kind==="HARD"?["Grenze","Feld","Hard"]:pathTones(kind);
     var pool=DATA.filter(function(e){ return okT.indexOf(e.tone)>=0&&e.cat!=="farben"; });
     var wd=0; try{ var wn=new Intl.DateTimeFormat("en-US",{timeZone:"Europe/Zurich",weekday:"short"}).format(new Date()); wd=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(wn); }catch(e){ wd=new Date().getDay(); }
     var dp=DAY_PL[wd<0?0:wd], hp=null, hint="";
@@ -947,7 +997,7 @@ try{
     if(pick.length<3) take(pool,3-pick.length,k+1);
     txt+=" Es ist "+PL_DAY[dp]+", der Tag "+({Sonne:"der Sonne",Mond:"des Mondes",Mars:"des Mars",Merkur:"des Merkur",Jupiter:"des Jupiter",Venus:"der Venus",Saturn:"des Saturn"})[dp]+" (Tradition)."+(hp?" Jetzt läuft die Stunde des Planeten "+hp+".":"");
     box.style.setProperty("--rzc",col); box.hidden=false;
-    box.innerHTML='<p class="rtH">Heute passend</p><p class="rtT">'+esc(txt)+'</p><div class="rtL">'+pick.map(function(e){ return '<button type="button" class="rtB" data-go="'+esc(e.id)+'">'+esc(e.name)+'<small>'+esc(CAT_LAB[e.cat])+'</small></button>'; }).join("")+'</div>';
+    box.innerHTML='<p class="rtH">Heute passend<span>'+esc((KIND_LAB[kind]||"Soft")+" · "+PL_DAY[dp])+'</span></p><p class="rtT">'+esc(txt)+'</p><div class="rtL">'+pick.map(function(e){ return '<button type="button" class="rtB" data-go="'+esc(e.id)+'">'+esc(e.name)+'<small>'+esc(CAT_LAB[e.cat])+'</small></button>'; }).join("")+'</div>';
   }
   function fallbackIco(e){
     if(e.cat==="zahlen") return '<b class="rzNum">'+esc(e.num||"")+"</b>";
@@ -967,11 +1017,15 @@ try{
     var tones=document.getElementById("rzTones");
     var list=document.getElementById("rzList");
     if(tones){
-      tones.innerHTML=TONE_CHIPS.map(function(c){
-        return '<button type="button" class="rzToneF'+(toneF===c[0]?" on":"")+'" data-tn="'+c[0]+'"><i></i>'+c[1]+"</button>";
-      }).join("");
+      var kd=dayKind();
+      tones.innerHTML='<span class="rzPfad" role="group" aria-label="Pfad"><button type="button" data-pf="0" class="'+(pfad?"":"on")+'" aria-pressed="'+!pfad+'">Alle</button><button type="button" data-pf="1" class="'+(pfad?"on":"")+'" aria-pressed="'+!!pfad+'">Nur mein Pfad</button></span>'+TONE_CHIPS.map(function(c){
+        return '<button type="button" class="rzToneF'+(toneF===c[0]?" on":"")+'" data-tn="'+c[0]+'" aria-pressed="'+(toneF===c[0])+'"><i></i>'+c[1]+"</button>";
+      }).join("")+'<p class="rzPfadHint">'+(pfad?esc("Mein Pfad heute: "+(KIND_LAB[kd]||"Soft")+"-Tag laut Kalender, passend sind "+pathTones(kd).join(", ")+"."):"")+'</p>';
       tones.querySelectorAll("[data-tn]").forEach(function(b){
-        b.onclick=function(){ toneF=b.getAttribute("data-tn")||""; paint(); };
+        b.onclick=function(){ var v=b.getAttribute("data-tn")||""; toneF=toneF===v?"":v; paint(); };
+      });
+      tones.querySelectorAll("[data-pf]").forEach(function(b){
+        b.onclick=function(){ pfad=+b.getAttribute("data-pf"); lsSet(KPFAD,pfad); paint(); };
       });
     }
     if(tabs){
@@ -989,6 +1043,7 @@ try{
       return;
     }
     var rows=DATA.filter(match);
+    if(q){ var rk={}; rows.forEach(function(e){ rk[e.id]=rank(e); }); rows=rows.map(function(e,i){ return [e,i]; }).sort(function(a,b){ return rk[a[0].id]-rk[b[0].id]||a[1]-b[1]; }).map(function(x){ return x[0]; }); }
     var cnt=document.getElementById("rzCount");
     if(cnt) cnt.textContent=lf?(rows.length+" mit dieser Verbindung, alle Gruppen"):q?(rows.length+(rows.length===1?" Treffer":" Treffer")+" in allen Gruppen"):(rows.length+(rows.length===1?" Eintrag":" Einträge"));
     var bar=document.getElementById("rzLf");
@@ -999,12 +1054,18 @@ try{
     var intro=document.getElementById("rzIntro");
     if(intro){ intro.textContent=(!lf&&!q&&INTRO[tab])?INTRO[tab]:""; intro.hidden=!intro.textContent; }
     if(!rows.length){
-      list.innerHTML='<p class="rzEmpty">'+(tab==="fav"&&!q&&!toneF?"Noch keine Favoriten. Tippe den Stern an einem Eintrag, dann liegt er hier.":(toneF&&!q?"Hier gibt es keinen Eintrag mit diesem Ton. Der Filter «Alle» zeigt alles.":"Nichts gefunden. Eine andere Schreibweise oder der Filter «Alle» hilft."))+"</p>";
+      if(q){
+        var tr=["Salbei","Schutz","Kerze","Opfergaben"].filter(function(x){ return norm(x).indexOf(norm(q))<0; }).slice(0,3);
+        list.innerHTML='<div class="rzEmpty"><b>Nichts gefunden für «'+esc(q)+'»</b> – versuch es mit einem anderen Wortanfang, zum Beispiel:'+'<div class="rzTry">'+tr.map(function(x){ return '<button type="button" data-try="'+esc(x)+'">'+esc(x)+'</button>'; }).join("")+'</div>'+((toneF||pfad)?'<p style="margin:.4rem 0 0">Ein Ton-Filter oder «Nur mein Pfad» ist aktiv und blendet einiges aus.</p>':"")+'</div>';
+        list.querySelectorAll("[data-try]").forEach(function(b){ b.onclick=function(){ var f=document.getElementById("rzFind"); q=norm(b.getAttribute("data-try")); if(f) f.value=b.getAttribute("data-try"); q=(f?f.value:q).trim().toLowerCase(); paint(); }; });
+        return;
+      }
+      list.innerHTML='<p class="rzEmpty">'+(tab==="fav"&&!toneF&&!pfad?"Noch keine Favoriten. Tippe den Stern an einem Eintrag, dann liegt er hier.":"Hier passt gerade nichts zu Ton oder Pfad. Tippe den Ton nochmals an oder wähle «Alle».")+"</p>";
       return;
     }
     list.innerHTML=rows.map(function(e){
       var fv=isFav(e.id), nt=notes[e.id]||"", op=openNote===e.id;
-      var inner="<b>"+esc(e.name)+"</b>"+
+      var inner="<b>"+esc(e.name)+"</b>"+(e.alias&&e.alias.length?'<span class="rzAka">auch: '+esc(e.alias.join(", "))+"</span>":"")+
         '<span class="rzTone" data-t="'+esc(e.tone)+'">'+esc(e.tone)+"</span>"+((q||tab==="fav")?'<span class="rzCat">'+esc(CAT_LAB[e.cat].replace("★ ",""))+"</span>":"")+
         '<p class="rzTxt">'+esc(e.text)+"</p>"+moreHtml(e)+
         (nt&&!op?'<p class="rzMine">'+esc(nt)+"</p>":"")+
@@ -1031,15 +1092,15 @@ try{
       });
     }
     Promise.all([
-      one("resonanzen-a.json?v=47"),
-      one("resonanzen-b.json?v=47"),
-      one("resonanzen-c.json?v=47"),
-      one("resonanzen-ico-a.json?v=22"),
-      one("resonanzen-ico-b.json?v=22"),
-      one("resonanzen-ico-c.json?v=22"),
-      one("resonanzen-d.json?v=74"),
-      one("resonanzen-links.json?v=74"),
-      one("resonanzen-mehr.json?v=75")
+      one("resonanzen-a.json?v=114"),
+      one("resonanzen-b.json?v=114"),
+      one("resonanzen-c.json?v=114"),
+      one("resonanzen-ico-a.json?v=114"),
+      one("resonanzen-ico-b.json?v=114"),
+      one("resonanzen-ico-c.json?v=114"),
+      one("resonanzen-d.json?v=114"),
+      one("resonanzen-links.json?v=114"),
+      one("resonanzen-mehr.json?v=114")
     ]).then(function(ps){
       DATA=(ps[0]||[]).concat(ps[1]||[], ps[2]||[], ps[6]||[]);
       LINKS=ps[7]||{}; MEHR=ps[8]||{};
@@ -1052,6 +1113,9 @@ try{
       if(list) list.innerHTML='<p class="rzEmpty">Lexikon nicht geladen.</p>';
     });
   }
+  function goTo(e){ tab=e.cat; q=""; toneF=""; pfad=0; lf=null; var f=document.getElementById("rzFind"); if(f) f.value=""; flash=e.id; openMore[e.id]=true; paint(); }
+  /* Build 114: Sprung aus dem Ritualbauer («Im Lexikon ansehen») */
+  window.RR25_RESO={open:function(id){ id=MERGE[id]||id; if(typeof show==="function") show("resonanzen"); boot(); var t=0; (function w(){ var e=DATA.filter(function(x){ return x.id===id; })[0]; if(e){ goTo(e); return; } if(++t<40) setTimeout(w,100); })(); }};
   function boot(){
     var find=document.getElementById("rzFind");
     if(find && !find._rz){
@@ -1085,7 +1149,7 @@ try{
       tb.addEventListener("click",function(ev){
         var t=ev.target&&ev.target.closest?ev.target.closest("[data-go]"):null; if(!t) return;
         var id=t.getAttribute("data-go"), e=DATA.filter(function(x){ return x.id===id; })[0]; if(!e) return;
-        tab=e.cat; q=""; toneF=""; var f=document.getElementById("rzFind"); if(f) f.value=""; flash=id; paint();
+        goTo(e);
       });
     }
     load();
