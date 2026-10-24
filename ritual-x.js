@@ -296,6 +296,7 @@
         "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und das Gute findet den Weg.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier trifft es.",
         "Tu:\nZugang weglegen. Hände unter kaltes Wasser.\n\nSprich:\n{S}Das Gute gehört [Name]. Die Last bleibt nicht bei mir. Ich bin wieder ich.\n{F}Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."];
       r.rxAbs=String((P?(S.rt==="Fluch"?abF:abS):(S.txt.trim()||abS))||"").split("[Name]").join(w||"").replace(/[\s.!]+$/,"");
+      r.rxKurz=({herz:"Liebe",traum:"Traum",ende:"Abschluss"}[S.th]||thn)+" für "+(P?"[Name]":(w||"mich"));
       for(var i=R.length-1;i>=0;i--) if(R[i].id===id) R.splice(i,1);
       R.push(r);
       S=S1; VIEW=null;
