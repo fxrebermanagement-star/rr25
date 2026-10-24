@@ -2097,6 +2097,35 @@ try{
     try{ var d=load(); d.planned=d.planned||[]; d.planned.unshift({pid:(typeof uid==="function"?uid():"p"+Date.now().toString(36)),id:"rz:"+c0.id,titel:"Ritual X · "+c0.name,wer:c0.fuer&&c0.fuer.w||""}); save(d); }catch(e){}
     S=S0(); MSG="Vorgemerkt ✦ Du findest es unter Geplant.";
   }
+  /* Build 119: Ritual X laeuft durch denselben Ablauf wie die festen Rituale (ritual-runner-v2.js):
+     Tor, Vorbereitung, Standort, Rahmen, Absicht (Segen/Fluch), Zugang, Ich · Spiel · Quelle auf einem Schirm, So sei es, Loesen, Rueckkehr mit Haekchen, Schluss, Status, Echo, Chronik. */
+  function runFlow(rec){
+    var S1=S; S={th:rec.th||"",ton:rec.ton||"Soft",txt:rec.absicht||"",fm:(rec.fuer&&rec.fuer.m)||"ich",fw:(rec.fuer&&rec.fuer.w)||"",sel:(rec.zut||[]).slice(),name:rec.name||"",_txtAuto:"",rt:rec.rt||"Segen",wes:!!rec.wes,eid:rec.id};
+    try{
+      var P=isP(S), w=fuerTxt(S), q=x369(), thn=(TH.filter(function(x){ return x[0]===S.th; })[0]||["","Ritual"])[1];
+      var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
+      var abS=S.rt!=="Fluch"&&S.txt.trim()?S.txt.trim():autoSatz({fm:S.fm,fw:S.fw,th:S.th,rt:"Segen",ton:S.ton}), abF=S.rt==="Fluch"&&S.txt.trim()?S.txt.trim():autoSatz({fm:S.fm,fw:S.fw,th:S.th,rt:"Fluch",ton:S.ton});
+      if(w){ abS=abS.split(w).join("[Name]"); abF=abF.split(w).join("[Name]"); }
+      var vb="Tu:\nRuhiger Ort. Eine Kerze. Wasser danach."+(z.length?"\n"+z.map(zSatz).join("\n"):"")+(S.ton==="Hard"?"\nZeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")+"\n\nSprich:\n"+thn+(P?" für [Name]":"")+". Ich bleibe ich.";
+      var flow=[["Vorbereitung",(P?"Name oben.\n\n":"")+vb],
+        ["Standort","Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler. Die Quelle ist wach."],
+        ["Rahmen","Sprich:\nIch öffne nur für Reines und Stimmiges."],
+        ["Absicht","Sprich:\n"+(P?"{S}"+abS+"\n{F}"+abF+"\n{S}Zum höchsten Wohl.":(S.txt.trim()||abS))],
+        ["369","Tu:\nJede Zeile laut. Antippen zählt.\n\nDrei: "+q[0]+"\nSechs: "+q[1]+"\nNeun: "+q[2]],
+        ["So sei es","Sprich:\nVersiegelt. Übergeben. So sei es."],
+        ["Rückkehr","Sprich:\n"+(P?"Ich bin nicht [Name]. Ich kehre vollständig zurück.\n":"Ich bin ganz bei mir.\n")+"Meine Energie gehört mir.\nFüsse. Atem. Raum."],
+        ["Schluss","Sprich:\nDanke, Feld.\n\nTu:\nWasser. Alltag."]];
+      var id="rx_"+String(rec.id||Date.now().toString(36)), tone=String(S.ton||"Soft").toLowerCase();
+      var r={id:id,tone:/^(soft|hard|grenze|feld)$/.test(tone)?tone:"soft",t:"Ritual X · "+(rec.name||thn),s:"Ritual X.",cat:"Ritual X",hard:S.ton==="Hard",need:P?["Name"]:[],flow:flow};
+      if(P&&window.RR25_ZUGANG) window.RR25_ZUGANG[id]=["Der Zugang ist dein Draht zu [Name]: der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was dir [Name] am nächsten bringt.",
+        "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und das Gute findet den Weg.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier trifft es.",
+        "Tu:\nZugang weglegen. Hände unter kaltes Wasser.\n\nSprich:\n{S}Das Gute gehört [Name]. Die Last bleibt nicht bei mir. Ich bin wieder ich.\n{F}Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."];
+      for(var i=R.length-1;i>=0;i--) if(R[i].id===id) R.splice(i,1);
+      R.push(r);
+      S=S1; VIEW=null;
+      if(typeof openR==="function"){ try{ fromPlan=null; }catch(e){} openR(id,P?w:""); }
+    }catch(e){ S=S1; console.warn("rr25 ritual x run",e); }
+  }
   function builderHtml(){
     var sv=rez(), out=xHtml()+'<p class="rxAnp">Anpassen</p>';
     if(!S.txt.trim()||S.txt===S._txtAuto){ S.txt=autoSatz(S); S._txtAuto=S.txt; }
@@ -2150,12 +2179,12 @@ try{
     all("[data-ton]",function(b){ b.onclick=function(){ keep(); S.ton=b.getAttribute("data-ton"); S.sel=[]; paint(); }; });
     all("[data-z]",function(b){ b.onclick=function(){ keep(); var id=b.getAttribute("data-z"), i=S.sel.indexOf(id); if(i>=0) S.sel.splice(i,1); else if(S.sel.length<3) S.sel.push(id); S.info=id; paint(); }; });
     all("[data-lex]",function(b){ b.onclick=function(){ var id=b.getAttribute("data-lex"); VIEW=null; if(window.RR25_RESO) window.RR25_RESO.open(id); }; });
-    all("[data-r]",function(b){ b.onclick=function(){ var r=rez()[+b.getAttribute("data-r")]; if(r){ VIEW={r:r,i:0}; paint(); } }; });
+    all("[data-r]",function(b){ b.onclick=function(){ var r=rez()[+b.getAttribute("data-r")]; if(r){ runFlow(r); } }; });
     all("[data-d]",function(b){ b.onclick=function(){ ASK=+b.getAttribute("data-d"); paint(); }; });
     all("[data-tg]",function(b){ b.onclick=function(){ var z=document.getElementById("rzZeile"); if(z) VIEW.zeile=z.value; var k=b.getAttribute("data-tg"); VIEW[k]=!VIEW[k]; paint(); }; });
     all("[data-a]",function(b){ b.onclick=function(){
       var a=b.getAttribute("data-a");
-      if(a==="start"){ keep(); VIEW={r:cur(),i:0}; }
+      if(a==="start"){ keep(); var cs=cur(); runFlow(cs); return; }
       else if(a==="save"){ keep(); var r=rez(), c0=cur(), ix=-1; r.forEach(function(x,j){ if(x.id===c0.id) ix=j; }); if(ix>=0) r[ix]=c0; else r.unshift(c0); setRez(r.slice(0,30)); S=S0(); UNDO=null; ASK=-1; paint(); MSG="Gespeichert ✦"; var mm=document.createElement("p"); mm.className="rzMsg"; mm.setAttribute("role","status"); mm.textContent=MSG; var bb=document.getElementById("rezBody"), sv0=bb&&bb.querySelector(".rzSv"); if(bb){ if(sv0) bb.insertBefore(mm,sv0.previousElementSibling); else bb.appendChild(mm); } MSG=""; setTimeout(function(){ try{ mm.remove(); }catch(e){} },2600); return; }
       else if(a==="neu"){ S=S0(); }
       else if(a==="xgo"){ xRun(); }
@@ -2259,7 +2288,7 @@ try{
   /* Vormerken: Geplant-Eintrag mit id «rz:…» oeffnet das Ritual X direkt */
   if(typeof openR==="function"&&!openR._rx){ var o0=openR; openR=function(id,wer){ if(/^rz:/.test(String(id))){ var rid=String(id).slice(3), r=rez().filter(function(x){ return x.id===rid; })[0];
       try{ var d=load(); d.planned=(d.planned||[]).filter(function(p){ return p.id!==id; }); save(d); }catch(e){}
-      if(r){ open(); VIEW={r:r,i:0}; paint(); } return; } return o0.apply(this,arguments); }; openR._rx=1; }
+      if(r){ ensure(); loadLex(); runFlow(r); } return; } return o0.apply(this,arguments); }; openR._rx=1; }
   window.RR25_RITUALX={open:open,close:close};
   window.RR25_REZEPT={list:rez,open:open,close:close,satz:zSatz};
 })();
