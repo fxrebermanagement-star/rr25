@@ -2747,6 +2747,7 @@ try{
     if(line){ c.fillText(line,x,y); y+=lh; } return y;
   }
   function moonDraw(c,cx,cy,r,p){
+    if(window.RR25_ICO&&window.RR25_ICO.moonEmoji){ c.save(); c.font=Math.round(r*2)+'px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(window.RR25_ICO.moonEmoji(p),cx,cy+r*.08); c.restore(); return; } /* Build 123 */
     c.save(); c.beginPath(); c.arc(cx,cy,r,0,7); c.fillStyle="rgba(40,20,70,.9)"; c.fill(); c.strokeStyle="rgba(200,160,255,.6)"; c.lineWidth=3; c.stroke(); c.clip();
     /* beleuchteter Anteil: p 0..1 (0 neu, .5 voll); Terminator als Ellipse */
     var k=Math.cos(p*2*Math.PI), waxing=p<0.5; c.fillStyle="#efe3ff";

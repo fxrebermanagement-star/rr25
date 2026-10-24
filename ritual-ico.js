@@ -45,7 +45,12 @@
       (il>.04?'<ellipse cx="'+hx+'" cy="8" rx="'+(1.2+1.4*il).toFixed(2)+'" ry="1.6" fill="url(#rrMoHi)"/>':'')+
       '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#f2f0ff" stroke-opacity=".4" stroke-width=".4"/>';
   }
-  function moonSvg(p,cls){ return '<svg class="rrMoon'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+art(p)+'</svg>'; }
+  var MOE=["\ud83c\udf11","\ud83c\udf12","\ud83c\udf13","\ud83c\udf14","\ud83c\udf15","\ud83c\udf16","\ud83c\udf17","\ud83c\udf18"];
+  function moonEmoji(p){ p=((+p%1)+1)%1; return MOE[Math.round(p*8)%8]; }
+  /* Build 123: Mond als natives Phasen-Emoji, wie die Sonne */
+  function moonSvg(p,cls){ return '<span class="rrMoon rrMoEmo'+(cls?" "+cls:"")+'" aria-hidden="true">'+moonEmoji(p)+'</span>'; }
+  function moonArtSvg(p){ return '<text x="12" y="12" text-anchor="middle" dominant-baseline="central" font-size="22" font-family="Noto Color Emoji,Apple Color Emoji,Segoe UI Emoji,sans-serif">'+moonEmoji(p)+'</text>'; }
+  function moonSvgOld(p,cls){ return '<svg class="rrMoon'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+art(p)+'</svg>'; }
   var P={
     sonne:'<circle cx="12" cy="12" r="4.4" class="icF"/><path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.4 5.4l1.8 1.8M16.8 16.8l1.8 1.8M5.4 18.6l1.8-1.8M16.8 7.2l1.8-1.8"/>',
     herz:'<path class="icF" d="M12 19.6s-7.2-4.4-7.2-9.4A3.9 3.9 0 0112 7.9a3.9 3.9 0 017.2 2.3c0 5-7.2 9.4-7.2 9.4z"/>',
@@ -65,10 +70,10 @@
   for(var m in MP) MAP[m]=m;
   var LAB={sonne:"Sonne",herz:"Ich",haende:"Spiel",auge:"Quelle"};
   var RE=/\u2600\ufe0f?|\u2764\ufe0f?|\ud83d\ude4f|\ud83d\udc41\ufe0f?|\ud83c[\udf11-\udf18]/g;
-  var SKIP="#sigilBox,#sigilBox *,[data-go=sigilGo],#sigilGo,input,textarea,select,option,svg,canvas,script,style,title";
+  var SKIP=".rrMoEmo,.rrMoEmo *,#sigilBox,#sigilBox *,[data-go=sigilGo],#sigilGo,input,textarea,select,option,svg,canvas,script,style,title";
   function skipEl(el){
     if(!el||el.nodeType!==1) return true;
-    if(el.closest&&el.closest("#sigilBox,#sunWrap,svg,canvas,select,textarea,script,style,.tile.t4,[data-go=sigilGo]")) return true;
+    if(el.closest&&el.closest(".rrMoEmo,#sigilBox,#sunWrap,svg,canvas,select,textarea,script,style,.tile.t4,[data-go=sigilGo]")) return true;
     return false;
   }
   function fix(node){
@@ -103,6 +108,6 @@
       });
     }).observe(app,{childList:true,subtree:true,characterData:true});
   }
-  window.RR25_ICO={svg:svg,scan:scan,moonArt:art,moonSvg:moonSvg,moon:function(p){ return svg(+p); }};
+  window.RR25_ICO={svg:svg,scan:scan,moonArt:moonArtSvg,moonSvg:moonSvg,moonEmoji:moonEmoji,moon:function(p){ return svg(+p); }};
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start); else start();
 })();
