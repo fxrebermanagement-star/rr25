@@ -77,6 +77,7 @@
     var bg=document.createElement("div"); bg.className="gpDlgBg";
     bg.innerHTML='<div class="gpDlg" role="dialog" aria-label="Datum und Erinnerung"><p class="gpDlgK">Datum und Erinnerung</p><h3>'+esc(p.titel)+(p.wer?' <small>· '+esc(p.wer)+'</small>':'')+'</h3>'+
       '<div class="gpQuick"><button type="button" data-q="0">Heute</button><button type="button" data-q="1">Morgen</button><button type="button" data-q="vm">Vollmond</button><button type="button" data-q="7">In 1 Woche</button></div>'+
+      '<div id="gpFen" class="gpFen"></div>'+
       '<label class="gpF"><span>Datum</span><input type="date" id="gpD" value="'+iso(due)+'"></label>'+
       '<label class="gpF"><span>Zeit</span><input type="time" id="gpT" value="'+hm(due)+'"></label>'+
       '<label class="gpF"><span>Erinnern</span><select id="gpL">'+[[0,"zur Zeit"],[10,"10 Min. vorher"],[15,"15 Min. vorher"],[30,"30 Min. vorher"],[60,"1 Std. vorher"],[1440,"1 Tag vorher"]].map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===lead?' selected':'')+'>'+o[1]+'</option>'; }).join("")+'</select></label>'+
@@ -90,7 +91,8 @@
       var r0=rel(t), s=(r0===dl(t)?r0:r0+", "+dl(t))+" um "+hm(t)+" Uhr";
       try{ var M=window.RR25_MOND; if(M){ var m=M.day(t); s+=" · "+m.name; } var K=window.RR25_KAL; if(K){ var st=K.state(t); var k=st&&(st.tone||st.kind); if(k) s+=" · "+({SOFT:"Soft",HARD:"Hard",ECHO:"Echo",STILL:"Still"}[k]||k); } }catch(e){}
       $("gpHint").textContent=s; }
-    hint(); $("gpD").oninput=hint; $("gpT").oninput=hint;
+    hint(); $("gpD").oninput=hint;
+    try{ if(window.RR25_FENSTER) window.RR25_FENSTER.fill($("gpFen"),p,function(t){ $("gpD").value=iso(t); $("gpT").value=hm(t); if(+$("gpL").value===0) $("gpL").value="15"; hint(); }); }catch(e){} $("gpT").oninput=hint;
     bg.querySelectorAll("[data-q]").forEach(function(b){ b.onclick=function(){ var q=b.getAttribute("data-q"), t;
       if(q==="vm"){ var M=window.RR25_MOND; t=M?M.next(2,Date.now()):null; if(!t) return; }
       else t=Date.now()+(+q)*DAY;

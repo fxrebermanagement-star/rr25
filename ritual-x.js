@@ -521,7 +521,7 @@
   if(typeof openR==="function"&&!openR._rx){ var o0=openR; openR=function(id,wer){ if(/^rz:/.test(String(id))){ var rid=String(id).slice(3), r=rez().filter(function(x){ return x.id===rid; })[0];
       try{ var d=load(); d.planned=(d.planned||[]).filter(function(p){ return p.id!==id; }); save(d); }catch(e){}
       if(r){ ensure(); loadLex(); runFlow(r); } return; } return o0.apply(this,arguments); }; openR._rx=1; }
-  window.RR25_RITUALX={open:open,close:close,
+  window.RR25_RITUALX={open:open,close:close,trad:TRAD,
     /* Build 122: fuer Tests */ _parse:function(v){ var r=xParse(v), S1=S; S=S0(); S.th=r.th; S.ton=r.ton; S.rt=r.rt; S.fm=r.fm; S.fw=r.fw; var o={th:r.th,ton:r.ton,rt:isP(S)?r.rt:"",fw:r.fw,satz:r.th?xSatz(r):"",mat:xMaterial().concat((xFarbe()||{}).id||[]),zeit:xZeit()}; S=S1; return o; },
     _mat:function(th,ton,rt,fw){ var S1=S; S=S0(); S.th=th; S.ton=ton; S.rt=rt; if(fw){ S.fm="person"; S.fw=fw; } var o={mat:xMaterial(),farbe:(xFarbe()||{}).id||"",satz:autoSatz(S),q:x369()}; S=S1; return o; },
     _ready:function(){ loadLex(); return !!DATA; }};
