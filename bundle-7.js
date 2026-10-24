@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 125 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 126 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-x.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -1320,8 +1320,9 @@ try{
     /* Mondmarker (r=116) */
     YD.moons.forEach(function(m){
       var p=xy(ang(m.d-y0),116), full=m.q===2;
-      var id=info({title:full?"Vollmond":"Neumond",when:dstr(m.d)+" um "+zeitBern(m.t)+" Uhr (Berner Zeit)",tag:full?"Hard":"Mond",c:full?TONF.HARD.c:"#cdb6ff",
-        text:full?"Um den Vollmond gilt eine Hard-Phase von 3 Tagen: der Tag davor, der Vollmondtag und der Tag danach.":"Neumond ist Aussaat. Neu setzen, still halten."});
+      var VN=full&&window.RR25_MOND&&window.RR25_MOND.vollName?window.RR25_MOND.vollName(m.t):null; /* Build 126 */
+      var id=info({title:VN?VN.name+" · "+VN.zeichen:(full?"Vollmond":"Neumond"),when:dstr(m.d)+" um "+zeitBern(m.t)+" Uhr (Berner Zeit)",tag:full?"Hard":"Mond",c:full?TONF.HARD.c:"#cdb6ff",
+        text:VN?VN.wasser+" "+VN.laden+" Um den Vollmond gilt eine Hard-Phase von 3 Tagen.":full?"Um den Vollmond gilt eine Hard-Phase von 3 Tagen: der Tag davor, der Vollmondtag und der Tag danach.":"Neumond ist Aussaat. Neu setzen, still halten."});
       el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:full?"5":"4.4","class":full?"jrMv":"jrMn"},rot);
       el("circle",{cx:p[0].toFixed(1),cy:p[1].toFixed(1),r:"10","class":"jrHit","data-x":id},rot);
     });
