@@ -1,5 +1,5 @@
-/* rr25 · Paket 7/7 · Build 118 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
-   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
+/* rr25 · Paket 7/7 · Build 119 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+   Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-x.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
 /* ritual-sichern.js — «Sichern» und «Wiederherstellen» in «Mehr».
@@ -1742,11 +1742,11 @@ try{
   function absichten(){
     var T=tags(), out=[];
     rows().forEach(function(e){
-      var ti=String(e&&e.titel||"").trim(), rz=/^(Rezept|Ritualbauer) · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
+      var ti=String(e&&e.titel||"").trim(), rz=/^(Rezept|Ritualbauer|Ritual X) · /.test(ti); if(ti!=="Tagesziel"&&ti!=="Sigille"&&!rz) return;
       var txt=rz?String(e.absicht||e.note||"").trim():String(e.note||e.wer||"").trim(); if(!txt) return;
       var ms=when(e); if(ms==null) return;
       var tg=T[String(e.id)]||[];
-      out.push({id:String(e.id),kind:rz?"Ritualbauer":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
+      out.push({id:String(e.id),kind:rz?"Ritual X":(ti==="Sigille"?"Zeichen":"Tagesziel"),txt:txt,fuer:rz?String(e.fuer||""):"",zeile:rz?String(e.zeile||""):"",ms:ms,wirk:tg.indexOf("Wirkung")>=0,echo:tg.indexOf("Echo")>=0});
     });
     out.sort(function(a,b){ return b.ms-a.ms; });
     return out;
@@ -1821,9 +1821,11 @@ try{
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
-/* ==== ritual-b83.js ==== */
+/* ==== ritual-x.js ==== */
 try{
-/* ritual-b83.js — Ritualbauer (Build 83, Build 86 ausgebaut): eigene Vollseite «Ritualbauer».
+/* ritual-x.js — Build 119: «Ritual X» ersetzt den Ritualbauer (ehemals ritual-b83.js). Ein Satz oben formt das Ritual, alles bleibt einstellbar.
+   Speicher unveraendert (rr25_rezepte, rr25_zugang_v1), alte Rituale sind sofort da.
+   Vorher: ritual-b83.js — Ritualbauer (Build 83, Build 86 ausgebaut): eigene Vollseite «Ritualbauer».
    Ablauf: Absicht (freier Satz, Themen als Vorschläge) · Für wen (mich, Person, Situation) · Ton Soft/Hard · Zutaten (Favoriten zuerst)
    · Hinweis, wann es passt (Tradition) -> Schritte: Vorbereitung, Standort, Absicht, Ich, Spiel, Quelle (Hard: Rückkehr, Anker).
    Danach Echo/Wirkung (rr25_tags_v1, fliesst ins Absicht-Tagebuch) und Chronik-Eintrag mit Absicht und «für wen».
@@ -1869,7 +1871,7 @@ try{
     }
   }
   var DATA=null, LINKS={}, st=0, PREV="home";
-  var S0=function(){ return {th:"",ton:"Soft",txt:"",fm:"ich",fw:"",sel:[],name:"",_txtAuto:"",rt:"Segen",wes:false,eid:""}; };
+  var S0=function(){ return {th:"",ton:"Soft",txt:"",fm:"ich",fw:"",sel:[],name:"",_txtAuto:"",rt:"Segen",wes:false,eid:"",xs:""}; };
   var MSG="", ASK=-1, UNDO=null;
   var S=S0(), VIEW=null;
   function js(k,d){ try{ var v=JSON.parse(localStorage.getItem(k)); return v==null?d:v; }catch(e){ return d; } }
@@ -1918,29 +1920,38 @@ try{
     return b;
   }
   function fuerLab(s){ var w=fuerTxt(s); return s.fm==="ich"||!w?"für mich":"für "+w; }
+  /* Build 119: Ich · Spiel · Quelle wie bei den festen Ritualen (Ich 3×, Spiel 6×, Quelle 3× «So sei es» plus ein Satz einmal) */
+  var X369={heilung:["Die Heilung sitzt.","Alles Störende löst sich.","Ich sehe es. Die Heilung ist gesetzt."],schutz:["Der Schutz ist stark.","Alles Fremde prallt ab.","Ich sehe es. Der Schutz steht."],
+    herz:["Ich bin offen.","Liebe findet den Weg.","Ich sehe es. Es ist gesetzt."],klaerung:["Es wird klar.","Der Nebel löst sich.","Ich sehe es. Es ist klar."],mut:["Die Kraft ist da.","Die Energie fliesst.","Ich sehe es. Ich bin in der Kraft."],
+    fuelle:["Ich bin versorgt.","Der Weg öffnet sich.","Ich sehe es. Es ist gesetzt."],ruhe:["Die Ruhe sitzt.","Alles Unruhige legt sich.","Ich sehe es. Es ist still und gut."],
+    traum:["Die Schwelle ist offen.","Der Weg ist sanft.","Ich sehe es. Es ist getragen."],ende:["Die Verbindung löst sich.","Die Fäden fallen ab.","Ich sehe es. Es ist zu Ende."]};
+  function x369(){ if(isP(S)&&S.rt==="Fluch") return ["Es sitzt.","Was gesetzt wurde, kehrt zurück.","Ich sehe es. Es ist gesetzt."]; return X369[S.th]||["Es sitzt.","Es findet den Weg.","Ich sehe es. Es ist gesetzt."]; }
   function build(){
     var hard=S.ton==="Hard", ab=(S.txt||"").trim()||autoSatz(S)||"So sei es.", w=fuerTxt(S), P=isP(S), fl=P&&S.rt==="Fluch";
     var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
     var steps=[];
     steps.push(["Vorbereitung","Tu:|Ruhiger Ort. Wasser bereit."+(z.length?" Bereit: "+z.map(kurz).join(", ")+".":"")+(hard?"|Zeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")+(S.wes?"|Für die Wesenheit: ein Licht oder ein Platz, der nur ihr gehört.":"")]);
-    steps.push(["Standort","Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin hier. Ich bin klar."]);
+    steps.push(["Standort","Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach."]);
     if(S.wes) steps.push(["Wesenheit · Einladung","Sprich:|Ich lade die Wesenheit ein, die mir wohlgesinnt ist. Nur für diesen Auftrag, nur für diese Zeit."]);
-    steps.push(["Absicht ❤️","Sprich die Absicht, dreimal, ganz bewusst:",{rep:3,txt:ab}]);
+    steps.push(["Absicht","Sprich:|"+ab+(P&&!fl?"|Nur zum Guten.":"")]);
     var tu=z.length?z.map(zSatz):["Ein kleiner Schritt von mir, hier und jetzt: Kerze, Atem oder Wasser."];
     var tr=z.filter(function(e){ return e.text; }).map(function(e){ return kurz(e)+": "+e.text; });
     var spiel="Tu:|"+tu.join("|")+(tr.length?"||Aus der Tradition:|"+tr.join("|"):"");
     if(P){
-      steps.push(["Zugang 🙏","Der Zugang ist dein Draht zu "+w+": der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was "+w+" dir am nächsten bringt.",{rep:6,zg:1,txt:"Mein Zugang ist [Zugang], und ich weiss: Hier steht "+w+(fl?", und hier trifft es.":", und das trägt."),name:w}]);
+      steps.push(["Zugang 🙏","Der Zugang ist dein Draht zu "+w+": der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was "+w+" dir am nächsten bringt.",{rep:1,zg:1,txt:"Mein Zugang ist [Zugang], und ich weiss: Hier steht "+w+(fl?", und hier trifft es.":", und das trägt."),name:w}]);
       steps.push(["Spiel","Was tue ich für "+w+"?||"+spiel]);
     } else {
-      steps.push(["Spiel 🙏","Was tue ich dafür?||"+spiel+"||Sprich sechsmal:",{rep:6,txt:"Ich tue meinen Teil. Ich tue ihn gern."}]);
+      steps.push(["Spiel","Was tue ich dafür?||"+spiel]);
     }
-    steps.push(["Vollendung 👁","Ein langer Atemzug. Hände öffnen. Die Quelle ist wach.||Sprich neunmal:",{rep:9,txt:"So sei es.",full:1}]);
+    var q=x369(); steps.push(["Ich ❤️","Jede Zeile laut. Antippen zählt.||Sprich dreimal:",{rep:3,txt:q[0]}]); steps.push(["Spiel 🙏","Sprich sechsmal:",{rep:6,txt:q[1]}]);
+    steps.push(["Quelle 👁","Sprich dreimal «So sei es.» und tippe. Danach einmal den Quelle-Satz:|«"+q[2]+"»",{rep:3,txt:"So sei es.",full:1}]);
+    steps.push(["So sei es","Sprich:|Versiegelt. Übergeben. So sei es."]);
     if(S.wes) steps.push(["Wesenheit · Dank","Sprich:|Danke. Der Auftrag ist bei dir. Du gehst deinen Weg, ich bleibe in meinem."]);
-    var los=P?(fl?"Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir.":"Ich lasse los. "+w+" ist in guten Händen."):S.fm==="situation"&&w?"Ich lasse los. Es ist in guten Händen.":"Ich lasse los. Ich bin in guten Händen.";
-    steps.push(["Lösen","Tu:|"+(P?"Zugang weglegen, Hände ausschütteln.":"Hände ausschütteln, einmal tief ausatmen.")+"||Sprich:|"+los]);
-    if(hard){ steps.push(["Rückkehr","Sprich:|Ich bin hier. Ich bin ganz bei mir.||Tu:|Füsse. Atem. Raum."]); steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]); }
-    else steps.push(["Schluss","Tu:|Wasser trinken. Zurück in den Alltag."]);
+    var los=P?(fl?"Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir.":"Das Gute gehört "+w+". Die Last bleibt nicht bei mir. Ich bin wieder ich."):"Der Faden ist gelegt. Ich lasse los, er wirkt.";
+    steps.push(["Lösen","Tu:|"+(P?"Zugang weglegen. Hände unter kaltes Wasser.":"Hände unter kaltes Wasser.")+"||Sprich:|"+los]);
+    steps.push(["Rückkehr","Sprich:|"+(P?"Ich bin nicht "+w+". Ich kehre vollständig zurück.|":"Ich bin ganz bei mir.|")+"Meine Energie gehört mir.|Füsse. Atem. Raum.||Anker: Daumen und Zeigefinger zusammen. Eigener Vorname laut."]);
+    if(hard) steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]);
+    steps.push(["Schluss","Sprich:|Danke, Feld.||Tu:|Wasser. Alltag."]);
     return steps;
   }
   /* Build 113: «Tu:»/«Sprich:» als kleine Marke, Fragen und Erklärungen als ruhiger Text */
@@ -1997,8 +2008,126 @@ try{
     };
     setTimeout(function(){ inp.click(); },30);
   }
+  /* ===== Ritual X (Build 119): ein Satz oben, daraus wird das Ritual geformt. Alles bleibt darunter einstellbar. ===== */
+  function xn(s){ return String(s||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim(); }
+  var XTH=[["heilung",/heil|gesund|krank|schmerz|genes|operation|erholen|fieber/],["schutz",/schutz|schuetz|sicher|bewahr|abschirm|boese blick|neid/],["herz",/liebe|lieb |anzieh|herz|partner|beziehung|verlieb|freundschaft|dank|segen|segne/],
+    ["ende",/trenn|loes|abschluss|beend|abschied|loslass|ende /],["mut",/energie|kraft|mut|power|antrieb|motivation|staerke/],["fuelle",/geld|fuelle|wohlstand|reich|finanz|job|arbeit|erfolg|kunden/],
+    ["klaerung",/klar|klaer|entscheid|wahrheit|erkenn|verstehen/],["ruhe",/ruhe|ruhig|schlaf|angst|stress|frieden|entspann|sorge/],["traum",/traum|schwelle|ahnen|vorfahren|jenseits/]];
+  var XTIER=["katze","kater","hund","huendin","pferd","vogel","hase","kaninchen","meerschweinchen","hamster","fisch","pony","esel","ziege","schaf","kuh","welpe","kaetzchen","tier"];
+  var XPERS=["mama","mutter","papa","vater","sohn","tochter","bruder","schwester","oma","grossmutter","opa","grossvater","freundin","freund","partnerin","partner","mann","frau","kind","chef","chefin","nachbarin","nachbar","kollegin","kollege","tante","onkel","ex"];
+  function cap(w){ return w.charAt(0).toUpperCase()+w.slice(1); }
+  function xParse(raw){
+    var t=" "+xn(raw)+" ", r={th:"",ton:"Soft",rt:"Segen",fm:"ich",fw:"",wes:false,tier:"",pers:""};
+    var th=XTH.filter(function(x){ return x[1].test(t); }).map(function(x){ return x[0]; });
+    /* Heilung und Schutz gehen vor dem allgemeinen Segen/Herz */
+    r.th=th.indexOf("heilung")>=0?"heilung":th.indexOf("schutz")>=0?"schutz":th[0]||"";
+    if(r.th==="herz"&&th.length>1&&!/liebe|anzieh|partner|beziehung|verlieb/.test(t)) r.th=th[1];
+    if(/fluch|verfluch|rache|bestraf|heimzahl|zurueckschlag|soll leiden/.test(t)){ r.rt="Fluch"; r.ton="Hard"; }
+    if(/ hard | hart | scharf/.test(t)) r.ton="Hard"; else if(/grenze|abgrenz|nein sagen/.test(t)) r.ton="Grenze"; else if(/ feld |feldarbeit/.test(t)) r.ton="Feld";
+    else if(r.th==="ende"&&r.rt!=="Fluch") r.ton="Grenze";
+    if(/wesen|engel|geist|krafttier|schutzgeist/.test(t)) r.wes=true;
+    var nm=/(heisst|namens|name ist)\s+([a-z]+)/.exec(t), nameO=nm?String(raw).match(new RegExp("\\b("+nm[2]+")\\b","i")):null;
+    XTIER.some(function(w){ if(new RegExp(" "+w+"[a-z]{0,2} ").test(t)){ r.tier=w; return true; } return false; });
+    if(!r.tier) XPERS.some(function(w){ if(new RegExp(" (mein|meine|meinen|meinem|meiner|unser|unsere|fuer) "+w+"[a-z]{0,2} ").test(t)){ r.pers=w; return true; } return false; });
+    if(!r.tier&&!r.pers){ var m=/\bf(?:ü|ue)r\s+([A-ZÄÖÜ][a-zäöüé]+)/.exec(String(raw)); if(m&&!/^(Mich|Uns|Heute|Morgen|Ruhe|Liebe|Geld|Schutz|Heilung)$/.test(m[1])) r.pers=m[1]; }
+    if(r.tier||r.pers){ r.fm="person"; r.fw=nameO?cap(nameO[1]):(r.tier?cap(r.tier==="kaetzchen"?"Kätzchen":r.tier==="huendin"?"Hündin":r.tier):cap(r.pers)); }
+    return r;
+  }
+  function xSatz(r){
+    var tmp={fm:r.fm,fw:r.fw,th:r.th,rt:r.rt,ton:r.ton}, s=autoSatz(tmp);
+    if(r.tier&&r.rt!=="Fluch"){ var fem=/^(katze|huendin|kuh|ziege|maus)$/.test(r.tier), wer=(r.fw.toLowerCase()===r.tier||/^(Kätzchen|Hündin)$/.test(r.fw))?(fem?"Meine ":"Mein ")+r.fw:r.fw;
+      var XS={heilung:"Heilung findet den Weg, sanft und im eigenen Tempo.",schutz:"Ein warmer Schutz liegt um "+(fem?"sie":"ihn")+".",herz:"Liebe umhüllt "+(fem?"sie":"ihn")+".",ruhe:"Ruhe kehrt ein, tief und weich.",mut:"Neue Kraft fliesst, Schritt für Schritt."};
+      s=wer+" ist gesegnet. "+(XS[r.th]||"Das Gute findet den Weg."); }
+    return s;
+  }
+  function xMaterial(){
+    if(!DATA) return [];
+    var pool=vorschlag(), out=[];
+    ["kerzen","kraeuter","steine","farben"].forEach(function(c){ if(out.length>=3) return; var e=pool.filter(function(x){ return x.cat===c&&out.indexOf(x.id)<0; })[0];
+      if(!e) e=DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat===c&&toneOk(x,S.ton)&&l&&(l.t||[]).indexOf(S.th)>=0; })[0];
+      if(e) out.push(e.id); });
+    return out;
+  }
+  function xFarbe(){ if(!DATA) return null; return DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat==="farben"&&l&&(l.t||[]).indexOf(S.th)>=0; })[0]||null; }
+  function xT(ms){ var d=new Date(ms); return DL[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+"., "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
+  /* Beste Zeit: Tradition (Wochentag und Mond) + Planetenstunde des Tagesplaneten + Ton-Fenster aus dem Kalender (Bern) */
+  function xZeit(){
+    var K=window.RR25_KAL, M=window.RR25_MOND, T=TRAD[S.th], out=[], now=Date.now(), best=null;
+    try{
+      if(T&&M){ for(var n=0;n<30&&!best;n++){ var d=new Date(); d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n,12).getTime(); var wd=new Date(d).getDay(), mk=""; try{ mk=M.day(d).key; }catch(e){}
+        if(T.d.indexOf(wd)>=0&&T.m.indexOf(mk)>=0){ var pd=K?K.planetDay(d):[], hit=pd.filter(function(x){ return x.p===PN[wd]&&!x.nacht&&x.e>now; })[0]; best={d:d,ph:hit,mond:MK[mk]}; } } }
+      if(best) out.push((best.ph?xT(best.ph.s)+" · Stunde von "+best.ph.p:DL[new Date(best.d).getDay()]+" "+new Date(best.d).getDate()+"."+(new Date(best.d).getMonth()+1)+".")+" · "+best.mond+".");
+      else if(T) out.push("Als Tradition: "+T.d.map(function(i){ return DL[i]; }).join(" oder ")+", "+T.m.map(function(k){ return MK[k]; }).join(" oder ")+". In den naechsten 30 Tagen passt nicht beides, es geht auch so.".replace("naechsten","nächsten"));
+      if(K&&S.ton==="Hard"){ var nx=K.next("HARD",now); out.push(nx?"Hard-Fenster: "+xT(nx.x.s)+" bis "+String(new Date(nx.x.e).getHours()).padStart(2,"0")+":"+String(new Date(nx.x.e).getMinutes()).padStart(2,"0")+".":"Im Kalender ist bald kein Hard-Fenster offen."); }
+      else if(K&&(S.ton==="Soft"||S.ton==="Grenze")){ var ns=K.state(now); if(ns&&ns.tone==="SOFT") out.push("Jetzt ist ein Soft-Feld offen, es geht auch sofort."); }
+      if(K){ var sz=K.seasons(best?best.d:now).map(function(x){ return String(x.sz||x.t||""); }).filter(function(x){ return /rückläufig/.test(x); });
+        sz.forEach(function(x){ if(/Merkur/.test(x)) out.push("Merkur rückläufig: Worte vorher in Ruhe aufschreiben, langsam sprechen."); else if(/Venus/.test(x)) out.push("Venus rückläufig: bei Herz und Fülle lieber sanft, nichts erzwingen."); else out.push(x+": nur ein Hinweis."); }); }
+    }catch(e){}
+    return out;
+  }
+  function xHtml(){
+    var o='<div class="rxTop"><label class="rxQ" for="rzX">Was liegt dir am Herzen?</label><textarea id="rzX" class="rzRi rzTa rxIn" maxlength="200" rows="2" placeholder="Zum Beispiel: Meine Katze ist krank, ich möchte für sie Segen und Heilung">'+h(S.xs||"")+'</textarea>'+
+      '<button type="button" class="rxGo" data-a="xgo"><span class="rzhIc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 5.3 5.3 1.5-5.3 1.5L12 16.8l-1.5-5.3L5.2 10l5.3-1.5z"/></svg></span>Ritual formen</button></div>';
+    if(S.xs&&!S.th){ o+='<div class="rxCard"><p class="rxH">Magst du mir noch sagen, worum es geht?</p><div class="rzCh">'+TH.map(function(t){ return '<button type="button" data-xth="'+t[0]+'">'+t[1]+'</button>'; }).join("")+'</div></div>'; }
+    else if(S.xs&&S.th){
+      var st=build(), P=isP(S), w=fuerTxt(S), thn=(TH.filter(function(x){ return x[0]===S.th; })[0]||["",""])[1], ab=(S.txt||"").trim()||autoSatz(S);
+      var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean), fb=xFarbe();
+      var zt=xZeit(), los=st.filter(function(s){ return /^(Lösen|Anker|Schluss|Rückkehr)/.test(s[0]); });
+      o+='<div class="rxCard"><p class="rxK">Dein Ritual</p><h3 class="rxT">'+h(thn)+' · '+h(S.ton)+(P?' · '+h(S.rt):'')+'</h3><p class="rxF">'+h(fuerLab(S))+(S.wes?' · mit Wesenheit':'')+'</p>'+
+        '<p class="rxH">Beste Zeit</p>'+(zt.length?zt.map(function(x){ return '<p class="rxL">'+h(x)+'</p>'; }).join(""):'<p class="rxL">Jederzeit, in Ruhe.</p>')+
+        (function(){ var q=x369(); return '<p class="rxH">Ablauf</p><p class="rxL"><b>Absicht</b> einmal: «'+h(ab)+'»</p>'+(P?'<p class="rxL"><b>Zugang</b> zu '+h(w)+': Name, Foto oder etwas in der Hand.</p>':'')+
+        '<p class="rxH">Ich · Spiel · Quelle</p><p class="rxL"><b>❤️ 3×</b> «'+h(q[0])+'»</p><p class="rxL"><b>🙏 6×</b> «'+h(q[1])+'»</p><p class="rxL"><b>👁 3×</b> «So sei es.» und einmal «'+h(q[2])+'»</p>'+
+        '<p class="rxL"><b>Siegel:</b> «Versiegelt. Übergeben. So sei es.»</p>'; })()+
+        '<p class="rxH">Material</p><p class="rxL">'+(z.length?z.map(function(e){ return h(kurz(e)); }).join(" · "):"Kerze, Atem oder Wasser.")+(fb&&S.sel.indexOf(fb.id)<0?' · Farbe '+h(fb.name):'')+'</p>'+
+        '<p class="rxH">Lösen und Anker</p>'+los.map(function(s){ var L=String(s[1]).split("|").filter(function(x){ return x&&!/:$/.test(x); }); return '<p class="rxL"><b>'+h(s[0])+':</b> '+h(L.join(" "))+'</p>'; }).join("")+
+        '<div class="rzVb"><button type="button" class="btn ghost" data-a="start">Jetzt durchgehen</button><button type="button" class="btn primary" data-a="save">'+(S.eid?"Änderung speichern":"Speichern")+'</button></div>'+
+        '<div class="rzVb"><button type="button" class="btn ghost" data-a="xplan">Vormerken</button></div>'+
+        '<p class="rzRn">Nach dem Durchgehen steht es in der Chronik. Unten kannst du alles anpassen.</p></div>';
+    }
+    return o;
+  }
+  function xRun(){
+    var i=document.getElementById("rzX"); var v=i?i.value.trim():""; S.xs=v; if(!v) return;
+    var r=xParse(v); var keepTh=S.th;
+    S.th=r.th; S.ton=r.ton; S.rt=r.rt; S.fm=r.fm; S.fw=r.fw; S.wes=r.wes; S.name=""; S.sel=[];
+    S.txt=r.th?xSatz(r):""; S._txtAuto=""; S.sel=r.th?xMaterial():[]; S._x=r;
+  }
+  function xPlan(){
+    var r=rez(), c0=cur(), ix=-1; r.forEach(function(x,j){ if(x.id===c0.id) ix=j; }); if(ix>=0) r[ix]=c0; else r.unshift(c0); setRez(r.slice(0,30));
+    try{ var d=load(); d.planned=d.planned||[]; d.planned.unshift({pid:(typeof uid==="function"?uid():"p"+Date.now().toString(36)),id:"rz:"+c0.id,titel:"Ritual X · "+c0.name,wer:c0.fuer&&c0.fuer.w||""}); save(d); }catch(e){}
+    S=S0(); MSG="Vorgemerkt ✦ Du findest es unter Geplant.";
+  }
+  /* Build 119: Ritual X laeuft durch denselben Ablauf wie die festen Rituale (ritual-runner-v2.js):
+     Tor, Vorbereitung, Standort, Rahmen, Absicht (Segen/Fluch), Zugang, Ich · Spiel · Quelle auf einem Schirm, So sei es, Loesen, Rueckkehr mit Haekchen, Schluss, Status, Echo, Chronik. */
+  function runFlow(rec){
+    var S1=S; S={th:rec.th||"",ton:rec.ton||"Soft",txt:rec.absicht||"",fm:(rec.fuer&&rec.fuer.m)||"ich",fw:(rec.fuer&&rec.fuer.w)||"",sel:(rec.zut||[]).slice(),name:rec.name||"",_txtAuto:"",rt:rec.rt||"Segen",wes:!!rec.wes,eid:rec.id};
+    try{
+      var P=isP(S), w=fuerTxt(S), q=x369(), thn=(TH.filter(function(x){ return x[0]===S.th; })[0]||["","Ritual"])[1];
+      var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
+      var abS=S.rt!=="Fluch"&&S.txt.trim()?S.txt.trim():autoSatz({fm:S.fm,fw:S.fw,th:S.th,rt:"Segen",ton:S.ton}), abF=S.rt==="Fluch"&&S.txt.trim()?S.txt.trim():autoSatz({fm:S.fm,fw:S.fw,th:S.th,rt:"Fluch",ton:S.ton});
+      if(w){ abS=abS.split(w).join("[Name]"); abF=abF.split(w).join("[Name]"); }
+      var vb="Tu:\nRuhiger Ort. Eine Kerze. Wasser danach."+(z.length?"\n"+z.map(zSatz).join("\n"):"")+(S.ton==="Hard"?"\nZeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")+"\n\nSprich:\n"+thn+(P?" für [Name]":"")+". Ich bleibe ich.";
+      var flow=[["Vorbereitung",(P?"Name oben.\n\n":"")+vb],
+        ["Standort","Tu:\nFüsse. Drei Atemzüge.\n\nSprich:\nIch bin der Spieler. Die Quelle ist wach."],
+        ["Rahmen","Sprich:\nIch öffne nur für Reines und Stimmiges."],
+        ["Absicht","Sprich:\n"+(P?"{S}"+abS+"\n{F}"+abF+"\n{S}Zum höchsten Wohl.":(S.txt.trim()||abS))],
+        ["369","Tu:\nJede Zeile laut. Antippen zählt.\n\nDrei: "+q[0]+"\nSechs: "+q[1]+"\nNeun: "+q[2]],
+        ["So sei es","Sprich:\nVersiegelt. Übergeben. So sei es."],
+        ["Rückkehr","Sprich:\n"+(P?"Ich bin nicht [Name]. Ich kehre vollständig zurück.\n":"Ich bin ganz bei mir.\n")+"Meine Energie gehört mir.\nFüsse. Atem. Raum."],
+        ["Schluss","Sprich:\nDanke, Feld.\n\nTu:\nWasser. Alltag."]];
+      var id="rx_"+String(rec.id||Date.now().toString(36)), tone=String(S.ton||"Soft").toLowerCase();
+      var r={id:id,tone:/^(soft|hard|grenze|feld)$/.test(tone)?tone:"soft",t:"Ritual X · "+(rec.name||thn),s:"Ritual X.",cat:"Ritual X",hard:S.ton==="Hard",need:P?["Name"]:[],flow:flow};
+      if(P&&window.RR25_ZUGANG) window.RR25_ZUGANG[id]=["Der Zugang ist dein Draht zu [Name]: der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was dir [Name] am nächsten bringt.",
+        "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und das Gute findet den Weg.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier trifft es.",
+        "Tu:\nZugang weglegen. Hände unter kaltes Wasser.\n\nSprich:\n{S}Das Gute gehört [Name]. Die Last bleibt nicht bei mir. Ich bin wieder ich.\n{F}Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."];
+      for(var i=R.length-1;i>=0;i--) if(R[i].id===id) R.splice(i,1);
+      R.push(r);
+      S=S1; VIEW=null;
+      if(typeof openR==="function"){ try{ fromPlan=null; }catch(e){} openR(id,P?w:""); }
+    }catch(e){ S=S1; console.warn("rr25 ritual x run",e); }
+  }
   function builderHtml(){
-    var sv=rez(), out='';
+    var sv=rez(), out=xHtml()+'<p class="rxAnp">Anpassen</p>';
     if(!S.txt.trim()||S.txt===S._txtAuto){ S.txt=autoSatz(S); S._txtAuto=S.txt; }
     if(S.eid) out+='<p class="rzRn rzEd">Du bearbeitest «'+h(S.name||defName())+'».</p>';
     out+='<p class="rzRh">1 · Für wen</p><div class="rzCh"><button type="button" data-fm="ich" class="'+(S.fm==="ich"?"on":"")+'">Für mich</button><button type="button" data-fm="person" class="'+(S.fm==="person"?"on":"")+'">Für eine Person</button><button type="button" data-fm="situation" class="'+(S.fm==="situation"?"on":"")+'">Für eine Situation</button></div>';
@@ -2036,6 +2165,8 @@ try{
     function all(sel,fn){ [].slice.call(p.querySelectorAll(sel)).forEach(fn); }
     MSG="";
     all("[data-th]",function(b){ b.onclick=function(){ keep(); S.th=b.getAttribute("data-th"); S.sel=[]; paint(); }; });
+    all("[data-xth]",function(b){ b.onclick=function(){ var r=xParse(S.xs||""); r.th=b.getAttribute("data-xth"); S.th=r.th; S.ton=r.ton; S.rt=r.rt; S.fm=r.fm; S.fw=r.fw; S.wes=r.wes; S.txt=xSatz(r); S._txtAuto=""; S.sel=xMaterial(); paint(); }; });
+    var xi=document.getElementById("rzX"); if(xi) xi.addEventListener("input",function(){ S.xs=xi.value; });
     all("[data-rt]",function(b){ b.onclick=function(){ keep(); S.rt=b.getAttribute("data-rt"); paint(); }; });
     all("[data-wes]",function(b){ b.onclick=function(){ keep(); S.wes=b.getAttribute("data-wes")==="1"; paint(); }; });
     all("[data-e]",function(b){ b.onclick=function(){ var r=rez()[+b.getAttribute("data-e")]; if(!r) return; var f=r.fuer||{};
@@ -2048,14 +2179,16 @@ try{
     all("[data-ton]",function(b){ b.onclick=function(){ keep(); S.ton=b.getAttribute("data-ton"); S.sel=[]; paint(); }; });
     all("[data-z]",function(b){ b.onclick=function(){ keep(); var id=b.getAttribute("data-z"), i=S.sel.indexOf(id); if(i>=0) S.sel.splice(i,1); else if(S.sel.length<3) S.sel.push(id); S.info=id; paint(); }; });
     all("[data-lex]",function(b){ b.onclick=function(){ var id=b.getAttribute("data-lex"); VIEW=null; if(window.RR25_RESO) window.RR25_RESO.open(id); }; });
-    all("[data-r]",function(b){ b.onclick=function(){ var r=rez()[+b.getAttribute("data-r")]; if(r){ VIEW={r:r,i:0}; paint(); } }; });
+    all("[data-r]",function(b){ b.onclick=function(){ var r=rez()[+b.getAttribute("data-r")]; if(r){ runFlow(r); } }; });
     all("[data-d]",function(b){ b.onclick=function(){ ASK=+b.getAttribute("data-d"); paint(); }; });
     all("[data-tg]",function(b){ b.onclick=function(){ var z=document.getElementById("rzZeile"); if(z) VIEW.zeile=z.value; var k=b.getAttribute("data-tg"); VIEW[k]=!VIEW[k]; paint(); }; });
     all("[data-a]",function(b){ b.onclick=function(){
       var a=b.getAttribute("data-a");
-      if(a==="start"){ keep(); VIEW={r:cur(),i:0}; }
+      if(a==="start"){ keep(); var cs=cur(); runFlow(cs); return; }
       else if(a==="save"){ keep(); var r=rez(), c0=cur(), ix=-1; r.forEach(function(x,j){ if(x.id===c0.id) ix=j; }); if(ix>=0) r[ix]=c0; else r.unshift(c0); setRez(r.slice(0,30)); S=S0(); UNDO=null; ASK=-1; paint(); MSG="Gespeichert ✦"; var mm=document.createElement("p"); mm.className="rzMsg"; mm.setAttribute("role","status"); mm.textContent=MSG; var bb=document.getElementById("rezBody"), sv0=bb&&bb.querySelector(".rzSv"); if(bb){ if(sv0) bb.insertBefore(mm,sv0.previousElementSibling); else bb.appendChild(mm); } MSG=""; setTimeout(function(){ try{ mm.remove(); }catch(e){} },2600); return; }
       else if(a==="neu"){ S=S0(); }
+      else if(a==="xgo"){ xRun(); }
+      else if(a==="xplan"){ keep(); xPlan(); }
       else if(a==="undo"){ if(UNDO){ var ru=rez(); ru.splice(Math.min(UNDO.i,ru.length),0,UNDO.r); setRez(ru); } UNDO=null; }
       else if(a==="dno"){ ASK=-1; }
       else if(a==="cnt"){ var st=VIEW.r.steps[VIEW.i], x=repOf(st); if(x&&x.zg){ if(!VIEW.zg){ var zi=document.getElementById("rzZg"); if(zi) zi.focus(); return; } zgPut(x.name,VIEW.zg); VIEW.zgUsed=VIEW.zg; } if(x&&(VIEW.c||0)<x.rep){ VIEW.c=(VIEW.c||0)+1; if(VIEW.c>=x.rep){ buzz(!!x.full); var v=VIEW, ii=v.i; setTimeout(function(){ if(VIEW===v&&v.i===ii&&!v.fin){ v.c=0; if(v.i<v.r.steps.length-1) v.i++; else v.fin=true; paint(); } },900); } } }
@@ -2082,7 +2215,7 @@ try{
       if(typeof load==="function"&&typeof save==="function"){
         var d=load(); d.log=d.log||[];
         var zl=(V.zeile||"").trim(), ab=r.absicht||"";
-        var e={id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),ms:Date.now(),titel:"Ritualbauer · "+r.name,wer:pers?fw:(r.fuer&&r.fuer.m==="situation"?fw:""),note:zl||ab,absicht:ab,fuer:fl,zeile:zl,tone:tone,kal:kal,wesen:!!r.wes,bauer:r.id};
+        var e={id:id,t:typeof now==="function"?now():new Date().toLocaleString("de-CH"),ms:Date.now(),titel:"Ritual X · "+r.name,wer:pers?fw:(r.fuer&&r.fuer.m==="situation"?fw:""),note:zl||ab,absicht:ab,fuer:fl,zeile:zl,tone:tone,kal:kal,wesen:!!r.wes,bauer:r.id};
         if(pers){ e.person=true; e.richtung=r.rt||"Segen"; if(V.zgUsed) e.zugang=V.zgUsed; if(V.echo&&zl){ e.echo=zl; e.echoT=Date.now(); e.note=ab; } }
         d.log.unshift(e);
         if(V.pic){ d.log[0].pics=1; }
@@ -2102,7 +2235,7 @@ try{
     if(document.getElementById("rezept")) return;
     var main=document.querySelector("main"); if(!main) return;
     var s=document.createElement("section"); s.className="screen"; s.id="rezept";
-    s.innerHTML='<div class="hero rezHero"><button type="button" id="rezBack" class="rezBackBtn" aria-label="Zurück">‹</button><h2>Ritualbauer</h2></div><div id="rezBody" class="card"></div>';
+    s.innerHTML='<div class="hero rezHero"><button type="button" id="rezBack" class="rezBackBtn" aria-label="Zurück">‹</button><h2>Ritual X</h2></div><div id="rezBody" class="card"></div>';
     main.appendChild(s);
     s.querySelector("#rezBack").onclick=close;
   }
@@ -2119,7 +2252,7 @@ try{
     /* Build 114: kompakt neben der Suche */
     var slot=document.getElementById("rzBauSlot");
     var w=document.createElement(slot?"span":"div"); w.id="rzRezept";
-    w.innerHTML='<button type="button" class="btn ghost" id="rzRezBtn" aria-label="Ritualbauer öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 19.4h10M8.4 19.4c-.6-3.4 0-6 3.6-8.4 3.6 2.4 4.2 5 3.6 8.4"/><path d="M12 11V8.6M12 6.2l.01 0M9.2 5.2l.01 0M14.8 5.2l.01 0"/></svg>Ritualbauer</button>';
+    w.innerHTML='<button type="button" class="btn ghost" id="rzRezBtn" aria-label="Ritual X öffnen"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 19.4h10M8.4 19.4c-.6-3.4 0-6 3.6-8.4 3.6 2.4 4.2 5 3.6 8.4"/><path d="M12 11V8.6M12 6.2l.01 0M9.2 5.2l.01 0M14.8 5.2l.01 0"/></svg>Ritual X</button>';
     if(slot) slot.appendChild(w); else root.insertBefore(w,top); w.querySelector("#rzRezBtn").onclick=open;
   }
   ensure(); mount(); setTimeout(mount,500);
@@ -2152,6 +2285,11 @@ try{
     ".rzSv{list-style:none;margin:0;padding:0}.rzSv li{display:flex;gap:.3rem;align-items:center;border-top:1px solid rgba(200,120,255,.12)}.rzOpen{flex:1;text-align:left;background:none;border:0;padding:.5rem 0;min-height:2.75rem;color:#f1e1ff}.rzOpen b{display:block;font-weight:500;font-size:.9rem}.rzOpen small{font-size:.68rem;color:#a994c4}.rzDel{min-height:2.75rem;width:2.75rem;height:2.75rem;border-radius:50%;border:1px solid rgba(200,120,255,.25);background:transparent;color:#a994c4;padding:0}"
   ].join("");
   document.head.appendChild(css);
+  /* Vormerken: Geplant-Eintrag mit id «rz:…» oeffnet das Ritual X direkt */
+  if(typeof openR==="function"&&!openR._rx){ var o0=openR; openR=function(id,wer){ if(/^rz:/.test(String(id))){ var rid=String(id).slice(3), r=rez().filter(function(x){ return x.id===rid; })[0];
+      try{ var d=load(); d.planned=(d.planned||[]).filter(function(p){ return p.id!==id; }); save(d); }catch(e){}
+      if(r){ ensure(); loadLex(); runFlow(r); } return; } return o0.apply(this,arguments); }; openR._rx=1; }
+  window.RR25_RITUALX={open:open,close:close};
   window.RR25_REZEPT={list:rez,open:open,close:close,satz:zSatz};
 })();
 
@@ -2282,8 +2420,8 @@ try{
     var home=document.getElementById("home"), cats=document.getElementById("cats"); if(!home||!cats) return;
     var b=document.getElementById("rezHome");
     if(!b){
-      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Ritualbauer öffnen, eigenes Ritual zusammenstellen");
-      b.innerHTML='<span class="rzhIc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 5.3 5.3 1.5-5.3 1.5L12 16.8l-1.5-5.3L5.2 10l5.3-1.5z"/><path d="M18.4 15.6l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/></svg></span><span class="rzhTx">Ritualbauer</span>';
+      b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Ritual X öffnen, eigenes Ritual formen");
+      b.innerHTML='<span class="rzhIc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 5.3 5.3 1.5-5.3 1.5L12 16.8l-1.5-5.3L5.2 10l5.3-1.5z"/><path d="M18.4 15.6l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/></svg></span><span class="rzhTx">Ritual X</span>';
       b.onclick=function(){
         try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); }catch(e){}
       };

@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 118 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 119 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -38,6 +38,7 @@ try{
     ueber:["Der Zugang ist die Tür zur Person: ihr Name laut, ein Foto oder etwas von ihr in der Hand. Kurz hinein, sofort zurück.", "Mein Zugang ist [Zugang], und ich weiss: Hier steht [Name], und nur für [Auftrag].", "Tu:\nZugang weglegen, Hände unter kaltes Wasser.\n\nSprich:\nIch bin nicht [Name]. Die Tür ist zu. Ich bin wieder ganz ich."],
     band:["Der Zugang zeigt, wo das Band sitzt: Name, Foto, ein Gegenstand oder das Gefühl im Körper, wo es zieht.", "Mein Zugang ist [Zugang], und ich weiss: Hier hängt das Band zwischen [Name] und mir.", "Tu:\nZugang weglegen, Hände ausschütteln.\n\nSprich:\nDer Faden ist gelöst, [Name] geht frei, ich auch."]
   };
+  window.RR25_ZUGANG=ZUGANG; /* Build 119: Ritual X legt hier seinen Zugang ab */
   /* Personen-Rituale brauchen den Namen (z. B. band hatte keinen) */
   R.forEach(function(r){ if(ZUGANG[r.id]){ r.need=(r.need||[]).slice(); if(r.need.indexOf("Name")<0 && r.need.indexOf("A")<0) r.need.unshift("Name"); } });
   /* Build 108: Zugang-Schluessel auch fuer zwei Personen (A und B) */

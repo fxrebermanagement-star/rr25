@@ -100,3 +100,23 @@ html body #home #cats .chip.on,html body #home #cats .chip[aria-pressed="true"]{
 html body #home #cats .chip:active{transform:scale(.96);border-color:var(--rr-pink)!important;
   box-shadow:0 0 18px rgba(255,122,217,.45),0 0 5px rgba(199,139,255,.55),inset 0 1px 0 rgba(255,255,255,.18)!important}
 html body #home #cats .chip:focus-visible{outline:none;border-color:var(--rr-violet-hi)!important;box-shadow:0 0 14px rgba(199,139,255,.5)!important}
+
+/* Build 119: Ritual X (ersetzt den Ritualbauer) */
+#rezept .rxTop{margin:0 0 .9rem;padding:.85rem .85rem .9rem;border-radius:1.2rem;border:1px solid rgba(199,139,255,.45);
+  background:linear-gradient(135deg,rgba(199,139,255,.22),rgba(255,122,217,.12));box-shadow:0 0 16px rgba(199,139,255,.22),inset 0 1px 0 rgba(255,255,255,.12)}
+#rezept .rxQ{display:block;margin:0 0 .45rem;font-family:Georgia,serif;font-size:1.08rem;color:var(--rr-violet-hi)}
+#rezept .rxIn{margin:0;border-radius:.9rem;border:1px solid rgba(199,139,255,.35);background:rgba(10,4,24,.55);color:var(--rr-text);font-size:.92rem;line-height:1.4}
+#rezept .rxGo{display:flex;align-items:center;justify-content:center;gap:.45rem;width:100%;margin:.6rem 0 0;min-height:2.9rem;border-radius:999px;
+  border:1px solid rgba(199,139,255,.6);background:linear-gradient(135deg,rgba(199,139,255,.38),rgba(255,122,217,.28));color:#fff;font-family:var(--rr-font-btn);font-weight:600;font-size:.9rem;letter-spacing:.03em;
+  box-shadow:0 0 16px rgba(199,139,255,.32),inset 0 1px 0 rgba(255,255,255,.16);transition:transform .18s ease,box-shadow .25s ease;-webkit-tap-highlight-color:transparent}
+#rezept .rxGo:active{transform:scale(.97);box-shadow:0 0 24px rgba(255,122,217,.55),inset 0 1px 0 rgba(255,255,255,.2)}
+#rezept .rxGo .rzhIc{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#fff3fb 0%,var(--rr-pink) 45%,var(--rr-violet) 100%);box-shadow:0 0 8px rgba(255,122,217,.55)}
+#rezept .rxGo .rzhIc svg{width:14px;height:14px;fill:#3a1350}
+#rezept .rxCard{margin:0 0 1rem;padding:.85rem .9rem;border-radius:1.2rem;border:1px solid rgba(255,122,217,.35);background:linear-gradient(180deg,rgba(60,24,88,.7),rgba(24,10,40,.85));box-shadow:0 0 18px rgba(255,122,217,.16)}
+#rezept .rxK{margin:0;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--rr-pink)}
+#rezept .rxT{margin:.2rem 0 .1rem;font-family:Georgia,serif;font-weight:500;font-size:1.25rem;color:#fff}
+#rezept .rxF{margin:0 0 .3rem;font-size:.8rem;color:var(--rr-mute)}
+#rezept .rxH{margin:.75rem 0 .2rem;font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--rr-violet)}
+#rezept .rxL{margin:.12rem 0;font-size:.86rem;line-height:1.45;color:var(--rr-text)}#rezept .rxL b{display:inline!important;margin-right:.25rem;color:var(--rr-violet-hi);font-weight:600}
+#rezept .rxCard .rzCh{flex-wrap:wrap}
+#rezept .rxAnp{margin:.4rem 0 .6rem;padding-top:.7rem;border-top:1px solid rgba(199,139,255,.2);font-family:Georgia,serif;font-size:1rem;color:var(--rr-violet-hi)}
