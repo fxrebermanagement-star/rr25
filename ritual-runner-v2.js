@@ -127,6 +127,7 @@
   /* ---------- Ablauf ---------- */
   var cur=null;
   function sigilAbsicht(){
+    if(cur&&cur.r&&cur.r.rxAbs!=null) return ""; /* Build 120: Ritual X nimmt nie den Zeichen-Text */
     try{ var d=JSON.parse(localStorage.getItem("rr25_sigil")||"{}"); return String(d.t||"").trim(); }catch(e){ return ""; }
   }
   function fillT(s){
@@ -388,7 +389,7 @@
     else if(/^Absicht$/.test(st[0]) && ZUGANG[r.id]){
       if(!cur.mem.Absicht){ var sg0=sigilAbsicht(); if(sg0) cur.mem.Absicht=sg0; }
       if(!cur.mem.Richtung) cur.mem.Richtung="Segen";
-      raw=raw+"\n\nIch richte mich auf [Absicht] aus, als [Richtung].";
+      raw=raw+"\n\nIch richte mich auf "+(r.rxKurz||"[Absicht]")+" aus, als [Richtung].";
       body='<p class="words" id="w0">'+h(fillT(raw))+'</p>'+
         '<div class="row rtg">'+["Segen","Fluch"].map(function(x){ return '<button type="button" class="chip'+(cur.mem.Richtung===x?" on":"")+'" data-rtg="'+x+'" aria-pressed="'+(cur.mem.Richtung===x)+'">als '+x+'</button>'; }).join("")+'</div>'+
         '<label class="absLab">Absicht · einmal<input class="nm" id="absT" data-n="Absicht" placeholder="Worauf richte ich mich aus?" value="'+h(cur.mem.Absicht||'')+'" autocomplete="off" maxlength="200"></label>'+
@@ -521,6 +522,7 @@
     var r=byId(id); if(!r) return;
     var mem={};
     if(wer){ mem.Name=wer; var p=String(wer).split(/\s*·\s*/); mem.A=p[0]||wer; mem.B=p[1]||""; }
+    if(r.rxAbs) mem.Absicht=r.rxAbs;
     cur={r:r,mem:mem,wer:wer||"",i:0,lvl:null,wesen:false,steps:[],started:false,ctx:ctx||null};
     window._rid=r.id;
     show("run");

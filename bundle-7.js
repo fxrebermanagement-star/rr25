@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 119 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 120 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-x.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -2120,6 +2120,8 @@ try{
       if(P&&window.RR25_ZUGANG) window.RR25_ZUGANG[id]=["Der Zugang ist dein Draht zu [Name]: der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was dir [Name] am nächsten bringt.",
         "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und das Gute findet den Weg.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier trifft es.",
         "Tu:\nZugang weglegen. Hände unter kaltes Wasser.\n\nSprich:\n{S}Das Gute gehört [Name]. Die Last bleibt nicht bei mir. Ich bin wieder ich.\n{F}Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."];
+      r.rxAbs=String((P?(S.rt==="Fluch"?abF:abS):(S.txt.trim()||abS))||"").split("[Name]").join(w||"").replace(/[\s.!]+$/,"");
+      r.rxKurz=({herz:"Liebe",traum:"Traum",ende:"Abschluss"}[S.th]||thn)+" für "+(P?"[Name]":(w||"mich"));
       for(var i=R.length-1;i>=0;i--) if(R[i].id===id) R.splice(i,1);
       R.push(r);
       S=S1; VIEW=null;
