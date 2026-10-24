@@ -187,7 +187,7 @@
   function xn(s){ return String(s||"").toLowerCase().replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue").replace(/ß/g,"ss").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim(); }
   var XTH=[["heilung",/heil|gesund|krank|schmerz|genes|operation|erholen|fieber/],["schutz",/schutz|schuetz|sicher|bewahr|abschirm|boese blick|neid/],["herz",/liebe|lieb |anzieh|herz|partner|beziehung|verlieb|freundschaft|dank|segen|segne/],
     ["ende",/trenn|loes|abschluss|beend|abschied|loslass|ende /],["mut",/energie|kraft|mut|power|antrieb|motivation|staerke/],["fuelle",/geld|fuelle|wohlstand|reich|finanz|job|arbeit|erfolg|kunden/],
-    ["klaerung",/klar|klaer|entscheid|wahrheit|erkenn|verstehen/],["ruhe",/ruhe|ruhig|schlaf|angst|stress|frieden|entspann|sorge/],["traum",/traum|schwelle|ahnen|vorfahren|jenseits/]];
+    ["klaerung",/klar|klaer|entscheid|wahrheit|erkenn|verstehen/],["ruhe",/ruhe|ruhig|schlaf|angst|stress|frieden|entspann|sorge|gruebel|grueb|kopfkino|nachdenk|unruh/],["traum",/traum|schwelle|ahnen|vorfahren|jenseits/]];
   var XTIER=["katze","kater","hund","huendin","pferd","vogel","hase","kaninchen","meerschweinchen","hamster","fisch","pony","esel","ziege","schaf","kuh","welpe","kaetzchen","tier"];
   var XPERS=["mama","mutter","papa","vater","sohn","tochter","bruder","schwester","oma","grossmutter","opa","grossvater","freundin","freund","partnerin","partner","mann","frau","kind","chef","chefin","nachbarin","nachbar","kollegin","kollege","tante","onkel","ex"];
   function cap(w){ return w.charAt(0).toUpperCase()+w.slice(1); }
@@ -205,6 +205,18 @@
     XTIER.some(function(w){ if(new RegExp(" "+w+"[a-z]{0,2} ").test(t)){ r.tier=w; return true; } return false; });
     if(!r.tier) XPERS.some(function(w){ if(new RegExp(" (mein|meine|meinen|meinem|meiner|unser|unsere|fuer) "+w+"[a-z]{0,2} ").test(t)){ r.pers=w; return true; } return false; });
     if(!r.tier&&!r.pers){ var m=/\bf(?:ü|ue)r\s+([A-ZÄÖÜ][a-zäöüé]+)/.exec(String(raw)); if(m&&!/^(Mich|Uns|Heute|Morgen|Ruhe|Liebe|Geld|Schutz|Heilung)$/.test(m[1])) r.pers=m[1]; }
+    /* Build 121: Vorname im Satz (Beat soll …, für Anna, Hund Bello) */
+    var RAW=String(raw), STOPN=/^(Ich|Mein|Meine|Meinen|Meinem|Meiner|Unser|Unsere|Er|Sie|Es|Wir|Du|Der|Die|Das|Den|Dem|Ein|Eine|Bitte|Heute|Morgen|Gott|Engel|Ruhe|Liebe|Geld|Schutz|Heilung|Segen|Fluch|Glück|Kraft|Mut|Herz|Frieden|Schlaf|Arbeit|Job|Erfolg|Angst|Stress|Mich|Uns|Ihn|Ihr)$/, vn="";
+    var mT=r.tier?new RegExp("\\b"+r.tier.replace("ae","(?:ä|ae)").replace("ue","(?:ü|ue)")+"[a-zäöü]{0,2}\\s+([A-ZÄÖÜ][a-zäöüé]+)","i").exec(RAW):null;
+    if(mT&&/^[A-ZÄÖÜ]/.test(mT[1])&&!STOPN.test(mT[1])) vn=mT[1];
+    if(!vn){ var m1=/^\s*([A-ZÄÖÜ][a-zäöüé]+)\s+(soll|sollen|ist|hat|wird|kann|darf|möge|moege|muss|braucht|will)\b/.exec(RAW); if(m1&&!STOPN.test(m1[1])) vn=m1[1]; }
+    if(!vn){ var m2=/\b(?:für|fuer|an|gegen|von|bei|zu)\s+([A-ZÄÖÜ][a-zäöüé]+)\b/.exec(RAW); if(m2&&!STOPN.test(m2[1])) vn=m2[1]; }
+    if(vn&&!nameO) nameO=[vn,vn];
+    if(vn&&!r.tier&&!r.pers) r.pers=vn;
+    /* Build 121: Schaden gegen jemand anderen -> Hard, Fluch. Eigene Last mit «nicht mehr» bleibt Segen. */
+    var harm=/ soll(?:en)? (?:[a-z]+ ){0,4}nicht mehr | soll(?:en)? (?:[a-z]+ ){0,3}keine?n? (?:[a-z]+ ){0,3}mehr | soll(?:en)? (?:[a-z]+ ){0,4}(?:leiden|scheitern|verlieren|pech haben|ungluecklich|krank werden|zahlen|buessen)| nie (?:mehr|wieder) /.test(t);
+    if(harm&&(r.tier||r.pers)&&!/ ich (?:will|moechte|soll|kann) /.test(t)){ r.rt="Fluch"; r.ton="Hard";
+      if(!r.th||/^(herz|mut)$/.test(r.th)&&!/liebe|partner|beziehung/.test(t)) r.th=/schlaf|ruhe|ruhig/.test(t)?"ruhe":/geld|job|arbeit|erfolg|kunden/.test(t)?"fuelle":/gesund|krank/.test(t)?"heilung":r.th||"klaerung"; }
     if(r.tier||r.pers){ r.fm="person"; r.fw=nameO?cap(nameO[1]):(r.tier?cap(r.tier==="kaetzchen"?"Kätzchen":r.tier==="huendin"?"Hündin":r.tier):cap(r.pers)); }
     return r;
   }
@@ -215,19 +227,21 @@
       s=wer+" ist gesegnet. "+(XS[r.th]||"Das Gute findet den Weg."); }
     return s;
   }
+  function xFl(){ return isP(S)&&S.rt==="Fluch"; }
   function xMaterial(){
     if(!DATA) return [];
+    if(xFl()) return ["kerze-schwarz","wermut","onyx"].filter(function(id){ return DATA.some(function(e){ return e.id===id; }); }); /* Build 121: Fluch-Material */
     var pool=vorschlag(), out=[];
     ["kerzen","kraeuter","steine","farben"].forEach(function(c){ if(out.length>=3) return; var e=pool.filter(function(x){ return x.cat===c&&out.indexOf(x.id)<0; })[0];
       if(!e) e=DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat===c&&toneOk(x,S.ton)&&l&&(l.t||[]).indexOf(S.th)>=0; })[0];
       if(e) out.push(e.id); });
     return out;
   }
-  function xFarbe(){ if(!DATA) return null; return DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat==="farben"&&l&&(l.t||[]).indexOf(S.th)>=0; })[0]||null; }
+  function xFarbe(){ if(!DATA) return null; if(xFl()) return DATA.filter(function(x){ return x.id==="farbe-schwarz"; })[0]||null; return DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat==="farben"&&l&&(l.t||[]).indexOf(S.th)>=0; })[0]||null; }
   function xT(ms){ var d=new Date(ms); return DL[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+"., "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
   /* Beste Zeit: Tradition (Wochentag und Mond) + Planetenstunde des Tagesplaneten + Ton-Fenster aus dem Kalender (Bern) */
   function xZeit(){
-    var K=window.RR25_KAL, M=window.RR25_MOND, T=TRAD[S.th], out=[], now=Date.now(), best=null;
+    var K=window.RR25_KAL, M=window.RR25_MOND, T=S.ton==="Hard"?{d:[2,6],m:["ab"]}:TRAD[S.th], out=[], now=Date.now(), best=null;
     try{
       if(T&&M){ for(var n=0;n<30&&!best;n++){ var d=new Date(); d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+n,12).getTime(); var wd=new Date(d).getDay(), mk=""; try{ mk=M.day(d).key; }catch(e){}
         if(T.d.indexOf(wd)>=0&&T.m.indexOf(mk)>=0){ var pd=K?K.planetDay(d):[], hit=pd.filter(function(x){ return x.p===PN[wd]&&!x.nacht&&x.e>now; })[0]; best={d:d,ph:hit,mond:MK[mk]}; } } }
@@ -236,7 +250,7 @@
       if(K&&S.ton==="Hard"){ var nx=K.next("HARD",now); out.push(nx?"Hard-Fenster: "+xT(nx.x.s)+" bis "+String(new Date(nx.x.e).getHours()).padStart(2,"0")+":"+String(new Date(nx.x.e).getMinutes()).padStart(2,"0")+".":"Im Kalender ist bald kein Hard-Fenster offen."); }
       else if(K&&(S.ton==="Soft"||S.ton==="Grenze")){ var ns=K.state(now); if(ns&&ns.tone==="SOFT") out.push("Jetzt ist ein Soft-Feld offen, es geht auch sofort."); }
       if(K){ var sz=K.seasons(best?best.d:now).map(function(x){ return String(x.sz||x.t||""); }).filter(function(x){ return /rückläufig/.test(x); });
-        sz.forEach(function(x){ if(/Merkur/.test(x)) out.push("Merkur rückläufig: Worte vorher in Ruhe aufschreiben, langsam sprechen."); else if(/Venus/.test(x)) out.push("Venus rückläufig: bei Herz und Fülle lieber sanft, nichts erzwingen."); else out.push(x+": nur ein Hinweis."); }); }
+        sz.forEach(function(x){ if(/Merkur/.test(x)) out.push("Merkur rückläufig: Worte vorher in Ruhe aufschreiben, langsam sprechen."); else if(/Venus/.test(x)){ if(S.ton!=="Hard") out.push("Venus rückläufig: bei Herz und Fülle lieber sanft, nichts erzwingen."); } else out.push(x+": nur ein Hinweis."); }); }
     }catch(e){}
     return out;
   }
@@ -247,7 +261,7 @@
     else if(S.xs&&S.th){
       var st=build(), P=isP(S), w=fuerTxt(S), thn=(TH.filter(function(x){ return x[0]===S.th; })[0]||["",""])[1], ab=(S.txt||"").trim()||autoSatz(S);
       var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean), fb=xFarbe();
-      var zt=xZeit(), los=st.filter(function(s){ return /^(Lösen|Anker|Schluss|Rückkehr)/.test(s[0]); });
+      var zt=xZeit(), los=xFl()?[["Gabe · Preis","Eine Gabe hinstellen: Wasser, Salz oder etwas von dir. Ich gebe das als Ausgleich. Ich trage den Preis."],["Lösen","Zugang mit Salz umkreisen, dann weglegen. Die Bahn ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."],["Rückkehr","Ich bin nicht "+w+". Ich kehre vollständig zurück. Meine Energie gehört mir. Ich bleibe im Spiel. Ich bleibe ich. Füsse. Atem. Raum."],["Reinigen","Hände mit Salzwasser waschen. Das Wasser weggiessen. Rein. Nichts bleibt an mir."],["Schluss","Danke, Feld. Wasser. Alltag. Nicht nachladen."]]:st.filter(function(s){ return /^(Lösen|Anker|Schluss|Rückkehr)/.test(s[0]); });
       o+='<div class="rxCard"><p class="rxK">Dein Ritual</p><h3 class="rxT">'+h(thn)+' · '+h(S.ton)+(P?' · '+h(S.rt):'')+'</h3><p class="rxF">'+h(fuerLab(S))+(S.wes?' · mit Wesenheit':'')+'</p>'+
         '<p class="rxH">Beste Zeit</p>'+(zt.length?zt.map(function(x){ return '<p class="rxL">'+h(x)+'</p>'; }).join(""):'<p class="rxL">Jederzeit, in Ruhe.</p>')+
         (function(){ var q=x369(); return '<p class="rxH">Ablauf</p><p class="rxL"><b>Absicht</b> einmal: «'+h(ab)+'»</p>'+(P?'<p class="rxL"><b>Zugang</b> zu '+h(w)+': Name, Foto oder etwas in der Hand.</p>':'')+
@@ -263,7 +277,7 @@
   }
   function xRun(){
     var i=document.getElementById("rzX"); var v=i?i.value.trim():""; S.xs=v; if(!v) return;
-    var r=xParse(v); var keepTh=S.th;
+    var r=xParse(v); S=S0(); S.xs=v; /* Build 121: frisch aus dem Satz, nichts Altes aus Anpassen */
     S.th=r.th; S.ton=r.ton; S.rt=r.rt; S.fm=r.fm; S.fw=r.fw; S.wes=r.wes; S.name=""; S.sel=[];
     S.txt=r.th?xSatz(r):""; S._txtAuto=""; S.sel=r.th?xMaterial():[]; S._x=r;
   }
@@ -290,9 +304,23 @@
         ["So sei es","Sprich:\nVersiegelt. Übergeben. So sei es."],
         ["Rückkehr","Sprich:\n"+(P?"Ich bin nicht [Name]. Ich kehre vollständig zurück.\n":"Ich bin ganz bei mir.\n")+"Meine Energie gehört mir.\nFüsse. Atem. Raum."],
         ["Schluss","Sprich:\nDanke, Feld.\n\nTu:\nWasser. Alltag."]];
+      if(P&&S.rt==="Fluch"){ /* Build 121: Aufbau wie das feste Ritual «Fluch» */
+        flow=[["Vorbereitung","Name oben.\n\nTu:\nEine Kerze. Wasser und Salz bereit."+(z.length?"\n"+z.map(zSatz).join("\n"):"")+"\n\nSprich:\nSoft-Karma zuerst, wenn es reicht. Sonst hier. Ich halte keinen Hass."],
+          ["Bannen","Tu:\nSalz oder Rauch. Einmal um dich.\n\nSprich:\nWas nicht hierher gehört, geht. Der Raum ist rein."],
+          ["Standort","Tu:\nFüsse. Drei Atemzüge. Grenze um dich.\n\nSprich:\nIch bin der Spieler. Die Quelle ist wach.\nIch schliesse mein Feld hart."],
+          ["Rahmen","Sprich:\nNur die Bahn, die [Name] selbst gelegt hat.\nNichts darüber hinaus. Kein Dritter. Ich kenne den Preis."],
+          ["Spiegel","Tu:\nHände vor die Brust, Flächen nach aussen.\n\nSprich:\nWas zurückkommt, prallt an meinem Feld ab und geht in die Erde.\nNichts davon bleibt an mir."],
+          ["Absicht","Sprich:\n{F}"+abF+"\n{S}"+abS+"\n{F}Nicht mehr und nicht weniger. Ich setze und lasse los."],
+          ["369","Tu:\nJede Zeile laut. Antippen zählt.\n\nDrei: "+q[0]+"\nSechs: "+q[1]+"\nNeun: "+q[2]],
+          ["So sei es","Sprich:\nVersiegelt. Übergeben. So sei es."],
+          ["Gabe · Preis","Tu:\nEine Gabe hinstellen: Wasser, Salz oder etwas von dir.\n\nSprich:\nIch gebe das als Ausgleich. Ich trage den Preis."],
+          ["Rückkehr","Sprich:\nIch bin nicht [Name]. Ich kehre vollständig zurück.\nMeine Energie gehört mir. Ich bleibe im Spiel. Ich bleibe ich.\nFüsse. Atem. Raum."],
+          ["Reinigen","Tu:\nHände mit Salzwasser waschen. Das Wasser weggiessen.\n\nSprich:\nRein. Nichts bleibt an mir."],
+          ["Schluss","Sprich:\nDanke, Feld.\n\nTu:\nWasser. Alltag. Nicht nachladen."]];
+      }
       var id="rx_"+String(rec.id||Date.now().toString(36)), tone=String(S.ton||"Soft").toLowerCase();
       var r={id:id,tone:/^(soft|hard|grenze|feld)$/.test(tone)?tone:"soft",t:"Ritual X · "+(rec.name||thn),s:"Ritual X.",cat:"Ritual X",hard:S.ton==="Hard",need:P?["Name"]:[],flow:flow};
-      if(P&&window.RR25_ZUGANG) window.RR25_ZUGANG[id]=["Der Zugang ist dein Draht zu [Name]: der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was dir [Name] am nächsten bringt.",
+      if(P&&window.RR25_ZUGANG) window.RR25_ZUGANG[id]=(S.rt==="Fluch"&&window.RR25_ZUGANG.fluch)?window.RR25_ZUGANG.fluch:["Der Zugang ist dein Draht zu [Name]: der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was dir [Name] am nächsten bringt.",
         "{S}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und das Gute findet den Weg.\n{F}Mein Zugang ist [Zugang], und ich weiss: Hier ist [Name], und hier trifft es.",
         "Tu:\nZugang weglegen. Hände unter kaltes Wasser.\n\nSprich:\n{S}Das Gute gehört [Name]. Die Last bleibt nicht bei mir. Ich bin wieder ich.\n{F}Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."];
       r.rxAbs=String((P?(S.rt==="Fluch"?abF:abS):(S.txt.trim()||abS))||"").split("[Name]").join(w||"").replace(/[\s.!]+$/,"");
