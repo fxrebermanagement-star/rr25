@@ -2075,7 +2075,7 @@ try{
       if(K&&S.ton==="Hard"){ var nx=K.next("HARD",now); out.push(nx?"Hard-Fenster: "+xT(nx.x.s)+" bis "+String(new Date(nx.x.e).getHours()).padStart(2,"0")+":"+String(new Date(nx.x.e).getMinutes()).padStart(2,"0")+".":"Im Kalender ist bald kein Hard-Fenster offen."); }
       else if(K&&(S.ton==="Soft"||S.ton==="Grenze")){ var ns=K.state(now); if(ns&&ns.tone==="SOFT") out.push("Jetzt ist ein Soft-Feld offen, es geht auch sofort."); }
       if(K){ var sz=K.seasons(best?best.d:now).map(function(x){ return String(x.sz||x.t||""); }).filter(function(x){ return /rückläufig/.test(x); });
-        sz.forEach(function(x){ if(/Merkur/.test(x)) out.push("Merkur rückläufig: Worte vorher in Ruhe aufschreiben, langsam sprechen."); else if(/Venus/.test(x)) out.push("Venus rückläufig: bei Herz und Fülle lieber sanft, nichts erzwingen."); else out.push(x+": nur ein Hinweis."); }); }
+        sz.forEach(function(x){ if(/Merkur/.test(x)) out.push("Merkur rückläufig: Worte vorher in Ruhe aufschreiben, langsam sprechen."); else if(/Venus/.test(x)){ if(S.ton!=="Hard") out.push("Venus rückläufig: bei Herz und Fülle lieber sanft, nichts erzwingen."); } else out.push(x+": nur ein Hinweis."); }); }
     }catch(e){}
     return out;
   }
