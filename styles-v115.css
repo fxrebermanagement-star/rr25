@@ -123,4 +123,5 @@ html body #home #cats .chip:focus-visible{outline:none;border-color:var(--rr-vio
 
 /* Build 123: Mondbilder (Perlmutt, Krater, sanfter Schein) */
 .rrMoon{display:inline-block;width:1.3em;height:1.3em;vertical-align:-.28em;overflow:visible}
-.rrIco.rrIco-mondbild,.mbSvg{stroke:none;fill:none;filter:drop-shadow(0 0 3px rgba(255,200,70,.45))}
+.rrIco.rrIco-mondbild,.mbSvg{stroke:none;fill:none;filter:drop-shadow(0 0 3px rgba(235,230,255,.45))}
+#moonSym .mbSvg{width:2.55rem!important;height:2.55rem!important;margin:-.25rem;vertical-align:top}

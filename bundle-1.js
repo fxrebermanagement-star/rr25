@@ -22,11 +22,12 @@ try{
     if(document.getElementById("rrMoDefs")||!document.body) return;
     var d=document.createElement("div");
     d.innerHTML='<svg id="rrMoDefs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>'+
-      '<radialGradient id="rrMoLit" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="#fffbe6"/><stop offset=".35" stop-color="#ffe88a"/><stop offset=".75" stop-color="#ffcf3f"/><stop offset="1" stop-color="#f7a92a"/></radialGradient>'+
-      '<radialGradient id="rrMoDark" cx="42%" cy="38%" r="75%"><stop offset="0" stop-color="#4a3070"/><stop offset="1" stop-color="#22123a"/></radialGradient>'+
-      '<radialGradient id="rrMoGlow" cx="50%" cy="50%" r="50%"><stop offset=".6" stop-color="#ffd84a" stop-opacity=".55"/><stop offset=".8" stop-color="#ffb347" stop-opacity=".2"/><stop offset="1" stop-color="#ff9f40" stop-opacity="0"/></radialGradient>'+
-      '<radialGradient id="rrMoCr" cx="40%" cy="35%" r="65%"><stop offset="0" stop-color="#e8a21c" stop-opacity=".16"/><stop offset="1" stop-color="#c97d10" stop-opacity=".34"/></radialGradient>'+
-      '<radialGradient id="rrMoHi" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'+
+      '<radialGradient id="rrMoLit" cx="36%" cy="32%" r="80%"><stop offset="0" stop-color="#fbfbfd"/><stop offset=".4" stop-color="#d9d9e0"/><stop offset=".78" stop-color="#a9a9b4"/><stop offset="1" stop-color="#7d7c8a"/></radialGradient>'+
+      '<radialGradient id="rrMoDark" cx="42%" cy="38%" r="75%"><stop offset="0" stop-color="#3a3446"/><stop offset="1" stop-color="#17141f"/></radialGradient>'+
+      '<radialGradient id="rrMoGlow" cx="50%" cy="50%" r="50%"><stop offset=".6" stop-color="#f4f2ff" stop-opacity=".5"/><stop offset=".8" stop-color="#cdbcff" stop-opacity=".18"/><stop offset="1" stop-color="#cdbcff" stop-opacity="0"/></radialGradient>'+
+      '<radialGradient id="rrMoCr" cx="40%" cy="35%" r="65%"><stop offset="0" stop-color="#55525f" stop-opacity=".3"/><stop offset="1" stop-color="#3e3b48" stop-opacity=".55"/></radialGradient>'+
+      '<radialGradient id="rrMoMa" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#6c6a78" stop-opacity=".55"/><stop offset=".7" stop-color="#76747f" stop-opacity=".4"/><stop offset="1" stop-color="#7a7884" stop-opacity="0"/></radialGradient>'+
+      '<radialGradient id="rrMoHi" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'+
       '</defs></svg>';
     document.body.insertBefore(d.firstChild,document.body.firstChild);
   }
@@ -43,9 +44,10 @@ try{
     var q=p<=.5?p:1-p, il=(1-Math.cos(2*Math.PI*q))/2, hx=12+6.5*(1-il)-2*il; if(p>.5) hx=24-hx;
     return '<circle cx="12" cy="12" r="11.9" fill="url(#rrMoGlow)" opacity="'+(.25+.75*il).toFixed(2)+'"/>'+
       '<circle cx="12" cy="12" r="'+MR+'" fill="url(#rrMoDark)"/>'+litPath(p)+
+      '<ellipse cx="9.6" cy="9.4" rx="3.4" ry="2.6" fill="url(#rrMoMa)"/><ellipse cx="14.2" cy="10.6" rx="2.6" ry="3" fill="url(#rrMoMa)"/><ellipse cx="11.2" cy="15.2" rx="3.6" ry="2.2" fill="url(#rrMoMa)"/><ellipse cx="7.2" cy="13.2" rx="1.8" ry="2.4" fill="url(#rrMoMa)"/>'+
       cr.map(function(c){ return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="url(#rrMoCr)"/>'; }).join("")+
       (il>.04?'<ellipse cx="'+hx+'" cy="8" rx="'+(1.2+1.4*il).toFixed(2)+'" ry="1.6" fill="url(#rrMoHi)"/>':'')+
-      '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#ffe9a8" stroke-opacity=".45" stroke-width=".4"/>';
+      '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#f2f0ff" stroke-opacity=".4" stroke-width=".4"/>';
   }
   function moonSvg(p,cls){ return '<svg class="rrMoon'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+art(p)+'</svg>'; }
   var P={
