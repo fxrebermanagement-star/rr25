@@ -94,13 +94,18 @@
     if(line){ c.fillText(line,x,y); y+=lh; } return y;
   }
   function moonDraw(c,cx,cy,r,p){
+    if(window.RR25_ICO&&window.RR25_ICO.moonEmoji){ c.save(); c.font=Math.round(r*2)+'px "Noto Color Emoji","Apple Color Emoji","Segoe UI Emoji",sans-serif'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(window.RR25_ICO.moonEmoji(p),cx,cy+r*.08); c.restore(); return; } /* Build 123 */
     c.save(); c.beginPath(); c.arc(cx,cy,r,0,7); c.fillStyle="rgba(40,20,70,.9)"; c.fill(); c.strokeStyle="rgba(200,160,255,.6)"; c.lineWidth=3; c.stroke(); c.clip();
     /* beleuchteter Anteil: p 0..1 (0 neu, .5 voll); Terminator als Ellipse */
     var k=Math.cos(p*2*Math.PI), waxing=p<0.5; c.fillStyle="#efe3ff";
     c.beginPath();
     if(waxing){ c.arc(cx,cy,r,-Math.PI/2,Math.PI/2,false); c.ellipse(cx,cy,Math.abs(r*k),r,0,Math.PI/2,-Math.PI/2,k<0?false:true); }
     else { c.arc(cx,cy,r,Math.PI/2,-Math.PI/2,false); c.ellipse(cx,cy,Math.abs(r*k),r,0,-Math.PI/2,Math.PI/2,k<0?false:true); }
-    c.fill(); c.restore();
+    var lg=c.createRadialGradient(cx-r*.25,cy-r*.3,r*.1,cx,cy,r*1.05); lg.addColorStop(0,"#fbfbfd"); lg.addColorStop(.45,"#d9d9e0"); lg.addColorStop(.8,"#a9a9b4"); lg.addColorStop(1,"#7d7c8a"); c.fillStyle=lg;
+    c.fill();
+    /* Build 123: Krater */
+    [[-.3,-.33,.18],[.31,-.4,.11],[.15,.26,.22],[-.39,.29,.12],[.48,.08,.09],[-.08,-.03,.07]].forEach(function(k){ c.beginPath(); c.arc(cx+k[0]*r,cy+k[1]*r,k[2]*r,0,7); c.fillStyle="rgba(70,68,82,.38)"; c.fill(); });
+    c.restore();
   }
   function render(D){
     var cv=document.createElement("canvas"); cv.width=1080; cv.height=1350; var c=cv.getContext("2d");
