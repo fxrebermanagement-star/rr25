@@ -22,10 +22,11 @@ try{
     if(document.getElementById("rrMoDefs")||!document.body) return;
     var d=document.createElement("div");
     d.innerHTML='<svg id="rrMoDefs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>'+
-      '<radialGradient id="rrMoLit" cx="40%" cy="36%" r="72%"><stop offset="0" stop-color="#fffdf6"/><stop offset=".42" stop-color="#f4ead8"/><stop offset=".78" stop-color="#e2cfe6"/><stop offset="1" stop-color="#bfa1dc"/></radialGradient>'+
-      '<radialGradient id="rrMoDark" cx="42%" cy="38%" r="75%"><stop offset="0" stop-color="#3d2b5c"/><stop offset="1" stop-color="#1a1029"/></radialGradient>'+
-      '<radialGradient id="rrMoGlow" cx="50%" cy="50%" r="50%"><stop offset=".62" stop-color="#ffc4ef" stop-opacity=".42"/><stop offset=".8" stop-color="#c78bff" stop-opacity=".16"/><stop offset="1" stop-color="#c78bff" stop-opacity="0"/></radialGradient>'+
-      '<radialGradient id="rrMoCr" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#7d5f9c" stop-opacity=".16"/><stop offset="1" stop-color="#6a4c8a" stop-opacity=".34"/></radialGradient>'+
+      '<radialGradient id="rrMoLit" cx="38%" cy="32%" r="78%"><stop offset="0" stop-color="#fffbe6"/><stop offset=".35" stop-color="#ffe88a"/><stop offset=".75" stop-color="#ffcf3f"/><stop offset="1" stop-color="#f7a92a"/></radialGradient>'+
+      '<radialGradient id="rrMoDark" cx="42%" cy="38%" r="75%"><stop offset="0" stop-color="#4a3070"/><stop offset="1" stop-color="#22123a"/></radialGradient>'+
+      '<radialGradient id="rrMoGlow" cx="50%" cy="50%" r="50%"><stop offset=".6" stop-color="#ffd84a" stop-opacity=".55"/><stop offset=".8" stop-color="#ffb347" stop-opacity=".2"/><stop offset="1" stop-color="#ff9f40" stop-opacity="0"/></radialGradient>'+
+      '<radialGradient id="rrMoCr" cx="40%" cy="35%" r="65%"><stop offset="0" stop-color="#e8a21c" stop-opacity=".16"/><stop offset="1" stop-color="#c97d10" stop-opacity=".34"/></radialGradient>'+
+      '<radialGradient id="rrMoHi" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>'+
       '</defs></svg>';
     document.body.insertBefore(d.firstChild,document.body.firstChild);
   }
@@ -39,10 +40,12 @@ try{
   function art(p){
     defs(); p=((+p%1)+1)%1;
     var cr=[[9.2,9,1.7],[14.8,8.3,1.05],[13.4,14.4,2.05],[8.4,14.7,1.15],[16.4,12.7,.85],[11.3,11.7,.65],[6.6,11.4,.7]];
-    return '<circle cx="12" cy="12" r="11.8" fill="url(#rrMoGlow)"/>'+
+    var q=p<=.5?p:1-p, il=(1-Math.cos(2*Math.PI*q))/2, hx=12+6.5*(1-il)-2*il; if(p>.5) hx=24-hx;
+    return '<circle cx="12" cy="12" r="11.9" fill="url(#rrMoGlow)" opacity="'+(.25+.75*il).toFixed(2)+'"/>'+
       '<circle cx="12" cy="12" r="'+MR+'" fill="url(#rrMoDark)"/>'+litPath(p)+
       cr.map(function(c){ return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="url(#rrMoCr)"/>'; }).join("")+
-      '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#ffe4fb" stroke-opacity=".38" stroke-width=".45"/>';
+      (il>.04?'<ellipse cx="'+hx+'" cy="8" rx="'+(1.2+1.4*il).toFixed(2)+'" ry="1.6" fill="url(#rrMoHi)"/>':'')+
+      '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#ffe9a8" stroke-opacity=".45" stroke-width=".4"/>';
   }
   function moonSvg(p,cls){ return '<svg class="rrMoon'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+art(p)+'</svg>'; }
   var P={

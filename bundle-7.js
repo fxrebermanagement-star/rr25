@@ -2753,7 +2753,7 @@ try{
     c.beginPath();
     if(waxing){ c.arc(cx,cy,r,-Math.PI/2,Math.PI/2,false); c.ellipse(cx,cy,Math.abs(r*k),r,0,Math.PI/2,-Math.PI/2,k<0?false:true); }
     else { c.arc(cx,cy,r,Math.PI/2,-Math.PI/2,false); c.ellipse(cx,cy,Math.abs(r*k),r,0,-Math.PI/2,Math.PI/2,k<0?false:true); }
-    var lg=c.createRadialGradient(cx-r*.25,cy-r*.3,r*.1,cx,cy,r*1.05); lg.addColorStop(0,"#fffdf6"); lg.addColorStop(.45,"#f4ead8"); lg.addColorStop(.8,"#e2cfe6"); lg.addColorStop(1,"#bfa1dc"); c.fillStyle=lg;
+    var lg=c.createRadialGradient(cx-r*.25,cy-r*.3,r*.1,cx,cy,r*1.05); lg.addColorStop(0,"#fffbe6"); lg.addColorStop(.45,"#ffe88a"); lg.addColorStop(.8,"#ffcf3f"); lg.addColorStop(1,"#f7a92a"); c.fillStyle=lg;
     c.fill();
     /* Build 123: Krater */
     [[-.3,-.33,.18],[.31,-.4,.11],[.15,.26,.22],[-.39,.29,.12],[.48,.08,.09],[-.08,-.03,.07]].forEach(function(k){ c.beginPath(); c.arc(cx+k[0]*r,cy+k[1]*r,k[2]*r,0,7); c.fillStyle="rgba(110,80,145,.22)"; c.fill(); });
