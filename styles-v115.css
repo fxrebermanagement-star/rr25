@@ -86,3 +86,17 @@ html body #home #rezHome .rzhIc svg{width:15px;height:15px;fill:#3a1350;stroke:n
 html body #home #rezHome:active{transform:scale(.96);border-color:var(--rr-pink)!important;
   box-shadow:0 0 22px rgba(255,122,217,.5),0 0 6px rgba(199,139,255,.6),inset 0 1px 0 rgba(255,255,255,.2)!important}
 html body #home #rezHome:focus-visible{outline:none;border-color:var(--rr-violet-hi)!important;box-shadow:0 0 18px rgba(199,139,255,.55)!important}
+
+/* Build 118: Ritual-Chips auf Heute passend zum Ritualbauer-Knopf (leiser, gleiche Familie) */
+html body #home #cats .chip{
+  border-radius:999px!important;border:1px solid rgba(199,139,255,.42)!important;
+  background:linear-gradient(135deg,rgba(199,139,255,.20),rgba(255,122,217,.12))!important;
+  color:var(--rr-violet-hi)!important;font-family:var(--rr-font-btn);font-weight:500;
+  box-shadow:0 0 9px rgba(199,139,255,.18),inset 0 1px 0 rgba(255,255,255,.10)!important;
+  transition:transform .18s ease,box-shadow .25s ease,border-color .25s ease;-webkit-tap-highlight-color:transparent}
+html body #home #cats .chip.on,html body #home #cats .chip[aria-pressed="true"]{
+  border-color:var(--rr-pink)!important;background:linear-gradient(135deg,rgba(199,139,255,.38),rgba(255,122,217,.30))!important;
+  box-shadow:0 0 14px rgba(255,122,217,.35),inset 0 1px 0 rgba(255,255,255,.16)!important;color:#fff!important}
+html body #home #cats .chip:active{transform:scale(.96);border-color:var(--rr-pink)!important;
+  box-shadow:0 0 18px rgba(255,122,217,.45),0 0 5px rgba(199,139,255,.55),inset 0 1px 0 rgba(255,255,255,.18)!important}
+html body #home #cats .chip:focus-visible{outline:none;border-color:var(--rr-violet-hi)!important;box-shadow:0 0 14px rgba(199,139,255,.5)!important}
