@@ -1,4 +1,4 @@
-/* rr25 · Paket 4/7 · Build 125 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 4/7 · Build 126 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-fotos.js, ritual-gpic.js, ritual-kalender.js, ritual-start.js, ritual-buch.js, ritual-navlove.js, ritual-final.js, ritual-gabe-fix.js */
 /* ==== ritual-fotos.js ==== */
 try{
@@ -427,8 +427,21 @@ try{
         (moon?'<span class="kmMoon">'+moon+'</span>':'')+'<span>'+dd.getDate()+'</span><span class="kmDots">'+dots+'</span></button>');
     }
     return '<div class="kalMonth"><div class="kmHead"><button type="button" class="kmNav" data-m="-1" aria-label="Monat zurück">‹</button><b>'+MN[d.getMonth()]+' '+d.getFullYear()+'</b><span class="kmR"><button type="button" class="kmYear" id="kmYear">Jahr</button><button type="button" class="kmNav" data-m="1" aria-label="Monat vor">›</button></span></div>'+
-      '<div class="kmGrid">'+cells.join("")+'</div>'+
+      '<div class="kmGrid">'+cells.join("")+'</div>'+vmListe(m0)+
       LEG(false)+'</div>';
+  }
+  /* Build 126: Vollmondnamen im Monat, antippen öffnet den Tag */
+  function vmListe(m0){
+    var M=window.RR25_MOND; if(!M||!M.vollName) return "";
+    var d=new Date(m0), e=new Date(d.getFullYear(),d.getMonth()+1,1).getTime();
+    return M.events(m0,e-1).filter(function(x){ return x.q===2; }).map(function(x){ var v=M.vollName(x.t);
+      return '<button type="button" class="kmVm" data-day="'+day0(x.t)+'"><span class="kmVmS">🌕</span><span><b>'+h(v.name)+' · '+h(v.zeichen)+'</b><small>'+dstr(x.t)+' · '+tstr(x.t)+' Uhr</small></span></button>'; }).join("");
+  }
+  function vmKarte(dm){
+    var M=window.RR25_MOND; if(!M||!M.vollName) return "";
+    var e=M.events(dm,dm+86400000-1).filter(function(x){ return x.q===2; })[0]; if(!e) return "";
+    var v=M.vollName(e.t);
+    return '<div class="kalVm"><p class="kalVmT">🌕 '+h(v.name)+' · '+h(v.zeichen)+'</p><p class="kalVmZ">Vollmond um '+tstr(e.t)+' Uhr, Berner Zeit</p><p class="kalVmW">'+h(v.wasser)+'</p><p class="kalVmL">'+h(v.laden)+'</p></div>';
   }
   /* Legende (Build 33): Symbol+Text bleiben zusammen (nowrap je Eintrag, Zeile bricht zwischen Einträgen) */
   function LEG(yr){
@@ -457,7 +470,7 @@ try{
     else sugg=[byId("segen"),byId("dank"),byId("schutz")];
     sugg=sugg.filter(Boolean);
     var rl=sugg.length?'<div class="kalRits"><span class="kcK">Rituale'+(tk==="HARD"?' · nur im Feintakt, mit Gate und Rückkehr':'')+'</span>'+sugg.map(function(r){ return '<button type="button" class="kalRit" data-rid="'+h(r.id)+'">'+h(r.t)+'</button>'; }).join("")+'</div>':'';
-    return '<div id="kalDay"><p class="group">'+head+'</p>'+cx+rl+vh+(items.length?cards(items,now):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
+    return '<div id="kalDay"><p class="group">'+head+'</p>'+vmKarte(dm)+cx+rl+vh+(items.length?cards(items,now):'<p class="meta">Keine Einträge. Mondregel: '+NAME[p.kind]+'.</p>')+'</div>';
   }
   function covLine(now){
     var c=K.coverage(), stt=K.status();
@@ -516,7 +529,7 @@ try{
     });
     box.querySelectorAll(".kalRit").forEach(function(b){ b.onclick=function(ev){ ev.stopPropagation(); var id=b.getAttribute("data-rid"); if(id&&window.RR25_OPEN) window.RR25_OPEN(id); }; });
     /* Build 110: Tipp auf einen Tag führt direkt zur Tagesansicht (unter der Kopfzeile) */
-    box.querySelectorAll(".kmDay").forEach(function(b){
+    box.querySelectorAll(".kmDay,.kmVm").forEach(function(b){
       b.onclick=function(){ var dm=+b.getAttribute("data-day"); SEL=SEL===dm?null:dm; paint();
         var el=document.getElementById("kalDay"); if(!el) return;
         var hd=document.querySelector("header"), off=(hd&&getComputedStyle(hd).position!=="static"?hd.getBoundingClientRect().bottom:0)+8;
@@ -596,6 +609,10 @@ try{
     ".kmDay.today{box-shadow:inset 0 0 0 1.5px #ff4fe0}",
     ".kmDay.sel{box-shadow:inset 0 0 0 2px #cbb8ff;background:rgba(155,140,255,.22)}",
     ".kmDay.today.sel{box-shadow:inset 0 0 0 2px #ff4fe0;background:rgba(155,140,255,.22)}",
+    ".kmVm{display:flex;align-items:center;gap:.6rem;width:100%;margin:.45rem 0 0;padding:.55rem .75rem;border-radius:14px;border:1px solid rgba(214,170,255,.35);background:linear-gradient(135deg,rgba(120,60,200,.22),rgba(255,120,220,.08));color:#f3e8ff;text-align:left;box-shadow:0 0 14px rgba(190,110,255,.18)}",
+    ".kmVm b{display:block;font-weight:600;font-size:.92rem}.kmVm small{display:block;color:#c9b3ee;font-size:.75rem}.kmVmS{font-size:1.5rem;filter:drop-shadow(0 0 6px rgba(255,230,170,.7))}",
+    ".kalVm{margin:.4rem 0 .7rem;padding:.7rem .85rem;border-radius:16px;border:1px solid rgba(214,170,255,.4);background:linear-gradient(135deg,rgba(120,60,200,.25),rgba(255,120,220,.08));box-shadow:0 0 18px rgba(190,110,255,.2)}",
+    ".kalVmT{margin:0;font-weight:600;color:#fff4d6;font-size:1rem}.kalVmZ{margin:.15rem 0 .4rem;color:#c9b3ee;font-size:.78rem}.kalVmW{margin:0 0 .3rem;color:#efe3ff;font-size:.88rem}.kalVmL{margin:0;color:#ffd9f4;font-size:.82rem}",
     ".kmMoon{position:absolute;top:1px;right:3px;font-size:.55rem;line-height:1;color:#fff1c2}",
     ".kmDots{display:flex;gap:2px;height:5px}",
     ".kmDots i,.kmLeg i.dh,.kmLeg i.de{display:inline-block;width:5px;height:5px;border-radius:50%}",

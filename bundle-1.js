@@ -1,4 +1,4 @@
-/* rr25 · Paket 1/7 · Build 125 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 1/7 · Build 126 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-ico.js, doll.js, ritual-core.js, ritual-mondphase.js, ritual-zeit.js, rituals-v2.js */
 /* ==== ritual-ico.js ==== */
 try{
@@ -252,7 +252,29 @@ try{
     return {key:zu?"zu":"ab",name:zu?"Zunehmend":"Abnehmend",sym:d.sym,
       say:zu?"zunehmend"+(nf?" · "+tage(dayDiff(s,nf))+" vor Vollmond":""):"abnehmend"+(nn?" · "+tage(dayDiff(s,nn))+" vor Neumond":"")};
   }
-  window.RR25_MOND={events:events,phase:phase,day:day,next:next,prev:prev,phaseMs:phaseMs,fenster:fenster};
+
+  /* Build 126: Vollmondnamen mit Tierkreiszeichen (tropisch). Mond bei Vollmond = Sonne + 180°. */
+  var VMN=["Wolfsmond","Schneemond","Wurmmond","Pinkmond","Blumenmond","Erdbeermond","Hirschmond","Störmond","Erntemond","Jägermond","Bibermond","Kältemond"];
+  var ZD=["Widder","Stier","Zwillinge","Krebs","Löwe","Jungfrau","Waage","Skorpion","Schütze","Steinbock","Wassermann","Fische"];
+  var WAS={Widder:"Wasser für Mut und Neustart. Gut zum Waschen der Hände vor einem ersten Schritt.",
+    Stier:"Wasser für Fülle, Erdung und Selbstwert. Gut für Pflanzen, Geldschale und Körperpflege.",
+    Zwillinge:"Wasser für klare Worte und Austausch. Gut vor Gesprächen, Briefen und Lernen.",
+    Krebs:"Wasser für Geborgenheit und Heilen. Gut fürs Zuhause, Bad und Herzarbeit.",
+    "Löwe":"Wasser für Strahlkraft und Selbstvertrauen. Gut für Auftritte und Kreatives.",
+    Jungfrau:"Wasser für Ordnung, Reinigung und Gesundheit. Gut zum Putzen und für den Alltag.",
+    Waage:"Wasser für Harmonie und Liebe. Gut für Beziehungen, Schönheit und Ausgleich.",
+    Skorpion:"Wasser für Tiefe, Schutz und Loslassen. Gut zum Reinigen alter Lasten.",
+    "Schütze":"Wasser für Glück, Weite und Zuversicht. Gut für Reisen und grosse Ziele.",
+    Steinbock:"Wasser für Ausdauer und Struktur. Gut für Beruf, Pläne und Grenzen.",
+    Wassermann:"Wasser für Freiheit und neue Ideen. Gut für Wandel und Freundschaft.",
+    Fische:"Wasser für Intuition und Träume. Gut für Meditation, Schlaf und Mitgefühl."};
+  function sunLon(ms){ var n=ms/DAY+2440587.5-2451545, g=(357.528+0.9856003*n)*rad; return ((280.460+0.9856474*n+1.915*Math.sin(g)+0.020*Math.sin(2*g))%360+360)%360; }
+  function vollName(t){
+    var d=new Date(t), m=d.getMonth(), p=prev(2,t-5*DAY), blau=p&&new Date(p).getMonth()===m&&new Date(p).getFullYear()===d.getFullYear();
+    var z=ZD[Math.floor(((sunLon(t)+180)%360)/30)];
+    return {name:blau?"Blauer Mond":VMN[m],zeichen:z,t:t,wasser:WAS[z],laden:"Wasser laden: Vorabend bis Nacht danach, 3 Nächte."};
+  }
+  window.RR25_MOND={vollName:vollName,events:events,phase:phase,day:day,next:next,prev:prev,phaseMs:phaseMs,fenster:fenster};
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
