@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 122 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 123 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-x.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -937,6 +937,7 @@ try{
     return "M12 2A10 10 0 0 "+outer+" 12 22A"+rx.toFixed(2)+" 10 0 0 "+term+" 12 2Z";
   }
   function svg(p){
+    if(window.RR25_ICO&&window.RR25_ICO.moonSvg) return window.RR25_ICO.moonSvg(p,"mbSvg"); /* Build 123 */
     var lit=(1-Math.cos(2*Math.PI*p))/2, d=lit>.995?"M12 2A10 10 0 1 1 12 22A10 10 0 1 1 12 2Z":(lit<.005?"":path(p));
     return '<svg class="mbSvg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false">'+
       '<defs><radialGradient id="mbLit" cx="40%" cy="38%" r="70%"><stop offset="0" stop-color="#fff8ff"/><stop offset=".65" stop-color="#eadcff"/><stop offset="1" stop-color="#c9b2f2"/></radialGradient></defs>'+
@@ -1340,8 +1341,8 @@ try{
     el("path",{d:"M"+C+","+(C-LR-24)+" l-5,-8 h10z","class":"jrPtr"},svg);
     var M=null; try{ M=window.RR25_MOND&&window.RR25_MOND.day(Date.now()); }catch(e){}
     var mgrp=el("g",{transform:"translate("+C+","+(C-12)+")","class":"jrMoon"},svg);
-    el("circle",{r:"22","class":"jrMoonBg"},mgrp);
-    if(M) el("path",{d:moonPath(M.p,19.5),"class":"jrMoonLit"},mgrp);
+    if(M&&window.RR25_ICO&&window.RR25_ICO.moonArt){ var ma=el("g",{transform:"scale(2.05) translate(-12,-12)"},mgrp); ma.innerHTML=window.RR25_ICO.moonArt(M.p); } /* Build 123 */
+    else { el("circle",{r:"22","class":"jrMoonBg"},mgrp); if(M) el("path",{d:moonPath(M.p,19.5),"class":"jrMoonLit"},mgrp); }
     var mt=el("text",{x:C,y:C+24,"text-anchor":"middle","class":"jrMoonT"},svg); mt.textContent=isNow&&M?M.name:"";
     var tt=el("text",{x:C,y:C+38,"text-anchor":"middle","class":"jrToneT"},svg); tt.textContent=isNow?"heute "+tf.n:String(y); tt.setAttribute("fill",isNow?tf.c:"#cdb6ff");
     if(!isNow) mgrp.setAttribute("display","none");
@@ -2752,7 +2753,11 @@ try{
     c.beginPath();
     if(waxing){ c.arc(cx,cy,r,-Math.PI/2,Math.PI/2,false); c.ellipse(cx,cy,Math.abs(r*k),r,0,Math.PI/2,-Math.PI/2,k<0?false:true); }
     else { c.arc(cx,cy,r,Math.PI/2,-Math.PI/2,false); c.ellipse(cx,cy,Math.abs(r*k),r,0,-Math.PI/2,Math.PI/2,k<0?false:true); }
-    c.fill(); c.restore();
+    var lg=c.createRadialGradient(cx-r*.25,cy-r*.3,r*.1,cx,cy,r*1.05); lg.addColorStop(0,"#fffdf6"); lg.addColorStop(.45,"#f4ead8"); lg.addColorStop(.8,"#e2cfe6"); lg.addColorStop(1,"#bfa1dc"); c.fillStyle=lg;
+    c.fill();
+    /* Build 123: Krater */
+    [[-.3,-.33,.18],[.31,-.4,.11],[.15,.26,.22],[-.39,.29,.12],[.48,.08,.09],[-.08,-.03,.07]].forEach(function(k){ c.beginPath(); c.arc(cx+k[0]*r,cy+k[1]*r,k[2]*r,0,7); c.fillStyle="rgba(110,80,145,.22)"; c.fill(); });
+    c.restore();
   }
   function render(D){
     var cv=document.createElement("canvas"); cv.width=1080; cv.height=1350; var c=cv.getContext("2d");

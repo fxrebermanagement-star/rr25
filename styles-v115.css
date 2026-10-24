@@ -120,3 +120,7 @@ html body #home #cats .chip:focus-visible{outline:none;border-color:var(--rr-vio
 #rezept .rxL{margin:.12rem 0;font-size:.86rem;line-height:1.45;color:var(--rr-text)}#rezept .rxL b{display:inline!important;margin-right:.25rem;color:var(--rr-violet-hi);font-weight:600}
 #rezept .rxCard .rzCh{flex-wrap:wrap}
 #rezept .rxAnp{margin:.4rem 0 .6rem;padding-top:.7rem;border-top:1px solid rgba(199,139,255,.2);font-family:Georgia,serif;font-size:1rem;color:var(--rr-violet-hi)}
+
+/* Build 123: Mondbilder (Perlmutt, Krater, sanfter Schein) */
+.rrMoon{display:inline-block;width:1.3em;height:1.3em;vertical-align:-.28em;overflow:visible}
+.rrIco.rrIco-mondbild{stroke:none;fill:none;filter:drop-shadow(0 0 2px rgba(255,190,240,.35))}

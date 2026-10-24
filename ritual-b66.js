@@ -355,8 +355,8 @@
     el("path",{d:"M"+C+","+(C-LR-24)+" l-5,-8 h10z","class":"jrPtr"},svg);
     var M=null; try{ M=window.RR25_MOND&&window.RR25_MOND.day(Date.now()); }catch(e){}
     var mgrp=el("g",{transform:"translate("+C+","+(C-12)+")","class":"jrMoon"},svg);
-    el("circle",{r:"22","class":"jrMoonBg"},mgrp);
-    if(M) el("path",{d:moonPath(M.p,19.5),"class":"jrMoonLit"},mgrp);
+    if(M&&window.RR25_ICO&&window.RR25_ICO.moonArt){ var ma=el("g",{transform:"scale(2.05) translate(-12,-12)"},mgrp); ma.innerHTML=window.RR25_ICO.moonArt(M.p); } /* Build 123 */
+    else { el("circle",{r:"22","class":"jrMoonBg"},mgrp); if(M) el("path",{d:moonPath(M.p,19.5),"class":"jrMoonLit"},mgrp); }
     var mt=el("text",{x:C,y:C+24,"text-anchor":"middle","class":"jrMoonT"},svg); mt.textContent=isNow&&M?M.name:"";
     var tt=el("text",{x:C,y:C+38,"text-anchor":"middle","class":"jrToneT"},svg); tt.textContent=isNow?"heute "+tf.n:String(y); tt.setAttribute("fill",isNow?tf.c:"#cdb6ff");
     if(!isNow) mgrp.setAttribute("display","none");

@@ -12,6 +12,35 @@
     else lit='<path class="icF" d="M12 '+(C-R)+'A'+R+' '+R+' 0 0 1 12 '+(C+R)+'A'+rx+' '+R+' 0 0 '+(k>0?0:1)+' 12 '+(C-R)+'Z"'+(wax?'':' transform="matrix(-1 0 0 1 24 0)"')+'/>';
     return '<circle cx="12" cy="12" r="'+R+'" class="icO"/>'+lit;
   }
+  /* Build 123: Mond als Bild. Perlmutt-Licht mit Krater, dunkle Seite schwach sichtbar, sanfter violett-rosa Schein.
+     Ein gemeinsames <defs> im Dokument (rrMoDefs). p: 0 Neumond, .5 Vollmond, <.5 zunehmend (Licht rechts). */
+  function defs(){
+    if(document.getElementById("rrMoDefs")||!document.body) return;
+    var d=document.createElement("div");
+    d.innerHTML='<svg id="rrMoDefs" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><defs>'+
+      '<radialGradient id="rrMoLit" cx="40%" cy="36%" r="72%"><stop offset="0" stop-color="#fffdf6"/><stop offset=".42" stop-color="#f4ead8"/><stop offset=".78" stop-color="#e2cfe6"/><stop offset="1" stop-color="#bfa1dc"/></radialGradient>'+
+      '<radialGradient id="rrMoDark" cx="42%" cy="38%" r="75%"><stop offset="0" stop-color="#3d2b5c"/><stop offset="1" stop-color="#1a1029"/></radialGradient>'+
+      '<radialGradient id="rrMoGlow" cx="50%" cy="50%" r="50%"><stop offset=".62" stop-color="#ffc4ef" stop-opacity=".42"/><stop offset=".8" stop-color="#c78bff" stop-opacity=".16"/><stop offset="1" stop-color="#c78bff" stop-opacity="0"/></radialGradient>'+
+      '<radialGradient id="rrMoCr" cx="45%" cy="40%" r="60%"><stop offset="0" stop-color="#7d5f9c" stop-opacity=".16"/><stop offset="1" stop-color="#6a4c8a" stop-opacity=".34"/></radialGradient>'+
+      '</defs></svg>';
+    document.body.insertBefore(d.firstChild,document.body.firstChild);
+  }
+  var MR=9.2;
+  function litPath(p){
+    var wax=p<=.5, q=wax?p:1-p, k=Math.cos(2*Math.PI*q), rx=(Math.abs(k)*MR).toFixed(2), t=(12-MR).toFixed(2), b=(12+MR).toFixed(2);
+    if(q<.02) return "";
+    if(q>.485) return '<circle cx="12" cy="12" r="'+MR+'" fill="url(#rrMoLit)"/>';
+    return '<path fill="url(#rrMoLit)" d="M12 '+t+'A'+MR+' '+MR+' 0 0 1 12 '+b+'A'+rx+' '+MR+' 0 0 '+(k>0?0:1)+' 12 '+t+'Z"'+(wax?'':' transform="matrix(-1 0 0 1 24 0)"')+'/>';
+  }
+  function art(p){
+    defs(); p=((+p%1)+1)%1;
+    var cr=[[9.2,9,1.7],[14.8,8.3,1.05],[13.4,14.4,2.05],[8.4,14.7,1.15],[16.4,12.7,.85],[11.3,11.7,.65],[6.6,11.4,.7]];
+    return '<circle cx="12" cy="12" r="11.8" fill="url(#rrMoGlow)"/>'+
+      '<circle cx="12" cy="12" r="'+MR+'" fill="url(#rrMoDark)"/>'+litPath(p)+
+      cr.map(function(c){ return '<circle cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="url(#rrMoCr)"/>'; }).join("")+
+      '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#ffe4fb" stroke-opacity=".38" stroke-width=".45"/>';
+  }
+  function moonSvg(p,cls){ return '<svg class="rrMoon'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+art(p)+'</svg>'; }
   var P={
     sonne:'<circle cx="12" cy="12" r="4.4" class="icF"/><path d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.4 5.4l1.8 1.8M16.8 16.8l1.8 1.8M5.4 18.6l1.8-1.8M16.8 7.2l1.8-1.8"/>',
     herz:'<path class="icF" d="M12 19.6s-7.2-4.4-7.2-9.4A3.9 3.9 0 0112 7.9a3.9 3.9 0 017.2 2.3c0 5-7.2 9.4-7.2 9.4z"/>',
@@ -21,7 +50,8 @@
   var MP={"\ud83c\udf11":0,"\ud83c\udf12":.125,"\ud83c\udf13":.25,"\ud83c\udf14":.375,"\ud83c\udf15":.5,"\ud83c\udf16":.625,"\ud83c\udf17":.75,"\ud83c\udf18":.875};
   var NM={"\ud83c\udf11":"Neumond","\ud83c\udf12":"zunehmende Sichel","\ud83c\udf13":"erstes Viertel","\ud83c\udf14":"zunehmender Mond","\ud83c\udf15":"Vollmond","\ud83c\udf16":"abnehmender Mond","\ud83c\udf17":"letztes Viertel","\ud83c\udf18":"abnehmende Sichel"};
   function svg(name){
-    var body=P[name]; if(name in MP) body=moon(MP[name]); else if(typeof name==="number") body=moon(name);
+    if(name in MP) return moonSvg(MP[name],"rrIco rrIco-mondbild"); if(typeof name==="number") return moonSvg(name,"rrIco rrIco-mondbild");
+    var body=P[name];
     if(!body) return "";
     var cls=typeof name==="string"&&P[name]?name:"mond";
     return '<svg class="rrIco rrIco-'+cls+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+body+'</svg>';
@@ -68,6 +98,6 @@
       });
     }).observe(app,{childList:true,subtree:true,characterData:true});
   }
-  window.RR25_ICO={svg:svg,scan:scan,moon:function(p){ return svg(+p); }};
+  window.RR25_ICO={svg:svg,scan:scan,moonArt:art,moonSvg:moonSvg,moon:function(p){ return svg(+p); }};
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",start); else start();
 })();
