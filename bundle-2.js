@@ -1,4 +1,4 @@
-/* rr25 · Paket 2/7 · Build 119 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 2/7 · Build 120 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-runner-v2.js, ritual-karten.js */
 /* ==== ritual-runner-v2.js ==== */
 try{
@@ -131,6 +131,7 @@ try{
   /* ---------- Ablauf ---------- */
   var cur=null;
   function sigilAbsicht(){
+    if(cur&&cur.r&&cur.r.rxAbs!=null) return ""; /* Build 120: Ritual X nimmt nie den Zeichen-Text */
     try{ var d=JSON.parse(localStorage.getItem("rr25_sigil")||"{}"); return String(d.t||"").trim(); }catch(e){ return ""; }
   }
   function fillT(s){
@@ -525,6 +526,7 @@ try{
     var r=byId(id); if(!r) return;
     var mem={};
     if(wer){ mem.Name=wer; var p=String(wer).split(/\s*·\s*/); mem.A=p[0]||wer; mem.B=p[1]||""; }
+    if(r.rxAbs) mem.Absicht=r.rxAbs;
     cur={r:r,mem:mem,wer:wer||"",i:0,lvl:null,wesen:false,steps:[],started:false,ctx:ctx||null};
     window._rid=r.id;
     show("run");
