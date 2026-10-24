@@ -1840,7 +1840,11 @@ try{
   var SATZ={schutz:"Ich bin geschützt. Mein Feld ist geschlossen.",ruhe:"Ich bin ruhig. Ich lasse los.",herz:"Mein Herz ist offen und klar.",klaerung:"Ich sehe klar.",mut:"Ich bin mutig und ruhig.",heilung:"Ich lasse Heilung zu, in meinem Tempo.",fuelle:"Ich bin versorgt. Genug ist da.",traum:"Ich gehe sanft über die Schwelle.",ende:"Es ist gut. Ich schliesse ab."};
   /* Build 113: Sätze für eine Person (Segen) und als Fluch, [N] = Name */
   var SATZP={schutz:"[N] ist geschützt. Das Feld um [N] ist geschlossen.",ruhe:"[N] ist ruhig. [N] darf loslassen.",herz:"Das Herz von [N] ist offen und klar.",klaerung:"[N] sieht klar.",mut:"[N] ist mutig und ruhig.",heilung:"Heilung findet den Weg zu [N], im eigenen Tempo.",fuelle:"[N] ist versorgt. Genug ist da.",traum:"[N] geht sanft über die Schwelle.",ende:"Es ist gut. Für [N] ist es abgeschlossen."};
-  var SATZF={schutz:"Was von [N] kommt, prallt ab und geht zurück zu [N].",ruhe:"[N] findet keine Ruhe, bis es gut ist.",herz:"Das Herz von [N] zeigt sich, wie es ist.",klaerung:"Was [N] verbirgt, kommt ans Licht.",mut:"Der Mut von [N] trägt nicht weiter als bis hier.",heilung:"Was [N] gesetzt hat, kehrt zu [N] zurück.",fuelle:"Was [N] genommen hat, geht dahin zurück, wo es hingehört.",traum:"[N] trägt die eigenen Träume, nicht meine.",ende:"Zwischen [N] und mir ist es zu Ende."};
+  /* Build 122: Fluch in Ritual X direkt und scharf, ohne er/sie (Name statt Pronomen) */
+  var SATZF={fuelle:"Was [N] hält, geht verloren. Es rinnt [N] durch die Finger.",ruhe:"[N] findet keinen Schlaf. Die Ruhe meidet [N].",herz:"[N] bleibt allein. Die Wärme zieht sich von [N] zurück.",heilung:"Die Kraft weicht von [N].",schutz:"Was [N] sendet, trifft [N] selbst.",
+    klaerung:"Was [N] verbirgt, kommt ans Licht und bleibt dort.",mut:"Der Mut von [N] bricht. Die Kraft trägt nicht mehr.",traum:"Die Nächte von [N] werden unruhig. Kein Traum bringt Frieden.",ende:"Zwischen [N] und mir ist es zu Ende. Der Faden reisst."};
+  var X369F={fuelle:["Es ist gesetzt.","Es rinnt davon.","[N] verliert."],ruhe:["Es ist gesetzt.","Die Ruhe bleibt fern.","[N] findet keinen Schlaf."],herz:["Es ist gesetzt.","Die Wärme zieht sich zurück.","[N] bleibt allein."],
+    heilung:["Es ist gesetzt.","Die Kraft weicht.","Es nimmt seinen Lauf."],schutz:["Es ist gesetzt.","Es kehrt zurück.","Es trifft den Sender."]};
   var SATZG={schutz:"Meine Grenze steht. Bis hierher und nicht weiter.",ruhe:"Meine Ruhe gehört mir. Die Grenze steht.",ende:"Es ist zu Ende. Die Grenze steht."};
   var TONS=[["Soft","tS"],["Grenze","tG"],["Hard","tH"],["Feld","tF"]];
   /* Überlieferung: Wochentag (0 So … 6 Sa) und Mondphase, in eigenen Worten, als Tradition */
@@ -1925,7 +1929,7 @@ try{
     herz:["Ich bin offen.","Liebe findet den Weg.","Ich sehe es. Es ist gesetzt."],klaerung:["Es wird klar.","Der Nebel löst sich.","Ich sehe es. Es ist klar."],mut:["Die Kraft ist da.","Die Energie fliesst.","Ich sehe es. Ich bin in der Kraft."],
     fuelle:["Ich bin versorgt.","Der Weg öffnet sich.","Ich sehe es. Es ist gesetzt."],ruhe:["Die Ruhe sitzt.","Alles Unruhige legt sich.","Ich sehe es. Es ist still und gut."],
     traum:["Die Schwelle ist offen.","Der Weg ist sanft.","Ich sehe es. Es ist getragen."],ende:["Die Verbindung löst sich.","Die Fäden fallen ab.","Ich sehe es. Es ist zu Ende."]};
-  function x369(){ if(isP(S)&&S.rt==="Fluch") return ["Es sitzt.","Was gesetzt wurde, kehrt zurück.","Ich sehe es. Es ist gesetzt."]; return X369[S.th]||["Es sitzt.","Es findet den Weg.","Ich sehe es. Es ist gesetzt."]; }
+  function x369(){ if(isP(S)&&S.rt==="Fluch"){ var F=X369F[S.th]||["Es ist gesetzt.","Es nimmt seinen Lauf.","Es ist gesetzt."], n=fuerTxt(S); return [F[0],F[1],"Ich sehe es. "+F[2].replace(/\[N\]/g,n)]; } return X369[S.th]||["Es sitzt.","Es findet den Weg.","Ich sehe es. Es ist gesetzt."]; }
   function build(){
     var hard=S.ton==="Hard", ab=(S.txt||"").trim()||autoSatz(S)||"So sei es.", w=fuerTxt(S), P=isP(S), fl=P&&S.rt==="Fluch";
     var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
