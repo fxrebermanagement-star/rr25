@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 117 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 118 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-b83.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -2283,7 +2283,7 @@ try{
     var b=document.getElementById("rezHome");
     if(!b){
       b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Ritualbauer öffnen, eigenes Ritual zusammenstellen");
-      b.textContent="✦ Ritualbauer";
+      b.innerHTML='<span class="rzhIc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 5.3 5.3 1.5-5.3 1.5L12 16.8l-1.5-5.3L5.2 10l5.3-1.5z"/><path d="M18.4 15.6l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/></svg></span><span class="rzhTx">Ritualbauer</span>';
       b.onclick=function(){
         try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); }catch(e){}
       };
