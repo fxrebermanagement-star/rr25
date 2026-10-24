@@ -70,3 +70,19 @@ html body .rrLeer{display:block!important;margin:.9rem 0!important;padding:.9rem
 /* Geplant: Auswahlliste im App-Stil */
 html body #geplant select#plR{-webkit-appearance:none;appearance:none;padding-right:2.4rem!important;background-color:rgba(30,14,48,.8)!important;color:var(--rr-text)!important;border:1px solid var(--rr-line)!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c78bff' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right .8rem center!important;background-size:1.1rem!important}
 html body #geplant select#plR option{background:#1a0b2c;color:var(--rr-text)}
+
+/* Build 118: Ritualbauer-Knopf auf Heute, schoener: weiche Violett-Pille mit Funkel-Icon und sanftem Tipp-Leuchten */
+html body #home #rezHome{
+  gap:.42rem;height:36px!important;padding:0 1.05rem 0 .5rem!important;margin-top:8px!important;
+  border-radius:999px!important;border:1px solid rgba(199,139,255,.55)!important;
+  background:linear-gradient(135deg,rgba(199,139,255,.30),rgba(255,122,217,.20))!important;
+  color:var(--rr-violet-hi)!important;font-family:var(--rr-font-btn);font-size:.74rem!important;font-weight:600;letter-spacing:.03em;
+  box-shadow:0 0 14px rgba(199,139,255,.28),inset 0 1px 0 rgba(255,255,255,.14)!important;
+  transition:transform .18s ease,box-shadow .25s ease,border-color .25s ease;-webkit-tap-highlight-color:transparent}
+html body #home #rezHome .rzhIc{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,#fff3fb 0%,var(--rr-pink) 45%,var(--rr-violet) 100%);
+  box-shadow:0 0 8px rgba(255,122,217,.55)}
+html body #home #rezHome .rzhIc svg{width:15px;height:15px;fill:#3a1350;stroke:none}
+html body #home #rezHome:active{transform:scale(.96);border-color:var(--rr-pink)!important;
+  box-shadow:0 0 22px rgba(255,122,217,.5),0 0 6px rgba(199,139,255,.6),inset 0 1px 0 rgba(255,255,255,.2)!important}
+html body #home #rezHome:focus-visible{outline:none;border-color:var(--rr-violet-hi)!important;box-shadow:0 0 18px rgba(199,139,255,.55)!important}

@@ -7,7 +7,7 @@
     var b=document.getElementById("rezHome");
     if(!b){
       b=document.createElement("button"); b.type="button"; b.id="rezHome"; b.className="chip"; b.setAttribute("aria-label","Ritualbauer öffnen, eigenes Ritual zusammenstellen");
-      b.textContent="✦ Ritualbauer";
+      b.innerHTML='<span class="rzhIc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 5.3 5.3 1.5-5.3 1.5L12 16.8l-1.5-5.3L5.2 10l5.3-1.5z"/><path d="M18.4 15.6l.6 1.9 1.9.6-1.9.6-.6 1.9-.6-1.9-1.9-.6 1.9-.6z"/></svg></span><span class="rzhTx">Ritualbauer</span>';
       b.onclick=function(){
         try{ window.RR25_REZEPT&&window.RR25_REZEPT.open(); }catch(e){}
       };
