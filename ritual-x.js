@@ -15,7 +15,11 @@
   var SATZ={schutz:"Ich bin geschützt. Mein Feld ist geschlossen.",ruhe:"Ich bin ruhig. Ich lasse los.",herz:"Mein Herz ist offen und klar.",klaerung:"Ich sehe klar.",mut:"Ich bin mutig und ruhig.",heilung:"Ich lasse Heilung zu, in meinem Tempo.",fuelle:"Ich bin versorgt. Genug ist da.",traum:"Ich gehe sanft über die Schwelle.",ende:"Es ist gut. Ich schliesse ab."};
   /* Build 113: Sätze für eine Person (Segen) und als Fluch, [N] = Name */
   var SATZP={schutz:"[N] ist geschützt. Das Feld um [N] ist geschlossen.",ruhe:"[N] ist ruhig. [N] darf loslassen.",herz:"Das Herz von [N] ist offen und klar.",klaerung:"[N] sieht klar.",mut:"[N] ist mutig und ruhig.",heilung:"Heilung findet den Weg zu [N], im eigenen Tempo.",fuelle:"[N] ist versorgt. Genug ist da.",traum:"[N] geht sanft über die Schwelle.",ende:"Es ist gut. Für [N] ist es abgeschlossen."};
-  var SATZF={schutz:"Was von [N] kommt, prallt ab und geht zurück zu [N].",ruhe:"[N] findet keine Ruhe, bis es gut ist.",herz:"Das Herz von [N] zeigt sich, wie es ist.",klaerung:"Was [N] verbirgt, kommt ans Licht.",mut:"Der Mut von [N] trägt nicht weiter als bis hier.",heilung:"Was [N] gesetzt hat, kehrt zu [N] zurück.",fuelle:"Was [N] genommen hat, geht dahin zurück, wo es hingehört.",traum:"[N] trägt die eigenen Träume, nicht meine.",ende:"Zwischen [N] und mir ist es zu Ende."};
+  /* Build 122: Fluch in Ritual X direkt und scharf, ohne er/sie (Name statt Pronomen) */
+  var SATZF={fuelle:"Was [N] hält, geht verloren. Es rinnt [N] durch die Finger.",ruhe:"[N] findet keinen Schlaf. Die Ruhe meidet [N].",herz:"[N] bleibt allein. Die Wärme zieht sich von [N] zurück.",heilung:"Die Kraft weicht von [N].",schutz:"Was [N] sendet, trifft [N] selbst.",
+    klaerung:"Was [N] verbirgt, kommt ans Licht und bleibt dort.",mut:"Der Mut von [N] bricht. Die Kraft trägt nicht mehr.",traum:"Die Nächte von [N] werden unruhig. Kein Traum bringt Frieden.",ende:"Zwischen [N] und mir ist es zu Ende. Der Faden reisst."};
+  var X369F={fuelle:["Es ist gesetzt.","Es rinnt davon.","[N] verliert."],ruhe:["Es ist gesetzt.","Die Ruhe bleibt fern.","[N] findet keinen Schlaf."],herz:["Es ist gesetzt.","Die Wärme zieht sich zurück.","[N] bleibt allein."],
+    heilung:["Es ist gesetzt.","Die Kraft weicht.","Es nimmt seinen Lauf."],schutz:["Es ist gesetzt.","Es kehrt zurück.","Es trifft den Sender."]};
   var SATZG={schutz:"Meine Grenze steht. Bis hierher und nicht weiter.",ruhe:"Meine Ruhe gehört mir. Die Grenze steht.",ende:"Es ist zu Ende. Die Grenze steht."};
   var TONS=[["Soft","tS"],["Grenze","tG"],["Hard","tH"],["Feld","tF"]];
   /* Überlieferung: Wochentag (0 So … 6 Sa) und Mondphase, in eigenen Worten, als Tradition */
@@ -100,7 +104,7 @@
     herz:["Ich bin offen.","Liebe findet den Weg.","Ich sehe es. Es ist gesetzt."],klaerung:["Es wird klar.","Der Nebel löst sich.","Ich sehe es. Es ist klar."],mut:["Die Kraft ist da.","Die Energie fliesst.","Ich sehe es. Ich bin in der Kraft."],
     fuelle:["Ich bin versorgt.","Der Weg öffnet sich.","Ich sehe es. Es ist gesetzt."],ruhe:["Die Ruhe sitzt.","Alles Unruhige legt sich.","Ich sehe es. Es ist still und gut."],
     traum:["Die Schwelle ist offen.","Der Weg ist sanft.","Ich sehe es. Es ist getragen."],ende:["Die Verbindung löst sich.","Die Fäden fallen ab.","Ich sehe es. Es ist zu Ende."]};
-  function x369(){ if(isP(S)&&S.rt==="Fluch") return ["Es sitzt.","Was gesetzt wurde, kehrt zurück.","Ich sehe es. Es ist gesetzt."]; return X369[S.th]||["Es sitzt.","Es findet den Weg.","Ich sehe es. Es ist gesetzt."]; }
+  function x369(){ if(isP(S)&&S.rt==="Fluch"){ var F=X369F[S.th]||["Es ist gesetzt.","Es nimmt seinen Lauf.","Es ist gesetzt."], n=fuerTxt(S); return [F[0],F[1],"Ich sehe es. "+F[2].replace(/\[N\]/g,n)]; } return X369[S.th]||["Es sitzt.","Es findet den Weg.","Ich sehe es. Es ist gesetzt."]; }
   function build(){
     var hard=S.ton==="Hard", ab=(S.txt||"").trim()||autoSatz(S)||"So sei es.", w=fuerTxt(S), P=isP(S), fl=P&&S.rt==="Fluch";
     var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
@@ -191,33 +195,43 @@
   var XTIER=["katze","kater","hund","huendin","pferd","vogel","hase","kaninchen","meerschweinchen","hamster","fisch","pony","esel","ziege","schaf","kuh","welpe","kaetzchen","tier"];
   var XPERS=["mama","mutter","papa","vater","sohn","tochter","bruder","schwester","oma","grossmutter","opa","grossvater","freundin","freund","partnerin","partner","mann","frau","kind","chef","chefin","nachbarin","nachbar","kollegin","kollege","tante","onkel","ex"];
   function cap(w){ return w.charAt(0).toUpperCase()+w.slice(1); }
+  /* Build 122: Parser neu. Reihenfolge: Ziel (Tier, Person, Vorname) -> Schaden gegen andere (Fluch, Hard) -> Thema -> Ton. */
+  var XSTOP=/^(Ich|Mein|Meine|Meinen|Meinem|Meiner|Unser|Unsere|Er|Sie|Es|Wir|Du|Ihr|Der|Die|Das|Den|Dem|Des|Ein|Eine|Einen|Bitte|Heute|Morgen|Gott|Engel|Ruhe|Liebe|Geld|Schutz|Heilung|Segen|Fluch|Glück|Gluck|Kraft|Mut|Herz|Frieden|Schlaf|Arbeit|Job|Erfolg|Angst|Stress|Mich|Uns|Ihn|Ihm|Ihnen|Alles|Nichts|Jetzt|Immer|Nie|Dass|Wenn|Und|Aber|Weil|Hilfe|Familie|Haus|Wohnung|Gesundheit|Klarheit|Wahrheit|Ritual|Segnung|Energie|Fülle|Fuelle|Trennung|Abschluss|Traum|Schwelle|Woche|Tag|Nacht|Leben|Zukunft|Prüfung|Pruefung|Firma|Geschäft|Geschaeft|Chef|Chefin|Mama|Papa|Oma|Opa)$/;
+  var XVERB="soll|sollen|sollte|wird|werden|muss|müssen|muessen|möge|moege|darf|kann|ist|hat|braucht|will|verliert|leidet|scheitert|bekommt|findet|schläft|schlaeft|geht|bleibt|bezahlt|zahlt";
+  function xName(RAW,tier){
+    var w="", m, NM="([A-ZÄÖÜ][a-zäöüéè]+)";
+    var nm=/(?:heisst|heißt|namens|name ist)\s+([A-Za-zÄÖÜäöüé]+)/i.exec(RAW); if(nm) return cap(nm[1]);
+    if(tier){ m=new RegExp("\\b"+tier.replace("ae","(?:ä|ae)").replace("ue","(?:ü|ue)")+"[a-zäöü]{0,2}\\s+"+NM).exec(RAW); if(m&&!XSTOP.test(m[1])) return m[1]; }
+    var re=new RegExp("(^|[^A-Za-zÄÖÜäöüß])"+NM+"\\s+(?:"+XVERB+")\\b","g");
+    while((m=re.exec(RAW))){ var pre=RAW.slice(0,m.index+m[1].length); if(!XSTOP.test(m[2])&&!/\b(der|die|das|den|dem|des|ein|eine|einen|mein|meine|meinen|dein|sein|ihr|unser|unsere)\s*$/i.test(pre)) return m[2]; }
+    m=new RegExp("\\b(?:für|fuer|an|gegen|von|bei|mit|dass|das)\\s+"+NM+"\\b").exec(RAW); if(m&&!XSTOP.test(m[1])) return m[1];
+    return w;
+  }
+  var XHARM=/verlier|verliert|verloren|leiden|leidet|leide |scheiter|krank werd|krank wird|erkrank|allein sein|allein bleib|einsam|pleite|ruinier|untergeh|bestraf|buess|bezahl|zahlen|pech |unglueck|keine ruhe|nie wieder|nie mehr|nicht mehr (?:[a-z]+ ){0,3}(?:koennen|kann|koenn|darf|duerfen|schlafen|schlaeft)|soll(?:en)? (?:[a-z]+ ){0,3}keine?n? (?:[a-z]+ ){0,3}mehr|wird (?:[a-z]+ ){0,3}keine?n? (?:[a-z]+ ){0,3}mehr|fluch|verfluch|rache|heimzahl|schaden|zurueckzahl|kaputt/;
   function xParse(raw){
-    var t=" "+xn(raw)+" ", r={th:"",ton:"Soft",rt:"Segen",fm:"ich",fw:"",wes:false,tier:"",pers:""};
-    var th=XTH.filter(function(x){ return x[1].test(t); }).map(function(x){ return x[0]; });
-    /* Heilung und Schutz gehen vor dem allgemeinen Segen/Herz */
-    r.th=th.indexOf("heilung")>=0?"heilung":th.indexOf("schutz")>=0?"schutz":th[0]||"";
-    if(r.th==="herz"&&th.length>1&&!/liebe|anzieh|partner|beziehung|verlieb/.test(t)) r.th=th[1];
-    if(/fluch|verfluch|rache|bestraf|heimzahl|zurueckschlag|soll leiden/.test(t)){ r.rt="Fluch"; r.ton="Hard"; }
-    if(/ hard | hart | scharf/.test(t)) r.ton="Hard"; else if(/grenze|abgrenz|nein sagen/.test(t)) r.ton="Grenze"; else if(/ feld |feldarbeit/.test(t)) r.ton="Feld";
-    else if(r.th==="ende"&&r.rt!=="Fluch") r.ton="Grenze";
-    if(/wesen|engel|geist|krafttier|schutzgeist/.test(t)) r.wes=true;
-    var nm=/(heisst|namens|name ist)\s+([a-z]+)/.exec(t), nameO=nm?String(raw).match(new RegExp("\\b("+nm[2]+")\\b","i")):null;
+    var RAW=String(raw||""), t=" "+xn(RAW)+" ", r={th:"",ton:"Soft",rt:"Segen",fm:"ich",fw:"",wes:false,tier:"",pers:""};
     XTIER.some(function(w){ if(new RegExp(" "+w+"[a-z]{0,2} ").test(t)){ r.tier=w; return true; } return false; });
-    if(!r.tier) XPERS.some(function(w){ if(new RegExp(" (mein|meine|meinen|meinem|meiner|unser|unsere|fuer) "+w+"[a-z]{0,2} ").test(t)){ r.pers=w; return true; } return false; });
-    if(!r.tier&&!r.pers){ var m=/\bf(?:ü|ue)r\s+([A-ZÄÖÜ][a-zäöüé]+)/.exec(String(raw)); if(m&&!/^(Mich|Uns|Heute|Morgen|Ruhe|Liebe|Geld|Schutz|Heilung)$/.test(m[1])) r.pers=m[1]; }
-    /* Build 121: Vorname im Satz (Beat soll …, für Anna, Hund Bello) */
-    var RAW=String(raw), STOPN=/^(Ich|Mein|Meine|Meinen|Meinem|Meiner|Unser|Unsere|Er|Sie|Es|Wir|Du|Der|Die|Das|Den|Dem|Ein|Eine|Bitte|Heute|Morgen|Gott|Engel|Ruhe|Liebe|Geld|Schutz|Heilung|Segen|Fluch|Glück|Kraft|Mut|Herz|Frieden|Schlaf|Arbeit|Job|Erfolg|Angst|Stress|Mich|Uns|Ihn|Ihr)$/, vn="";
-    var mT=r.tier?new RegExp("\\b"+r.tier.replace("ae","(?:ä|ae)").replace("ue","(?:ü|ue)")+"[a-zäöü]{0,2}\\s+([A-ZÄÖÜ][a-zäöüé]+)","i").exec(RAW):null;
-    if(mT&&/^[A-ZÄÖÜ]/.test(mT[1])&&!STOPN.test(mT[1])) vn=mT[1];
-    if(!vn){ var m1=/^\s*([A-ZÄÖÜ][a-zäöüé]+)\s+(soll|sollen|ist|hat|wird|kann|darf|möge|moege|muss|braucht|will)\b/.exec(RAW); if(m1&&!STOPN.test(m1[1])) vn=m1[1]; }
-    if(!vn){ var m2=/\b(?:für|fuer|an|gegen|von|bei|zu)\s+([A-ZÄÖÜ][a-zäöüé]+)\b/.exec(RAW); if(m2&&!STOPN.test(m2[1])) vn=m2[1]; }
-    if(vn&&!nameO) nameO=[vn,vn];
+    if(!r.tier) XPERS.some(function(w){ if(new RegExp(" (mein|meine|meinen|meinem|meiner|unser|unsere|fuer|gegen|dass|das|der|die|den|dem) "+w+"[a-z]{0,2} ").test(t)){ r.pers=w; return true; } return false; });
+    var vn=xName(RAW,r.tier);
     if(vn&&!r.tier&&!r.pers) r.pers=vn;
-    /* Build 121: Schaden gegen jemand anderen -> Hard, Fluch. Eigene Last mit «nicht mehr» bleibt Segen. */
-    var harm=/ soll(?:en)? (?:[a-z]+ ){0,4}nicht mehr | soll(?:en)? (?:[a-z]+ ){0,3}keine?n? (?:[a-z]+ ){0,3}mehr | soll(?:en)? (?:[a-z]+ ){0,4}(?:leiden|scheitern|verlieren|pech haben|ungluecklich|krank werden|zahlen|buessen)| nie (?:mehr|wieder) /.test(t);
-    if(harm&&(r.tier||r.pers)&&!/ ich (?:will|moechte|soll|kann) /.test(t)){ r.rt="Fluch"; r.ton="Hard";
-      if(!r.th||/^(herz|mut)$/.test(r.th)&&!/liebe|partner|beziehung/.test(t)) r.th=/schlaf|ruhe|ruhig/.test(t)?"ruhe":/geld|job|arbeit|erfolg|kunden/.test(t)?"fuelle":/gesund|krank/.test(t)?"heilung":r.th||"klaerung"; }
-    if(r.tier||r.pers){ r.fm="person"; r.fw=nameO?cap(nameO[1]):(r.tier?cap(r.tier==="kaetzchen"?"Kätzchen":r.tier==="huendin"?"Hündin":r.tier):cap(r.pers)); }
+    /* «Ich will mich von Tom trennen»: es geht um mich */
+    if(!r.tier&&/ ich (?:will|moechte|muss|werde|kann) mich /.test(t)&&!XHARM.test(t.replace(/trenn[a-z]*/g,""))){ r.pers=""; vn=""; }
+    var other=!!(r.tier||r.pers);
+    if(other){ r.fm="person"; r.fw=vn||(r.tier?cap(r.tier==="kaetzchen"?"Kätzchen":r.tier==="huendin"?"Hündin":r.tier):cap(r.pers)); }
+    /* Schaden: nur gegen andere. «Ich will nicht mehr grübeln» bleibt Segen für mich. */
+    var harm=other&&XHARM.test(t)&&!/(angst|sorge|furcht)[a-z]* (?:[a-z]+ ){0,4}(verlier|zu verlieren)/.test(t)&&!/(darf|soll|wird) (?:[a-z]+ ){0,3}nicht mehr (?:[a-z]+ ){0,2}(leiden|weh|krank|schmerz)|nicht mehr leid|keine schmerzen mehr|nie wieder (krank|schmerz|leid)/.test(t);
+    if(harm){
+      r.rt="Fluch"; r.ton="Hard";
+      r.th=/schlaf|ruhe|ruhig/.test(t)?"ruhe":/gesund|krank|schmerz|erkrank/.test(t)?"heilung":/liebe|partner|beziehung|allein|einsam|freund|verlass|herz|gluecklich|glueck/.test(t)?"herz":/trenn|ende |abschluss/.test(t)?"ende":/mut|kraft|energie/.test(t)?"mut":/luege|wahrheit|verbirg|licht/.test(t)?"klaerung":/verlier|verliert|verloren|geld|job|arbeit|alles|pleite|ruinier|erfolg|firma|geschaeft|kunden|scheiter|untergeh|zahl/.test(t)?"fuelle":"schutz";
+    } else {
+      var th=XTH.filter(function(x){ return x[1].test(t); }).map(function(x){ return x[0]; });
+      r.th=th.indexOf("heilung")>=0?"heilung":th.indexOf("schutz")>=0?"schutz":th[0]||"";
+      if(r.th==="herz"&&th.length>1&&!/liebe|anzieh|partner|beziehung|verlieb/.test(t)) r.th=th[1];
+      if(/ hard | hart | scharf/.test(t)) r.ton="Hard"; else if(/grenze|abgrenz|nein sagen/.test(t)) r.ton="Grenze"; else if(/ feld |feldarbeit/.test(t)) r.ton="Feld";
+      else if(r.th==="ende") r.ton="Grenze";
+    }
+    if(!harm&&other&&r.fw&&new RegExp(" gegen (?:[a-z]+ )?"+xn(r.fw)+" ").test(t)){ r.fm="ich"; r.fw=""; r.tier=""; r.pers=""; r.th="schutz"; r.ton="Grenze"; }
+    if(/wesen|engel|geist|krafttier|schutzgeist/.test(t)) r.wes=true;
     return r;
   }
   function xSatz(r){
@@ -227,6 +241,13 @@
       s=wer+" ist gesegnet. "+(XS[r.th]||"Das Gute findet den Weg."); }
     return s;
   }
+  /* Build 122: Grundsatz je Thema, damit immer Kerze, Kraut, Stein und Farbe da sind ([Soft, Hard]) */
+  var XMAT={schutz:[["kerze-weiss","rosmarin","tuerkis","farbe-weiss"],["kerze-weiss","distel","gagat","farbe-schwarz"]],ruhe:[["kerze-blau","baldrian","amethyst","farbe-blau"]],herz:[["kerze-rosa","rose","rosenquarz","farbe-rosa"]],
+    klaerung:[["kerze-weiss","minze","fluorit","farbe-weiss"],["kerze-weiss","salbei","rauchquarz","farbe-weiss"]],mut:[["kerze-orange","oregano","karneol","farbe-orange"],["kerze-rot","brennnessel","granat","farbe-rot"]],
+    heilung:[["kerze-gruen","ringelblume","aquamarin","farbe-gruen"]],fuelle:[["kerze-gold","lorbeer","citrin","farbe-gold"]],traum:[["kerze-violett","jasmin","mondstein","farbe-violett"]],
+    ende:[["kerze-weiss","salbei","rauchquarz","farbe-weiss"],["kerze-schwarz","wermut","onyx","farbe-schwarz"]]};
+  function xBase(){ var b=XMAT[S.th]||[[]]; return (S.ton==="Hard"&&b[1])||b[0]; }
+  function xHas(id){ return DATA&&DATA.some(function(e){ return e.id===id; }); }
   function xFl(){ return isP(S)&&S.rt==="Fluch"; }
   function xMaterial(){
     if(!DATA) return [];
@@ -235,9 +256,13 @@
     ["kerzen","kraeuter","steine","farben"].forEach(function(c){ if(out.length>=3) return; var e=pool.filter(function(x){ return x.cat===c&&out.indexOf(x.id)<0; })[0];
       if(!e) e=DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat===c&&toneOk(x,S.ton)&&l&&(l.t||[]).indexOf(S.th)>=0; })[0];
       if(e) out.push(e.id); });
+    var CT={kerzen:0,kraeuter:1,steine:2}, have={}; out.forEach(function(id){ var e=DATA.filter(function(x){ return x.id===id; })[0]; if(e) have[e.cat]=1; });
+    Object.keys(CT).forEach(function(c){ if(!have[c]){ var id=xBase()[CT[c]]; if(id&&xHas(id)&&out.indexOf(id)<0) out.push(id); } });
+    out=out.filter(function(id){ var e=DATA.filter(function(x){ return x.id===id; })[0]; return !(e&&e.cat==="farben"); });
     return out;
   }
-  function xFarbe(){ if(!DATA) return null; if(xFl()) return DATA.filter(function(x){ return x.id==="farbe-schwarz"; })[0]||null; return DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat==="farben"&&l&&(l.t||[]).indexOf(S.th)>=0; })[0]||null; }
+  function xFarbe(){ if(!DATA) return null; if(xFl()) return DATA.filter(function(x){ return x.id==="farbe-schwarz"; })[0]||null;
+    var bf=xBase()[3]; if(bf&&xHas(bf)&&(S.ton==="Hard"||!DATA.some(function(x){ var l=LINKS[x.id]; return x.cat==="farben"&&l&&(l.t||[]).indexOf(S.th)>=0; }))) return DATA.filter(function(x){ return x.id===bf; })[0]; return DATA.filter(function(x){ var l=LINKS[x.id]; return x.cat==="farben"&&l&&(l.t||[]).indexOf(S.th)>=0; })[0]||null; }
   function xT(ms){ var d=new Date(ms); return DL[d.getDay()]+" "+d.getDate()+"."+(d.getMonth()+1)+"., "+String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
   /* Beste Zeit: Tradition (Wochentag und Mond) + Planetenstunde des Tagesplaneten + Ton-Fenster aus dem Kalender (Bern) */
   function xZeit(){
@@ -259,6 +284,7 @@
       '<button type="button" class="rxGo" data-a="xgo"><span class="rzhIc" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3.2l1.5 5.3 5.3 1.5-5.3 1.5L12 16.8l-1.5-5.3L5.2 10l5.3-1.5z"/></svg></span>Ritual formen</button></div>';
     if(S.xs&&!S.th){ o+='<div class="rxCard"><p class="rxH">Magst du mir noch sagen, worum es geht?</p><div class="rzCh">'+TH.map(function(t){ return '<button type="button" data-xth="'+t[0]+'">'+t[1]+'</button>'; }).join("")+'</div></div>'; }
     else if(S.xs&&S.th){
+      if(S._needMat&&DATA){ S.sel=xMaterial(); S._needMat=false; } /* Build 122: Material nachholen, wenn das Lexikon erst nach dem Formen geladen ist */
       var st=build(), P=isP(S), w=fuerTxt(S), thn=(TH.filter(function(x){ return x[0]===S.th; })[0]||["",""])[1], ab=(S.txt||"").trim()||autoSatz(S);
       var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean), fb=xFarbe();
       var zt=xZeit(), los=xFl()?[["Gabe · Preis","Eine Gabe hinstellen: Wasser, Salz oder etwas von dir. Ich gebe das als Ausgleich. Ich trage den Preis."],["Lösen","Zugang mit Salz umkreisen, dann weglegen. Die Bahn ist gesetzt. Ich gehe raus. Nichts davon klebt an mir."],["Rückkehr","Ich bin nicht "+w+". Ich kehre vollständig zurück. Meine Energie gehört mir. Ich bleibe im Spiel. Ich bleibe ich. Füsse. Atem. Raum."],["Reinigen","Hände mit Salzwasser waschen. Das Wasser weggiessen. Rein. Nichts bleibt an mir."],["Schluss","Danke, Feld. Wasser. Alltag. Nicht nachladen."]]:st.filter(function(s){ return /^(Lösen|Anker|Schluss|Rückkehr)/.test(s[0]); });
@@ -279,7 +305,7 @@
     var i=document.getElementById("rzX"); var v=i?i.value.trim():""; S.xs=v; if(!v) return;
     var r=xParse(v); S=S0(); S.xs=v; /* Build 121: frisch aus dem Satz, nichts Altes aus Anpassen */
     S.th=r.th; S.ton=r.ton; S.rt=r.rt; S.fm=r.fm; S.fw=r.fw; S.wes=r.wes; S.name=""; S.sel=[];
-    S.txt=r.th?xSatz(r):""; S._txtAuto=""; S.sel=r.th?xMaterial():[]; S._x=r;
+    S.txt=r.th?xSatz(r):""; S._txtAuto=""; S.sel=r.th?xMaterial():[]; S._needMat=!!(r.th&&!DATA); S._x=r; loadLex();
   }
   function xPlan(){
     var r=rez(), c0=cur(), ix=-1; r.forEach(function(x,j){ if(x.id===c0.id) ix=j; }); if(ix>=0) r[ix]=c0; else r.unshift(c0); setRez(r.slice(0,30));
@@ -494,6 +520,9 @@
   if(typeof openR==="function"&&!openR._rx){ var o0=openR; openR=function(id,wer){ if(/^rz:/.test(String(id))){ var rid=String(id).slice(3), r=rez().filter(function(x){ return x.id===rid; })[0];
       try{ var d=load(); d.planned=(d.planned||[]).filter(function(p){ return p.id!==id; }); save(d); }catch(e){}
       if(r){ ensure(); loadLex(); runFlow(r); } return; } return o0.apply(this,arguments); }; openR._rx=1; }
-  window.RR25_RITUALX={open:open,close:close};
+  window.RR25_RITUALX={open:open,close:close,
+    /* Build 122: fuer Tests */ _parse:function(v){ var r=xParse(v), S1=S; S=S0(); S.th=r.th; S.ton=r.ton; S.rt=r.rt; S.fm=r.fm; S.fw=r.fw; var o={th:r.th,ton:r.ton,rt:isP(S)?r.rt:"",fw:r.fw,satz:r.th?xSatz(r):"",mat:xMaterial().concat((xFarbe()||{}).id||[]),zeit:xZeit()}; S=S1; return o; },
+    _mat:function(th,ton,rt,fw){ var S1=S; S=S0(); S.th=th; S.ton=ton; S.rt=rt; if(fw){ S.fm="person"; S.fw=fw; } var o={mat:xMaterial(),farbe:(xFarbe()||{}).id||"",satz:autoSatz(S),q:x369()}; S=S1; return o; },
+    _ready:function(){ loadLex(); return !!DATA; }};
   window.RR25_REZEPT={list:rez,open:open,close:close,satz:zSatz};
 })();
