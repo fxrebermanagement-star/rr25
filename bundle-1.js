@@ -1,4 +1,4 @@
-/* rr25 · Paket 1/7 · Build 124 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 1/7 · Build 125 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-ico.js, doll.js, ritual-core.js, ritual-mondphase.js, ritual-zeit.js, rituals-v2.js */
 /* ==== ritual-ico.js ==== */
 try{
@@ -50,9 +50,13 @@ try{
       '<circle cx="12" cy="12" r="'+MR+'" fill="none" stroke="#f2f0ff" stroke-opacity=".4" stroke-width=".4"/>';
   }
   var MOE=["\ud83c\udf11","\ud83c\udf12","\ud83c\udf13","\ud83c\udf14","\ud83c\udf15","\ud83c\udf16","\ud83c\udf17","\ud83c\udf18"];
-  function moonEmoji(p){ p=((+p%1)+1)%1; return MOE[Math.round(p*8)%8]; }
+  function moonEmoji(p){ p=((+p%1)+1)%1; /* Build 125: Haupt-Phasen nur um den echten Tag (±1 Tag), sonst Sichel/Dreiviertel */
+    var T=.034, d=function(a){ return Math.abs(p-a)<T; };
+    if(p<T||p>1-T) return MOE[0]; if(d(.25)) return MOE[2]; if(d(.5)) return MOE[4]; if(d(.75)) return MOE[6];
+    return MOE[p<.25?1:p<.5?3:p<.75?5:7]; }
   /* Build 123: Mond als natives Phasen-Emoji, wie die Sonne */
-  function moonSvg(p,cls){ return '<span class="rrMoon rrMoEmo'+(cls?" "+cls:"")+'" aria-hidden="true">'+moonEmoji(p)+'</span>'; }
+  function moonSvg(p,cls){ var q=((+p%1)+1)%1, voll=Math.abs(q-.5)<.034; /* Build 125: Halo nur am echten Vollmond */
+    return '<span class="rrMoon rrMoEmo'+(voll?" rrMoVoll":"")+(cls?" "+cls:"")+'" aria-hidden="true">'+moonEmoji(p)+'</span>'; }
   function moonArtSvg(p){ return '<text x="12" y="12" text-anchor="middle" dominant-baseline="central" font-size="22" font-family="Noto Color Emoji,Apple Color Emoji,Segoe UI Emoji,sans-serif">'+moonEmoji(p)+'</text>'; }
   function moonSvgOld(p,cls){ return '<svg class="rrMoon'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+art(p)+'</svg>'; }
   var P={

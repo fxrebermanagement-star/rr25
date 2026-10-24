@@ -125,3 +125,8 @@ html body #home #cats .chip:focus-visible{outline:none;border-color:var(--rr-vio
 .rrMoon{display:inline-block;width:1.3em;height:1.3em;vertical-align:-.28em;overflow:visible}
 .rrMoEmo{display:inline-block;width:auto;height:auto;line-height:1;font-style:normal;font-family:'Noto Color Emoji','Apple Color Emoji','Segoe UI Emoji',sans-serif}
 #moonSym .rrMoEmo.mbSvg{width:auto;height:auto;margin:0;font-size:inherit;filter:none;display:block}
+
+/* Build 125: echter Vollmond leuchtet */
+.rrMoEmo.rrMoVoll{border-radius:50%;filter:drop-shadow(0 0 4px rgba(255,236,170,.95)) drop-shadow(0 0 10px rgba(255,210,120,.7)) drop-shadow(0 0 18px rgba(200,150,255,.5))}
+.rrMoEmo:not(.rrMoVoll){filter:saturate(.9)}
+#moonSym .rrMoEmo.rrMoVoll.mbSvg{filter:drop-shadow(0 0 4px rgba(255,236,170,.95)) drop-shadow(0 0 10px rgba(255,210,120,.7)) drop-shadow(0 0 18px rgba(200,150,255,.5))}
