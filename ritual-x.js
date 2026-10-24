@@ -95,29 +95,38 @@
     return b;
   }
   function fuerLab(s){ var w=fuerTxt(s); return s.fm==="ich"||!w?"für mich":"für "+w; }
+  /* Build 119: Ich · Spiel · Quelle wie bei den festen Ritualen (Ich 3×, Spiel 6×, Quelle 3× «So sei es» plus ein Satz einmal) */
+  var X369={heilung:["Die Heilung sitzt.","Alles Störende löst sich.","Ich sehe es. Die Heilung ist gesetzt."],schutz:["Der Schutz ist stark.","Alles Fremde prallt ab.","Ich sehe es. Der Schutz steht."],
+    herz:["Ich bin offen.","Liebe findet den Weg.","Ich sehe es. Es ist gesetzt."],klaerung:["Es wird klar.","Der Nebel löst sich.","Ich sehe es. Es ist klar."],mut:["Die Kraft ist da.","Die Energie fliesst.","Ich sehe es. Ich bin in der Kraft."],
+    fuelle:["Ich bin versorgt.","Der Weg öffnet sich.","Ich sehe es. Es ist gesetzt."],ruhe:["Die Ruhe sitzt.","Alles Unruhige legt sich.","Ich sehe es. Es ist still und gut."],
+    traum:["Die Schwelle ist offen.","Der Weg ist sanft.","Ich sehe es. Es ist getragen."],ende:["Die Verbindung löst sich.","Die Fäden fallen ab.","Ich sehe es. Es ist zu Ende."]};
+  function x369(){ if(isP(S)&&S.rt==="Fluch") return ["Es sitzt.","Was gesetzt wurde, kehrt zurück.","Ich sehe es. Es ist gesetzt."]; return X369[S.th]||["Es sitzt.","Es findet den Weg.","Ich sehe es. Es ist gesetzt."]; }
   function build(){
     var hard=S.ton==="Hard", ab=(S.txt||"").trim()||autoSatz(S)||"So sei es.", w=fuerTxt(S), P=isP(S), fl=P&&S.rt==="Fluch";
     var z=S.sel.map(function(id){ return DATA&&DATA.filter(function(e){ return e.id===id; })[0]; }).filter(Boolean);
     var steps=[];
     steps.push(["Vorbereitung","Tu:|Ruhiger Ort. Wasser bereit."+(z.length?" Bereit: "+z.map(kurz).join(", ")+".":"")+(hard?"|Zeit für die Rückkehr einplanen. Anker bereithalten (Wasser, Salz).":"")+(S.wes?"|Für die Wesenheit: ein Licht oder ein Platz, der nur ihr gehört.":"")]);
-    steps.push(["Standort","Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin hier. Ich bin klar."]);
+    steps.push(["Standort","Tu:|Füsse. Drei Atemzüge.||Sprich:|Ich bin der Spieler. Die Quelle ist wach."]);
     if(S.wes) steps.push(["Wesenheit · Einladung","Sprich:|Ich lade die Wesenheit ein, die mir wohlgesinnt ist. Nur für diesen Auftrag, nur für diese Zeit."]);
-    steps.push(["Absicht ❤️","Sprich die Absicht, dreimal, ganz bewusst:",{rep:3,txt:ab}]);
+    steps.push(["Absicht","Sprich:|"+ab+(P&&!fl?"|Nur zum Guten.":"")]);
     var tu=z.length?z.map(zSatz):["Ein kleiner Schritt von mir, hier und jetzt: Kerze, Atem oder Wasser."];
     var tr=z.filter(function(e){ return e.text; }).map(function(e){ return kurz(e)+": "+e.text; });
     var spiel="Tu:|"+tu.join("|")+(tr.length?"||Aus der Tradition:|"+tr.join("|"):"");
     if(P){
-      steps.push(["Zugang 🙏","Der Zugang ist dein Draht zu "+w+": der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was "+w+" dir am nächsten bringt.",{rep:6,zg:1,txt:"Mein Zugang ist [Zugang], und ich weiss: Hier steht "+w+(fl?", und hier trifft es.":", und das trägt."),name:w}]);
+      steps.push(["Zugang 🙏","Der Zugang ist dein Draht zu "+w+": der Name laut, ein Foto oder etwas, das du in der Hand hältst. Wähl, was "+w+" dir am nächsten bringt.",{rep:1,zg:1,txt:"Mein Zugang ist [Zugang], und ich weiss: Hier steht "+w+(fl?", und hier trifft es.":", und das trägt."),name:w}]);
       steps.push(["Spiel","Was tue ich für "+w+"?||"+spiel]);
     } else {
-      steps.push(["Spiel 🙏","Was tue ich dafür?||"+spiel+"||Sprich sechsmal:",{rep:6,txt:"Ich tue meinen Teil. Ich tue ihn gern."}]);
+      steps.push(["Spiel","Was tue ich dafür?||"+spiel]);
     }
-    steps.push(["Vollendung 👁","Ein langer Atemzug. Hände öffnen. Die Quelle ist wach.||Sprich neunmal:",{rep:9,txt:"So sei es.",full:1}]);
+    var q=x369(); steps.push(["Ich ❤️","Jede Zeile laut. Antippen zählt.||Sprich dreimal:",{rep:3,txt:q[0]}]); steps.push(["Spiel 🙏","Sprich sechsmal:",{rep:6,txt:q[1]}]);
+    steps.push(["Quelle 👁","Sprich dreimal «So sei es.» und tippe. Danach einmal den Quelle-Satz:|«"+q[2]+"»",{rep:3,txt:"So sei es.",full:1}]);
+    steps.push(["So sei es","Sprich:|Versiegelt. Übergeben. So sei es."]);
     if(S.wes) steps.push(["Wesenheit · Dank","Sprich:|Danke. Der Auftrag ist bei dir. Du gehst deinen Weg, ich bleibe in meinem."]);
-    var los=P?(fl?"Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir.":"Ich lasse los. "+w+" ist in guten Händen."):S.fm==="situation"&&w?"Ich lasse los. Es ist in guten Händen.":"Ich lasse los. Ich bin in guten Händen.";
-    steps.push(["Lösen","Tu:|"+(P?"Zugang weglegen, Hände ausschütteln.":"Hände ausschütteln, einmal tief ausatmen.")+"||Sprich:|"+los]);
-    if(hard){ steps.push(["Rückkehr","Sprich:|Ich bin hier. Ich bin ganz bei mir.||Tu:|Füsse. Atem. Raum."]); steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]); }
-    else steps.push(["Schluss","Tu:|Wasser trinken. Zurück in den Alltag."]);
+    var los=P?(fl?"Es ist gesetzt. Ich gehe raus. Nichts davon klebt an mir.":"Das Gute gehört "+w+". Die Last bleibt nicht bei mir. Ich bin wieder ich."):"Der Faden ist gelegt. Ich lasse los, er wirkt.";
+    steps.push(["Lösen","Tu:|"+(P?"Zugang weglegen. Hände unter kaltes Wasser.":"Hände unter kaltes Wasser.")+"||Sprich:|"+los]);
+    steps.push(["Rückkehr","Sprich:|"+(P?"Ich bin nicht "+w+". Ich kehre vollständig zurück.|":"Ich bin ganz bei mir.|")+"Meine Energie gehört mir.|Füsse. Atem. Raum.||Anker: Daumen und Zeigefinger zusammen. Eigener Vorname laut."]);
+    if(hard) steps.push(["Anker","Tu:|Wasser trinken. Salz kurz berühren. Etwas Alltägliches tun.||Sprich:|Anker gesetzt. Ich bin zurück."]);
+    steps.push(["Schluss","Sprich:|Danke, Feld.||Tu:|Wasser. Alltag."]);
     return steps;
   }
   /* Build 113: «Tu:»/«Sprich:» als kleine Marke, Fragen und Erklärungen als ruhiger Text */
@@ -241,9 +250,9 @@
       var zt=xZeit(), los=st.filter(function(s){ return /^(Lösen|Anker|Schluss|Rückkehr)/.test(s[0]); });
       o+='<div class="rxCard"><p class="rxK">Dein Ritual</p><h3 class="rxT">'+h(thn)+' · '+h(S.ton)+(P?' · '+h(S.rt):'')+'</h3><p class="rxF">'+h(fuerLab(S))+(S.wes?' · mit Wesenheit':'')+'</p>'+
         '<p class="rxH">Beste Zeit</p>'+(zt.length?zt.map(function(x){ return '<p class="rxL">'+h(x)+'</p>'; }).join(""):'<p class="rxL">Jederzeit, in Ruhe.</p>')+
-        '<p class="rxH">Ablauf 3 · 6 · 9</p><p class="rxL"><b>3×</b> «'+h(ab)+'»</p>'+
-        (P?'<p class="rxL"><b>6×</b> Zugang zu '+h(w)+': Name, Foto oder etwas in der Hand.</p>':'<p class="rxL"><b>6×</b> «Ich tue meinen Teil. Ich tue ihn gern.»</p>')+
-        '<p class="rxL"><b>9×</b> «So sei es.»</p>'+
+        (function(){ var q=x369(); return '<p class="rxH">Ablauf</p><p class="rxL"><b>Absicht</b> einmal: «'+h(ab)+'»</p>'+(P?'<p class="rxL"><b>Zugang</b> zu '+h(w)+': Name, Foto oder etwas in der Hand.</p>':'')+
+        '<p class="rxH">Ich · Spiel · Quelle</p><p class="rxL"><b>❤️ 3×</b> «'+h(q[0])+'»</p><p class="rxL"><b>🙏 6×</b> «'+h(q[1])+'»</p><p class="rxL"><b>👁 3×</b> «So sei es.» und einmal «'+h(q[2])+'»</p>'+
+        '<p class="rxL"><b>Siegel:</b> «Versiegelt. Übergeben. So sei es.»</p>'; })()+
         '<p class="rxH">Material</p><p class="rxL">'+(z.length?z.map(function(e){ return h(kurz(e)); }).join(" · "):"Kerze, Atem oder Wasser.")+(fb&&S.sel.indexOf(fb.id)<0?' · Farbe '+h(fb.name):'')+'</p>'+
         '<p class="rxH">Lösen und Anker</p>'+los.map(function(s){ var L=String(s[1]).split("|").filter(function(x){ return x&&!/:$/.test(x); }); return '<p class="rxL"><b>'+h(s[0])+':</b> '+h(L.join(" "))+'</p>'; }).join("")+
         '<div class="rzVb"><button type="button" class="btn ghost" data-a="start">Jetzt durchgehen</button><button type="button" class="btn primary" data-a="save">'+(S.eid?"Änderung speichern":"Speichern")+'</button></div>'+
