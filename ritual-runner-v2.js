@@ -84,7 +84,7 @@
     else txt=s.kind+" · "+(window.RR25_MOND?window.RR25_MOND.day().name:"");
     return {kind:s.kind,tone:s.tone||s.kind,txt:txt,s:s};
   }
-  function fensterZeile(now,kind){
+  function fensterZeile(now,kind,r){
     if(!KZ) return "";
     var L=KZ.list(now), d0=new Date(now); d0.setHours(0,0,0,0); d0=d0.getTime();
     var soft=[], hard=[];
@@ -95,6 +95,7 @@
     });
     var bits=[];
     if(soft.length) bits.push('Soft-Fenster: '+soft.map(function(x){ return hm(x.s)+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
+    if(r&&!r.hard) hard=[]; /* Build 124: bei Soft keine Hard-Feintakte */
     if(hard.length) bits.push('Hard-Feintakte: '+hard.map(function(x){ return hm(x.s)+(x.anker?' Anker':'')+(x.s<=now&&now<x.e?' (offen)':''); }).join(' · '));
     /* Build 108: nur zeigen, wenn es zur Hauptaussage passt (kein «Soft-Fenster» oben und «kein Soft-Fenster» unten) */
     if(!bits.length){ if(kind==="SOFT"||kind==="HARD") return ""; bits.push('Heute kein Soft-Fenster und kein Hard-Feintakt mehr.'); }
@@ -120,7 +121,7 @@
       var n2=KZ.next("SOFT",now);
       warn='<br><b>Jetzt nicht.</b> '+(w.kind==="STILL"?'Still-Band.':'Echo-Tag.')+(n2?' Nächstes Soft-Fenster: '+relDay(n2.x.s)+' '+hm(n2.x.s)+'.':'');
     }
-    return '<span class="wk wk-'+(w.tone||w.kind).toLowerCase()+'">'+h(mondKlein(w.txt))+'</span><br>'+say+extra+warn+fensterZeile(now,w.kind)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
+    return '<span class="wk wk-'+(w.tone||w.kind).toLowerCase()+'">'+h(mondKlein(w.txt))+'</span><br>'+say+extra+warn+fensterZeile(now,w.kind,r)+'<br><span class="meta">'+DAYS[d]+' · '+PLANET[d]+'</span>';
   }
   setInterval(function(){ var w=document.getElementById("wetter"); if(w&&cur){ var x=wetterHtml(cur.r); if(x!==w.innerHTML) w.innerHTML=x; } },30000);
 
@@ -270,7 +271,7 @@
   function zeitHtml(r){
     var z=r&&r.zeit; if(!z) return "";
     var parts=[], ok=[], d=new Date().getDay();
-    if(z.tag&&z.tag.length){ parts.push(z.tag.map(function(i){ return TAGK[i]+" · "+PLAN[i]; }).join(" oder ")); ok.push(z.tag.indexOf(d)>=0); }
+    if(z.tag&&z.tag.length){ var th=r.thema||(r.cat&&r.cat!=="Ritual X"?r.cat:""); parts.push((th?th+"-Tage: ":"Beste Tage: ")+z.tag.map(function(i){ return TAGK[i]+" · "+PLAN[i]; }).join(" oder ")); /* Build 124 */ ok.push(z.tag.indexOf(d)>=0); }
     if(z.mond){
       parts.push(MONDN[z.mond]);
       var m=window.RR25_MOND?window.RR25_MOND.day():null, k=m?m.key:"";
@@ -279,7 +280,7 @@
     var all=ok.every(Boolean), some=ok.some(Boolean);
     var now="Heute "+TAGK[d]+" · "+PLAN[d]+(window.RR25_MOND?", "+mondKlein(window.RR25_MOND.day().name):"");
     var say=all?"Heute passt die Zeit.":some?"Heute passt es zum Teil.":"Heute nicht die passende Zeit. Nur ein Hinweis.";
-    return '<div class="zeitTor'+(all?' ok':'')+'"><b>Zeit</b> '+h(parts.join(" · "))+'<br><span class="meta">'+h(now)+'. '+h(say)+(r.hard?' Das Hard-Fenster geht vor.':'')+'</span></div>';
+    return '<div class="zeitTor'+(all?' ok':'')+'"><b>Zeit</b> '+h(parts.join(", "))+'<br><span class="meta">'+h(now)+'. '+h(say)+(r.hard?' Das Hard-Fenster geht vor.':'')+'</span></div>';
   }
   function tor(){
     loadKal();
