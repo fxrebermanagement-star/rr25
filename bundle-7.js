@@ -1,4 +1,4 @@
-/* rr25 · Paket 7/7 · Build 128 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 7/7 · Build 129 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sichern.js, ritual-gerechnet.js, ritual-rueckblick.js, ritual-erinnern.js, ritual-mondhinweis.js, ritual-zaehler.js, ritual-danksatz.js, ritual-sterne.js, ritual-mondbild.js, ritual-tippen.js, ritual-b66.js, ritual-b80.js, ritual-b81.js, ritual-b82.js, ritual-x.js, ritual-b84.js, ritual-b85.js, ritual-b94.js, ritual-b95.js, ritual-b99.js, ritual-b103.js, ritual-echo-nachtrag.js, ritual-b109.js, ritual-b112.js, ritual-b127.js, ritual-b128.js */
 /* ==== ritual-sichern.js ==== */
 try{
@@ -2681,13 +2681,16 @@ try{
   }
   function noon(dn){ return dn*DAYMS+12*3600*1000; }
   function stats(W){
-    var R=window.RR25_ZAEHLREGEL, T=js("rr25_tags_v1",{}), per=[0,0,0,0,0,0,0], rit=0, echo=0, wirk=0, first=Infinity;
+    var R=window.RR25_ZAEHLREGEL, T=js("rr25_tags_v1",{}), per=[0,0,0,0,0,0,0], rit=0, echo=0, wirk=0, first=Infinity, seen={};
     rows().forEach(function(e){
       var t=when(e); if(t==null) return; if(t<first) first=t;
       var dn=zday(t); if(dn<W.ws||dn>W.we) return;
-      var tg=(T[String(e.id)]||[]);
-      if(tg.indexOf("Echo")>=0) echo++; if(tg.indexOf("Wirkung")>=0) wirk++;
-      if(R&&R.isRitual(e)){ rit++; per[dn-W.ws]++; }
+      /* Build 129: Echo und Wirkung nur an Ritualen, jede Eintrags-ID nur einmal (vorher zählten auch Tagesziel, Zeichen, Gaben und doppelte IDs mit) */
+      if(!(R?R.isRitual(e):true)) return;
+      var id=String(e.id); if(seen[id]) return; seen[id]=1;
+      rit++; per[dn-W.ws]++;
+      var tg=(T[id]||[]);
+      if(tg.indexOf("Echo")>=0||e.echo) echo++; if(tg.indexOf("Wirkung")>=0) wirk++;
     });
     return {per:per,rit:rit,echo:echo,wirk:wirk,first:first};
   }
@@ -2726,8 +2729,9 @@ try{
     return '<div class="wbHead"><button type="button" class="wbNav" id="wbPrev" aria-label="Eine Woche zurück">‹</button><div><b>'+h(D.title)+'</b></div><button type="button" class="wbNav" id="wbNext" aria-label="Eine Woche weiter"'+(D.W.now?' disabled':'')+'>›</button></div>'+
       '<p class="wbSay">'+h(D.txt)+'</p><div class="wbBars">'+bars+'</div>'+
       '<div class="wbRow"><span>Mond</span><b>'+(D.M?h(D.M.sym+" "+D.M.txt):"–")+'</b></div>'+
-      '<div class="wbRow"><span>Echo · Wirkung</span><b>'+D.S.echo+' · '+D.S.wirk+'</b></div>'+
-      '<div class="wbRow"><span>Wochenfarben</span><b class="wbDots">'+dots+'</b></div>'+
+      '<div class="wbRow"><span>Echo · Wirkung</span><b>'+D.S.echo+' · '+D.S.wirk+' <small style="opacity:.7;font-weight:400">von '+D.S.rit+' Ritualen</small></b></div>'+
+      '<div class="wbFarb"><p class="wbFarbK">Wochenfarben</p><ul class="wbLeg">'+PL.map(function(p,i){ return '<li><s style="background:rgb('+p[1]+');box-shadow:0 0 6px rgba('+p[1]+',.6)"></s>'+WD[i]+' · '+p[0]+'</li>'; }).join("")+'</ul>'+
+      '<p class="wbNote">Jeder Tag trägt die Farbe seines Planeten, wie seit alter Zeit: Montag Mond, Dienstag Mars bis Sonntag Sonne. Die Balken zeigen, wie viele Rituale du an diesem Tag gemacht hast. Echo und Wirkung zählen nur Rituale, jedes höchstens einmal.</p></div>'+
       (D.sz?'<div class="wbRow"><span>Saison</span><b>'+h(D.sz)+'</b></div>':'')+
       '<p class="wbSatz">«'+h(D.sa)+'»</p>'+
       '<button type="button" class="btn" id="wbSave">Als Bild speichern oder teilen</button><p class="wbNote" id="wbMsg">Das Bild bleibt auf deinem Handy.</p>';
@@ -2836,6 +2840,9 @@ try{
   ].join("");
   document.head.appendChild(css);
   window.RR25_WOCHENBILD={data:data,render:render};
+  (function(){ if(document.getElementById("wbLegCss")) return; var st=document.createElement("style"); st.id="wbLegCss";
+    st.textContent=".wbFarb{margin:10px 0 4px}.wbFarbK{font-size:12px;color:#c9a6ff;margin:0 0 6px}.wbLeg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}.wbLeg li{display:flex;align-items:center;gap:8px;font-size:13px;color:#e8dcff}.wbLeg s{display:inline-block;width:12px;height:12px;border-radius:50%;flex:none}.wbFarb .wbNote{margin-top:8px;line-height:1.4}";
+    document.head.appendChild(st); })();
 })();
 
 }catch(e){setTimeout(function(){throw e;});}
