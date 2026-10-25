@@ -1,4 +1,4 @@
-/* rr25 · Paket 3/7 · Build 128 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
+/* rr25 · Paket 3/7 · Build 129 · erzeugt mit tools/bundle.py. Nicht von Hand bearbeiten:
    Quelldatei ändern und neu erzeugen. Inhalt in dieser Reihenfolge: ritual-sigil.js, ritual-log.js, ritual-notes.js, ritual-plus.js, ritual-nav.js, ritual-layout.js, ritual-look.js, ritual-extra.js, ritual-zahl.js, ritual-home.js, ritual-backup.js, pwa.js, ritual-log-fix.js, ritual-polish.js, ritual-mond.js, ritual-skizze.js */
 /* ==== ritual-sigil.js ==== */
 try{
@@ -1048,7 +1048,7 @@ try{
   if(!("serviceWorker" in navigator)) return;
   /* Stand dieser Datei. Muss zu <meta name="rr25-build"> in index.html passen (beide zusammen erhöhen).
      Kommt index.html noch aus einem alten Zwischenspeicher (älterer Stand), einmal frisch laden. Nutzerdaten bleiben unberührt. */
-  var BUILD=128;
+  var BUILD=129;
   var mb=document.querySelector('meta[name="rr25-build"]'), have=mb?+mb.getAttribute("content"):0;
   if(have<BUILD){
     try{
