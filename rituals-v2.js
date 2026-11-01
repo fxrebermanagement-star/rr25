@@ -264,12 +264,13 @@
     ['Rückkehr','Sprich:|Ich bin nicht [Name]. Ich bin ganz bei mir.|Füsse. Atem. Raum.'],
     ['Schluss','Sprich:|Danke, Feld.||Tu:|Wasser. Alltag.']
   ]},
-  {id:'djinn',tone:'feld',t:'Djinn · Kontakt & Prüfung',s:'Schutz zuerst. Probe. Ablehnen dürfen. Soft · 7–12 Min.',cat:'Feld',hard:false,chronikSatz:true,zeit:{tag:[0,1,3,4,5]},flow:[
+  {id:'djinn',tone:'feld',t:'Djinn · Kontakt & Aufgabe',s:'Schutz zuerst. Probe. Auftrag. Ablehnen dürfen. Soft · 7–12 Min.',cat:'Feld',hard:false,chronikSatz:true,need:['Auftrag'],zeit:{tag:[0,1,3,4,5]},flow:[
     ['Raum','Tu:|Fenster kurz. Eine Kerze. Wasser oder Tee bereit. Salz bereit.||Sprich:|Nur dieser Raum. Nur klar.|Ich bleibe ich.|An Hard-Tagen nur mit klarem Gate.||Hinweis:|Marit, Ifrit, Hin — nur als Hinweis, keine Pflicht.'],
     ['Schutz zuerst','Tu:|Kugel um dich. Nacken zu. Grenze spüren.||Sprich:|Nur was mit Respekt kommt, darf sich zeigen.|Was drängt oder täuscht, bleibt draussen.|Kein Verschmelzen. Kein Nachlaufen.'],
     ['Absicht','Tu:|Einen Satz. Klar und kurz.||Sprich:|Meine Absicht ist klar.|Mehr nicht.'],
     ['Einladen','Sprich:|Wenn du bereit und mit Respekt kommst, zeige dich kurz.|Ich lade ein. Ich verlange nichts.|Ich behalte den Raum.'],
     ['Vertrag · Probe','Tu:|Drei Fragen laut. Antwort nur, wenn klar.||Sprich:|Was willst du?|Was gibst du?|Was ist der Preis?||Tu:|Erst nach einer kleinen Probe Opfer geben: Licht, Wasser oder Tee, ein klares Wort.|Kein Blut. Kein grosses Versprechen heute.'],
+    ['Auftrag','Tu:|Einen klaren Auftrag oder eine Aufgabe formulieren. Ein Satz.||Sprich:|Dein Auftrag ist: [Auftrag].|Nur in diesem Rahmen. Ohne unnötigen Schaden.|Der Auftrag endet, wenn er erfüllt ist, oder wenn ich schliesse.'],
     ['Ablehnen','Sprich:|Ich darf ablehnen. Ohne Schuld.|Passt es nicht, schliesse ich jetzt.|Du gehst. Ich bleibe ich.'],
     ['Anker · Chronik','Tu:|Feld zu. Hände zusammen, dann lösen.||Sprich:|Danke. Kontakt geschlossen. Ich bin bei mir.||Tu:|Ein Satz in die Chronik. 24 Stunden nur beobachten, nicht nachladen.']
   ]},
